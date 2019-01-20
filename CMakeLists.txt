@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.12)
 project (autotester)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/cmake)
 ADD_DEFINITIONS(
-  -std=c++17 # Or -std=c++0x
+  -std=c++1z # Or -std=c++0x
   # Other flags
   )
 

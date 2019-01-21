@@ -1,6 +1,12 @@
 cmake_minimum_required (VERSION 3.12)
 project (autotester)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/cmake)
+
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake")
+message (STATUS "${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}")
+if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
+  message(FATAL_ERROR "In-source builds are forbidden.")
+endif()
+
 ADD_DEFINITIONS(
   -std=c++1z # Or -std=c++0x
   # Other flags

@@ -1,16 +1,15 @@
-with import <nixpkgs> {};
+{
+  pkgs ? import <nixpkgs> {},
+  stdenv ? pkgs.clangStdenv
+}:
 
-pkgs.mkShell {
+stdenv.mkDerivation {
+  name = "spa-env";
   buildInputs = with pkgs; [
-    qt511.qtbase
+    qt5.qtbase
     cmake
-    clang
 
     # utilities
     cquery
   ];
-
-  shellHook = ''
-    export CXX=${clang}/bin/clang++
-  '';
 }

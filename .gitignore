@@ -48,6 +48,7 @@
 *.app
 
 ### CMake ###
+build/
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
@@ -58,5 +59,8 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
+
+# macOS
+.DS_Store
 
 # End of https://www.gitignore.io/api/cmake,c++

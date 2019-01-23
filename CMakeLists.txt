@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.12)
-project (autotester)
+project (autotester CXX)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake")
 message (STATUS "${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}")
@@ -9,6 +9,7 @@ endif()
 
 ADD_DEFINITIONS(
   -std=c++1z # Or -std=c++0x
+  -Wall
   # Other flags
   )
 

@@ -1,0 +1,2 @@
+clang
+%cpp -std=c++1z

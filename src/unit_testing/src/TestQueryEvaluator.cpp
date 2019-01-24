@@ -2,7 +2,6 @@
 
 #include "query_evaluator/query_evaluator.h"
 #include "query_evaluator/query_preprocessor.h"
-#include "query_evaluator/pql.h"
 #include <vector>
 #include <iostream>
 

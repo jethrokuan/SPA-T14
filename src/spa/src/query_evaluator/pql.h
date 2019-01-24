@@ -1,7 +1,7 @@
-#ifndef __PQL_H
-#define __PQL_H
+#pragma once
 #include <vector>
 #include <memory>
+#include <regex>
 
 /*
  * Defines the main constructs for the Query Language PQL
@@ -24,7 +24,14 @@ namespace QE {
         PROCEDURE
     };
     class Declaration {
+        private:
+            // Spec: LETTER (LETTER | DIGIT)*
+            const std::regex synonym_regex = std::regex("[a-zA-Z](\\d|[a-zA-Z])*");
         public:
+            const DesignEntity design_entity;
+            const std::string synonym;
+            Declaration(DesignEntity de, std::string syn) : design_entity(de), synonym(syn) { };
+            bool isValid();
             bool operator==(const Declaration& a2) const {
                 return true;
             }
@@ -49,6 +56,7 @@ namespace QE {
             // -- Accessors and constructors for Query --
             Query(std::vector<Declaration>*, Declaration*);
             Query();
+            ~Query();
             std::vector<Declaration>* getDeclarations() { return declarations; }
             Declaration* getSelectedDeclarations() { return selected_declaration; }
             SuchThat* getSuchThat() { return such_that; }
@@ -59,5 +67,3 @@ namespace QE {
             static std::unique_ptr<Query> makeStubQuery();
     };
 }
-
-#endif

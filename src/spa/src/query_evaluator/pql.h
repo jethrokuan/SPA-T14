@@ -28,9 +28,14 @@ namespace QE {
             // Spec: LETTER (LETTER | DIGIT)*
             const std::regex synonym_regex = std::regex("[a-zA-Z](\\d|[a-zA-Z])*");
         public:
+            // Members
             const DesignEntity design_entity;
             const std::string synonym;
+
+            // Constructors
             Declaration(DesignEntity de, std::string syn) : design_entity(de), synonym(syn) { };
+
+            // Checks if synonym is valid (and therefore that Declaration is valid)
             bool isValid();
             bool operator==(const Declaration& a2) const {
                 return true;
@@ -48,6 +53,7 @@ namespace QE {
     class Query {
         private:
             std::vector<Declaration>* declarations;
+            // Selected declaration refers to the synonym that is after the 'Select'
             Declaration* selected_declaration;
             // No std::optional (is in C++17 - have to use nullable types)
             SuchThat* such_that;

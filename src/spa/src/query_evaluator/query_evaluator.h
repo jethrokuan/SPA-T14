@@ -16,7 +16,7 @@ namespace QE {
 
     class QueryEvaluator {
         public:
-            // Give a string containing PQL, makes the appropriate calls to PKB
+            // Given a string containing PQL, makes the appropriate calls to PKB
             // and retrieves the QueryResult
             std::unique_ptr<QueryResult> makePqlQuery(std::string&);
 

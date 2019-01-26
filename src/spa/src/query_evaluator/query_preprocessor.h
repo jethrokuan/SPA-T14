@@ -12,10 +12,13 @@
 
 namespace QE {
     class QueryPreprocessor {
+        private:
+            void parseDeclarations(Query*, std::vector<std::string>*);
+            void parseSelect(Query*, std::vector<std::string>*);
         public:
             // Given a string containing PQL, 
             // returns the Query object representing the query's structure
-            std::unique_ptr<Query> getQuery(std::string&);
+            Query* getQuery(std::string&);
     };
 }
 

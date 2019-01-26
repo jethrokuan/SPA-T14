@@ -4,8 +4,8 @@
 #include <memory> // future use of smart pointers
 
 /*
- * Given a PQL query as a string, splits the string into tokens
- * 
+ * Utility class that when given a PQL query as a string, splits the string into tokens
+ * which are stored in a struct based on their relevance to the PQL query
 */
 
 namespace QE {

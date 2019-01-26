@@ -3,12 +3,9 @@
 #include <string>
 #include <memory> // future use of smart pointers
 
-/*
- * Utility class that when given a PQL query as a string, splits the string into tokens
- * which are stored in a struct based on their relevance to the PQL query
-*/
-
 namespace QE {
+
+    // Aggregate class to return data from QueryTokenizer
     class QueryTokenizerTokens {
         private:
             static const std::string QUERY_TOKENIZER_TOKEN_DELIMITER;
@@ -22,6 +19,10 @@ namespace QE {
 
     };
 
+    /*
+     * Utility class that when given a PQL query as a string, splits the string into tokens
+     * which are stored in a struct based on their relevance to the PQL query
+    */
     class QueryTokenizer {
         private:
             const static char QUERY_DELIMITER;

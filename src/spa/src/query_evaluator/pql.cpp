@@ -36,7 +36,8 @@ bool Declaration::isValid() {
 }
 
 namespace QE {
-    // Feel dirty.. but no boost bidirectional map
+    // Hard to use unordered_map even though faster
+    // - need to define specialized hash for enum class
     std::map<DesignEntity, std::string> designEntityToStringMap({
         { DesignEntity::STMT      , "stmt"      },
         { DesignEntity::READ      , "read"      },
@@ -50,6 +51,8 @@ namespace QE {
         { DesignEntity::PROCEDURE , "procedure" },
     });
 
+    // Generic template for swapping keys and value of a map into a new map
+    // Should put in generic lib
     template <class T1, class T2>
     std::map<T2, T1> swapPairs(std::map<T1, T2> m) {
         std::map<T2, T1> m1;
@@ -59,26 +62,7 @@ namespace QE {
         return m1;
     };
 
-    // When does this get run?
     auto stringToDesignEntityMap = swapPairs<DesignEntity, std::string>(designEntityToStringMap);
-
-
-    /*
-    // UPDATE BOTH OF THESE MAPS AT THE SAME TIME
-    // TODO: Composite data structure to mimic bi-map
-    std::unordered_map<std::string, DesignEntity> stringToDesignEntityMap({
-        { "stmt",      DesignEntity::STMT      },
-        { "read",      DesignEntity::READ      },
-        { "print",     DesignEntity::PRINT     },
-        { "call",      DesignEntity::CALL      },
-        { "while",     DesignEntity::WHILE     },
-        { "if",        DesignEntity::IF        },
-        { "assign",    DesignEntity::ASSIGN    },
-        { "variable",  DesignEntity::VARIABLE  },
-        { "constant",  DesignEntity::CONSTANT  },
-        { "procedure", DesignEntity::PROCEDURE },
-    });
-*/
 
     DesignEntity getDesignEntity(std::string& designentity_string) {
         return stringToDesignEntityMap.at(designentity_string);

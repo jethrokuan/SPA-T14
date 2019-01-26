@@ -12,8 +12,7 @@
 // (zero or more declarations), followed by the word Select
 namespace QE {
 
-
-    // WARNING: UPDATING THIS CLASS --> THE wordMap in the CPP FILE MUST BE UPDATED
+    // WARNING: WHEN UPDATING THIS CLASS --> THE wordMap in the CPP FILE MUST BE UPDATED
     enum class DesignEntity {
         STMT=1,
         READ,
@@ -38,14 +37,22 @@ namespace QE {
             // Spec: LETTER (LETTER | DIGIT)*
             const std::regex synonym_regex = std::regex("[a-zA-Z](\\d|[a-zA-Z])*");
         public:
-            // Members
+            // -- Data --
+
             const DesignEntity design_entity;
             const std::string synonym;
 
-            // Constructors
+            // -- Constructors --
+
             Declaration(DesignEntity de, std::string syn) : design_entity(de), synonym(syn) { };
+
+            // -- Methods --
+
             // Checks if synonym is valid (and therefore that Declaration is valid)
             bool isValid();
+
+            // -- Operators --
+
             bool operator==(const Declaration& a2) const {
                 return design_entity == a2.design_entity && synonym == a2.synonym;
             }
@@ -54,7 +61,6 @@ namespace QE {
                 os << getDesignEntityString(decl.design_entity) << " " << decl.synonym;
                 return os;
             }
-
     };
 
     class SuchThat {
@@ -76,14 +82,14 @@ namespace QE {
             SuchThat* such_that;
             Pattern* pattern;
 
-            // -- Accessors and constructors for Query --
+            // -- Accessors and constructors --
 
             Query(std::vector<Declaration>*, Declaration*);
             Query();
             ~Query();
 
 
-            // -- Utility Methods --
+            // -- Methods --
 
             // Make a basic (invalid) query with empty definition and empty select
             static std::unique_ptr<Query> makeStubQuery();

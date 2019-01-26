@@ -12,7 +12,7 @@ using std::make_unique;
 using std::unique_ptr;
 
 TEST_CASE("Test Parser works") {
-  std::string filename = "../tests/simple_source/assign.txt";
+  std::string filename = "tests/simple_source/assign.txt";
   std::ifstream input(filename);
 
   Simple::Lexer lexer = Simple::Lexer(input);

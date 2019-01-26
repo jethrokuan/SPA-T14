@@ -8,7 +8,7 @@
 using namespace Simple;
 
 TEST_CASE("Test Lexer works") {
-  std::string filename = "../tests/simple_source/assign.txt";
+  std::string filename = "tests/simple_source/assign.txt";
   std::ifstream input(filename);
 
   auto lexer = Lexer(input);

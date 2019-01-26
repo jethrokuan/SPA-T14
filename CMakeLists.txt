@@ -37,4 +37,4 @@ add_subdirectory(src/unit_testing)
 add_subdirectory(src/integration_testing)
 
 enable_testing()
-add_test(NAME UnitTests COMMAND unit_testing)
+add_test(NAME UnitTests COMMAND unit_testing WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})

@@ -1,25 +1,24 @@
 sudo: false
+dist: trusty
+language: cpp
 
-language:
-  - cpp
+# Have to install g++7 to upgrade libstdc++
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10.1
+
 
 before_install:
-  - pip install --user cpp-coveralls
+  - eval "${MATRIX_EVAL}"
 
 script:
   - mkdir build
   - cd build
   - cmake ..
-  - cmake --build .
+  - make -j$(nproc --all)
   - ctest
 
-after_success:
-  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
-
 notifications:
-email: false
+  email: false

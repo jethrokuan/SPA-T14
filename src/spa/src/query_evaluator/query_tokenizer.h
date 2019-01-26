@@ -1,5 +1,4 @@
-#ifndef __QUERY_TOKENIZER_H
-#define __QUERY_TOKENIZER_H
+#pragma once
 #include <string>
 #include <memory> // future use of smart pointers
 
@@ -37,5 +36,3 @@ namespace QE {
 
     };
 }
-
-#endif

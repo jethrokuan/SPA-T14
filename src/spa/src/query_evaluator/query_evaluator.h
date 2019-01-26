@@ -1,5 +1,4 @@
-#ifndef __QUERY_EVALUATOR_H
-#define __QUERY_EVALUATOR_H
+#pragma once
 #include <string>
 #include <memory> // future use of smart pointers
 #include "query_evaluator/pql.h"
@@ -22,5 +21,3 @@ namespace QE {
 
     };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __QUERY_PREPROCESSOR_H
-#define __QUERY_PREPROCESSOR_H
+#pragma once
 #include <string>
 #include <memory> // future use of smart pointers
 #include "query_evaluator/pql.h"
@@ -21,5 +20,3 @@ namespace QE {
             Query* getQuery(std::string&);
     };
 }
-
-#endif

@@ -41,9 +41,8 @@ class VariableExpr : public Expr {
 };
 
 class AssignExpr : public Expr {
-  std::unique_ptr<Expr> Var, RHS;
-
  public:
+  std::unique_ptr<Expr> Var, RHS;
   AssignExpr(std::unique_ptr<Expr> var, std::unique_ptr<Expr> rhs)
       : Var(std::move(var)), RHS(std::move(rhs)) {}
   bool operator==(const Expr& other) const {

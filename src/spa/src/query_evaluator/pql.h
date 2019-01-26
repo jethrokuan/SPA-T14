@@ -58,7 +58,7 @@ namespace QE {
             }
 
             friend std::ostream& operator <<(std::ostream& os, Declaration const& decl ) {
-                os << getDesignEntityString(decl.design_entity) << " " << decl.synonym;
+                os << getDesignEntityString(decl.design_entity) << std::string(" ") << decl.synonym;
                 return os;
             }
     };

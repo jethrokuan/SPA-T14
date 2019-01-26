@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
-#include "query_tokenizer.h"
+#include "query_evaluator/query_tokenizer.h"
 
 using namespace QE;
 

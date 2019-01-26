@@ -2,7 +2,7 @@
 #define __QUERY_PREPROCESSOR_H
 #include <string>
 #include <memory> // future use of smart pointers
-#include "pql.h"
+#include "query_evaluator/pql.h"
 
 /*
  * Utility class that takes in a PQL query string and returns a Query object

@@ -2,7 +2,7 @@
 #define __QUERY_EVALUATOR_H
 #include <string>
 #include <memory> // future use of smart pointers
-#include "pql.h"
+#include "query_evaluator/pql.h"
 
 /*
  * The main API for the PQL Query Engine (QE)

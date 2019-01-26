@@ -1,5 +1,5 @@
-#include "query_preprocessor.h"
-#include "query_tokenizer.h"
+#include "query_evaluator/query_preprocessor.h"
+#include "query_evaluator/query_tokenizer.h"
 #include "pql.h"
 #include <iostream>
 #include <algorithm>

@@ -9,6 +9,7 @@ endif()
 
 ADD_DEFINITIONS(
   -std=c++1z # Or -std=c++0x
+  -Wall
   # Other flags
   )
 

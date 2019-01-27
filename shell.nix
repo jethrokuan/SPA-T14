@@ -10,6 +10,6 @@ stdenv.mkDerivation {
     cmake
 
     # utilities
-    cquery
+    ccls
   ];
 }

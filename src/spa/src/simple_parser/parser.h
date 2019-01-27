@@ -12,7 +12,7 @@ namespace Simple {
 class Expr {
  public:
   virtual ~Expr(){};
-  virtual bool operator==(const Expr& other) const = 0;
+  virtual bool operator==(const Expr &other) const = 0;
   virtual std::string str() = 0;
 };
 
@@ -20,9 +20,9 @@ class Expr {
 class NumberExpr : public Expr {
  public:
   std::string Val;
-  NumberExpr(const std::string& Val) : Val(Val){};
-  bool operator==(const Expr& other) const {
-    auto casted_other = dynamic_cast<const NumberExpr*>(&other);
+  NumberExpr(const std::string &Val) : Val(Val){};
+  bool operator==(const Expr &other) const {
+    auto casted_other = dynamic_cast<const NumberExpr *>(&other);
     return casted_other != 0 && this->Val.compare(casted_other->Val) == 0;
   };
   std::string str() { return this->Val; };
@@ -31,9 +31,9 @@ class NumberExpr : public Expr {
 class VariableExpr : public Expr {
  public:
   std::string Name;
-  VariableExpr(const std::string& Name) : Name(Name){};
-  bool operator==(const Expr& other) const {
-    auto casted_other = dynamic_cast<const VariableExpr*>(&other);
+  VariableExpr(const std::string &Name) : Name(Name){};
+  bool operator==(const Expr &other) const {
+    auto casted_other = dynamic_cast<const VariableExpr *>(&other);
     return casted_other != 0 && this->Name.compare(casted_other->Name) == 0;
   };
 
@@ -45,8 +45,8 @@ class AssignExpr : public Expr {
   std::unique_ptr<Expr> Var, RHS;
   AssignExpr(std::unique_ptr<Expr> var, std::unique_ptr<Expr> rhs)
       : Var(std::move(var)), RHS(std::move(rhs)) {}
-  bool operator==(const Expr& other) const {
-    auto casted_other = dynamic_cast<const AssignExpr*>(&other);
+  bool operator==(const Expr &other) const {
+    auto casted_other = dynamic_cast<const AssignExpr *>(&other);
     return casted_other != 0 && *this->Var == *casted_other->Var &&
            *this->RHS == *casted_other->RHS;
   };
@@ -59,8 +59,8 @@ class ProcedureExpr : public Expr {
  public:
   ProcedureExpr(std::unique_ptr<Expr> var, std::unique_ptr<Expr> stmtList)
       : Var(std::move(var)), StmtList(std::move(stmtList)) {}
-  bool operator==(const Expr& other) const {
-    auto casted_other = dynamic_cast<const ProcedureExpr*>(&other);
+  bool operator==(const Expr &other) const {
+    auto casted_other = dynamic_cast<const ProcedureExpr *>(&other);
     return casted_other != 0 && *this->Var == *casted_other->Var &&
            *this->StmtList == *casted_other->StmtList;
   };
@@ -72,7 +72,7 @@ class ProcedureExpr : public Expr {
 
 class Node {
  public:
-  Node* next = nullptr;
+  Node *next = nullptr;
   Node(){};
   virtual std::string to_str() { return ""; };
 };
@@ -86,8 +86,8 @@ class ProcedureNode : public Node {
 class Parser {
  private:
   int current = 0;
-  std::vector<Token*> tokens;
-  Node* root = nullptr;
+  std::vector<Token *> tokens;
+  Node *root = nullptr;
 
   bool match(TokenType type) {
     if (check(type)) {
@@ -113,20 +113,20 @@ class Parser {
     return peek()->t == type;
   };
 
-  Token* advance() {
+  Token *advance() {
     if (!isAtEnd()) current++;
     return previous();
   };
 
   bool isAtEnd() { return peek()->t == TokenType::END_OF_FILE; };
 
-  Token* peek() { return tokens[current]; };
+  Token *peek() { return tokens[current]; };
 
-  Token* previous() { return tokens[current - 1]; };
+  Token *previous() { return tokens[current - 1]; };
 
   std::unique_ptr<NumberExpr> parseNumberExpr() {
     if (match(TokenType::NUMBER)) {
-      std::string num = static_cast<NumberToken*>(previous())->number;
+      std::string num = static_cast<NumberToken *>(previous())->number;
       auto Result = std::make_unique<NumberExpr>(num);
       return std::move(Result);
     } else {
@@ -136,7 +136,7 @@ class Parser {
 
   std::unique_ptr<VariableExpr> parseVariableExpr() {
     if (match(TokenType::SYMBOL)) {
-      std::string name = static_cast<SymbolToken*>(previous())->name;
+      std::string name = static_cast<SymbolToken *>(previous())->name;
       auto Result = std::make_unique<VariableExpr>(name);
       return std::move(Result);
     } else {
@@ -189,7 +189,7 @@ class Parser {
   };
 
  public:
-  Parser(std::vector<Token*> t) { tokens = t; }
+  Parser(std::vector<Token *> t) { tokens = t; }
   std::unique_ptr<Expr> parse() { return parseProcedure(); }
 };
 }  // namespace Simple

@@ -8,19 +8,19 @@
 
 using namespace Simple;
 
-void getSymbol(std::istream& stream, std::string& str) {
+void getSymbol(std::istream &stream, std::string &str) {
   while (isalnum(stream.peek())) {
     str += stream.get();
   }
 }
 
-void getNumber(std::istream& stream, std::string& str) {
+void getNumber(std::istream &stream, std::string &str) {
   while (isdigit(stream.peek())) {
     str += stream.get();
   }
 }
 
-Simple::Lexer::Lexer(std::istream& stream) {
+Simple::Lexer::Lexer(std::istream &stream) {
   char nextChar;
   std::string str;
   int row = 1;

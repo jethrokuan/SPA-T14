@@ -14,6 +14,7 @@ before_install:
   - eval "${MATRIX_EVAL}"
 
 script:
+  - ./scripts/format_check.sh
   - mkdir build
   - cd build
   - cmake ..

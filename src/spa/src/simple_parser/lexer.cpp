@@ -8,6 +8,9 @@
 
 using namespace Simple;
 
+void getSymbol(std::istream& stream, std::string& str);
+void getNumber(std::istream& stream, std::string& str);
+
 void getSymbol(std::istream& stream, std::string& str) {
   while (isalnum(stream.peek())) {
     str += stream.get();

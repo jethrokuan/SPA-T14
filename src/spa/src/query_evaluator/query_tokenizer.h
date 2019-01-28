@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>  // future use of smart pointers
 #include <string>
+#include <vector>
 
 namespace QE {
 

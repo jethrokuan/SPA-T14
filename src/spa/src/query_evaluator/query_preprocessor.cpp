@@ -21,21 +21,21 @@ Query* QueryPreprocessor::getQuery(std::string& pql_query_string) {
 }
 
 void QueryPreprocessor::parseDeclarations(Query* query, std::vector<std::string>* declaration_tokens) {
-    // Default value for de
-    auto de = DesignEntity::ASSIGN;
-    auto decls = new std::vector<Declaration>();
-    for (int i = 0; i < declaration_tokens->size(); i++) {
-        if (i % 2 == 0) {
-            // Design entity
-            // TODO: This can throw an error if the DE isn't recognized (incorrect DE)!
-            de = getDesignEntity((*declaration_tokens)[i]);
-        } else {
-            // This is the synonym half of the decl: store the DE we have into our list
-            auto synonym = (*declaration_tokens)[i];
-            decls->push_back(Declaration(de, synonym));
-        }
+  // Default value for de
+  auto de = DesignEntity::ASSIGN;
+  auto decls = new std::vector<Declaration>();
+  for (size_t i = 0; i < declaration_tokens->size(); i++) {
+    if (i % 2 == 0) {
+      // Design entity
+      // TODO: This can throw an error if the DE isn't recognized (incorrect DE)!
+      de = getDesignEntity((*declaration_tokens)[i]);
+    } else {
+      // This is the synonym half of the decl: store the DE we have into our list
+      auto synonym = (*declaration_tokens)[i];
+      decls->push_back(Declaration(de, synonym));
     }
-    query->declarations = decls;
+  }
+  query->declarations = decls;
 }
 
 void QueryPreprocessor::parseSelect(Query* query, std::vector<std::string>* select_tokens) {

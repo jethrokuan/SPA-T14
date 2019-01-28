@@ -13,7 +13,6 @@ class Expr {
  public:
   virtual ~Expr(){};
   virtual bool operator==(const Expr& other) const = 0;
-  virtual std::string str() = 0;
 };
 
 // NumberExprAST - Expression class for numeric literals
@@ -25,7 +24,6 @@ class NumberExpr : public Expr {
     auto casted_other = dynamic_cast<const NumberExpr*>(&other);
     return casted_other != 0 && this->Val.compare(casted_other->Val) == 0;
   };
-  std::string str() { return this->Val; };
 };
 
 class VariableExpr : public Expr {
@@ -36,8 +34,6 @@ class VariableExpr : public Expr {
     auto casted_other = dynamic_cast<const VariableExpr*>(&other);
     return casted_other != 0 && this->Name.compare(casted_other->Name) == 0;
   };
-
-  std::string str() { return this->Name; }
 };
 
 class AssignExpr : public Expr {
@@ -50,7 +46,6 @@ class AssignExpr : public Expr {
     return casted_other != 0 && *this->Var == *casted_other->Var &&
            *this->RHS == *casted_other->RHS;
   };
-  std::string str() { return this->Var->str() + " = " + this->RHS->str(); }
 };
 
 class ProcedureExpr : public Expr {
@@ -64,30 +59,12 @@ class ProcedureExpr : public Expr {
     return casted_other != 0 && *this->Var == *casted_other->Var &&
            *this->StmtList == *casted_other->StmtList;
   };
-
-  std::string str() {
-    return "procedure " + this->Var->str() + " -> " + this->StmtList->str();
-  }
-};
-
-class Node {
- public:
-  Node* next = nullptr;
-  Node(){};
-  virtual std::string to_str() { return ""; };
-};
-
-class ProcedureNode : public Node {
- public:
-  std::string procName;
-  ProcedureNode(std::string name) : Node(){};
 };
 
 class Parser {
  private:
   int current = 0;
   std::vector<Token*> tokens;
-  Node* root = nullptr;
 
   bool match(TokenType type) {
     if (check(type)) {
@@ -127,8 +104,8 @@ class Parser {
   std::unique_ptr<NumberExpr> parseNumberExpr() {
     if (match(TokenType::NUMBER)) {
       std::string num = static_cast<NumberToken*>(previous())->number;
-      auto Result = std::make_unique<NumberExpr>(num);
-      return std::move(Result);
+      auto result = std::make_unique<NumberExpr>(num);
+      return result;
     } else {
       return nullptr;
     }
@@ -137,8 +114,8 @@ class Parser {
   std::unique_ptr<VariableExpr> parseVariableExpr() {
     if (match(TokenType::SYMBOL)) {
       std::string name = static_cast<SymbolToken*>(previous())->name;
-      auto Result = std::make_unique<VariableExpr>(name);
-      return std::move(Result);
+      auto result = std::make_unique<VariableExpr>(name);
+      return result;
     } else {
       return nullptr;
     }

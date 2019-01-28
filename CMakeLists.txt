@@ -7,11 +7,7 @@ if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
   message(FATAL_ERROR "In-source builds are forbidden.")
 endif()
 
-ADD_DEFINITIONS(
-  -std=c++1z # Or -std=c++0x
-  -Wall
-  # Other flags
-  )
+set(CMAKE_CXX_FLAGS "-std=c++1z -Wall -Wextra -Wcast-qual -Wcast-align -Wstrict-aliasing -Wpointer-arith -Winit-self -Wshadow -Wswitch-enum -Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls -Wfloat-equal -Wundef -Wvla -Wdeclaration-after-statement -Wc++-compat")
 
 if (WIN32)
   SET(CMAKE_FIND_LIBRARY_PREFIXES "")

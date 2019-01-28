@@ -89,8 +89,37 @@ Simple::Lexer::Lexer(std::istream& stream) {
       } else {
         std::cout << "Expecting another |";  // TODO: Handle Error properly
       }
+    } else if (nextChar == '=') {
+      if (stream.peek() == '=') {
+        stream.get();  // Consume character
+        tokens.push_back(new Token(row, TokenType::EQUAL_EQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::EQUAL));
+      }
+    } else if (nextChar == '>') {
+      if (stream.peek() == '=') {
+        stream.get();  // Consume character
+        tokens.push_back(new Token(row, TokenType::GREATER_EQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::GREATER));
+      }
+    } else if (nextChar == '<') {
+      if (stream.peek() == '=') {
+        stream.get();  // Consume character
+        tokens.push_back(new Token(row, TokenType::LESS_EQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::LESS));
+      }
     } else if (nextChar == '+') {
       tokens.push_back(new Token(row, TokenType::PLUS));
+    } else if (nextChar == '-') {
+      tokens.push_back(new Token(row, TokenType::MINUS));
+    } else if (nextChar == '*') {
+      tokens.push_back(new Token(row, TokenType::TIMES));
+    } else if (nextChar == '/') {
+      tokens.push_back(new Token(row, TokenType::DIVIDE));
+    } else if (nextChar == '%') {
+      tokens.push_back(new Token(row, TokenType::MOD));
     } else if (nextChar == ';') {
       tokens.push_back(new Token(row, TokenType::SEMI));
     } else if (nextChar == '\n') {

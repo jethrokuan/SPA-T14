@@ -19,12 +19,26 @@ enum TokenType {
   ELSE,
 
   EQUAL,
-  PLUS,
-  EQUAL_EQUAL,
   BANG,
+
+  // Relations
+  GREATER,
+  GREATER_EQUAL,
+  LESS,
+  LESS_EQUAL,
+  EQUAL_EQUAL,
   BANG_EQUAL,
+
+  // Cond
   AND,
   OR,
+
+  // Ops
+  PLUS,
+  MINUS,
+  TIMES,
+  DIVIDE,
+  MOD,
 
   // Punctuation
   L_BRACE,

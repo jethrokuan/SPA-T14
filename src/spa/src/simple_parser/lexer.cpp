@@ -1,3 +1,11 @@
+/* Lexer for SIMPLE language.
+
+   Here we use a handwritten DFA to lex the tokens, because the
+   language is relatively simple, and this makes lexing fast compared
+   to regex approaches. The DFA can easily be extended to handle
+   changes to the language.
+*/
+
 #include <cctype>
 #include <iostream>
 #include <string>

@@ -46,6 +46,16 @@ class ReadExpr : public Expr {
   };
 };
 
+class PrintExpr : public Expr {
+ public:
+  std::unique_ptr<Expr> Var;
+  PrintExpr(std::unique_ptr<Expr> var) : Var(std::move(var)){};
+  bool operator==(const Expr& other) const {
+    auto casted_other = dynamic_cast<const PrintExpr*>(&other);
+    return casted_other != 0 && *this->Var == *casted_other->Var;
+  };
+};
+
 class AssignExpr : public Expr {
  public:
   std::unique_ptr<Expr> Var, RHS;
@@ -166,6 +176,9 @@ class Parser {
     stmt = parseRead();
     if (stmt) return stmt;
 
+    stmt = parsePrint();
+    if (stmt) return stmt;
+
     return nullptr;
   };
 
@@ -194,6 +207,19 @@ class Parser {
     expect(TokenType::SEMI);
 
     return std::make_unique<ReadExpr>(std::move(Var));
+  };
+
+  std::unique_ptr<PrintExpr> parsePrint() {
+    expect(TokenType::PRINT);
+
+    auto Var = parseVariableExpr();
+    if (!Var) {
+      return nullptr;
+    }
+
+    expect(TokenType::SEMI);
+
+    return std::make_unique<PrintExpr>(std::move(Var));
   };
 
  public:

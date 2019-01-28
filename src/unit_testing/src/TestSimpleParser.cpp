@@ -42,6 +42,21 @@ TEST_CASE("Test Read Expr") {
   REQUIRE(*proc == *expected);
 }
 
+TEST_CASE("Test Print Expr") {
+  std::string filename = "tests/simple_source/print.txt";
+  std::ifstream input(filename);
+
+  Simple::Lexer lexer = Simple::Lexer(input);
+  Simple::Parser parser = Simple::Parser(lexer.tokens);
+  auto proc = parser.parse();
+
+  auto expected = std::make_unique<ProcedureExpr>(
+      std::make_unique<VariableExpr>("main"),
+      std::make_unique<PrintExpr>(std::make_unique<VariableExpr>("i")));
+
+  REQUIRE(*proc == *expected);
+}
+
 TEST_CASE("Expr equality comparisons") {
   SECTION("VariableExpr") {
     auto v1 = make_unique<VariableExpr>("i");

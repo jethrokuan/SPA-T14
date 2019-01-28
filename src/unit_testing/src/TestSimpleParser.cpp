@@ -11,7 +11,7 @@ using namespace Simple;
 using std::make_unique;
 using std::unique_ptr;
 
-TEST_CASE("Test Parser works") {
+TEST_CASE("Test Assign Expr") {
   std::string filename = "tests/simple_source/assign.txt";
   std::ifstream input(filename);
 
@@ -23,6 +23,21 @@ TEST_CASE("Test Parser works") {
       std::make_unique<VariableExpr>("main"),
       std::make_unique<AssignExpr>(std::make_unique<VariableExpr>("i"),
                                    std::make_unique<NumberExpr>("5")));
+
+  REQUIRE(*proc == *expected);
+}
+
+TEST_CASE("Test Read Expr") {
+  std::string filename = "tests/simple_source/read.txt";
+  std::ifstream input(filename);
+
+  Simple::Lexer lexer = Simple::Lexer(input);
+  Simple::Parser parser = Simple::Parser(lexer.tokens);
+  auto proc = parser.parse();
+
+  auto expected = std::make_unique<ProcedureExpr>(
+      std::make_unique<VariableExpr>("main"),
+      std::make_unique<ReadExpr>(std::make_unique<VariableExpr>("i")));
 
   REQUIRE(*proc == *expected);
 }

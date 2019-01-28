@@ -36,6 +36,16 @@ class VariableExpr : public Expr {
   };
 };
 
+class ReadExpr : public Expr {
+ public:
+  std::unique_ptr<Expr> Var;
+  ReadExpr(std::unique_ptr<Expr> var) : Var(std::move(var)){};
+  bool operator==(const Expr& other) const {
+    auto casted_other = dynamic_cast<const ReadExpr*>(&other);
+    return casted_other != 0 && *this->Var == *casted_other->Var;
+  };
+};
+
 class AssignExpr : public Expr {
  public:
   std::unique_ptr<Expr> Var, RHS;
@@ -149,7 +159,15 @@ class Parser {
 
   std::unique_ptr<Expr> parseStatementList() { return parseStatement(); };
 
-  std::unique_ptr<Expr> parseStatement() { return parseAssign(); };
+  std::unique_ptr<Expr> parseStatement() {
+    std::unique_ptr<Expr> stmt = parseAssign();
+    if (stmt) return stmt;
+
+    stmt = parseRead();
+    if (stmt) return stmt;
+
+    return nullptr;
+  };
 
   std::unique_ptr<AssignExpr> parseAssign() {
     auto Var = parseVariableExpr();
@@ -163,6 +181,19 @@ class Parser {
     }
     expect(TokenType::SEMI);
     return std::make_unique<AssignExpr>(std::move(Var), std::move(Num));
+  };
+
+  std::unique_ptr<ReadExpr> parseRead() {
+    expect(TokenType::READ);
+
+    auto Var = parseVariableExpr();
+    if (!Var) {
+      return nullptr;
+    }
+
+    expect(TokenType::SEMI);
+
+    return std::make_unique<ReadExpr>(std::move(Var));
   };
 
  public:

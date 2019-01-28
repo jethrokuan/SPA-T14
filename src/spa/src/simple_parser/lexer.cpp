@@ -57,12 +57,33 @@ Simple::Lexer::Lexer(std::istream& stream) {
       tokens.push_back(new Token(row, TokenType::L_PAREN));
     } else if (nextChar == ')') {
       tokens.push_back(new Token(row, TokenType::R_PAREN));
+    } else if (nextChar == '!') {
+      if (stream.peek() == '=') {
+        stream.get();
+        tokens.push_back(new Token(row, TokenType::BANG_EQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::BANG));
+      }
     } else if (nextChar == '=') {
       if (stream.peek() == '=') {
         stream.get();  // Consume character
-        tokens.push_back(new Token(row, TokenType::EQUALEQUAL));
+        tokens.push_back(new Token(row, TokenType::EQUAL_EQUAL));
       } else {
         tokens.push_back(new Token(row, TokenType::EQUAL));
+      }
+    } else if (nextChar == '&') {
+      if (stream.peek() == '&') {
+        stream.get();
+        tokens.push_back(new Token(row, TokenType::AND));
+      } else {
+        std::cout << "Expecting another &";  // TODO: Handle Error properly
+      }
+    } else if (nextChar == '|') {
+      if (stream.peek() == '|') {
+        stream.get();
+        tokens.push_back(new Token(row, TokenType::OR));
+      } else {
+        std::cout << "Expecting another |";  // TODO: Handle Error properly
       }
     } else if (nextChar == '+') {
       tokens.push_back(new Token(row, TokenType::PLUS));

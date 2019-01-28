@@ -20,7 +20,11 @@ enum TokenType {
 
   EQUAL,
   PLUS,
-  EQUALEQUAL,
+  EQUAL_EQUAL,
+  BANG,
+  BANG_EQUAL,
+  AND,
+  OR,
 
   // Punctuation
   L_BRACE,

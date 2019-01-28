@@ -1,0 +1,4 @@
+procedure main {
+  i = 5;
+  read i;
+}

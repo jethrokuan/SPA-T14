@@ -69,15 +69,22 @@ class AssignExpr : public Expr {
 };
 
 class ProcedureExpr : public Expr {
-  std::unique_ptr<Expr> Var, StmtList;
+  std::unique_ptr<Expr> Var;
+  std::vector<std::unique_ptr<Expr>> StmtList;
 
  public:
-  ProcedureExpr(std::unique_ptr<Expr> var, std::unique_ptr<Expr> stmtList)
+  ProcedureExpr(std::unique_ptr<Expr> var,
+                std::vector<std::unique_ptr<Expr>> stmtList)
       : Var(std::move(var)), StmtList(std::move(stmtList)) {}
   bool operator==(const Expr& other) const {
     auto casted_other = dynamic_cast<const ProcedureExpr*>(&other);
     return casted_other != 0 && *this->Var == *casted_other->Var &&
-           *this->StmtList == *casted_other->StmtList;
+           this->StmtList.size() == casted_other->StmtList.size() &&
+           std::equal(begin(this->StmtList), end(this->StmtList),
+                      begin(casted_other->StmtList),
+                      end(casted_other->StmtList),
+                      [](const std::unique_ptr<Expr>& t,
+                         const std::unique_ptr<Expr>& o) { return *t == *o; });
   };
 };
 
@@ -156,10 +163,6 @@ class Parser {
 
     auto StmtList = parseStatementList();
 
-    if (!StmtList) {
-      return nullptr;
-    }
-
     if (!match(TokenType::R_BRACE)) {
       return nullptr;
     }
@@ -167,7 +170,18 @@ class Parser {
     return std::make_unique<ProcedureExpr>(std::move(Var), std::move(StmtList));
   };
 
-  std::unique_ptr<Expr> parseStatementList() { return parseStatement(); };
+  std::vector<std::unique_ptr<Expr>> parseStatementList() {
+    std::vector<std::unique_ptr<Expr>> stmts;
+    while (true) {
+      auto stmt = parseStatement();
+      if (stmt) {
+        stmts.push_back(std::move(stmt));
+      } else {
+        break;
+      }
+    }
+    return stmts;
+  };
 
   std::unique_ptr<Expr> parseStatement() {
     std::unique_ptr<Expr> stmt = parseAssign();

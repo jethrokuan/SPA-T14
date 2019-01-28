@@ -35,6 +35,10 @@ Simple::Lexer::Lexer(std::istream& stream) {
       getSymbol(stream, str);
       if (str.compare("procedure") == 0) {
         tokens.push_back(new Token(row, TokenType::PROCEDURE));
+      } else if (str.compare("read") == 0) {
+        tokens.push_back(new Token(row, TokenType::READ));
+      } else if (str.compare("print") == 0) {
+        tokens.push_back(new Token(row, TokenType::PRINT));
       } else if (str.compare("while") == 0) {
         tokens.push_back(new Token(row, TokenType::WHILE));
       } else if (str.compare("if") == 0) {

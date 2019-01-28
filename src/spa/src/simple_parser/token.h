@@ -33,7 +33,9 @@ enum TokenType {
   R_PAREN,
   EOL,
   END_OF_FILE,
-  SEMI
+  SEMI,
+  READ,
+  PRINT
 };
 
 class Token {

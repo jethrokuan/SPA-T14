@@ -20,7 +20,8 @@ TEST_CASE("Test Lex Tokens") {
       new Token(1, L_PAREN),   new Token(1, R_PAREN),
       new Token(1, EQUAL),     new Token(1, BANG_EQUAL),
       new Token(1, BANG),      new Token(1, AND),
-      new Token(1, OR),        new Token(1, END_OF_FILE),
+      new Token(1, OR),        new Token(1, READ),
+      new Token(1, PRINT),     new Token(1, END_OF_FILE),
   };
 
   REQUIRE(std::equal(

@@ -1,8 +1,8 @@
+#include "query_evaluator/query_tokenizer.h"
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
-#include "query_evaluator/query_tokenizer.h"
 
 using namespace QE;
 
@@ -23,15 +23,15 @@ QueryTokenizerTokens QueryTokenizer::getTokens(std::string pql_query_string) {
 
   // Remove newlines
   pql_query_string.erase(
-                         std::remove(pql_query_string.begin(), pql_query_string.end(), '\n'),
-                         pql_query_string.end());
+      std::remove(pql_query_string.begin(), pql_query_string.end(), '\n'),
+      pql_query_string.end());
 
   // Trail a space and semicolon to make parsing work later when delim splitting
   pql_query_string += " ;";
 
   // Split input query string by semicolon
   auto& tokens = *(QueryTokenizer::splitString(
-                                               pql_query_string, QueryTokenizer::QUERY_DELIMITER));
+      pql_query_string, QueryTokenizer::QUERY_DELIMITER));
 
   // Tracking where we are in tokens
   size_t tokens_counter = 0;
@@ -44,16 +44,16 @@ QueryTokenizerTokens QueryTokenizer::getTokens(std::string pql_query_string) {
                   QueryTokenizer::QUERY_SELECT) == 0) {
       // For each assignment token, split the tokens by space
       auto declaration_token_strings = std::vector<std::string>(
-                                                                tokens.begin(), tokens.begin() + tokens_counter);
+          tokens.begin(), tokens.begin() + tokens_counter);
       final_tokens.declaration_tokens = new std::vector<std::string>();
       for (std::string s : declaration_token_strings) {
         // Required for the string split to work correctly (trailing space)
         s += " ";
         auto split_declaration_tokens =
-          QueryTokenizer::splitString(s, QueryTokenizer::SPACE_DELIMITER);
+            QueryTokenizer::splitString(s, QueryTokenizer::SPACE_DELIMITER);
         final_tokens.declaration_tokens->insert(
-                                                final_tokens.declaration_tokens->end(),
-                                                split_declaration_tokens->begin(), split_declaration_tokens->end());
+            final_tokens.declaration_tokens->end(),
+            split_declaration_tokens->begin(), split_declaration_tokens->end());
       }
       // Add the other token lists (select, such_that, pattern)
       setClauses(t, final_tokens);
@@ -70,7 +70,7 @@ void QueryTokenizer::setClauses(std::string& select_clause,
                                 QueryTokenizerTokens& qtt) {
   // Space separate all tokens to begin analysis
   auto initial_clause_tokens = QueryTokenizer::splitString(
-                                                           select_clause, QueryTokenizer::SPACE_DELIMITER);
+      select_clause, QueryTokenizer::SPACE_DELIMITER);
 
   // First two tokens should be "Select" and "<synonym>" always
   auto first = initial_clause_tokens->begin();

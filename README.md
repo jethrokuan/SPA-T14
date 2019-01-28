@@ -16,3 +16,6 @@ This project is known to work with
         - Combining this with the command above:  
             - `CC=clang CXX=clang++ cmake -DCMAKE_PREFIX_PATH=/opt/Qt5.12.0/5.12.0/gcc_64/lib/cmake .`
 4. Run `make` in the build directory. The build can be parallelized with `make -j<num>`, e.g. `make -j4`.
+
+## Contributing Guidelines
+Please read [the Contribution Guidelines](./CONTRIBUTING.md) when formatting your pull request.

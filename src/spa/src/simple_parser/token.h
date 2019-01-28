@@ -19,8 +19,26 @@ enum TokenType {
   ELSE,
 
   EQUAL,
+  BANG,
+
+  // Relations
+  GREATER,
+  GREATER_EQUAL,
+  LESS,
+  LESS_EQUAL,
+  EQUAL_EQUAL,
+  BANG_EQUAL,
+
+  // Cond
+  AND,
+  OR,
+
+  // Ops
   PLUS,
-  EQUALEQUAL,
+  MINUS,
+  TIMES,
+  DIVIDE,
+  MOD,
 
   // Punctuation
   L_BRACE,
@@ -29,7 +47,9 @@ enum TokenType {
   R_PAREN,
   EOL,
   END_OF_FILE,
-  SEMI
+  SEMI,
+  READ,
+  PRINT
 };
 
 class Token {

@@ -1,0 +1,1 @@
+procedure main 5 50 { } ( ) = != ! && || read print + - * / % > >= < <=

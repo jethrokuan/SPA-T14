@@ -1,3 +1,11 @@
+/* Lexer for SIMPLE language.
+
+   Here we use a handwritten DFA to lex the tokens, because the
+   language is relatively simple, and this makes lexing fast compared
+   to regex approaches. The DFA can easily be extended to handle
+   changes to the language.
+*/
+
 #include <cctype>
 #include <iostream>
 #include <string>
@@ -35,6 +43,10 @@ Simple::Lexer::Lexer(std::istream& stream) {
       getSymbol(stream, str);
       if (str.compare("procedure") == 0) {
         tokens.push_back(new Token(row, TokenType::PROCEDURE));
+      } else if (str.compare("read") == 0) {
+        tokens.push_back(new Token(row, TokenType::READ));
+      } else if (str.compare("print") == 0) {
+        tokens.push_back(new Token(row, TokenType::PRINT));
       } else if (str.compare("while") == 0) {
         tokens.push_back(new Token(row, TokenType::WHILE));
       } else if (str.compare("if") == 0) {
@@ -57,15 +69,65 @@ Simple::Lexer::Lexer(std::istream& stream) {
       tokens.push_back(new Token(row, TokenType::L_PAREN));
     } else if (nextChar == ')') {
       tokens.push_back(new Token(row, TokenType::R_PAREN));
+    } else if (nextChar == '!') {
+      if (stream.peek() == '=') {
+        stream.get();
+        tokens.push_back(new Token(row, TokenType::BANG_EQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::BANG));
+      }
     } else if (nextChar == '=') {
       if (stream.peek() == '=') {
         stream.get();  // Consume character
-        tokens.push_back(new Token(row, TokenType::EQUALEQUAL));
+        tokens.push_back(new Token(row, TokenType::EQUAL_EQUAL));
       } else {
         tokens.push_back(new Token(row, TokenType::EQUAL));
       }
+    } else if (nextChar == '&') {
+      if (stream.peek() == '&') {
+        stream.get();
+        tokens.push_back(new Token(row, TokenType::AND));
+      } else {
+        std::cout << "Expecting another &";  // TODO: Handle Error properly
+      }
+    } else if (nextChar == '|') {
+      if (stream.peek() == '|') {
+        stream.get();
+        tokens.push_back(new Token(row, TokenType::OR));
+      } else {
+        std::cout << "Expecting another |";  // TODO: Handle Error properly
+      }
+    } else if (nextChar == '=') {
+      if (stream.peek() == '=') {
+        stream.get();  // Consume character
+        tokens.push_back(new Token(row, TokenType::EQUAL_EQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::EQUAL));
+      }
+    } else if (nextChar == '>') {
+      if (stream.peek() == '=') {
+        stream.get();  // Consume character
+        tokens.push_back(new Token(row, TokenType::GREATER_EQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::GREATER));
+      }
+    } else if (nextChar == '<') {
+      if (stream.peek() == '=') {
+        stream.get();  // Consume character
+        tokens.push_back(new Token(row, TokenType::LESS_EQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::LESS));
+      }
     } else if (nextChar == '+') {
       tokens.push_back(new Token(row, TokenType::PLUS));
+    } else if (nextChar == '-') {
+      tokens.push_back(new Token(row, TokenType::MINUS));
+    } else if (nextChar == '*') {
+      tokens.push_back(new Token(row, TokenType::TIMES));
+    } else if (nextChar == '/') {
+      tokens.push_back(new Token(row, TokenType::DIVIDE));
+    } else if (nextChar == '%') {
+      tokens.push_back(new Token(row, TokenType::MOD));
     } else if (nextChar == ';') {
       tokens.push_back(new Token(row, TokenType::SEMI));
     } else if (nextChar == '\n') {

@@ -35,7 +35,15 @@ Simple::Lexer::Lexer(std::istream& stream) {
       getSymbol(stream, str);
       if (str.compare("procedure") == 0) {
         tokens.push_back(new Token(row, TokenType::PROCEDURE));
-      } else {
+      } else if (str.compare("while") == 0) {
+        tokens.push_back(new Token(row, TokenType::WHILE));
+      } else if (str.compare("if") == 0) {
+        tokens.push_back(new Token(row, TokenType::IF));
+      } else if (str.compare("then") == 0) {
+        tokens.push_back(new Token(row, TokenType::THEN));
+      } else if (str.compare("else") == 0) {
+        tokens.push_back(new Token(row, TokenType::ELSE));
+      } else {  // A regular symbol
         tokens.push_back(new SymbolToken(row, str));
       }
     } else if (isdigit(nextChar)) {  // Numbers
@@ -45,8 +53,19 @@ Simple::Lexer::Lexer(std::istream& stream) {
       tokens.push_back(new Token(row, TokenType::L_BRACE));
     } else if (nextChar == '}') {
       tokens.push_back(new Token(row, TokenType::R_BRACE));
+    } else if (nextChar == '(') {
+      tokens.push_back(new Token(row, TokenType::L_PAREN));
+    } else if (nextChar == ')') {
+      tokens.push_back(new Token(row, TokenType::R_PAREN));
     } else if (nextChar == '=') {
-      tokens.push_back(new Token(row, TokenType::EQUAL));
+      if (stream.peek() == '=') {
+        stream.get();  // Consume character
+        tokens.push_back(new Token(row, TokenType::EQUALEQUAL));
+      } else {
+        tokens.push_back(new Token(row, TokenType::EQUAL));
+      }
+    } else if (nextChar == '+') {
+      tokens.push_back(new Token(row, TokenType::PLUS));
     } else if (nextChar == ';') {
       tokens.push_back(new Token(row, TokenType::SEMI));
     } else if (nextChar == '\n') {

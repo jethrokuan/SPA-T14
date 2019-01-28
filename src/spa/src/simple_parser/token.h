@@ -12,11 +12,21 @@ enum TokenType {
   // Reserved keywords
   PROCEDURE,
 
+  // Conditionals
+  IF,
+  WHILE,
+  THEN,
+  ELSE,
+
   EQUAL,
+  PLUS,
+  EQUALEQUAL,
 
   // Punctuation
   L_BRACE,
   R_BRACE,
+  L_PAREN,
+  R_PAREN,
   EOL,
   END_OF_FILE,
   SEMI

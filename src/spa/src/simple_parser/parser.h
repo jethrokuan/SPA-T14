@@ -126,6 +126,52 @@ class FactorNode : public Node {
   }
 };
 
+class TermPNode : public Node {
+ public:
+  std::unique_ptr<FactorNode> Factor;
+  std::string Op;
+  std::unique_ptr<TermPNode> TermP;
+
+  TermPNode(std::unique_ptr<FactorNode> factor, std::string op, std::unique_ptr<TermPNode> termP)
+    : Factor(std::move(factor)), Op(std::move(op)), TermP(std::move(termP)){};
+};
+
+class TermNode : public Node {
+ public:
+  std::unique_ptr<FactorNode> Factor;
+  std::unique_ptr<TermPNode> TermP;
+
+  TermNode(std::unique_ptr<FactorNode> factor, std::unique_ptr<TermPNode> termP)
+      : Factor(std::move(factor)), TermP(std::move(termP)){};
+
+  TermNode(std::unique_ptr<FactorNode> factor)
+      : Factor(std::move(factor)), TermP(nullptr){};
+};
+
+class ExprPNode : public Node {
+ public:
+  std::unique_ptr<TermNode> Term;
+  std::string Op;
+  std::unique_ptr<ExprPNode> ExprP;
+
+  ExprPNode(std::unique_ptr<TermNode> term, std::string& op)
+      : Term(std::move(term)), Op(std::move(op)){};
+
+  ExprPNode(std::unique_ptr<TermNode> term, std::string& op, std::unique_ptr<ExprPNode> exprP)
+    : Term(std::move(term)), Op(std::move(op)), ExprP(std::move(exprP)){};
+};
+
+  class ExprNode : public Node {
+ public:
+  std::unique_ptr<TermNode> Term;
+  std::unique_ptr<ExprPNode> ExprP;
+
+  ExprNode(std::unique_ptr<TermNode> term, std::unique_ptr<ExprPNode> exprP)
+      : Term(std::move(term)), ExprP(std::move(exprP)){};
+  ExprNode(std::unique_ptr<TermNode> term)
+      : Term(std::move(term)), ExprP(nullptr){};
+};
+
 class Parser {
  private:
   int current = 0;

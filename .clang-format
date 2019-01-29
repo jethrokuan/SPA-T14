@@ -58,6 +58,8 @@ ForEachMacros:
   - foreach
   - Q_FOREACH
   - BOOST_FOREACH
+  - TEST_CASE
+  - SECTION
 IncludeCategories: 
   - Regex:           '^<.*\.h>'
     Priority:        1

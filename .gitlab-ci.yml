@@ -1,0 +1,117 @@
+stages:
+  - build
+  - test
+
+build:mac:gcc:
+  stage: build
+  tags:
+    - gcc
+    - mac
+  variables:
+    CMAKE_OSX_ARCHITECTURES: x86_64
+    MACOSX_DEPLOYMENT_TARGET: "10.7"
+    SDKROOT: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE=Release ..
+    - cmake ..
+    - make -j2
+  artifacts:
+    expire_in: 2 hrs
+    paths:
+      - build/
+
+build:mac:clang:
+  stage: build
+  tags:
+    - clang
+    - mac
+  variables:
+    CC: /usr/bin/clang
+    CXX: /usr/bin/clang++
+    CMAKE_OSX_ARCHITECTURES: x86_64
+    MACOSX_DEPLOYMENT_TARGET: "10.7"
+    SDKROOT: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE=Release ..
+    - cmake ..
+    - make -j2
+  artifacts:
+    expire_in: 2 hrs
+    paths:
+      - build/
+
+build:ubuntu:
+  stage: build
+  tags:
+    - ubuntu
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE=Release ..
+    - make -j2
+  artifacts:
+    expire_in: 2 hrs
+    paths:
+      - build/
+
+build:windows:
+  stage: build
+  tags:
+    - vs2017
+    - windows
+  script:
+    - mkdir build
+    - cd build
+    - '"C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 15 2017 Win64" ..'
+    - '"C:\Program Files\CMake\bin\cmake.exe" ..'
+    - '"C:\Program Files\CMake\bin\cmake.exe" --build . --config Release --target ALL_BUILD'
+  artifacts:
+    expire_in: 2 hrs
+    paths:
+      - build/
+
+test:mac:gcc:
+  stage: test
+  tags:
+    - gcc
+    - mac
+  dependencies:
+    - build:mac:gcc
+  script:
+    - cd build
+    - ctest
+
+test:mac:clang:
+  stage: test
+  tags:
+    - clang
+    - mac
+  dependencies:
+    - build:mac:clang
+  script:
+    - cd build
+    - ctest
+
+test:ubuntu:
+  stage: test
+  tags:
+    - ubuntu
+  dependencies:
+    - build:ubuntu
+  script:
+    - cd build
+    - ctest
+
+test:windows:
+  stage: test
+  tags:
+    - windows
+  dependencies:
+    - build:windows
+  script:
+    - cd build
+    - '"C:\Program Files\CMake\bin\ctest.exe"'

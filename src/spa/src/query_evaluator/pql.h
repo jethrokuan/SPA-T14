@@ -27,11 +27,23 @@ enum class DesignEntity {
   PROCEDURE = 10
 };
 // wordMap is declared in the .cpp file
-
 // Basic accessor for the DesignEntity word map and a reverse mapper
 // Note: can throw exception..really wish i had std::optional
 DesignEntity getDesignEntity(std::string&);
 std::string getDesignEntityString(DesignEntity);
+
+// WARNING: WHEN UPDATING THIS CLASS --> Update cpp file
+enum class Relation {
+  ModifiesS = 1,
+  UsesS,
+  Parent,
+  ParentT,
+  Follows,
+  FollowsT = 6
+};
+Relation getRelation(std::string&);
+std::string getRelationFromString(Relation);
+const std::map<Relation, std::string>& getRelationToStringMap();
 
 class Declaration {
  private:
@@ -66,8 +78,31 @@ class Declaration {
     return os;
   }
 };
+/*
+IDENT: LETTER (LETTER | DIGIT)*
+INTEGER: DIGIT+
 
-class SuchThat {};
+synonym: IDENT
+stmtRef: synonym | ‘_’ | INTEGER
+
+entRef: synonym | ‘_’ | ‘"’ IDENT ‘"’
+suchthat-cl: ‘such that’ relRef
+relRef: ModifiesS | UsesS | Parent | ParentT | Follows | FollowsT
+
+ModifiesS: ‘Modifies’ ‘(’ stmtRef ‘,’ entRef ‘)’
+UsesS: ‘Uses’ ‘(’ stmtRef ‘,’ entRef ‘)’
+Parent: ‘Parent’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
+ParentT: ‘Parent*’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
+Follows: ‘Follows’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
+FollowsT: ‘Follows*’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
+*/
+
+// using stmtRef = std::variant<Synonym, Underscore, int
+
+class SuchThat {
+ public:
+  Relation relation;
+};
 
 class Pattern {};
 

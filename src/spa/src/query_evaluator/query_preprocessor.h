@@ -14,6 +14,13 @@ class QueryPreprocessor {
  private:
   void parseDeclarations(Query*, std::vector<std::string>*);
   void parseSelect(Query*, std::vector<std::string>*);
+  void parseSuchThat(Query*, std::vector<std::string>*);
+
+  // Utility methods
+  static Declaration* findDeclaration(std::vector<Declaration>* declarations,
+                                      std::string synonym_to_match);
+  static void argToStmtEntityRef(std::vector<Declaration>* declarations,
+                                         std::string arg);
 
  public:
   // Given a string containing PQL,

@@ -34,19 +34,6 @@ enum class DesignEntity {
 DesignEntity getDesignEntity(std::string&);
 std::string getDesignEntityString(DesignEntity);
 
-// WARNING: WHEN UPDATING THIS CLASS --> Update cpp file
-enum class Relation {
-  ModifiesS = 1,
-  UsesS,
-  Parent,
-  ParentT,
-  Follows,
-  FollowsT = 6
-};
-Relation getRelation(std::string&);
-std::string getRelationFromString(Relation);
-const std::map<Relation, std::string>& getRelationToStringMap();
-
 class Synonym {
  private:
   // Spec: LETTER (LETTER | DIGIT)*
@@ -141,14 +128,45 @@ Follows: ‘Follows’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
 FollowsT: ‘Follows*’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
 */
 
-class Underscore {};
+// WARNING: WHEN UPDATING THIS CLASS --> Update cpp file
+enum class Relation {
+  ModifiesS = 1,
+  UsesS,
+  Parent,
+  ParentT,
+  Follows,
+  FollowsT = 6
+};
+Relation getRelation(std::string&);
+std::string getRelationFromString(Relation);
+const std::map<Relation, std::string>& getRelationToStringMap();
 
-using StmtRef = std::variant<Synonym, Underscore, unsigned int>;
+class Underscore {};
+using StatementNumber = unsigned int;
+using StmtRef = std::variant<Synonym, Underscore, StatementNumber>;
 using EntRef = std::variant<Synonym, Underscore, QuoteIdent>;
+using StmtOrEntRef = std::variant<StmtRef, EntRef>;
+
+// Given a particular Relation type
+// Describes the type of statements we're expecting for first and second
+// arguments
+enum class RefType { STMTREF, ENTREF };
+std::pair<RefType, RefType> getArgTypesFromRelation(Relation&);
 
 class SuchThat {
- public:
+ private:
   Relation relation;
+  StmtOrEntRef firstArg;
+  StmtOrEntRef secondArg;
+  SuchThat(Relation& r, StmtOrEntRef& a1, StmtOrEntRef& a2)
+      : relation(r), firstArg(a1), secondArg(a2){};
+
+ public:
+  static std::optional<SuchThat> construct(Relation, StmtOrEntRef&,
+                                           StmtOrEntRef&);
+  Relation getRelation() { return relation; }
+  StmtOrEntRef getFirstArg() { return firstArg; }
+  StmtOrEntRef getSecondArg() { return secondArg; }
 };
 
 class Pattern {};

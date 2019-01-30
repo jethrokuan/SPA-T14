@@ -96,7 +96,7 @@ void QueryPreprocessor::parseSuchThat(
       std::remove(joined_such_that.begin(), joined_such_that.end(), ' ');
   joined_such_that.erase(end_pos, joined_such_that.end());
 
-  auto suchThat = SuchThat();
+  // auto suchThat = SuchThat();
 
   std::cout << "to match: " << joined_such_that << std::endl;
 
@@ -110,7 +110,7 @@ void QueryPreprocessor::parseSuchThat(
     auto found_start_idx = joined_such_that.find(string_to_match);
     if (found_start_idx != std::string::npos) {
       // Set the relation we found - args set later
-      suchThat.relation = r.first;
+      // suchThat.relation = r.first;
       found_end_idx = found_start_idx + r.second.length();
       std::cout << "Found: " << string_to_match
                 << " ending at: " << found_end_idx << std::endl;

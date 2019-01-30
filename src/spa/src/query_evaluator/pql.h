@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <optional>
 #include <regex>
 #include <vector>
 
@@ -45,36 +46,54 @@ Relation getRelation(std::string&);
 std::string getRelationFromString(Relation);
 const std::map<Relation, std::string>& getRelationToStringMap();
 
+class Synonym {
+ private:
+  // Spec: LETTER (LETTER | DIGIT)*
+  static const std::regex synonym_regex;
+
+  // Make constructors private
+  Synonym() {}
+  Synonym(std::string& synonym) : synonym(synonym) {}
+
+ public:
+  std::string synonym;
+  // Constructs a guaranteed valid Synonym
+  static std::optional<Synonym> construct(std::string&);
+  static std::optional<Synonym> construct(const char*);
+
+  bool operator==(const Synonym& a2) const { return synonym == a2.synonym; }
+  friend std::ostream& operator<<(std::ostream& os, Synonym const& syn) {
+    os << syn.synonym;
+    return os;
+  }
+};
+
 class Declaration {
  private:
   // Spec: LETTER (LETTER | DIGIT)*
   const std::regex synonym_regex = std::regex("[a-zA-Z](\\d|[a-zA-Z])*");
+  // -- Data --
+  const DesignEntity design_entity;
+  const Synonym synonymObj;
 
  public:
-  // -- Data --
-
-  const DesignEntity design_entity;
-  const std::string synonym;
+  DesignEntity getDesignEntity() { return design_entity; }
+  std::string getSynonym() { return synonymObj.synonym; }
 
   // -- Constructors --
 
-  Declaration(DesignEntity de, std::string syn)
-      : design_entity(de), synonym(syn){};
-
-  // -- Methods --
-
-  // Checks if synonym is valid (and therefore that Declaration is valid)
-  bool isValid();
+  Declaration(DesignEntity de, Synonym syn)
+      : design_entity(de), synonymObj(syn){};
 
   // -- Operators --
 
   bool operator==(const Declaration& a2) const {
-    return design_entity == a2.design_entity && synonym == a2.synonym;
+    return design_entity == a2.design_entity && synonymObj == a2.synonymObj;
   }
 
   friend std::ostream& operator<<(std::ostream& os, Declaration const& decl) {
     os << getDesignEntityString(decl.design_entity) << std::string(" ")
-       << decl.synonym;
+       << decl.synonymObj;
     return os;
   }
 };
@@ -122,10 +141,5 @@ class Query {
   Query(std::vector<Declaration>*, Declaration*);
   Query();
   ~Query();
-
-  // -- Methods --
-
-  // Make a basic (invalid) query with empty definition and empty select
-  static std::unique_ptr<Query> makeStubQuery();
 };
 }  // namespace QE

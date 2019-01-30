@@ -38,7 +38,18 @@ void QueryPreprocessor::parseDeclarations(
       // This is the synonym half of the decl: store the DE we have into our
       // list
       auto synonym = (*declaration_tokens)[i];
-      decls->push_back(Declaration(de, synonym));
+      // Test whether this synonym is valid
+      std::optional<Synonym> synonymObj = Synonym::construct(synonym);
+      if (!synonymObj) {
+        // Failure in synonym construction: regex invalud
+        // TODO: PROPER ERROR HANDLING
+        std::cout << "Cannot recognize synonym [" << synonym
+                  << "] for design entity " << getDesignEntityString(de)
+                  << std::endl;
+        return;
+      }
+
+      decls->push_back(Declaration(de, synonymObj.value()));
     }
   }
   query->declarations = decls;
@@ -132,9 +143,9 @@ void QueryPreprocessor::parseSuchThat(
 // Find the first declaration that matches this synonym
 Declaration* QueryPreprocessor::findDeclaration(
     std::vector<Declaration>* declarations, std::string synonym_to_match) {
-  auto found_declaration =
-      std::find_if(declarations->begin(), declarations->end(),
-                   [&](auto decl) { return decl.synonym == synonym_to_match; });
+  auto found_declaration = std::find_if(
+      declarations->begin(), declarations->end(),
+      [&](auto decl) { return decl.getSynonym() == synonym_to_match; });
 
   return &declarations->at(
       std::distance(declarations->begin(), found_declaration));

@@ -21,6 +21,7 @@ class ExprNode;
 class ExprPNode;
 class AssignNode;
 class FactorNode;
+using RelFactorNode = FactorNode;
 
 class Node {
  public:
@@ -156,6 +157,7 @@ class Parser {
   std::vector<std::unique_ptr<Node>> parseStatementList();
   std::unique_ptr<Node> parseStatement();
   std::unique_ptr<FactorNode> parseFactor();
+  std::unique_ptr<RelFactorNode> parseRelFactor();
   std::unique_ptr<TermPNode> parseTermP();
   std::unique_ptr<TermNode> parseTerm();
   std::unique_ptr<ExprPNode> parseExprP();

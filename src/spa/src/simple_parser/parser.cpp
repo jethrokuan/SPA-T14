@@ -383,5 +383,26 @@ std::unique_ptr<PrintNode> Parser::parsePrint() {
   return std::make_unique<PrintNode>(std::move(Var));
 };
 
+std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
+  auto Var = parseVariable();
+  if (Var) {
+    return std::make_unique<FactorNode>(std::move(Var));
+  }
+
+  auto Number = parseNumber();
+
+  if (Number) {
+    return std::make_unique<FactorNode>(std::move(Number));
+  }
+
+  auto Expr = parseExpr();
+
+  if (!Expr) {
+    return nullptr;
+  }
+
+  return std::make_unique<FactorNode>(std::move(Expr));
+};
+
 Parser::Parser(std::vector<Token*> t) : tokens(t){};
 std::unique_ptr<ProcedureNode> Parser::parse() { return parseProcedure(); }

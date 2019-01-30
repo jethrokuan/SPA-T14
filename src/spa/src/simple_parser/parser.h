@@ -22,6 +22,7 @@ class ExprPNode;
 class AssignNode;
 class FactorNode;
 using RelFactorNode = FactorNode;
+class RelExprNode;
 
 class Node {
  public:
@@ -136,6 +137,16 @@ class AssignNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+class RelExprNode : public Node {
+ public:
+  std::unique_ptr<RelFactorNode> LHS;
+  std::string Op;
+  std::unique_ptr<RelFactorNode> RHS;
+  RelExprNode(std::unique_ptr<RelFactorNode> lhs, std::string& op,
+              std::unique_ptr<RelFactorNode> rhs);
+  bool operator==(const Node& other) const;
+};
+
 class Parser {
  private:
   int current = 0;
@@ -162,6 +173,7 @@ class Parser {
   std::unique_ptr<TermNode> parseTerm();
   std::unique_ptr<ExprPNode> parseExprP();
   std::unique_ptr<ExprNode> parseExpr();
+  std::unique_ptr<RelExprNode> parseRelExpr();
   std::unique_ptr<AssignNode> parseAssign();
   std::unique_ptr<ReadNode> parseRead();
   std::unique_ptr<PrintNode> parsePrint();

@@ -126,4 +126,6 @@ TEST_CASE ("Node equality comparisons") {
     REQUIRE(*p1 != *p3);
     REQUIRE(*p1 != *p4);
   }
+
+  // TODO: Test RelExprNode
 };

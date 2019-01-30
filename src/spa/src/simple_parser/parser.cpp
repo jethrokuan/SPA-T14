@@ -146,6 +146,16 @@ bool AssignNode::operator==(const Node& other) const {
          *this->Expr == *casted_other->Expr;
 };
 
+RelExprNode::RelExprNode(std::unique_ptr<RelFactorNode> lhs, std::string& op,
+                         std::unique_ptr<RelFactorNode> rhs)
+    : LHS(std::move(lhs)), Op(op), RHS(std::move(rhs)){};
+bool RelExprNode::operator==(const Node& other) const {
+  auto casted_other = dynamic_cast<const RelExprNode*>(&other);
+  return casted_other != 0 && *this->LHS == *casted_other->LHS &&
+         *this->RHS == *casted_other->RHS &&
+         this->Op.compare(casted_other->Op) == 0;
+};
+
 // Parser
 bool Parser::match(TokenType type) {
   if (check(type)) {
@@ -403,6 +413,42 @@ std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
 
   return std::make_unique<FactorNode>(std::move(Expr));
 };
+
+std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
+  auto lhs = parseRelFactor();
+
+  if (!lhs) {
+    return nullptr;
+  }
+
+  auto t = peek()->t;
+  std::string op;
+
+  if (t == +TokenType::GREATER) {
+    op = ">";
+  } else if (t == +TokenType::GREATER_EQUAL) {
+    op = ">=";
+  } else if (t == +TokenType::LESS) {
+    op = "<";
+  } else if (t == +TokenType::LESS_EQUAL) {
+    op = "<=";
+  } else if (t == +TokenType::EQUAL_EQUAL) {
+    op = "==";
+  } else if (t == +TokenType::BANG_EQUAL) {
+    op = "!=";
+  } else {
+    std::cout << "Expected an op, got " << t << std::endl;
+    return nullptr;
+  }
+
+  auto rhs = parseRelFactor();
+
+  if (!rhs) {
+    return nullptr;
+  }
+
+  return std::make_unique<RelExprNode>(std::move(lhs), op, std::move(rhs));
+}
 
 Parser::Parser(std::vector<Token*> t) : tokens(t){};
 std::unique_ptr<ProcedureNode> Parser::parse() { return parseProcedure(); }

@@ -156,6 +156,26 @@ bool RelExprNode::operator==(const Node& other) const {
          this->Op.compare(casted_other->Op) == 0;
 };
 
+CondExprNode::CondExprNode(std::unique_ptr<RelExprNode> relExpr)
+    : RelExpr(std::move(relExpr)){};
+CondExprNode::CondExprNode(std::unique_ptr<CondExprNode> condLHS)
+    : CondLHS(std::move(condLHS)), Op("!"){};
+CondExprNode::CondExprNode(std::unique_ptr<CondExprNode> condLHS,
+                           std::string& op,
+                           std::unique_ptr<CondExprNode> condRHS)
+    : CondLHS(std::move(condLHS)), Op(op), CondRHS(std::move(condRHS)){};
+bool CondExprNode::operator==(const Node& other) const {
+  auto casted_other = dynamic_cast<const CondExprNode*>(&other);
+  return casted_other != 0 &&
+         (this->RelExpr == casted_other->RelExpr ||
+          *this->RelExpr == *casted_other->RelExpr) &&
+         (this->CondLHS == casted_other->CondLHS ||
+          *this->CondLHS == *casted_other->CondLHS) &&
+         (this->CondRHS == casted_other->CondRHS ||
+          *this->CondRHS == *casted_other->CondRHS) &&
+         (this->Op.compare(casted_other->Op) == 0);
+};
+
 // Parser
 bool Parser::match(TokenType type) {
   if (check(type)) {
@@ -449,6 +469,42 @@ std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
 
   return std::make_unique<RelExprNode>(std::move(lhs), op, std::move(rhs));
 }
+
+std::unique_ptr<CondExprNode> Parser::parseCondExpr() {
+  auto relExpr = parseRelExpr();
+  if (relExpr) {
+    return std::make_unique<CondExprNode>(std::move(relExpr));
+  }
+
+  if (match(TokenType::BANG)) {
+    expect(TokenType::L_PAREN);
+    auto condExpr = parseCondExpr();
+    expect(TokenType::L_PAREN);
+    return std::make_unique<CondExprNode>(std::move(condExpr));
+  }
+
+  expect(TokenType::L_PAREN);
+  auto condLHS = parseCondExpr();
+  expect(TokenType::R_PAREN);
+
+  std::string op;
+
+  if (match(TokenType::AND)) {
+    op = "&&";
+  } else if (match(TokenType::OR)) {
+    op = "||";
+  } else {
+    // TODO: HANDLE BETTER
+    std::cout << "EXPECTING AN OP";
+  }
+
+  expect(TokenType::L_PAREN);
+  auto condRHS = parseCondExpr();
+  expect(TokenType::R_PAREN);
+
+  return std::make_unique<CondExprNode>(std::move(condLHS), op,
+                                        std::move(condRHS));
+};
 
 Parser::Parser(std::vector<Token*> t) : tokens(t){};
 std::unique_ptr<ProcedureNode> Parser::parse() { return parseProcedure(); }

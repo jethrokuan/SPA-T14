@@ -23,6 +23,7 @@ class AssignNode;
 class FactorNode;
 using RelFactorNode = FactorNode;
 class RelExprNode;
+class CondExprNode;
 
 class Node {
  public:
@@ -147,6 +148,23 @@ class RelExprNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+class CondExprNode : public Node {
+ public:
+  std::unique_ptr<RelExprNode> RelExpr = nullptr;
+  std::unique_ptr<CondExprNode> CondLHS = nullptr;
+  std::string Op = "";
+  std::unique_ptr<CondExprNode> CondRHS = nullptr;
+
+  // rel_expr
+  CondExprNode(std::unique_ptr<RelExprNode> relExpr);
+  // ! ( cond_expr )
+  CondExprNode(std::unique_ptr<CondExprNode> condLHS);
+  // ( cond_expr ) && ( cond_expr )
+  CondExprNode(std::unique_ptr<CondExprNode> condLHS, std::string& op,
+               std::unique_ptr<CondExprNode> condRHS);
+  bool operator==(const Node& other) const;
+};
+
 class Parser {
  private:
   int current = 0;
@@ -177,6 +195,7 @@ class Parser {
   std::unique_ptr<AssignNode> parseAssign();
   std::unique_ptr<ReadNode> parseRead();
   std::unique_ptr<PrintNode> parsePrint();
+  std::unique_ptr<CondExprNode> parseCondExpr();
 
  public:
   Parser(std::vector<Token*> t);

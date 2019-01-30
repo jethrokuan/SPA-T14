@@ -183,6 +183,18 @@ class WhileNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+class IfNode : public Node {
+ public:
+  std::unique_ptr<CondExprNode> CondExpr;
+  std::unique_ptr<StmtListNode> StmtListThen;
+  std::unique_ptr<StmtListNode> StmtListElse;
+
+  IfNode(std::unique_ptr<CondExprNode> condExpr,
+         std::unique_ptr<StmtListNode> stmtListThen,
+         std::unique_ptr<StmtListNode> stmtListElse);
+  bool operator==(const Node& other) const;
+};
+
 class Parser {
  private:
   int current = 0;
@@ -215,6 +227,7 @@ class Parser {
   std::unique_ptr<PrintNode> parsePrint();
   std::unique_ptr<CondExprNode> parseCondExpr();
   std::unique_ptr<WhileNode> parseWhile();
+  std::unique_ptr<IfNode> parseIf();
 
  public:
   Parser(std::vector<Token*> t);

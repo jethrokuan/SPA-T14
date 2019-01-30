@@ -192,6 +192,20 @@ bool WhileNode::operator==(const Node& other) const {
   return casted_other != 0 && *this->CondExpr == *casted_other->CondExpr &&
          *this->StmtList == *casted_other->StmtList;
 };
+
+IfNode::IfNode(std::unique_ptr<CondExprNode> condExpr,
+               std::unique_ptr<StmtListNode> stmtListThen,
+               std::unique_ptr<StmtListNode> stmtListElse)
+    : CondExpr(std::move(condExpr)),
+      StmtListThen(std::move(stmtListThen)),
+      StmtListElse(std::move(stmtListElse)){};
+bool IfNode::operator==(const Node& other) const {
+  auto casted_other = dynamic_cast<const IfNode*>(&other);
+  return casted_other != 0 && *this->CondExpr == *casted_other->CondExpr &&
+         *this->StmtListThen == *casted_other->StmtListThen &&
+         *this->StmtListElse == *casted_other->StmtListElse;
+};
+
 // Parser
 bool Parser::match(TokenType type) {
   if (check(type)) {
@@ -301,6 +315,11 @@ std::unique_ptr<Node> Parser::parseStatement() {
   }
 
   stmt = parseWhile();
+  if (stmt) {
+    return stmt;
+  }
+
+  stmt = parseIf();
   if (stmt) {
     return stmt;
   }
@@ -549,6 +568,38 @@ std::unique_ptr<WhileNode> Parser::parseWhile() {
   }
   expect(TokenType::R_BRACE);
   return std::make_unique<WhileNode>(std::move(condExpr), std::move(stmtList));
+};
+
+std::unique_ptr<IfNode> Parser::parseIf() {
+  if (!match(TokenType::IF)) {
+    return nullptr;
+  }
+
+  expect(TokenType::L_PAREN);
+  auto condExpr = parseCondExpr();
+  if (!condExpr) {
+    // TODO: HANDLE ERROR BETTER
+    std::cout << "Expected a cond expression";
+  }
+  expect(TokenType::R_PAREN);
+  expect(TokenType::THEN);
+  expect(TokenType::L_BRACE);
+  auto stmtListThen = parseStmtList();
+  if (!stmtListThen) {
+    // TODO: HANDLE ERROR BETTER
+    std::cout << "Expected a stmtlist";
+  }
+  expect(TokenType::R_BRACE);
+  expect(TokenType::ELSE);
+  expect(TokenType::L_BRACE);
+  auto stmtListElse = parseStmtList();
+  if (!stmtListElse) {
+    // TODO: HANDLE ERROR BETTER
+    std::cout << "Expected a stmtlist";
+  }
+  expect(TokenType::R_BRACE);
+  return std::make_unique<IfNode>(std::move(condExpr), std::move(stmtListThen),
+                                  std::move(stmtListElse));
 };
 
 Parser::Parser(std::vector<Token*> t) : tokens(t){};

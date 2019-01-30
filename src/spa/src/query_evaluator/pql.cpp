@@ -50,6 +50,15 @@ std::map<DesignEntity, std::string> designEntityToStringMap({
     {DesignEntity::PROCEDURE, "procedure"},
 });
 
+std::map<Relation, std::string> relationToStringMap({
+    {Relation::ModifiesS, "Modifies"},
+    {Relation::UsesS, "Uses"},
+    {Relation::Parent, "Parent"},
+    {Relation::ParentT, "Parent*"},
+    {Relation::Follows, "Follows"},
+    {Relation::FollowsT, "Follows*"},
+});
+
 // Generic template for swapping keys and value of a map into a new map
 // Should put in generic lib
 template <class T1, class T2>
@@ -63,11 +72,22 @@ std::map<T2, T1> swapPairs(std::map<T1, T2> m) {
 
 auto stringToDesignEntityMap =
     swapPairs<DesignEntity, std::string>(designEntityToStringMap);
+auto stringToRelationMap =
+    swapPairs<Relation, std::string>(relationToStringMap);
 
 DesignEntity getDesignEntity(std::string& designentity_string) {
   return stringToDesignEntityMap.at(designentity_string);
 }
 std::string getDesignEntityString(DesignEntity de) {
   return designEntityToStringMap.at(de);
+}
+Relation getRelation(std::string& relation_string) {
+  return stringToRelationMap.at(relation_string);
+}
+std::string getRelationFromString(Relation relation) {
+  return relationToStringMap.at(relation);
+}
+const std::map<Relation, std::string>& getRelationToStringMap() {
+  return relationToStringMap;
 }
 }  // namespace QE

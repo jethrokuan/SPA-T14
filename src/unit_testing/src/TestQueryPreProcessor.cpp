@@ -38,3 +38,13 @@ TEST_CASE("Test three assign one select query Preprocess") {
   REQUIRE(*(query->selected_declaration) ==
           Declaration(DesignEntity::ASSIGN, "p"));
 }
+
+TEST_CASE("Test one assign one select one such that query Preprocess") {
+  auto qp = QE::QueryPreprocessor();
+  std::string input = "assign p;Select p such that Follows(6++=sss| , s23123|)";
+  auto query = qp.getQuery(input);
+  REQUIRE(*(query->declarations) ==
+          std::vector<Declaration>{Declaration(DesignEntity::ASSIGN, "p")});
+  REQUIRE(*(query->selected_declaration) ==
+          Declaration(DesignEntity::ASSIGN, "p"));
+}

@@ -8,57 +8,191 @@
 #include "simple_parser/token.h"
 
 namespace Simple {
-// Expr is an interface that all expressions will need to implement.
-class Expr {
+class Node;
+class NumberNode;
+class VariableNode;
+class ReadNode;
+class PrintNode;
+class FactorNode;
+class ProcedureNode;
+class TermNode;
+class TermPNode;
+class ExprNode;
+class ExprPNode;
+class AssignNode;
+class FactorNode;
+using RelFactorNode = FactorNode;
+class RelExprNode;
+class CondExprNode;
+class WhileNode;
+
+class Node {
  public:
-  virtual ~Expr(){};
-  virtual bool operator==(const Expr& other) const = 0;
+  virtual ~Node(){};
+  virtual bool operator==(const Node& other) const = 0;
+  virtual bool operator!=(const Node& other) const {
+    return !operator==(other);
+  };
+};  // namespace Simple
+
+class StmtListNode : public Node {
+ public:
+  std::vector<std::unique_ptr<Node>> StmtList;
+  StmtListNode(std::vector<std::unique_ptr<Node>> stmtList);
+  bool operator==(const Node& other) const;
 };
 
-// NumberExprAST - Expression class for numeric literals
-class NumberExpr : public Expr {
+class NumberNode : public Node {
  public:
   std::string Val;
-  NumberExpr(const std::string& Val) : Val(Val){};
-  bool operator==(const Expr& other) const {
-    auto casted_other = dynamic_cast<const NumberExpr*>(&other);
-    return casted_other != 0 && this->Val.compare(casted_other->Val) == 0;
-  };
+  NumberNode(const std::string& val);
+  bool operator==(const Node& other) const;
 };
 
-class VariableExpr : public Expr {
+class VariableNode : public Node {
  public:
   std::string Name;
-  VariableExpr(const std::string& Name) : Name(Name){};
-  bool operator==(const Expr& other) const {
-    auto casted_other = dynamic_cast<const VariableExpr*>(&other);
-    return casted_other != 0 && this->Name.compare(casted_other->Name) == 0;
-  };
+  VariableNode(const std::string& name);
+  bool operator==(const Node& other) const;
 };
 
-class AssignExpr : public Expr {
+class ReadNode : public Node {
  public:
-  std::unique_ptr<Expr> Var, RHS;
-  AssignExpr(std::unique_ptr<Expr> var, std::unique_ptr<Expr> rhs)
-      : Var(std::move(var)), RHS(std::move(rhs)) {}
-  bool operator==(const Expr& other) const {
-    auto casted_other = dynamic_cast<const AssignExpr*>(&other);
-    return casted_other != 0 && *this->Var == *casted_other->Var &&
-           *this->RHS == *casted_other->RHS;
-  };
+  std::unique_ptr<Node> Var;
+  ReadNode(std::unique_ptr<VariableNode> var);
+  bool operator==(const Node& other) const;
 };
 
-class ProcedureExpr : public Expr {
-  std::unique_ptr<Expr> Var, StmtList;
-
+class PrintNode : public Node {
  public:
-  ProcedureExpr(std::unique_ptr<Expr> var, std::unique_ptr<Expr> stmtList)
-      : Var(std::move(var)), StmtList(std::move(stmtList)) {}
-  bool operator==(const Expr& other) const {
-    auto casted_other = dynamic_cast<const ProcedureExpr*>(&other);
-    return casted_other != 0 && *this->Var == *casted_other->Var &&
-           *this->StmtList == *casted_other->StmtList;
+  std::unique_ptr<Node> Var;
+  PrintNode(std::unique_ptr<Node> var);
+  bool operator==(const Node& other) const;
+};
+
+class ProcedureNode : public Node {
+ public:
+  std::unique_ptr<Node> Var;
+  std::unique_ptr<StmtListNode> StmtList;
+  ProcedureNode(std::unique_ptr<Node> var,
+                std::unique_ptr<StmtListNode> stmtList);
+  bool operator==(const Node& other) const;
+};
+
+class TermPNode : public Node {
+ public:
+  std::unique_ptr<FactorNode> Factor;
+  std::string Op;
+  std::unique_ptr<TermPNode> TermP;
+  TermPNode(std::unique_ptr<FactorNode> factor, std::string& op,
+            std::unique_ptr<TermPNode> termP);
+  bool operator==(const Node& other) const;
+};
+
+class TermNode : public Node {
+ public:
+  std::unique_ptr<FactorNode> Factor;
+  std::unique_ptr<TermPNode> TermP;
+
+  TermNode(std::unique_ptr<FactorNode> factor,
+           std::unique_ptr<TermPNode> termP);
+  TermNode(std::unique_ptr<FactorNode> factor);
+  bool operator==(const Node& other) const;
+};
+
+class ExprPNode : public Node {
+ public:
+  std::unique_ptr<TermNode> Term;
+  std::string Op;
+  std::unique_ptr<ExprPNode> ExprP;
+
+  ExprPNode(std::unique_ptr<TermNode> term, std::string& op);
+  ExprPNode(std::unique_ptr<TermNode> term, std::string& op,
+            std::unique_ptr<ExprPNode> exprP);
+  bool operator==(const Node& other) const;
+};
+
+class ExprNode : public Node {
+ public:
+  std::unique_ptr<TermNode> Term;
+  std::unique_ptr<ExprPNode> ExprP;
+
+  ExprNode(std::unique_ptr<TermNode> term, std::unique_ptr<ExprPNode> exprP);
+  ExprNode(std::unique_ptr<TermNode> term);
+  bool operator==(const Node& other) const;
+};
+
+class FactorNode : public Node {
+ public:
+  union {
+    std::unique_ptr<VariableNode> Var;
+    std::unique_ptr<NumberNode> Val;
+    std::unique_ptr<ExprNode> Expr;
   };
+  enum class UnionType { VAR, VAL, EXPR, NONE } type = UnionType::NONE;
+  FactorNode();
+  FactorNode(std::unique_ptr<VariableNode> var);
+  FactorNode(std::unique_ptr<NumberNode> val);
+  FactorNode(std::unique_ptr<ExprNode> expr);
+  ~FactorNode();
+  bool operator==(const Node& other) const;
+};
+
+class AssignNode : public Node {
+ public:
+  std::unique_ptr<VariableNode> Var;
+  std::unique_ptr<ExprNode> Expr;
+  AssignNode(std::unique_ptr<VariableNode> var, std::unique_ptr<ExprNode> expr);
+  bool operator==(const Node& other) const;
+};
+
+class RelExprNode : public Node {
+ public:
+  std::unique_ptr<RelFactorNode> LHS;
+  std::string Op;
+  std::unique_ptr<RelFactorNode> RHS;
+  RelExprNode(std::unique_ptr<RelFactorNode> lhs, std::string& op,
+              std::unique_ptr<RelFactorNode> rhs);
+  bool operator==(const Node& other) const;
+};
+
+class CondExprNode : public Node {
+ public:
+  std::unique_ptr<RelExprNode> RelExpr = nullptr;
+  std::unique_ptr<CondExprNode> CondLHS = nullptr;
+  std::string Op = "";
+  std::unique_ptr<CondExprNode> CondRHS = nullptr;
+
+  // rel_expr
+  CondExprNode(std::unique_ptr<RelExprNode> relExpr);
+  // ! ( cond_expr )
+  CondExprNode(std::unique_ptr<CondExprNode> condLHS);
+  // ( cond_expr ) && ( cond_expr )
+  CondExprNode(std::unique_ptr<CondExprNode> condLHS, std::string& op,
+               std::unique_ptr<CondExprNode> condRHS);
+  bool operator==(const Node& other) const;
+};
+
+class WhileNode : public Node {
+ public:
+  std::unique_ptr<CondExprNode> CondExpr;
+  std::unique_ptr<StmtListNode> StmtList;
+
+  WhileNode(std::unique_ptr<CondExprNode> condExpr,
+            std::unique_ptr<StmtListNode> stmtList);
+  bool operator==(const Node& other) const;
+};
+
+class IfNode : public Node {
+ public:
+  std::unique_ptr<CondExprNode> CondExpr;
+  std::unique_ptr<StmtListNode> StmtListThen;
+  std::unique_ptr<StmtListNode> StmtListElse;
+
+  IfNode(std::unique_ptr<CondExprNode> condExpr,
+         std::unique_ptr<StmtListNode> stmtListThen,
+         std::unique_ptr<StmtListNode> stmtListElse);
+  bool operator==(const Node& other) const;
 };
 
 class Parser {
@@ -66,107 +200,37 @@ class Parser {
   int current = 0;
   std::vector<Token*> tokens;
 
-  bool match(TokenType type) {
-    if (check(type)) {
-      advance();
-      return true;
-    } else {
-      return false;
-    }
-  };
+  // Utilities
+  bool match(TokenType type);
+  bool check(TokenType type);
+  bool expect(TokenType type);
+  bool isAtEnd();
+  Token* peek();
+  Token* previous();
+  Token* advance();
 
-  bool expect(TokenType type) {
-    if (match(type)) {
-      return true;
-    } else {
-      // TODO: Handle this better
-      std::cout << "expected a different symbol." << std::endl;
-      return false;
-    }
-  };
-
-  bool check(TokenType type) {
-    if (isAtEnd()) return false;
-    return peek()->t == type;
-  };
-
-  Token* advance() {
-    if (!isAtEnd()) current++;
-    return previous();
-  };
-
-  bool isAtEnd() { return peek()->t == TokenType::END_OF_FILE; };
-
-  Token* peek() { return tokens[current]; };
-
-  Token* previous() { return tokens[current - 1]; };
-
-  std::unique_ptr<NumberExpr> parseNumberExpr() {
-    if (match(TokenType::NUMBER)) {
-      std::string num = static_cast<NumberToken*>(previous())->number;
-      auto result = std::make_unique<NumberExpr>(num);
-      return result;
-    } else {
-      return nullptr;
-    }
-  }
-
-  std::unique_ptr<VariableExpr> parseVariableExpr() {
-    if (match(TokenType::SYMBOL)) {
-      std::string name = static_cast<SymbolToken*>(previous())->name;
-      auto result = std::make_unique<VariableExpr>(name);
-      return result;
-    } else {
-      return nullptr;
-    }
-  };
-
-  std::unique_ptr<ProcedureExpr> parseProcedure() {
-    if (!match(TokenType::PROCEDURE)) {
-      return nullptr;
-    }
-
-    auto Var = parseVariableExpr();
-
-    if (!Var) {
-      return nullptr;
-    }
-
-    expect(TokenType::L_BRACE);
-
-    auto StmtList = parseStatementList();
-
-    if (!StmtList) {
-      return nullptr;
-    }
-
-    if (!match(TokenType::R_BRACE)) {
-      return nullptr;
-    }
-
-    return std::make_unique<ProcedureExpr>(std::move(Var), std::move(StmtList));
-  };
-
-  std::unique_ptr<Expr> parseStatementList() { return parseStatement(); };
-
-  std::unique_ptr<Expr> parseStatement() { return parseAssign(); };
-
-  std::unique_ptr<AssignExpr> parseAssign() {
-    auto Var = parseVariableExpr();
-    if (!Var) {
-      return nullptr;
-    }
-    expect(TokenType::EQUAL);
-    auto Num = parseNumberExpr();
-    if (!Num) {
-      return nullptr;
-    }
-    expect(TokenType::SEMI);
-    return std::make_unique<AssignExpr>(std::move(Var), std::move(Num));
-  };
+  // Parsing
+  std::unique_ptr<NumberNode> parseNumber();
+  std::unique_ptr<VariableNode> parseVariable();
+  std::unique_ptr<ProcedureNode> parseProcedure();
+  std::unique_ptr<StmtListNode> parseStmtList();
+  std::unique_ptr<Node> parseStatement();
+  std::unique_ptr<FactorNode> parseFactor();
+  std::unique_ptr<RelFactorNode> parseRelFactor();
+  std::unique_ptr<TermPNode> parseTermP();
+  std::unique_ptr<TermNode> parseTerm();
+  std::unique_ptr<ExprPNode> parseExprP();
+  std::unique_ptr<ExprNode> parseExpr();
+  std::unique_ptr<RelExprNode> parseRelExpr();
+  std::unique_ptr<AssignNode> parseAssign();
+  std::unique_ptr<ReadNode> parseRead();
+  std::unique_ptr<PrintNode> parsePrint();
+  std::unique_ptr<CondExprNode> parseCondExpr();
+  std::unique_ptr<WhileNode> parseWhile();
+  std::unique_ptr<IfNode> parseIf();
 
  public:
-  Parser(std::vector<Token*> t) { tokens = t; }
-  std::unique_ptr<Expr> parse() { return parseProcedure(); }
+  Parser(std::vector<Token*> t);
+  std::unique_ptr<ProcedureNode> parse();
 };
 }  // namespace Simple

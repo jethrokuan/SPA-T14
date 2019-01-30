@@ -42,19 +42,19 @@ Simple::Lexer::Lexer(std::istream& stream) {
     if (isalpha(nextChar)) {  // Reserved keyword or variable
       getSymbol(stream, str);
       if (str.compare("procedure") == 0) {
-        tokens.push_back(new Token(row, TokenType::PROCEDURE));
+        tokens.push_back(new Token(row, "PROCEDURE"));
       } else if (str.compare("read") == 0) {
-        tokens.push_back(new Token(row, TokenType::READ));
+        tokens.push_back(new Token(row, "READ"));
       } else if (str.compare("print") == 0) {
-        tokens.push_back(new Token(row, TokenType::PRINT));
+        tokens.push_back(new Token(row, "PRINT"));
       } else if (str.compare("while") == 0) {
-        tokens.push_back(new Token(row, TokenType::WHILE));
+        tokens.push_back(new Token(row, "WHILE"));
       } else if (str.compare("if") == 0) {
-        tokens.push_back(new Token(row, TokenType::IF));
+        tokens.push_back(new Token(row, "IF"));
       } else if (str.compare("then") == 0) {
-        tokens.push_back(new Token(row, TokenType::THEN));
+        tokens.push_back(new Token(row, "THEN"));
       } else if (str.compare("else") == 0) {
-        tokens.push_back(new Token(row, TokenType::ELSE));
+        tokens.push_back(new Token(row, "ELSE"));
       } else {  // A regular symbol
         tokens.push_back(new SymbolToken(row, str));
       }
@@ -62,74 +62,74 @@ Simple::Lexer::Lexer(std::istream& stream) {
       getNumber(stream, str);
       tokens.push_back(new NumberToken(row, str));
     } else if (nextChar == '{') {
-      tokens.push_back(new Token(row, TokenType::L_BRACE));
+      tokens.push_back(new Token(row, "L_BRACE"));
     } else if (nextChar == '}') {
-      tokens.push_back(new Token(row, TokenType::R_BRACE));
+      tokens.push_back(new Token(row, "R_BRACE"));
     } else if (nextChar == '(') {
-      tokens.push_back(new Token(row, TokenType::L_PAREN));
+      tokens.push_back(new Token(row, "L_PAREN"));
     } else if (nextChar == ')') {
-      tokens.push_back(new Token(row, TokenType::R_PAREN));
+      tokens.push_back(new Token(row, "R_PAREN"));
     } else if (nextChar == '!') {
       if (stream.peek() == '=') {
         stream.get();
-        tokens.push_back(new Token(row, TokenType::BANG_EQUAL));
+        tokens.push_back(new Token(row, "BANG_EQUAL"));
       } else {
-        tokens.push_back(new Token(row, TokenType::BANG));
+        tokens.push_back(new Token(row, "BANG"));
       }
     } else if (nextChar == '=') {
       if (stream.peek() == '=') {
         stream.get();  // Consume character
-        tokens.push_back(new Token(row, TokenType::EQUAL_EQUAL));
+        tokens.push_back(new Token(row, "EQUAL_EQUAL"));
       } else {
-        tokens.push_back(new Token(row, TokenType::EQUAL));
+        tokens.push_back(new Token(row, "EQUAL"));
       }
     } else if (nextChar == '&') {
       if (stream.peek() == '&') {
         stream.get();
-        tokens.push_back(new Token(row, TokenType::AND));
+        tokens.push_back(new Token(row, "AND"));
       } else {
         std::cout << "Expecting another &";  // TODO: Handle Error properly
       }
     } else if (nextChar == '|') {
       if (stream.peek() == '|') {
         stream.get();
-        tokens.push_back(new Token(row, TokenType::OR));
+        tokens.push_back(new Token(row, "OR"));
       } else {
         std::cout << "Expecting another |";  // TODO: Handle Error properly
       }
     } else if (nextChar == '=') {
       if (stream.peek() == '=') {
         stream.get();  // Consume character
-        tokens.push_back(new Token(row, TokenType::EQUAL_EQUAL));
+        tokens.push_back(new Token(row, "EQUAL_EQUAL"));
       } else {
-        tokens.push_back(new Token(row, TokenType::EQUAL));
+        tokens.push_back(new Token(row, "EQUAL"));
       }
     } else if (nextChar == '>') {
       if (stream.peek() == '=') {
         stream.get();  // Consume character
-        tokens.push_back(new Token(row, TokenType::GREATER_EQUAL));
+        tokens.push_back(new Token(row, "GREATER_EQUAL"));
       } else {
-        tokens.push_back(new Token(row, TokenType::GREATER));
+        tokens.push_back(new Token(row, "GREATER"));
       }
     } else if (nextChar == '<') {
       if (stream.peek() == '=') {
         stream.get();  // Consume character
-        tokens.push_back(new Token(row, TokenType::LESS_EQUAL));
+        tokens.push_back(new Token(row, "LESS_EQUAL"));
       } else {
-        tokens.push_back(new Token(row, TokenType::LESS));
+        tokens.push_back(new Token(row, "LESS"));
       }
     } else if (nextChar == '+') {
-      tokens.push_back(new Token(row, TokenType::PLUS));
+      tokens.push_back(new Token(row, "PLUS"));
     } else if (nextChar == '-') {
-      tokens.push_back(new Token(row, TokenType::MINUS));
+      tokens.push_back(new Token(row, "MINUS"));
     } else if (nextChar == '*') {
-      tokens.push_back(new Token(row, TokenType::TIMES));
+      tokens.push_back(new Token(row, "TIMES"));
     } else if (nextChar == '/') {
-      tokens.push_back(new Token(row, TokenType::DIVIDE));
+      tokens.push_back(new Token(row, "DIVIDE"));
     } else if (nextChar == '%') {
-      tokens.push_back(new Token(row, TokenType::MOD));
+      tokens.push_back(new Token(row, "MOD"));
     } else if (nextChar == ';') {
-      tokens.push_back(new Token(row, TokenType::SEMI));
+      tokens.push_back(new Token(row, "SEMI"));
     } else if (nextChar == '\n') {
       row++;
     } else if (iswspace(nextChar)) {  // Ignore whitespaces
@@ -139,5 +139,5 @@ Simple::Lexer::Lexer(std::istream& stream) {
     }
     str = "";
   }
-  tokens.push_back(new Token(row, END_OF_FILE));
+  tokens.push_back(new Token(row, "END_OF_FILE"));
 };

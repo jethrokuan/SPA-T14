@@ -63,7 +63,6 @@ TermNode::TermNode(std::unique_ptr<FactorNode> factor,
 TermNode::TermNode(std::unique_ptr<FactorNode> factor)
     : Factor(std::move(factor)), TermP(nullptr){};
 bool TermNode::operator==(const Node& other) const {
-  return true;
   auto casted_other = dynamic_cast<const TermNode*>(&other);
   return casted_other != 0;
   return casted_other != 0 && *this->Factor == *casted_other->Factor &&
@@ -79,9 +78,7 @@ ExprPNode::ExprPNode(std::unique_ptr<TermNode> term, std::string& op,
     : Term(std::move(term)), Op(op), ExprP(std::move(exprP)){};
 
 bool ExprPNode::operator==(const Node& other) const {
-  return true;
   auto casted_other = dynamic_cast<const ExprPNode*>(&other);
-  return casted_other != 0;
   return casted_other != 0 && *this->Term == *casted_other->Term &&
          (this->ExprP == casted_other->ExprP ||
           *this->ExprP == *casted_other->ExprP) &&

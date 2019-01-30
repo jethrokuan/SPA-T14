@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <optional>
 
 using namespace QE;
 
@@ -26,13 +27,18 @@ Query::~Query() {
   delete pattern;
 }
 
-std::unique_ptr<Query> Query::makeStubQuery() {
-  auto decls = new std::vector<QE::Declaration>();
-  auto selected_decl = new QE::Declaration(DesignEntity::ASSIGN, "p");
-  return std::make_unique<Query>(decls, selected_decl);
+const std::regex Synonym::synonym_regex = std::regex("[a-zA-Z](\\d|[a-zA-Z])*");
+std::optional<Synonym> Synonym::construct(const char* synonym) {
+  std::string s(synonym);
+  return Synonym::construct(s);
 }
-
-bool Declaration::isValid() { return std::regex_match(synonym, synonym_regex); }
+std::optional<Synonym> Synonym::construct(std::string& synonym) {
+  if (std::regex_match(synonym, synonym_regex)) {
+    return Synonym(synonym);
+  } else {
+    return std::nullopt;
+  }
+}
 
 namespace QE {
 // Hard to use unordered_map even though faster

@@ -20,7 +20,7 @@ class QueryPreprocessor {
   static Declaration* findDeclaration(std::vector<Declaration>* declarations,
                                       std::string synonym_to_match);
   static void argToStmtEntityRef(std::vector<Declaration>* declarations,
-                                         std::string arg);
+                                 std::string arg);
 
  public:
   // Given a string containing PQL,

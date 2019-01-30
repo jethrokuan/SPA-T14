@@ -7,9 +7,12 @@ build:
   stage: build
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
-  before_script: 
-    - apt-get update --yes
-    - apt-get install --yes cmake
+  variables:
+    version: "3.9"
+    build: "2"
+  before_script:
+    - wget https://cmake.org/files/v$version/cmake-$version.-Linux-x86_64.sh
+    - sh ./cmake-$version.$build-Linux-x86_64.sh --prefix=/usr/local --skip-license
   script: 
     - mkdir build
     - cd build

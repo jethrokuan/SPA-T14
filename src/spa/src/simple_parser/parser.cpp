@@ -476,6 +476,12 @@ std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
   return std::make_unique<FactorNode>(std::move(Expr));
 };
 
+// rel_expr: rel_factor > rel_factor
+// | rel_factor >= rel_factor
+// | rel_factor < rel_factor
+// | rel_factor <= rel_factor
+// | rel_factor == rel_factor
+// | rel_factor != rel_factor
 std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
   auto lhs = parseRelFactor();
 
@@ -502,6 +508,7 @@ std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
     std::cout << "Expected an op, got " << t << std::endl;
     return nullptr;
   }
+  advance();
 
   auto rhs = parseRelFactor();
 
@@ -511,6 +518,11 @@ std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
 
   return std::make_unique<RelExprNode>(std::move(lhs), op, std::move(rhs));
 }
+
+// cond_expr: rel_expr
+// | ! ( cond_expr )
+// | ( cond_expr ) && ( cond_expr )
+// | ( cond_expr ) || ( cond_expr )
 
 std::unique_ptr<CondExprNode> Parser::parseCondExpr() {
   auto relExpr = parseRelExpr();

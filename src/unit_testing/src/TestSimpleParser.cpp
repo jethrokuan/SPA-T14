@@ -27,14 +27,30 @@ TEST_CASE ("Test Parser works") {
       make_unique<ExprNode>(make_unique<TermNode>(
           make_unique<FactorNode>(make_unique<NumberNode>("5")))));
 
+  // while (i==5) {
+  //   print i;
+  // }
+
+  std::vector<unique_ptr<Node>> whileStmtList;
+  auto print_j = make_unique<PrintNode>(make_unique<VariableNode>("j"));
+  whileStmtList.push_back(std::move(print_j));
+
+  std::string op = "==";
+  auto whileStmt = make_unique<WhileNode>(
+      make_unique<CondExprNode>(make_unique<RelExprNode>(
+          make_unique<RelFactorNode>(make_unique<VariableNode>("i")), op,
+          make_unique<RelFactorNode>(make_unique<NumberNode>("5")))),
+      make_unique<StmtListNode>(std::move(whileStmtList)));
+
   // print i;
-  auto print = make_unique<PrintNode>(make_unique<VariableNode>("i"));
+  auto print_i = make_unique<PrintNode>(make_unique<VariableNode>("i"));
 
   // read i;
   auto read = make_unique<ReadNode>(make_unique<VariableNode>("i"));
 
   stmtList.push_back(std::move(assign));
-  stmtList.push_back(std::move(print));
+  stmtList.push_back(std::move(whileStmt));
+  stmtList.push_back(std::move(print_i));
   stmtList.push_back(std::move(read));
 
   auto StmtList = std::make_unique<StmtListNode>(std::move(stmtList));

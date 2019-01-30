@@ -24,6 +24,7 @@ class FactorNode;
 using RelFactorNode = FactorNode;
 class RelExprNode;
 class CondExprNode;
+class WhileNode;
 
 class Node {
  public:
@@ -33,6 +34,13 @@ class Node {
     return !operator==(other);
   };
 };  // namespace Simple
+
+class StmtListNode : public Node {
+ public:
+  std::vector<std::unique_ptr<Node>> StmtList;
+  StmtListNode(std::vector<std::unique_ptr<Node>> stmtList);
+  bool operator==(const Node& other) const;
+};
 
 class NumberNode : public Node {
  public:
@@ -65,9 +73,9 @@ class PrintNode : public Node {
 class ProcedureNode : public Node {
  public:
   std::unique_ptr<Node> Var;
-  std::vector<std::unique_ptr<Node>> StmtList;
+  std::unique_ptr<StmtListNode> StmtList;
   ProcedureNode(std::unique_ptr<Node> var,
-                std::vector<std::unique_ptr<Node>> stmtList);
+                std::unique_ptr<StmtListNode> stmtList);
   bool operator==(const Node& other) const;
 };
 
@@ -165,6 +173,16 @@ class CondExprNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+class WhileNode : public Node {
+ public:
+  std::unique_ptr<CondExprNode> CondExpr;
+  std::unique_ptr<StmtListNode> StmtList;
+
+  WhileNode(std::unique_ptr<CondExprNode> condExpr,
+            std::unique_ptr<StmtListNode> stmtList);
+  bool operator==(const Node& other) const;
+};
+
 class Parser {
  private:
   int current = 0;
@@ -183,7 +201,7 @@ class Parser {
   std::unique_ptr<NumberNode> parseNumber();
   std::unique_ptr<VariableNode> parseVariable();
   std::unique_ptr<ProcedureNode> parseProcedure();
-  std::vector<std::unique_ptr<Node>> parseStatementList();
+  std::unique_ptr<StmtListNode> parseStmtList();
   std::unique_ptr<Node> parseStatement();
   std::unique_ptr<FactorNode> parseFactor();
   std::unique_ptr<RelFactorNode> parseRelFactor();
@@ -196,6 +214,7 @@ class Parser {
   std::unique_ptr<ReadNode> parseRead();
   std::unique_ptr<PrintNode> parsePrint();
   std::unique_ptr<CondExprNode> parseCondExpr();
+  std::unique_ptr<WhileNode> parseWhile();
 
  public:
   Parser(std::vector<Token*> t);

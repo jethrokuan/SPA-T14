@@ -37,8 +37,10 @@ TEST_CASE ("Test Parser works") {
   stmtList.push_back(std::move(print));
   stmtList.push_back(std::move(read));
 
+  auto StmtList = std::make_unique<StmtListNode>(std::move(stmtList));
+
   auto expected = std::make_unique<ProcedureNode>(
-      std::make_unique<VariableNode>("main"), std::move(stmtList));
+      std::make_unique<VariableNode>("main"), std::move(StmtList));
 
   REQUIRE(*proc == *expected);
 }
@@ -100,6 +102,27 @@ TEST_CASE ("Node equality comparisons") {
     REQUIRE(*f_val1 != *f_var1);
   }
 
+  SECTION ("StmtListNode") {
+    auto r1 = make_unique<ReadNode>(make_unique<VariableNode>("i"));
+    auto r2 = make_unique<ReadNode>(make_unique<VariableNode>("i"));
+    auto r3 = make_unique<ReadNode>(make_unique<VariableNode>("j"));
+
+    std::vector<unique_ptr<Node>> s1;
+    std::vector<unique_ptr<Node>> s2;
+    std::vector<unique_ptr<Node>> s3;
+
+    s1.push_back(std::move(r1));
+    s2.push_back(std::move(r2));
+    s3.push_back(std::move(r3));
+
+    auto sl1 = make_unique<StmtListNode>(std::move(s1));
+    auto sl2 = make_unique<StmtListNode>(std::move(s2));
+    auto sl3 = make_unique<StmtListNode>(std::move(s3));
+
+    REQUIRE(*sl1 == *sl2);
+    REQUIRE(*sl1 != *sl3);
+  }
+
   SECTION ("ProcedureNode") {
     auto r1 = make_unique<ReadNode>(make_unique<VariableNode>("i"));
     auto r2 = make_unique<ReadNode>(make_unique<VariableNode>("i"));
@@ -113,14 +136,18 @@ TEST_CASE ("Node equality comparisons") {
     s2.push_back(std::move(r2));
     s3.push_back(std::move(r3));
 
+    auto sl1 = make_unique<StmtListNode>(std::move(s1));
+    auto sl2 = make_unique<StmtListNode>(std::move(s2));
+    auto sl3 = make_unique<StmtListNode>(std::move(s3));
+
     auto p1 = make_unique<ProcedureNode>(make_unique<VariableNode>("main"),
-                                         std::move(s1));
+                                         std::move(sl1));
     auto p2 = make_unique<ProcedureNode>(make_unique<VariableNode>("main"),
-                                         std::move(s2));
+                                         std::move(sl2));
     auto p3 = make_unique<ProcedureNode>(make_unique<VariableNode>("main2"),
-                                         std::move(s2));
+                                         std::move(sl2));
     auto p4 = make_unique<ProcedureNode>(make_unique<VariableNode>("main"),
-                                         std::move(s3));
+                                         std::move(sl3));
 
     REQUIRE(*p1 == *p2);
     REQUIRE(*p1 != *p3);
@@ -128,4 +155,6 @@ TEST_CASE ("Node equality comparisons") {
   }
 
   // TODO: Test RelExprNode
+
+  // TODO: Test WhileNode
 };

@@ -2,6 +2,18 @@
 
 using namespace Simple;
 
+StmtListNode::StmtListNode(std::vector<std::unique_ptr<Node>> stmtList)
+    : StmtList(std::move(stmtList)){};
+bool StmtListNode::operator==(const Node& other) const {
+  auto casted_other = dynamic_cast<const StmtListNode*>(&other);
+  return casted_other != 0 &&
+         this->StmtList.size() == casted_other->StmtList.size() &&
+         std::equal(begin(this->StmtList), end(this->StmtList),
+                    begin(casted_other->StmtList), end(casted_other->StmtList),
+                    [](const std::unique_ptr<Node>& t,
+                       const std::unique_ptr<Node>& o) { return *t == *o; });
+};
+
 NumberNode::NumberNode(const std::string& val) : Val(val){};
 bool NumberNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const NumberNode*>(&other);
@@ -27,16 +39,12 @@ bool PrintNode::operator==(const Node& other) const {
 };
 
 ProcedureNode::ProcedureNode(std::unique_ptr<Node> var,
-                             std::vector<std::unique_ptr<Node>> stmtList)
+                             std::unique_ptr<StmtListNode> stmtList)
     : Var(std::move(var)), StmtList(std::move(stmtList)){};
 bool ProcedureNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const ProcedureNode*>(&other);
   return casted_other != 0 && *this->Var == *casted_other->Var &&
-         this->StmtList.size() == casted_other->StmtList.size() &&
-         std::equal(begin(this->StmtList), end(this->StmtList),
-                    begin(casted_other->StmtList), end(casted_other->StmtList),
-                    [](const std::unique_ptr<Node>& t,
-                       const std::unique_ptr<Node>& o) { return *t == *o; });
+         *this->StmtList == *casted_other->StmtList;
 };
 
 TermPNode::TermPNode(std::unique_ptr<FactorNode> factor, std::string& op,
@@ -176,6 +184,14 @@ bool CondExprNode::operator==(const Node& other) const {
          (this->Op.compare(casted_other->Op) == 0);
 };
 
+WhileNode::WhileNode(std::unique_ptr<CondExprNode> condExpr,
+                     std::unique_ptr<StmtListNode> stmtList)
+    : CondExpr(std::move(condExpr)), StmtList(std::move(stmtList)){};
+bool WhileNode::operator==(const Node& other) const {
+  auto casted_other = dynamic_cast<const WhileNode*>(&other);
+  return casted_other != 0 && *this->CondExpr == *casted_other->CondExpr &&
+         *this->StmtList == *casted_other->StmtList;
+};
 // Parser
 bool Parser::match(TokenType type) {
   if (check(type)) {
@@ -245,14 +261,14 @@ std::unique_ptr<ProcedureNode> Parser::parseProcedure() {
 
   expect(TokenType::L_BRACE);
 
-  auto StmtList = parseStatementList();
+  auto StmtList = parseStmtList();
 
   expect(TokenType::R_BRACE);
 
   return std::make_unique<ProcedureNode>(std::move(Var), std::move(StmtList));
 };
 
-std::vector<std::unique_ptr<Node>> Parser::parseStatementList() {
+std::unique_ptr<StmtListNode> Parser::parseStmtList() {
   std::vector<std::unique_ptr<Node>> stmts;
   while (true) {
     auto stmt = parseStatement();
@@ -263,21 +279,28 @@ std::vector<std::unique_ptr<Node>> Parser::parseStatementList() {
     }
   }
 
-  return stmts;
+  // TODO: Handle case where statement list is empty
+
+  return std::make_unique<StmtListNode>(std::move(stmts));
 };
 
 std::unique_ptr<Node> Parser::parseStatement() {
-  std::unique_ptr<Node> stmt = parseAssign();
-  if (stmt) {
-    return stmt;
-  }
-
-  stmt = parseRead();
+  std::unique_ptr<Node> stmt = parseRead();
   if (stmt) {
     return stmt;
   }
 
   stmt = parsePrint();
+  if (stmt) {
+    return stmt;
+  }
+
+  stmt = parseAssign();
+  if (stmt) {
+    return stmt;
+  }
+
+  stmt = parseWhile();
   if (stmt) {
     return stmt;
   }
@@ -504,6 +527,28 @@ std::unique_ptr<CondExprNode> Parser::parseCondExpr() {
 
   return std::make_unique<CondExprNode>(std::move(condLHS), op,
                                         std::move(condRHS));
+};
+
+std::unique_ptr<WhileNode> Parser::parseWhile() {
+  if (!match(TokenType::WHILE)) {
+    return nullptr;
+  }
+
+  expect(TokenType::L_PAREN);
+  auto condExpr = parseCondExpr();
+  if (!condExpr) {
+    // TODO: HANDLE ERROR BETTER
+    std::cout << "Expected a cond expression";
+  }
+  expect(TokenType::R_PAREN);
+  expect(TokenType::L_BRACE);
+  auto stmtList = parseStmtList();
+  if (!stmtList) {
+    // TODO: HANDLE ERROR BETTER
+    std::cout << "Expected a stmtlist";
+  }
+  expect(TokenType::R_BRACE);
+  return std::make_unique<WhileNode>(std::move(condExpr), std::move(stmtList));
 };
 
 Parser::Parser(std::vector<Token*> t) : tokens(t){};

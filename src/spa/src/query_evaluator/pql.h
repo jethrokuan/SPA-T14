@@ -2,6 +2,7 @@
 #include <memory>
 #include <optional>
 #include <regex>
+#include <variant>
 #include <vector>
 
 /*
@@ -68,6 +69,30 @@ class Synonym {
   }
 };
 
+class QuoteIdent {
+ private:
+  // Spec: LETTER (LETTER | DIGIT)*
+  static const std::regex quoteident_regex;
+
+  // Make constructors private
+  QuoteIdent() {}
+  QuoteIdent(std::string& quote_ident) : quote_ident(quote_ident) {}
+
+ public:
+  std::string quote_ident;
+  // Constructs a guaranteed valid Synonym
+  static std::optional<QuoteIdent> construct(std::string&);
+  static std::optional<QuoteIdent> construct(const char*);
+
+  bool operator==(const QuoteIdent& a2) const {
+    return quote_ident == a2.quote_ident;
+  }
+  friend std::ostream& operator<<(std::ostream& os, QuoteIdent const& qi) {
+    os << qi.quote_ident;
+    return os;
+  }
+};
+
 class Declaration {
  private:
   // Spec: LETTER (LETTER | DIGIT)*
@@ -116,7 +141,10 @@ Follows: ‘Follows’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
 FollowsT: ‘Follows*’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
 */
 
-// using stmtRef = std::variant<Synonym, Underscore, int
+class Underscore {};
+
+using StmtRef = std::variant<Synonym, Underscore, unsigned int>;
+using EntRef = std::variant<Synonym, Underscore, QuoteIdent>;
 
 class SuchThat {
  public:

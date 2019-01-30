@@ -27,6 +27,7 @@ Query::~Query() {
   delete pattern;
 }
 
+// Definitions for Synonym
 const std::regex Synonym::synonym_regex = std::regex("[a-zA-Z](\\d|[a-zA-Z])*");
 std::optional<Synonym> Synonym::construct(const char* synonym) {
   std::string s(synonym);
@@ -35,6 +36,21 @@ std::optional<Synonym> Synonym::construct(const char* synonym) {
 std::optional<Synonym> Synonym::construct(std::string& synonym) {
   if (std::regex_match(synonym, synonym_regex)) {
     return Synonym(synonym);
+  } else {
+    return std::nullopt;
+  }
+}
+
+// Definitions for QuoteIdent
+const std::regex QuoteIdent::quoteident_regex =
+    std::regex("\"[a-zA-Z](\\d|[a-zA-Z])*\"");
+std::optional<QuoteIdent> QuoteIdent::construct(const char* quote_ident) {
+  std::string qi(quote_ident);
+  return QuoteIdent::construct(qi);
+}
+std::optional<QuoteIdent> QuoteIdent::construct(std::string& quote_ident) {
+  if (std::regex_match(quote_ident, quoteident_regex)) {
+    return QuoteIdent(quote_ident);
   } else {
     return std::nullopt;
   }

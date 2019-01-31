@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "query_evaluator/pql.h"
+#include "query_evaluator/pql/pql.h"
 
 TEST_CASE("Empty Synonym") {
   auto d = QE::Synonym::construct("");

@@ -1,9 +1,7 @@
 #pragma once
+#include <iostream>
 #include <optional>
 #include <regex>
-#include <iostream>
-
-#include "query_evaluator/pql/pql.h"
 
 namespace QE {
 class Synonym {

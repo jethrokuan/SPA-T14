@@ -3,7 +3,6 @@
 #include <optional>
 #include <variant>
 
-#include "query_evaluator/pql/factor.h"
 #include "query_evaluator/pql/synonym.h"
 #include "query_evaluator/pql/util.h"
 

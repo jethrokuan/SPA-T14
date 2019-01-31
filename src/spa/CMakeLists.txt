@@ -4,6 +4,7 @@ set(srcs ${srcs}
   src/query_evaluator/query_evaluator.cpp
   src/query_evaluator/query_tokenizer.cpp
   src/query_evaluator/pql/pql.cpp
+  src/query_evaluator/pql/query.cpp
  )
 set(headers ${headers}
   src/query_evaluator/query_preprocessor.h

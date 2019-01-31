@@ -206,7 +206,7 @@ class SuchThat {
   }
 
   friend std::ostream& operator<<(std::ostream& os, SuchThat const& st) {
-    os << "SUCHTHAT: " << getStringFromRelation(st.getRelation()) << "("
+    os << getStringFromRelation(st.getRelation()) << "("
        << streamer{st.getFirstArg()} << ", " << streamer{st.getSecondArg()}
        << ")";
     return os;

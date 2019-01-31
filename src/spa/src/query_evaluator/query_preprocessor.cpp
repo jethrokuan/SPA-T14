@@ -96,10 +96,6 @@ void QueryPreprocessor::parseSuchThat(
       std::remove(joined_such_that.begin(), joined_such_that.end(), ' ');
   joined_such_that.erase(end_pos, joined_such_that.end());
 
-  // auto suchThat = SuchThat();
-
-  std::cout << "to match: " << joined_such_that << std::endl;
-
   // For a Relation to match: it must match 'RelationName'+'(' since some
   // relations are substrings of other relations
   const auto& stringToRelationMap = getRelationToStringMap();
@@ -113,8 +109,6 @@ void QueryPreprocessor::parseSuchThat(
       // Set the relation we found - args set later
       relation = r.first;
       found_end_idx = found_start_idx + r.second.length();
-      std::cout << "Found: " << string_to_match
-                << " ending at: " << found_end_idx << std::endl;
       found = true;
       break;
     }
@@ -134,9 +128,6 @@ void QueryPreprocessor::parseSuchThat(
   // These are the two strings representing each argument to SuchThat
   auto arg1 = joined_such_that.substr(arg1_start_idx, arg1_len);
   auto arg2 = joined_such_that.substr(arg2_start_idx, arg2_len);
-
-  std::cout << "Arg1: " << arg1 << std::endl;
-  std::cout << "Arg2: " << arg2 << std::endl;
 
   // Parse arguments to get either entRef or stmtRef
   auto arg_types = getArgTypesFromRelation(relation);
@@ -159,10 +150,12 @@ void QueryPreprocessor::parseSuchThat(
       relation, stmt_or_entref_1.value(), stmt_or_entref_2.value());
   if (opt_suchthat) {
     // FOR TOMORROW: WHY DOES THIS PARSE SUCCESSFULLY?
-    std::cout << "Such That parse success.\n";
     query->such_that = opt_suchthat.value();
   } else {
-    std::cout << "Such That parse error.\n";
+    std::cout << "Such That parse error - did not get correct stmtref/entref "
+                 "combination for given relation (this error message should "
+                 "not be seen)"
+              << getStringFromRelation(relation) << ".\n ";
   }
 }
 

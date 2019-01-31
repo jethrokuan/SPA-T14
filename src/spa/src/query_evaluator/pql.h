@@ -115,8 +115,8 @@ INTEGER: DIGIT+
 
 synonym: IDENT
 stmtRef: synonym | ‘_’ | INTEGER
-
 entRef: synonym | ‘_’ | ‘"’ IDENT ‘"’
+
 suchthat-cl: ‘such that’ relRef
 relRef: ModifiesS | UsesS | Parent | ParentT | Follows | FollowsT
 

@@ -1,9 +1,9 @@
-#include "query_evaluator/query_preprocessor.h"
+#include "query_evaluator/core/query_preprocessor.h"
 #include <algorithm>
 #include <iostream>
 #include <variant>
+#include "query_evaluator/core/query_tokenizer.h"
 #include "query_evaluator/pql/pql.h"
-#include "query_evaluator/query_tokenizer.h"
 
 using namespace QE;
 
@@ -236,8 +236,6 @@ Declaration* QueryPreprocessor::findDeclaration(
   return &declarations->at(
       std::distance(declarations->begin(), found_declaration));
 }
-
-
 
 // Tries to produce either a statement or entity reference from the given string
 std::optional<StmtOrEntRef> QueryPreprocessor::argToStmtOrEntRef(

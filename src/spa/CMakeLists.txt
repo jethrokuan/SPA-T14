@@ -1,8 +1,8 @@
 # PQL Query Evaluator files
 set(srcs ${srcs}
-  src/query_evaluator/query_preprocessor.cpp
   src/query_evaluator/query_evaluator.cpp
-  src/query_evaluator/query_tokenizer.cpp
+  src/query_evaluator/core/query_preprocessor.cpp
+  src/query_evaluator/core/query_tokenizer.cpp
   src/query_evaluator/pql/design_entity.cpp
   src/query_evaluator/pql/factor.cpp
   src/query_evaluator/pql/pattern.cpp
@@ -14,9 +14,9 @@ set(srcs ${srcs}
   src/query_evaluator/pql/util.cpp
  )
 set(headers ${headers}
-  src/query_evaluator/query_preprocessor.h
-  src/query_evaluator/query_tokenizer.h
   src/query_evaluator/query_evaluator.h
+  src/query_evaluator/core/query_preprocessor.h
+  src/query_evaluator/core/query_tokenizer.h
   src/query_evaluator/pql/pql.h
   src/query_evaluator/pql/declaration.h
   src/query_evaluator/pql/design_entity.h

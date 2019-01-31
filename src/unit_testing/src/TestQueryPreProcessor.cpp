@@ -17,6 +17,7 @@ TEST_CASE("Test one assign one select query Preprocess") {
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
   REQUIRE(query->such_that == nullptr);
+  REQUIRE(query->pattern == nullptr);
 }
 
 TEST_CASE("Test two assign one select query Preprocess") {
@@ -33,6 +34,7 @@ TEST_CASE("Test two assign one select query Preprocess") {
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
   REQUIRE(query->such_that == nullptr);
+  REQUIRE(query->pattern == nullptr);
 }
 
 TEST_CASE("Test three assign one select query Preprocess") {
@@ -51,6 +53,7 @@ TEST_CASE("Test three assign one select query Preprocess") {
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
   REQUIRE(query->such_that == nullptr);
+  REQUIRE(query->pattern == nullptr);
 }
 
 TEST_CASE(
@@ -65,6 +68,7 @@ TEST_CASE(
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
   REQUIRE(query->such_that == nullptr);
+  REQUIRE(query->pattern == nullptr);
 }
 
 TEST_CASE(
@@ -85,6 +89,7 @@ TEST_CASE(
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
     REQUIRE(*(query->such_that) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
+    REQUIRE(query->pattern == nullptr);
   }
 
   SECTION("Follows(stmtref(int), stmtref(int))") {
@@ -102,6 +107,7 @@ TEST_CASE(
     QE::StmtOrEntRef a2 = QE::StmtRef(78);
     REQUIRE(*(query->such_that) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
+    REQUIRE(query->pattern == nullptr);
   }
 
   SECTION("Follows(stmtref(synonym), stmtref(synonym))") {
@@ -119,6 +125,7 @@ TEST_CASE(
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
     REQUIRE(*(query->such_that) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
+    REQUIRE(query->pattern == nullptr);
   }
 
   SECTION("Follows(stmtref(synonym), entref(\"asd\"))") {
@@ -136,13 +143,14 @@ TEST_CASE(
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
     // No such_that - invalid parse
     REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
   }
 }
 
 TEST_CASE(
     "Test one assigned one select syntactically correct FOLLOWS such that one "
     "pattern") {
-  SECTION("Pattern test") {
+  SECTION("Pattern test QuoteIdent DoubleUnderscoreFactor") {
     auto qp = QE::QueryPreprocessor();
     std::string input =
         "assign p;Select p such that Follows(a, b) pattern p (\"x\", "
@@ -159,5 +167,81 @@ TEST_CASE(
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
     REQUIRE(*(query->such_that) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
+
+    QE::Synonym syn = QE::Synonym::construct("p").value();
+    QE::EntRef entRef = QE::EntRef(QE::QuoteIdent::construct("\"x\"").value());
+    QE::ExpressionSpec expr = QE::ExpressionSpec(
+        QE::DoubleUnderscoreFactor::construct("_\"y\"_").value());
+    auto pat = Pattern::construct(syn, entRef, expr);
+    REQUIRE(*(query->pattern) == pat);
+  }
+  SECTION("Pattern test QuoteIdent UnderScore") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input =
+        "assign p;Select p such that Follows(a, b) pattern p (\"x\", _)";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+
+    QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
+    QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
+    REQUIRE(*(query->such_that) ==
+            SuchThat::construct(Relation::Follows, a1, a2).value());
+
+    QE::Synonym syn = QE::Synonym::construct("p").value();
+    QE::EntRef entRef = QE::EntRef(QE::QuoteIdent::construct("\"x\"").value());
+    QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
+    auto pat = Pattern::construct(syn, entRef, expr);
+    REQUIRE(*(query->pattern) == pat);
+  }
+  SECTION("Pattern test UnderScore UnderScore") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input =
+        "assign p;Select p such that Follows(a, b) pattern p (_, _)";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+
+    QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
+    QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
+    REQUIRE(*(query->such_that) ==
+            SuchThat::construct(Relation::Follows, a1, a2).value());
+
+    QE::Synonym syn = QE::Synonym::construct("p").value();
+    QE::EntRef entRef = QE::EntRef(QE::Underscore());
+    QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
+    auto pat = Pattern::construct(syn, entRef, expr);
+    REQUIRE(*(query->pattern) == pat);
+  }
+  SECTION("Pattern test Synonym UnderScore") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input =
+        "assign p;Select p such that Follows(a, b) pattern p (x, _)";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+
+    QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
+    QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
+    REQUIRE(*(query->such_that) ==
+            SuchThat::construct(Relation::Follows, a1, a2).value());
+
+    QE::Synonym syn = QE::Synonym::construct("p").value();
+    QE::EntRef entRef = QE::EntRef(QE::Synonym::construct("x").value());
+    QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
+    auto pat = Pattern::construct(syn, entRef, expr);
+    REQUIRE(*(query->pattern) == pat);
   }
 }

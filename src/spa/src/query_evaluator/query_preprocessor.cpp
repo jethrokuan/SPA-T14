@@ -182,8 +182,6 @@ void QueryPreprocessor::parsePattern(Query* query,
       std::remove(joined_pattern.begin(), joined_pattern.end(), ' ');
   joined_pattern.erase(end_pos, joined_pattern.end());
 
-  std::cout << "Pattern string: " << joined_pattern << std::endl;
-
   auto syn_assign_len = joined_pattern.find('(');
 
   auto arg1_start_idx = joined_pattern.find('(') + 1;
@@ -194,10 +192,6 @@ void QueryPreprocessor::parsePattern(Query* query,
   auto syn_assign = joined_pattern.substr(0, syn_assign_len);
   auto arg1 = joined_pattern.substr(arg1_start_idx, arg1_len);
   auto arg2 = joined_pattern.substr(arg2_start_idx, arg2_len);
-
-  std::cout << "Syn-Assign: " << syn_assign << std::endl;
-  std::cout << "Pattern Arg 1: " << arg1 << std::endl;
-  std::cout << "Pattern Arg 2: " << arg2 << std::endl;
 
   auto synonym = Synonym::construct(syn_assign);
   auto entref = argToEntRef(arg1);

@@ -19,8 +19,10 @@ class QueryPreprocessor {
   // Utility methods
   static Declaration* findDeclaration(std::vector<Declaration>* declarations,
                                       std::string synonym_to_match);
-  static void argToStmtEntityRef(std::vector<Declaration>* declarations,
-                                 std::string arg);
+  static std::optional<StmtOrEntRef> argToStmtOrEntRef(std::string, RefType);
+  static std::optional<StmtRef> argToStmtRef(std::string arg);
+  static std::optional<EntRef> argToEntRef(std::string arg);
+  static bool has_only_digits(const std::string);
 
  public:
   // Given a string containing PQL,

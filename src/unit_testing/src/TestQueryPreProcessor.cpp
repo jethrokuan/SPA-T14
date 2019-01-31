@@ -16,6 +16,7 @@ TEST_CASE("Test one assign one select query Preprocess") {
   REQUIRE(
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+  REQUIRE(query->such_that == nullptr);
 }
 
 TEST_CASE("Test two assign one select query Preprocess") {
@@ -31,6 +32,7 @@ TEST_CASE("Test two assign one select query Preprocess") {
   REQUIRE(
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+  REQUIRE(query->such_that == nullptr);
 }
 
 TEST_CASE("Test three assign one select query Preprocess") {
@@ -48,9 +50,11 @@ TEST_CASE("Test three assign one select query Preprocess") {
   REQUIRE(
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+  REQUIRE(query->such_that == nullptr);
 }
 
-TEST_CASE("Test one assign one select one such that query Preprocess") {
+TEST_CASE(
+    "Test one assign one select one malformed such that query Preprocess") {
   auto qp = QE::QueryPreprocessor();
   std::string input = "assign p;Select p such that Follows(6++=sss| , s23123|)";
   auto query = qp.getQuery(input);
@@ -60,4 +64,20 @@ TEST_CASE("Test one assign one select one such that query Preprocess") {
   REQUIRE(
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+  REQUIRE(query->such_that == nullptr);
+}
+
+TEST_CASE(
+    "Test one assign one select one syntactically correct such that query "
+    "Preprocess") {
+  auto qp = QE::QueryPreprocessor();
+  std::string input = "assign p;Select p such that Follows(_,_)";
+  auto query = qp.getQuery(input);
+  REQUIRE(*(query->declarations) ==
+          std::vector<Declaration>{Declaration(
+              DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+  REQUIRE(
+      *(query->selected_declaration) ==
+      Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+  // REQUIRE(query->such_that == nullptr);
 }

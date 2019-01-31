@@ -105,12 +105,13 @@ void QueryPreprocessor::parseSuchThat(
   const auto& stringToRelationMap = getRelationToStringMap();
   size_t found_end_idx = 0;
   bool found = false;
+  Relation relation;
   for (const auto& r : stringToRelationMap) {
     auto string_to_match = r.second + '(';
     auto found_start_idx = joined_such_that.find(string_to_match);
     if (found_start_idx != std::string::npos) {
       // Set the relation we found - args set later
-      // suchThat.relation = r.first;
+      relation = r.first;
       found_end_idx = found_start_idx + r.second.length();
       std::cout << "Found: " << string_to_match
                 << " ending at: " << found_end_idx << std::endl;
@@ -138,6 +139,31 @@ void QueryPreprocessor::parseSuchThat(
   std::cout << "Arg2: " << arg2 << std::endl;
 
   // Parse arguments to get either entRef or stmtRef
+  auto arg_types = getArgTypesFromRelation(relation);
+
+  auto stmt_or_entref_1 = argToStmtOrEntRef(arg1, arg_types.first);
+  auto stmt_or_entref_2 = argToStmtOrEntRef(arg2, arg_types.second);
+
+  // TODO: Better error handling
+  if (!stmt_or_entref_1) {
+    std::cout << "Such That parse error with arg " << arg1 << "\n";
+    return;
+  }
+  if (!stmt_or_entref_2) {
+    std::cout << "Such That parse error with arg " << arg2 << "\n";
+    return;
+  }
+
+  // Construct final Such That relation
+  auto opt_suchthat = SuchThat::construct(relation, stmt_or_entref_1.value(),
+                                          stmt_or_entref_2.value());
+  if (opt_suchthat) {
+    // FOR TOMORROW: WHY DOES THIS PARSE SUCCESSFULLY?
+    std::cout << "Such That parse success.\n";
+    query->such_that = &opt_suchthat.value();
+  } else {
+    std::cout << "Such That parse error.\n";
+  }
 }
 
 // Find the first declaration that matches this synonym
@@ -151,8 +177,59 @@ Declaration* QueryPreprocessor::findDeclaration(
       std::distance(declarations->begin(), found_declaration));
 }
 
+bool QueryPreprocessor::has_only_digits(const std::string s) {
+  return s.find_first_not_of("0123456789") == std::string::npos;
+}
+
 // Tries to produce either a statement or entity reference from the given string
-static void argToStmtEntityRef(std::vector<Declaration>* declarations,
-                               std::string arg) {
-  return;
+std::optional<StmtOrEntRef> QueryPreprocessor::argToStmtOrEntRef(
+    std::string arg, RefType refType) {
+  if (refType == RefType::STMTREF) {
+    auto ret = argToStmtRef(arg);
+    if (ret) {
+      return ret.value();
+    } else {
+      return std::nullopt;
+    }
+  } else {
+    auto ret = argToEntRef(arg);
+    if (ret) {
+      return ret.value();
+    } else {
+      return std::nullopt;
+    }
+  }
+}
+
+std::optional<StmtRef> QueryPreprocessor::argToStmtRef(std::string arg) {
+  StmtRef s1 = QE::Underscore();
+  std::optional<Synonym> opt_synonym;
+  if (arg == "_") {
+    s1 = QE::Underscore();
+  } else if (has_only_digits(arg)) {
+    s1 = std::stoul(arg);
+  } else if ((opt_synonym = Synonym::construct(arg))) {
+    s1 = opt_synonym.value();
+  } else {
+    std::cout << "Cannot parse arg: " << arg << " as a stmtRef\n";
+    return std::nullopt;
+  }
+  return s1;
+}
+
+std::optional<EntRef> QueryPreprocessor::argToEntRef(std::string arg) {
+  QE::EntRef s1 = QE::Underscore();
+  std::optional<Synonym> opt_synonym;
+  std::optional<QuoteIdent> opt_quoteident;
+  if (arg == "_") {
+    s1 = QE::Underscore();
+  } else if ((opt_synonym = Synonym::construct(arg))) {
+    s1 = opt_synonym.value();
+  } else if ((opt_quoteident = QuoteIdent::construct(arg))) {
+    s1 = opt_quoteident.value();
+  } else {
+    std::cout << "Cannot parse arg: " << arg << " as an entRef\n";
+    return std::nullopt;
+  }
+  return s1;
 }

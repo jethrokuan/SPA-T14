@@ -79,5 +79,9 @@ TEST_CASE(
   REQUIRE(
       *(query->selected_declaration) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-  // REQUIRE(query->such_that == nullptr);
+
+  QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
+  QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
+  REQUIRE(*(query->such_that) ==
+          SuchThat::construct(Relation::Follows, a1, a2).value());
 }

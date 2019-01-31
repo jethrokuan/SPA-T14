@@ -237,9 +237,7 @@ Declaration* QueryPreprocessor::findDeclaration(
       std::distance(declarations->begin(), found_declaration));
 }
 
-bool QueryPreprocessor::has_only_digits(const std::string s) {
-  return s.find_first_not_of("0123456789") == std::string::npos;
-}
+
 
 // Tries to produce either a statement or entity reference from the given string
 std::optional<StmtOrEntRef> QueryPreprocessor::argToStmtOrEntRef(

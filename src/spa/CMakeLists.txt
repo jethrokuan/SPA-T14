@@ -3,8 +3,16 @@ set(srcs ${srcs}
   src/query_evaluator/query_preprocessor.cpp
   src/query_evaluator/query_evaluator.cpp
   src/query_evaluator/query_tokenizer.cpp
+  src/query_evaluator/pql/design_entity.cpp
+  src/query_evaluator/pql/factor.cpp
+  src/query_evaluator/pql/pattern.cpp
   src/query_evaluator/pql/pql.cpp
+  src/query_evaluator/pql/quoteident.cpp
   src/query_evaluator/pql/query.cpp
+  src/query_evaluator/pql/relation.cpp
+  src/query_evaluator/pql/suchthat.cpp
+  src/query_evaluator/pql/synonym.cpp
+  src/query_evaluator/pql/util.cpp
  )
 set(headers ${headers}
   src/query_evaluator/query_preprocessor.h

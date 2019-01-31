@@ -155,10 +155,6 @@ Relation getRelation(std::string& relation_string) {
   return stringToRelationMap.at(relation_string);
 }
 std::string getStringFromRelation(Relation relation) {
-  // std::cout << "UNDERLYING: "
-  //           << static_cast<std::underlying_type<Relation>::type>(relation)
-  //           << std::endl;
-
   return relationToStringMap.at(relation);
 }
 const std::map<Relation, std::string>& getRelationToStringMap() {

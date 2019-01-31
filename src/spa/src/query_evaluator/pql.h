@@ -126,6 +126,9 @@ Parent: ‘Parent’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
 ParentT: ‘Parent*’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
 Follows: ‘Follows’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
 FollowsT: ‘Follows*’ ‘(’ stmtRef ‘,’ stmtRef ‘)’
+
+pattern-cl: ‘pattern’ syn-assign ‘(‘entRef ’,’ expression-spec ’)’
+syn-assign is a synonym that
 */
 
 // WARNING: WHEN UPDATING THIS CLASS --> Update cpp file
@@ -213,7 +216,56 @@ class SuchThat {
   }
 };
 
-class Pattern {};
+using Factor = std::variant<Synonym, unsigned int>;
+class DoubleUnderscoreFactor {
+ private:
+  // Make constructors private
+  DoubleUnderscoreFactor(Factor factor) : factor(factor) {}
+
+ public:
+  Factor factor;
+  // Constructs a guaranteed valid Synonym
+  static std::optional<DoubleUnderscoreFactor> construct(std::string&);
+  static std::optional<DoubleUnderscoreFactor> construct(const char*);
+
+  bool operator==(const DoubleUnderscoreFactor& duf) const {
+    return factor == duf.factor;
+  }
+  friend std::ostream& operator<<(std::ostream& os,
+                                  DoubleUnderscoreFactor const& duf) {
+    os << streamer{duf.factor};
+    return os;
+  }
+};
+using ExpressionSpec = std::variant<DoubleUnderscoreFactor, Underscore>;
+
+class Pattern {
+ private:
+  Synonym synonym;
+  EntRef firstArg;
+  ExpressionSpec secondArg;
+  Pattern(Synonym& s, EntRef& a1, ExpressionSpec& a2)
+      : synonym(s), firstArg(a1), secondArg(a2){};
+
+ public:
+  static std::optional<Pattern> construct(Synonym&, EntRef&, ExpressionSpec&);
+  static std::optional<Pattern*> construct_heap(Synonym&, EntRef&,
+                                                ExpressionSpec&);
+  Synonym getSynonym() const { return synonym; }
+  EntRef getFirstArg() const { return firstArg; }
+  ExpressionSpec getSecondArg() const { return secondArg; }
+
+  bool operator==(const Pattern& pat) const {
+    return synonym == pat.synonym && firstArg == pat.firstArg &&
+           secondArg == pat.secondArg;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, Pattern const& pat) {
+    os << pat.synonym << "(" << streamer{pat.getFirstArg()} << ", "
+       << streamer{pat.getSecondArg()} << ")";
+    return os;
+  }
+};
 
 class Query {
  public:

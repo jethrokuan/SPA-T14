@@ -19,6 +19,7 @@ Query* QueryPreprocessor::getQuery(std::string& pql_query_string) {
   QueryPreprocessor::parseDeclarations(query, query_tokens.declaration_tokens);
   QueryPreprocessor::parseSelect(query, query_tokens.select_tokens);
   QueryPreprocessor::parseSuchThat(query, query_tokens.such_that_tokens);
+  QueryPreprocessor::parsePattern(query, query_tokens.pattern_tokens);
 
   return query;
 }
@@ -149,13 +150,85 @@ void QueryPreprocessor::parseSuchThat(
   auto opt_suchthat = SuchThat::construct_heap(
       relation, stmt_or_entref_1.value(), stmt_or_entref_2.value());
   if (opt_suchthat) {
-    // FOR TOMORROW: WHY DOES THIS PARSE SUCCESSFULLY?
     query->such_that = opt_suchthat.value();
   } else {
     std::cout << "Such That parse error - did not get correct stmtref/entref "
                  "combination for given relation (this error message should "
                  "not be seen)"
               << getStringFromRelation(relation) << ".\n ";
+  }
+}
+
+void QueryPreprocessor::parsePattern(Query* query,
+                                     std::vector<std::string>* pattern_tokens) {
+  if (pattern_tokens == nullptr) {
+    return;
+  } else if (pattern_tokens->size() <= 1) {
+    // Error condition: depends on error handling strategy for project
+    // TODO
+    std::cout << "Pattern tokens invalid";
+    return;
+  }
+
+  // Join and all such-that tokens excluding "pattern"
+  std::string joined_pattern;
+  for (auto it = pattern_tokens->begin() + 1; it != pattern_tokens->end();
+       ++it) {
+    joined_pattern += *it;
+  }
+
+  // Erase all whitespace
+  std::string::iterator end_pos =
+      std::remove(joined_pattern.begin(), joined_pattern.end(), ' ');
+  joined_pattern.erase(end_pos, joined_pattern.end());
+
+  std::cout << "Pattern string: " << joined_pattern << std::endl;
+
+  auto syn_assign_len = joined_pattern.find('(');
+
+  auto arg1_start_idx = joined_pattern.find('(') + 1;
+  auto arg1_len = joined_pattern.find(',') - arg1_start_idx;
+  auto arg2_start_idx = joined_pattern.find(',') + 1;
+  auto arg2_len = joined_pattern.find(')') - arg2_start_idx;
+
+  auto syn_assign = joined_pattern.substr(0, syn_assign_len);
+  auto arg1 = joined_pattern.substr(arg1_start_idx, arg1_len);
+  auto arg2 = joined_pattern.substr(arg2_start_idx, arg2_len);
+
+  std::cout << "Syn-Assign: " << syn_assign << std::endl;
+  std::cout << "Pattern Arg 1: " << arg1 << std::endl;
+  std::cout << "Pattern Arg 2: " << arg2 << std::endl;
+
+  auto synonym = Synonym::construct(syn_assign);
+  auto entref = argToEntRef(arg1);
+  auto exprspec = argToExprSpec(arg2);
+
+  // TODO: Better error handling
+  if (!synonym) {
+    std::cout << "Pattern parse error - cannot parse arg" << arg1
+              << " as synonym\n";
+    return;
+  }
+  if (!entref) {
+    std::cout << "Pattern parse error - cannot parse arg " << arg1
+              << " as entRef\n";
+    return;
+  }
+  if (!exprspec) {
+    std::cout << "Pattern parse error - cannot parse arg " << arg2
+              << " as exprspec\n";
+    return;
+  }
+
+  // Construct final Pattern relation
+  auto opt_pattern = Pattern::construct_heap(synonym.value(), entref.value(),
+                                             exprspec.value());
+  if (opt_pattern) {
+    query->pattern = opt_pattern.value();
+  } else {
+    std::cout << "Pattern parse error - could not construct final pattern from "
+                 "individually valid parts."
+              << ".\n ";
   }
 }
 
@@ -225,4 +298,17 @@ std::optional<EntRef> QueryPreprocessor::argToEntRef(std::string arg) {
     return std::nullopt;
   }
   return s1;
+}
+
+std::optional<ExpressionSpec> QueryPreprocessor::argToExprSpec(
+    std::string arg) {
+  auto duf = DoubleUnderscoreFactor::construct(arg);
+  if (duf) {
+    return duf;
+  } else if (arg == "_") {
+    return Underscore();
+  } else {
+    std::cout << "Cannot parse arg: " << arg << " as an exprspec\n";
+    return std::nullopt;
+  }
 }

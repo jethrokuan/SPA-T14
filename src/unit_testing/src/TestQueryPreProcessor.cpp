@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "query_evaluator/query_evaluator.h"
-#include "query_evaluator/query_preprocessor.h"
+#include "query_evaluator/core/query_preprocessor.h"
 
 using namespace QE;
 TEST_CASE("Test one assign one select query Preprocess") {

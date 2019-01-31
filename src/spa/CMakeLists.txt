@@ -6,7 +6,6 @@ set(srcs ${srcs}
   src/query_evaluator/pql/design_entity.cpp
   src/query_evaluator/pql/factor.cpp
   src/query_evaluator/pql/pattern.cpp
-  src/query_evaluator/pql/pql.cpp
   src/query_evaluator/pql/quoteident.cpp
   src/query_evaluator/pql/query.cpp
   src/query_evaluator/pql/relation.cpp

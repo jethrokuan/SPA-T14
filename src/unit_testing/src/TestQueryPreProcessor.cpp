@@ -138,3 +138,26 @@ TEST_CASE(
     REQUIRE(query->such_that == nullptr);
   }
 }
+
+TEST_CASE(
+    "Test one assigned one select syntactically correct FOLLOWS such that one "
+    "pattern") {
+  SECTION("Pattern test") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input =
+        "assign p;Select p such that Follows(a, b) pattern p (\"x\", "
+        "_\"y\"_)";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+
+    QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
+    QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
+    REQUIRE(*(query->such_that) ==
+            SuchThat::construct(Relation::Follows, a1, a2).value());
+  }
+}

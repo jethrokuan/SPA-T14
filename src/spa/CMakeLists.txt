@@ -3,13 +3,25 @@ set(srcs ${srcs}
   src/query_evaluator/query_preprocessor.cpp
   src/query_evaluator/query_evaluator.cpp
   src/query_evaluator/query_tokenizer.cpp
-  src/query_evaluator/pql.cpp
-  )
+  src/query_evaluator/pql/pql.cpp
+ )
 set(headers ${headers}
   src/query_evaluator/query_preprocessor.h
   src/query_evaluator/query_tokenizer.h
   src/query_evaluator/query_evaluator.h
-  src/query_evaluator/pql.h
+  src/query_evaluator/pql/pql.h
+  src/query_evaluator/pql/declaration.h
+  src/query_evaluator/pql/design_entity.h
+  src/query_evaluator/pql/factor.h
+  src/query_evaluator/pql/pattern.h
+  src/query_evaluator/pql/query.h
+  src/query_evaluator/pql/quoteident.h
+  src/query_evaluator/pql/relation.h
+  src/query_evaluator/pql/stmtentref.h
+  src/query_evaluator/pql/suchthat.h
+  src/query_evaluator/pql/synonym.h
+  src/query_evaluator/pql/underscore.h
+  src/query_evaluator/pql/util.h
  )
   
 # SIMPLE parser files

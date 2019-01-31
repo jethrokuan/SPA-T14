@@ -138,10 +138,20 @@ enum class Relation {
   FollowsT = 6
 };
 Relation getRelation(std::string&);
-std::string getRelationFromString(Relation);
+std::string getStringFromRelation(Relation);
 const std::map<Relation, std::string>& getRelationToStringMap();
 
-class Underscore {};
+class Underscore {
+ public:
+  bool operator==(__attribute__((unused)) const Underscore& u) const {
+    return true;
+  }
+  friend std::ostream& operator<<(std::ostream& os,
+                                  __attribute__((unused)) Underscore const& u) {
+    os << "_";
+    return os;
+  }
+};
 using StatementNumber = unsigned int;
 using StmtRef = std::variant<Synonym, Underscore, StatementNumber>;
 using EntRef = std::variant<Synonym, Underscore, QuoteIdent>;
@@ -152,6 +162,26 @@ using StmtOrEntRef = std::variant<StmtRef, EntRef>;
 // arguments
 enum class RefType { STMTREF, ENTREF };
 std::pair<RefType, RefType> getArgTypesFromRelation(Relation&);
+
+// Utility templates for streaming nested variants
+template <class T>
+struct streamer {
+  const T& val;
+};
+template <class T>
+streamer(T)->streamer<T>;
+
+template <class T>
+std::ostream& operator<<(std::ostream& os, streamer<T> s) {
+  os << s.val;
+  return os;
+}
+
+template <class... Ts>
+std::ostream& operator<<(std::ostream& os, streamer<std::variant<Ts...>> sv) {
+  std::visit([&os](const auto& v) { os << streamer{v}; }, sv.val);
+  return os;
+}
 
 class SuchThat {
  private:
@@ -164,9 +194,23 @@ class SuchThat {
  public:
   static std::optional<SuchThat> construct(Relation, StmtOrEntRef&,
                                            StmtOrEntRef&);
-  Relation getRelation() { return relation; }
-  StmtOrEntRef getFirstArg() { return firstArg; }
-  StmtOrEntRef getSecondArg() { return secondArg; }
+  static std::optional<SuchThat*> construct_heap(Relation, StmtOrEntRef&,
+                                                 StmtOrEntRef&);
+  Relation getRelation() const { return relation; }
+  StmtOrEntRef getFirstArg() const { return firstArg; }
+  StmtOrEntRef getSecondArg() const { return secondArg; }
+
+  bool operator==(const SuchThat& st) const {
+    return relation == st.relation && firstArg == st.firstArg &&
+           secondArg == st.secondArg;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, SuchThat const& st) {
+    os << "SUCHTHAT: " << getStringFromRelation(st.getRelation()) << "("
+       << streamer{st.getFirstArg()} << ", " << streamer{st.getSecondArg()}
+       << ")";
+    return os;
+  }
 };
 
 class Pattern {};

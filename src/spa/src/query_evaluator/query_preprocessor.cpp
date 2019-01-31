@@ -155,12 +155,12 @@ void QueryPreprocessor::parseSuchThat(
   }
 
   // Construct final Such That relation
-  auto opt_suchthat = SuchThat::construct(relation, stmt_or_entref_1.value(),
-                                          stmt_or_entref_2.value());
+  auto opt_suchthat = SuchThat::construct_heap(
+      relation, stmt_or_entref_1.value(), stmt_or_entref_2.value());
   if (opt_suchthat) {
     // FOR TOMORROW: WHY DOES THIS PARSE SUCCESSFULLY?
     std::cout << "Such That parse success.\n";
-    query->such_that = &opt_suchthat.value();
+    query->such_that = opt_suchthat.value();
   } else {
     std::cout << "Such That parse error.\n";
   }

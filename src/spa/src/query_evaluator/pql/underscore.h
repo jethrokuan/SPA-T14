@@ -1,8 +1,6 @@
 #pragma once
 #include <iostream>
 
-#include "query_evaluator/pql/pql.h"
-
 namespace QE {
 class Underscore {
  public:

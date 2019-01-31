@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
+#include <map>
+#include <string>
 #include <variant>
-
-#include "query_evaluator/pql/pql.h"
 
 namespace QE {
 // Utility templates for streaming nested variants
@@ -24,4 +24,17 @@ std::ostream& operator<<(std::ostream& os, streamer<std::variant<Ts...>> sv) {
   std::visit([&os](const auto& v) { os << streamer{v}; }, sv.val);
   return os;
 }
+
+// Generic template for swapping keys and value of a map into a new map
+template <class T1, class T2>
+std::map<T2, T1> swapPairs(std::map<T1, T2> m) {
+  std::map<T2, T1> m1;
+  for (auto&& item : m) {
+    m1.emplace(item.second, item.first);
+  }
+  return m1;
+};
+
+bool has_only_digits(const std::string);
+
 }  // namespace QE

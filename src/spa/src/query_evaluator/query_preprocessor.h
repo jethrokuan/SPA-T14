@@ -26,9 +26,6 @@ class QueryPreprocessor {
   static std::optional<ExpressionSpec> argToExprSpec(std::string arg);
 
  public:
-  // Util
-  static bool has_only_digits(const std::string);
-
   // Given a string containing PQL,
   // returns the Query object representing the query's structure
   Query* getQuery(std::string&);

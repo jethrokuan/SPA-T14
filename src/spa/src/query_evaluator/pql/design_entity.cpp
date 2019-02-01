@@ -1,5 +1,8 @@
 #include "query_evaluator/pql/design_entity.h"
+#include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/pql/util.h"
+
+#include <stdexcept>
 
 #include <map>
 
@@ -23,8 +26,15 @@ auto stringToDesignEntityMap =
     swapPairs<DesignEntity, std::string>(designEntityToStringMap);
 
 DesignEntity getDesignEntity(std::string& designentity_string) {
-  return stringToDesignEntityMap.at(designentity_string);
+  try {
+    return stringToDesignEntityMap.at(designentity_string);
+  } catch (const std::out_of_range& oor) {
+    throw PQLParseException("Cannot find a Design Entity called " +
+                            designentity_string);
+  }
 }
+
+// An exception here would be a programmer error - no need to handle differently
 std::string getDesignEntityString(DesignEntity de) {
   return designEntityToStringMap.at(de);
 }

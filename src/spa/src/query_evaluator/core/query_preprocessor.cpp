@@ -1,7 +1,9 @@
 #include "query_evaluator/core/query_preprocessor.h"
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <variant>
+#include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/core/query_tokenizer.h"
 #include "query_evaluator/pql/pql.h"
 
@@ -31,9 +33,7 @@ void QueryPreprocessor::parseDeclarations(
   auto decls = new std::vector<Declaration>();
   for (size_t i = 0; i < declaration_tokens->size(); i++) {
     if (i % 2 == 0) {
-      // Design entity
-      // TODO: This can throw an error if the DE isn't recognized (incorrect
-      // DE)!
+      // This might throw an error - it will terminate this process
       de = getDesignEntity((*declaration_tokens)[i]);
     } else {
       // This is the synonym half of the decl: store the DE we have into our
@@ -43,11 +43,11 @@ void QueryPreprocessor::parseDeclarations(
       std::optional<Synonym> synonymObj = Synonym::construct(synonym);
       if (!synonymObj) {
         // Failure in synonym construction: regex invalud
-        // TODO: PROPER ERROR HANDLING
-        std::cout << "Cannot recognize synonym [" << synonym
-                  << "] for design entity " << getDesignEntityString(de)
-                  << std::endl;
-        return;
+        std::ostringstream oss;
+        oss << "Could not parse synonym " << synonym
+            << " when processing design entity " << getDesignEntityString(de)
+            << std::endl;
+        throw PQLParseException(oss.str());
       }
 
       decls->push_back(Declaration(de, synonymObj.value()));
@@ -59,10 +59,10 @@ void QueryPreprocessor::parseDeclarations(
 void QueryPreprocessor::parseSelect(Query* query,
                                     std::vector<std::string>* select_tokens) {
   if (select_tokens->size() != 2) {
-    // Error condition: depends on error handling strategy for project
-    // TODO
-    std::cout << "Select tokens invalid";
-    return;
+    throw PQLParseException(
+        "Invalid number of tokens found for Select statement. Expected 2, "
+        "found " +
+        std::to_string(select_tokens->size()));
   }
 
   // The synonym in the Select statement (e.g. {"Select", "p"} --> "p")

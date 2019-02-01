@@ -2,8 +2,9 @@
 
 #include <iostream>
 #include <vector>
-#include "query_evaluator/query_evaluator.h"
+#include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/core/query_preprocessor.h"
+#include "query_evaluator/query_evaluator.h"
 
 using namespace QE;
 TEST_CASE("Test one assign one select query Preprocess") {
@@ -243,5 +244,34 @@ TEST_CASE(
     QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
     auto pat = Pattern::construct(syn, entRef, expr);
     REQUIRE(*(query->pattern) == pat);
+  }
+}
+
+// This should use REQUIRE_THROWS_MATCHES, but I cannot get the matcher to work
+// It cannot seem to convert my exception class to a string.
+// I've tried both to_string and operator<< implementations, no luck
+TEST_CASE("Test Preprocess Exceptions") {
+  SECTION("Test Declaration exception for invalid Design Entity") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "invalid_design_entity p;Select p";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
+
+  SECTION("Test Declaration exception for invalid synonym") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign @;Select p";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
+
+  SECTION("Test Declaration exception for != 2 select tokens") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLTokenizeException);
+  }
+
+  SECTION("Test Declaration exception for no select tokens") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLTokenizeException);
   }
 }

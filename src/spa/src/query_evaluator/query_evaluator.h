@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>  // future use of smart pointers
 #include <string>
-#include "query_evaluator/pql.h"
+#include "query_evaluator/pql/pql.h"
 
 /*
  * The main API for the PQL Query Engine (QE)

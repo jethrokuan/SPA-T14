@@ -1,4 +1,4 @@
-#include "query_evaluator/query_tokenizer.h"
+#include "query_evaluator/core/query_tokenizer.h"
 #include <algorithm>
 #include <iostream>
 #include <string>

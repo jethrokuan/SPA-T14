@@ -35,6 +35,7 @@ set(headers ${headers}
 # SIMPLE parser files
 set(srcs ${srcs}
   src/simple_parser/lexer.cpp
+  src/simple_parser/token.cpp
   src/simple_parser/parser.cpp
   )
 set(headers ${headers}

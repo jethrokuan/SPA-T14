@@ -1,5 +1,7 @@
 #include "simple_parser/parser.h"
 
+#include <unordered_set>
+
 using namespace Simple;
 
 StmtListNode::StmtListNode(std::vector<std::unique_ptr<Node>> stmtList)
@@ -213,19 +215,42 @@ bool Parser::match(TokenType type) {
   }
 }
 
+bool Parser::match(std::string s) {
+  if (check(s)) {
+    advance();
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool Parser::expect(TokenType type) {
   if (match(type)) {
     return true;
   } else {
     // TODO: Handle this better
-    std::cout << "expected " << type << ", got " << peek()->t << std::endl;
+    return false;
+  }
+};
+
+bool Parser::expect(std::string s) {
+  if (match(s)) {
+    return true;
+  } else {
+    // TODO: Handle this better
+    std::cout << "expected " << s << ", got " << peek()->Val << std::endl;
     return false;
   }
 };
 
 bool Parser::check(TokenType type) {
   if (isAtEnd()) return false;
-  return peek()->t == type;
+  return peek()->T == type;
+};
+
+bool Parser::check(std::string s) {
+  if (isAtEnd()) return false;
+  return peek()->Val.compare(s) == 0;
 };
 
 Token* Parser::advance() {
@@ -233,53 +258,61 @@ Token* Parser::advance() {
   return previous();
 };
 
-bool Parser::isAtEnd() { return peek()->t == +TokenType::END_OF_FILE; };
+bool Parser::isAtEnd() { return peek()->T == TokenType::END_OF_FILE; };
 
 Token* Parser::peek() { return tokens[current]; };
 
 Token* Parser::previous() { return tokens[current - 1]; };
 
 std::unique_ptr<NumberNode> Parser::parseNumber() {
+  save_loc();
   if (match(TokenType::NUMBER)) {
-    std::string num = static_cast<NumberToken*>(previous())->number;
+    std::string num = static_cast<NumberToken*>(previous())->Val;
     auto result = std::make_unique<NumberNode>(num);
     return result;
   } else {
+    reset();
     return nullptr;
   }
 }
 
 std::unique_ptr<VariableNode> Parser::parseVariable() {
+  save_loc();
   if (match(TokenType::SYMBOL)) {
-    std::string name = static_cast<SymbolToken*>(previous())->name;
+    std::string name = static_cast<SymbolToken*>(previous())->Val;
     auto result = std::make_unique<VariableNode>(name);
     return result;
   } else {
+    reset();
     return nullptr;
   }
 };
 
 std::unique_ptr<ProcedureNode> Parser::parseProcedure() {
-  if (!match(TokenType::PROCEDURE)) {
+  save_loc();
+  if (!match("procedure")) {
+    reset();
     return nullptr;
   }
 
   auto Var = parseVariable();
 
   if (!Var) {
+    reset();
     return nullptr;
   }
 
-  expect(TokenType::L_BRACE);
+  expect("{");
 
   auto StmtList = parseStmtList();
 
-  expect(TokenType::R_BRACE);
+  expect("}");
 
   return std::make_unique<ProcedureNode>(std::move(Var), std::move(StmtList));
 };
 
 std::unique_ptr<StmtListNode> Parser::parseStmtList() {
+  save_loc();
   std::vector<std::unique_ptr<Node>> stmts;
   while (true) {
     auto stmt = parseStatement();
@@ -296,6 +329,7 @@ std::unique_ptr<StmtListNode> Parser::parseStmtList() {
 };
 
 std::unique_ptr<Node> Parser::parseStatement() {
+  save_loc();
   std::unique_ptr<Node> stmt = parseRead();
   if (stmt) {
     return stmt;
@@ -321,10 +355,12 @@ std::unique_ptr<Node> Parser::parseStatement() {
     return stmt;
   }
 
+  reset();
   return nullptr;
 };
 
 std::unique_ptr<FactorNode> Parser::parseFactor() {
+  save_loc();
   auto Var = parseVariable();
   if (Var) {
     return std::make_unique<FactorNode>(std::move(Var));
@@ -336,36 +372,32 @@ std::unique_ptr<FactorNode> Parser::parseFactor() {
     return std::make_unique<FactorNode>(std::move(Number));
   }
 
-  expect(TokenType::L_PAREN);
+  expect("(");
   auto Expr = parseExpr();
-  expect(TokenType::R_PAREN);
+  expect(")");
   return std::make_unique<FactorNode>(std::move(Expr));
 };
 
 std::unique_ptr<TermPNode> Parser::parseTermP() {
-  if (match(TokenType::TIMES)) {
+  save_loc();
+  std::unordered_set<std::string> valid_ops({"*", "/", "%"});
+
+  if (valid_ops.find(peek()->Val) != valid_ops.end()) {
     auto Factor = parseFactor();
     auto TermP = parseTermP();
-    std::string op = "*";
-    return std::make_unique<TermPNode>(std::move(Factor), op, std::move(TermP));
-  } else if (match(TokenType::DIVIDE)) {
-    auto Factor = parseFactor();
-    auto TermP = parseTermP();
-    std::string op = "/";
-    return std::make_unique<TermPNode>(std::move(Factor), op, std::move(TermP));
-  } else if (match(TokenType::MOD)) {
-    auto Factor = parseFactor();
-    auto TermP = parseTermP();
-    std::string op = "%";
-    return std::make_unique<TermPNode>(std::move(Factor), op, std::move(TermP));
+    return std::make_unique<TermPNode>(std::move(Factor), advance()->Val,
+                                       std::move(TermP));
   } else {
+    reset();
     return nullptr;
   }
 };
 
 std::unique_ptr<TermNode> Parser::parseTerm() {
+  save_loc();
   auto Factor = parseFactor();
   if (!Factor) {
+    reset();
     return nullptr;
   }
 
@@ -375,25 +407,25 @@ std::unique_ptr<TermNode> Parser::parseTerm() {
 }
 
 std::unique_ptr<ExprPNode> Parser::parseExprP() {
-  if (match(TokenType::MINUS)) {
+  save_loc();
+  std::unordered_set<std::string> valid_ops({"+", "-"});
+  if (valid_ops.find(peek()->Val) != valid_ops.end()) {
     auto Term = parseTerm();
     auto ExprP = parseExprP();
-    std::string op = "-";
-    return std::make_unique<ExprPNode>(std::move(Term), op, std::move(ExprP));
-  } else if (match(TokenType::PLUS)) {
-    auto Term = parseTerm();
-    auto ExprP = parseExprP();
-    std::string op = "+";
-    return std::make_unique<ExprPNode>(std::move(Term), op, std::move(ExprP));
+    return std::make_unique<ExprPNode>(std::move(Term), advance()->Val,
+                                       std::move(ExprP));
   } else {
+    reset();
     return nullptr;
   }
 };
 
 std::unique_ptr<ExprNode> Parser::parseExpr() {
+  save_loc();
   auto Term = parseTerm();
 
   if (!Term) {
+    reset();
     return nullptr;
   }
 
@@ -402,57 +434,70 @@ std::unique_ptr<ExprNode> Parser::parseExpr() {
 };
 
 std::unique_ptr<AssignNode> Parser::parseAssign() {
+  save_loc();
   auto Var = parseVariable();
 
   if (!Var) {
+    reset();
     return nullptr;
   }
 
-  expect(TokenType::EQUAL);
+  if (!match("=")) {
+    reset();
+    return nullptr;
+  }
 
   auto Expr = parseExpr();
 
   if (!Expr) {
+    reset();
     return nullptr;
   }
 
-  expect(TokenType::SEMI);
+  expect(";");
 
   return std::make_unique<AssignNode>(std::move(Var), std::move(Expr));
 };
 
 std::unique_ptr<ReadNode> Parser::parseRead() {
-  if (!match(TokenType::READ)) {
+  save_loc();
+  if (!match("read")) {
+    reset();
     return nullptr;
   }
 
   auto Var = parseVariable();
 
   if (!Var) {
+    reset();
     return nullptr;
   }
 
-  expect(TokenType::SEMI);
+  expect(";");
 
   return std::make_unique<ReadNode>(std::move(Var));
 };
 
 std::unique_ptr<PrintNode> Parser::parsePrint() {
-  if (!match(TokenType::PRINT)) {
+  save_loc();
+  if (!match("print")) {
+    reset();
     return nullptr;
   }
 
   auto Var = parseVariable();
   if (!Var) {
+    reset();
     return nullptr;
   }
 
-  expect(TokenType::SEMI);
+  expect(";");
 
   return std::make_unique<PrintNode>(std::move(Var));
 };
 
 std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
+  save_loc();
   auto Var = parseVariable();
   if (Var) {
     return std::make_unique<FactorNode>(std::move(Var));
@@ -467,6 +512,7 @@ std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
   auto Expr = parseExpr();
 
   if (!Expr) {
+    reset();
     return nullptr;
   }
 
@@ -480,36 +526,27 @@ std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
 // | rel_factor == rel_factor
 // | rel_factor != rel_factor
 std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
+  save_loc();
   auto lhs = parseRelFactor();
 
   if (!lhs) {
+    reset();
+    return nullptr;
+  }
+  std::unordered_set<std::string> valid_ops({">", ">=", "<", "<=", "==", "!="});
+  auto op = peek()->Val;
+  if (valid_ops.find(op) == valid_ops.end()) {
+    std::cout << "Expected an op, got " << op << std::endl;
+    reset();
     return nullptr;
   }
 
-  auto t = peek()->t;
-  std::string op;
-
-  if (t == +TokenType::GREATER) {
-    op = ">";
-  } else if (t == +TokenType::GREATER_EQUAL) {
-    op = ">=";
-  } else if (t == +TokenType::LESS) {
-    op = "<";
-  } else if (t == +TokenType::LESS_EQUAL) {
-    op = "<=";
-  } else if (t == +TokenType::EQUAL_EQUAL) {
-    op = "==";
-  } else if (t == +TokenType::BANG_EQUAL) {
-    op = "!=";
-  } else {
-    std::cout << "Expected an op, got " << t << std::endl;
-    return nullptr;
-  }
   advance();
 
   auto rhs = parseRelFactor();
 
   if (!rhs) {
+    reset();
     return nullptr;
   }
 
@@ -522,91 +559,101 @@ std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
 // | ( cond_expr ) || ( cond_expr )
 
 std::unique_ptr<CondExprNode> Parser::parseCondExpr() {
+  save_loc();
   auto relExpr = parseRelExpr();
   if (relExpr) {
     return std::make_unique<CondExprNode>(std::move(relExpr));
   }
 
-  if (match(TokenType::BANG)) {
-    expect(TokenType::L_PAREN);
+  if (match("!")) {
+    expect("(");
     auto condExpr = parseCondExpr();
-    expect(TokenType::L_PAREN);
+    expect(")");
     return std::make_unique<CondExprNode>(std::move(condExpr));
   }
 
-  expect(TokenType::L_PAREN);
+  expect("(");
   auto condLHS = parseCondExpr();
-  expect(TokenType::R_PAREN);
+  expect(")");
 
   std::string op;
 
-  if (match(TokenType::AND)) {
+  if (match("&&")) {
     op = "&&";
-  } else if (match(TokenType::OR)) {
+  } else if (match("||")) {
     op = "||";
   } else {
     // TODO: HANDLE BETTER
     std::cout << "EXPECTING AN OP";
+    reset();
   }
 
-  expect(TokenType::L_PAREN);
+  expect("(");
   auto condRHS = parseCondExpr();
-  expect(TokenType::R_PAREN);
+  expect(")");
 
   return std::make_unique<CondExprNode>(std::move(condLHS), op,
                                         std::move(condRHS));
 };
 
 std::unique_ptr<WhileNode> Parser::parseWhile() {
-  if (!match(TokenType::WHILE)) {
+  save_loc();
+  if (!match("while")) {
+    reset();
     return nullptr;
   }
 
-  expect(TokenType::L_PAREN);
+  if (!match("(")) {
+    reset();
+    return nullptr;
+  }
+
   auto condExpr = parseCondExpr();
   if (!condExpr) {
     // TODO: HANDLE ERROR BETTER
     std::cout << "Expected a cond expression";
   }
-  expect(TokenType::R_PAREN);
-  expect(TokenType::L_BRACE);
+  expect(")");
+  expect("{");
   auto stmtList = parseStmtList();
   if (!stmtList) {
     // TODO: HANDLE ERROR BETTER
     std::cout << "Expected a stmtlist";
   }
-  expect(TokenType::R_BRACE);
+  expect("}");
   return std::make_unique<WhileNode>(std::move(condExpr), std::move(stmtList));
 };
 
 std::unique_ptr<IfNode> Parser::parseIf() {
-  if (!match(TokenType::IF)) {
+  save_loc();
+  if (!match("if")) {
+    reset();
     return nullptr;
   }
 
-  expect(TokenType::L_PAREN);
+  expect("(");
   auto condExpr = parseCondExpr();
   if (!condExpr) {
     // TODO: HANDLE ERROR BETTER
     std::cout << "Expected a cond expression";
   }
-  expect(TokenType::R_PAREN);
-  expect(TokenType::THEN);
-  expect(TokenType::L_BRACE);
+  expect(")");
+  expect("then");
+  expect("{");
   auto stmtListThen = parseStmtList();
   if (!stmtListThen) {
     // TODO: HANDLE ERROR BETTER
     std::cout << "Expected a stmtlist";
   }
-  expect(TokenType::R_BRACE);
-  expect(TokenType::ELSE);
-  expect(TokenType::L_BRACE);
+  expect("}");
+  expect("else");
+  expect("{");
   auto stmtListElse = parseStmtList();
   if (!stmtListElse) {
     // TODO: HANDLE ERROR BETTER
     std::cout << "Expected a stmtlist";
   }
-  expect(TokenType::R_BRACE);
+  expect("}");
   return std::make_unique<IfNode>(std::move(condExpr), std::move(stmtListThen),
                                   std::move(stmtListElse));
 };

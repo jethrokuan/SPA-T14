@@ -1,21 +1,17 @@
-FROM ubuntu:18.04
+FROM         ubuntu:18.04
+MAINTAINER   Jethro kuan <jethrokuan5@gmail.com>
+CMD          bash
 
-LABEL \
-  maintainer="jethrokuan"
-
-
-RUN apt-get update -qq
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-  git \
-  mercurial \
+# Required system packages
+RUN apt-get update && apt-get -y install \
+  apt-utils \
+  build-essential \
   curl \
+  doxygen \
+  git \
+  tar \
   wget \
-  python \
-  build-essential\
-  ca-certificates
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  xz-utils \
   cmake \
   clang
 

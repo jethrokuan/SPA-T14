@@ -12,17 +12,18 @@ build:
     - cd build
     - cmake ..
     - make -j4
-  artifacts:
-    paths:
-      - build
+    - ctest -V
+  # artifacts:
+  #   paths:
+  #     - build
   # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
   # cache:
   #   paths:
   #     - "*.o"
 
 # run tests using the binary built before
-test:
-  stage: test
-  script:
-    - cd build
-    - ctest -V
+# test:
+#   stage: test
+#   script:
+#     - cd build
+#     - ctest -V

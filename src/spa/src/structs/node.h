@@ -51,23 +51,23 @@ class VariableNode : public Node {
 
 class ReadNode : public Node {
  public:
-  std::shared_ptr<Node> Var;
+  std::shared_ptr<VariableNode> Var;
   ReadNode(std::shared_ptr<VariableNode> var);
   bool operator==(const Node& other) const;
 };
 
 class PrintNode : public Node {
  public:
-  std::shared_ptr<Node> Var;
-  PrintNode(std::shared_ptr<Node> var);
+  std::shared_ptr<VariableNode> Var;
+  PrintNode(std::shared_ptr<VariableNode> var);
   bool operator==(const Node& other) const;
 };
 
 class ProcedureNode : public Node {
  public:
-  std::shared_ptr<Node> Var;
+  std::shared_ptr<VariableNode> Var;
   std::shared_ptr<StmtListNode> StmtList;
-  ProcedureNode(std::shared_ptr<Node> var,
+  ProcedureNode(std::shared_ptr<VariableNode> var,
                 std::shared_ptr<StmtListNode> stmtList);
   bool operator==(const Node& other) const;
 };

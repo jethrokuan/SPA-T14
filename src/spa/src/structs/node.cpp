@@ -30,13 +30,13 @@ bool ReadNode::operator==(const Node& other) const {
   return casted_other != 0 && *this->Var == *casted_other->Var;
 };
 
-PrintNode::PrintNode(std::shared_ptr<Node> var) : Var(std::move(var)){};
+PrintNode::PrintNode(std::shared_ptr<VariableNode> var) : Var(std::move(var)){};
 bool PrintNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const PrintNode*>(&other);
   return casted_other != 0 && *this->Var == *casted_other->Var;
 };
 
-ProcedureNode::ProcedureNode(std::shared_ptr<Node> var,
+ProcedureNode::ProcedureNode(std::shared_ptr<VariableNode> var,
                              std::shared_ptr<StmtListNode> stmtList)
     : Var(std::move(var)), StmtList(std::move(stmtList)){};
 bool ProcedureNode::operator==(const Node& other) const {

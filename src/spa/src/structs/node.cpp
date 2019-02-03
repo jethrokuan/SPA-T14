@@ -36,12 +36,12 @@ bool PrintNode::operator==(const Node& other) const {
   return casted_other != 0 && *this->Var == *casted_other->Var;
 };
 
-ProcedureNode::ProcedureNode(std::shared_ptr<VariableNode> var,
+ProcedureNode::ProcedureNode(const std::string& name,
                              std::shared_ptr<StmtListNode> stmtList)
-    : Var(std::move(var)), StmtList(std::move(stmtList)){};
+    : Name(name), StmtList(std::move(stmtList)){};
 bool ProcedureNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const ProcedureNode*>(&other);
-  return casted_other != 0 && *this->Var == *casted_other->Var &&
+  return casted_other != 0 && this->Name.compare(casted_other->Name) == 0 &&
          *this->StmtList == *casted_other->StmtList;
 };
 

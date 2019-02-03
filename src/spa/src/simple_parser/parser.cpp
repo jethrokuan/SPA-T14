@@ -96,6 +96,7 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
   }
 
   auto Var = parseVariable();
+  auto procName = Var->Name;
 
   if (!Var) {
     reset();
@@ -108,7 +109,7 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
 
   expect("}");
 
-  return std::make_shared<ProcedureNode>(std::move(Var), std::move(StmtList));
+  return std::make_shared<ProcedureNode>(procName, std::move(StmtList));
 };
 
 std::shared_ptr<StmtListNode> Parser::parseStmtList() {

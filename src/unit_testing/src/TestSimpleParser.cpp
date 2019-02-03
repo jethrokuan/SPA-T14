@@ -55,8 +55,7 @@ TEST_CASE ("Test Parser works") {
 
   auto StmtList = std::make_shared<StmtListNode>(std::move(stmtList));
 
-  auto expected = std::make_shared<ProcedureNode>(
-      std::make_shared<VariableNode>("main"), std::move(StmtList));
+  auto expected = std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
   REQUIRE(*proc == *expected);
 }
@@ -156,14 +155,10 @@ TEST_CASE ("Node equality comparisons") {
     auto sl2 = make_shared<StmtListNode>(std::move(s2));
     auto sl3 = make_shared<StmtListNode>(std::move(s3));
 
-    auto p1 = make_shared<ProcedureNode>(make_shared<VariableNode>("main"),
-                                         std::move(sl1));
-    auto p2 = make_shared<ProcedureNode>(make_shared<VariableNode>("main"),
-                                         std::move(sl2));
-    auto p3 = make_shared<ProcedureNode>(make_shared<VariableNode>("main2"),
-                                         std::move(sl2));
-    auto p4 = make_shared<ProcedureNode>(make_shared<VariableNode>("main"),
-                                         std::move(sl3));
+    auto p1 = make_shared<ProcedureNode>("main", std::move(sl1));
+    auto p2 = make_shared<ProcedureNode>("main", std::move(sl2));
+    auto p3 = make_shared<ProcedureNode>("main2", std::move(sl2));
+    auto p4 = make_shared<ProcedureNode>("main", std::move(sl3));
 
     REQUIRE(*p1 == *p2);
     REQUIRE(*p1 != *p3);

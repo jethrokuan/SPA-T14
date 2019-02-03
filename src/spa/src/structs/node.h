@@ -65,9 +65,9 @@ class PrintNode : public Node {
 
 class ProcedureNode : public Node {
  public:
-  std::shared_ptr<VariableNode> Var;
+  std::string Name;
   std::shared_ptr<StmtListNode> StmtList;
-  ProcedureNode(std::shared_ptr<VariableNode> var,
+  ProcedureNode(const std::string& name,
                 std::shared_ptr<StmtListNode> stmtList);
   bool operator==(const Node& other) const;
 };

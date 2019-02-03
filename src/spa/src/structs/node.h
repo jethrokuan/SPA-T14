@@ -30,8 +30,8 @@ class Node {
 
 class StmtListNode : public Node {
  public:
-  std::vector<std::unique_ptr<Node>> StmtList;
-  StmtListNode(std::vector<std::unique_ptr<Node>> stmtList);
+  std::vector<std::shared_ptr<Node>> StmtList;
+  StmtListNode(std::vector<std::shared_ptr<Node>> stmtList);
   bool operator==(const Node& other) const;
 };
 
@@ -51,139 +51,139 @@ class VariableNode : public Node {
 
 class ReadNode : public Node {
  public:
-  std::unique_ptr<Node> Var;
-  ReadNode(std::unique_ptr<VariableNode> var);
+  std::shared_ptr<Node> Var;
+  ReadNode(std::shared_ptr<VariableNode> var);
   bool operator==(const Node& other) const;
 };
 
 class PrintNode : public Node {
  public:
-  std::unique_ptr<Node> Var;
-  PrintNode(std::unique_ptr<Node> var);
+  std::shared_ptr<Node> Var;
+  PrintNode(std::shared_ptr<Node> var);
   bool operator==(const Node& other) const;
 };
 
 class ProcedureNode : public Node {
  public:
-  std::unique_ptr<Node> Var;
-  std::unique_ptr<StmtListNode> StmtList;
-  ProcedureNode(std::unique_ptr<Node> var,
-                std::unique_ptr<StmtListNode> stmtList);
+  std::shared_ptr<Node> Var;
+  std::shared_ptr<StmtListNode> StmtList;
+  ProcedureNode(std::shared_ptr<Node> var,
+                std::shared_ptr<StmtListNode> stmtList);
   bool operator==(const Node& other) const;
 };
 
 class TermPNode : public Node {
  public:
-  std::unique_ptr<FactorNode> Factor;
+  std::shared_ptr<FactorNode> Factor;
   std::string Op;
-  std::unique_ptr<TermPNode> TermP;
-  TermPNode(std::unique_ptr<FactorNode> factor, std::string& op,
-            std::unique_ptr<TermPNode> termP);
+  std::shared_ptr<TermPNode> TermP;
+  TermPNode(std::shared_ptr<FactorNode> factor, std::string& op,
+            std::shared_ptr<TermPNode> termP);
   bool operator==(const Node& other) const;
 };
 
 class TermNode : public Node {
  public:
-  std::unique_ptr<FactorNode> Factor;
-  std::unique_ptr<TermPNode> TermP;
+  std::shared_ptr<FactorNode> Factor;
+  std::shared_ptr<TermPNode> TermP;
 
-  TermNode(std::unique_ptr<FactorNode> factor,
-           std::unique_ptr<TermPNode> termP);
-  TermNode(std::unique_ptr<FactorNode> factor);
+  TermNode(std::shared_ptr<FactorNode> factor,
+           std::shared_ptr<TermPNode> termP);
+  TermNode(std::shared_ptr<FactorNode> factor);
   bool operator==(const Node& other) const;
 };
 
 class ExprPNode : public Node {
  public:
-  std::unique_ptr<TermNode> Term;
+  std::shared_ptr<TermNode> Term;
   std::string Op;
-  std::unique_ptr<ExprPNode> ExprP;
+  std::shared_ptr<ExprPNode> ExprP;
 
-  ExprPNode(std::unique_ptr<TermNode> term, std::string& op);
-  ExprPNode(std::unique_ptr<TermNode> term, std::string& op,
-            std::unique_ptr<ExprPNode> exprP);
+  ExprPNode(std::shared_ptr<TermNode> term, std::string& op);
+  ExprPNode(std::shared_ptr<TermNode> term, std::string& op,
+            std::shared_ptr<ExprPNode> exprP);
   bool operator==(const Node& other) const;
 };
 
 class ExprNode : public Node {
  public:
-  std::unique_ptr<TermNode> Term;
-  std::unique_ptr<ExprPNode> ExprP;
+  std::shared_ptr<TermNode> Term;
+  std::shared_ptr<ExprPNode> ExprP;
 
-  ExprNode(std::unique_ptr<TermNode> term, std::unique_ptr<ExprPNode> exprP);
-  ExprNode(std::unique_ptr<TermNode> term);
+  ExprNode(std::shared_ptr<TermNode> term, std::shared_ptr<ExprPNode> exprP);
+  ExprNode(std::shared_ptr<TermNode> term);
   bool operator==(const Node& other) const;
 };
 
 class FactorNode : public Node {
  public:
   union {
-    std::unique_ptr<VariableNode> Var;
-    std::unique_ptr<NumberNode> Val;
-    std::unique_ptr<ExprNode> Expr;
+    std::shared_ptr<VariableNode> Var;
+    std::shared_ptr<NumberNode> Val;
+    std::shared_ptr<ExprNode> Expr;
   };
   enum class UnionType { VAR, VAL, EXPR, NONE } type = UnionType::NONE;
   FactorNode();
-  FactorNode(std::unique_ptr<VariableNode> var);
-  FactorNode(std::unique_ptr<NumberNode> val);
-  FactorNode(std::unique_ptr<ExprNode> expr);
+  FactorNode(std::shared_ptr<VariableNode> var);
+  FactorNode(std::shared_ptr<NumberNode> val);
+  FactorNode(std::shared_ptr<ExprNode> expr);
   ~FactorNode();
   bool operator==(const Node& other) const;
 };
 
 class AssignNode : public Node {
  public:
-  std::unique_ptr<VariableNode> Var;
-  std::unique_ptr<ExprNode> Expr;
-  AssignNode(std::unique_ptr<VariableNode> var, std::unique_ptr<ExprNode> expr);
+  std::shared_ptr<VariableNode> Var;
+  std::shared_ptr<ExprNode> Expr;
+  AssignNode(std::shared_ptr<VariableNode> var, std::shared_ptr<ExprNode> expr);
   bool operator==(const Node& other) const;
 };
 
 class RelExprNode : public Node {
  public:
-  std::unique_ptr<RelFactorNode> LHS;
+  std::shared_ptr<RelFactorNode> LHS;
   std::string Op;
-  std::unique_ptr<RelFactorNode> RHS;
-  RelExprNode(std::unique_ptr<RelFactorNode> lhs, std::string& op,
-              std::unique_ptr<RelFactorNode> rhs);
+  std::shared_ptr<RelFactorNode> RHS;
+  RelExprNode(std::shared_ptr<RelFactorNode> lhs, std::string& op,
+              std::shared_ptr<RelFactorNode> rhs);
   bool operator==(const Node& other) const;
 };
 
 class CondExprNode : public Node {
  public:
-  std::unique_ptr<RelExprNode> RelExpr = nullptr;
-  std::unique_ptr<CondExprNode> CondLHS = nullptr;
+  std::shared_ptr<RelExprNode> RelExpr = nullptr;
+  std::shared_ptr<CondExprNode> CondLHS = nullptr;
   std::string Op = "";
-  std::unique_ptr<CondExprNode> CondRHS = nullptr;
+  std::shared_ptr<CondExprNode> CondRHS = nullptr;
 
   // rel_expr
-  CondExprNode(std::unique_ptr<RelExprNode> relExpr);
+  CondExprNode(std::shared_ptr<RelExprNode> relExpr);
   // ! ( cond_expr )
-  CondExprNode(std::unique_ptr<CondExprNode> condLHS);
+  CondExprNode(std::shared_ptr<CondExprNode> condLHS);
   // ( cond_expr ) && ( cond_expr )
-  CondExprNode(std::unique_ptr<CondExprNode> condLHS, std::string& op,
-               std::unique_ptr<CondExprNode> condRHS);
+  CondExprNode(std::shared_ptr<CondExprNode> condLHS, std::string& op,
+               std::shared_ptr<CondExprNode> condRHS);
   bool operator==(const Node& other) const;
 };
 
 class WhileNode : public Node {
  public:
-  std::unique_ptr<CondExprNode> CondExpr;
-  std::unique_ptr<StmtListNode> StmtList;
+  std::shared_ptr<CondExprNode> CondExpr;
+  std::shared_ptr<StmtListNode> StmtList;
 
-  WhileNode(std::unique_ptr<CondExprNode> condExpr,
-            std::unique_ptr<StmtListNode> stmtList);
+  WhileNode(std::shared_ptr<CondExprNode> condExpr,
+            std::shared_ptr<StmtListNode> stmtList);
   bool operator==(const Node& other) const;
 };
 
 class IfNode : public Node {
  public:
-  std::unique_ptr<CondExprNode> CondExpr;
-  std::unique_ptr<StmtListNode> StmtListThen;
-  std::unique_ptr<StmtListNode> StmtListElse;
+  std::shared_ptr<CondExprNode> CondExpr;
+  std::shared_ptr<StmtListNode> StmtListThen;
+  std::shared_ptr<StmtListNode> StmtListElse;
 
-  IfNode(std::unique_ptr<CondExprNode> condExpr,
-         std::unique_ptr<StmtListNode> stmtListThen,
-         std::unique_ptr<StmtListNode> stmtListElse);
+  IfNode(std::shared_ptr<CondExprNode> condExpr,
+         std::shared_ptr<StmtListNode> stmtListThen,
+         std::shared_ptr<StmtListNode> stmtListElse);
   bool operator==(const Node& other) const;
 };

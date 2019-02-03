@@ -64,11 +64,11 @@ Token* Parser::peek() { return tokens[current]; };
 
 Token* Parser::previous() { return tokens[current - 1]; };
 
-std::unique_ptr<NumberNode> Parser::parseNumber() {
+std::shared_ptr<NumberNode> Parser::parseNumber() {
   save_loc();
   if (match(TokenType::NUMBER)) {
     std::string num = static_cast<NumberToken*>(previous())->Val;
-    auto result = std::make_unique<NumberNode>(num);
+    auto result = std::make_shared<NumberNode>(num);
     return result;
   } else {
     reset();
@@ -76,11 +76,11 @@ std::unique_ptr<NumberNode> Parser::parseNumber() {
   }
 }
 
-std::unique_ptr<VariableNode> Parser::parseVariable() {
+std::shared_ptr<VariableNode> Parser::parseVariable() {
   save_loc();
   if (match(TokenType::SYMBOL)) {
     std::string name = static_cast<SymbolToken*>(previous())->Val;
-    auto result = std::make_unique<VariableNode>(name);
+    auto result = std::make_shared<VariableNode>(name);
     return result;
   } else {
     reset();
@@ -88,7 +88,7 @@ std::unique_ptr<VariableNode> Parser::parseVariable() {
   }
 };
 
-std::unique_ptr<ProcedureNode> Parser::parseProcedure() {
+std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
   save_loc();
   if (!match("procedure")) {
     reset();
@@ -96,6 +96,7 @@ std::unique_ptr<ProcedureNode> Parser::parseProcedure() {
   }
 
   auto Var = parseVariable();
+  auto procName = Var->Name;
 
   if (!Var) {
     reset();
@@ -108,12 +109,12 @@ std::unique_ptr<ProcedureNode> Parser::parseProcedure() {
 
   expect("}");
 
-  return std::make_unique<ProcedureNode>(std::move(Var), std::move(StmtList));
+  return std::make_shared<ProcedureNode>(procName, std::move(StmtList));
 };
 
-std::unique_ptr<StmtListNode> Parser::parseStmtList() {
+std::shared_ptr<StmtListNode> Parser::parseStmtList() {
   save_loc();
-  std::vector<std::unique_ptr<Node>> stmts;
+  std::vector<std::shared_ptr<Node>> stmts;
   while (true) {
     auto stmt = parseStatement();
     if (stmt) {
@@ -125,12 +126,12 @@ std::unique_ptr<StmtListNode> Parser::parseStmtList() {
 
   // TODO: Handle case where statement list is empty
 
-  return std::make_unique<StmtListNode>(std::move(stmts));
+  return std::make_shared<StmtListNode>(std::move(stmts));
 };
 
-std::unique_ptr<Node> Parser::parseStatement() {
+std::shared_ptr<Node> Parser::parseStatement() {
   save_loc();
-  std::unique_ptr<Node> stmt = parseRead();
+  std::shared_ptr<Node> stmt = parseRead();
   if (stmt) {
     return stmt;
   }
@@ -159,33 +160,33 @@ std::unique_ptr<Node> Parser::parseStatement() {
   return nullptr;
 };
 
-std::unique_ptr<FactorNode> Parser::parseFactor() {
+std::shared_ptr<FactorNode> Parser::parseFactor() {
   save_loc();
   auto Var = parseVariable();
   if (Var) {
-    return std::make_unique<FactorNode>(std::move(Var));
+    return std::make_shared<FactorNode>(std::move(Var));
   }
 
   auto Number = parseNumber();
 
   if (Number) {
-    return std::make_unique<FactorNode>(std::move(Number));
+    return std::make_shared<FactorNode>(std::move(Number));
   }
 
   expect("(");
   auto Expr = parseExpr();
   expect(")");
-  return std::make_unique<FactorNode>(std::move(Expr));
+  return std::make_shared<FactorNode>(std::move(Expr));
 };
 
-std::unique_ptr<TermPNode> Parser::parseTermP() {
+std::shared_ptr<TermPNode> Parser::parseTermP() {
   save_loc();
   std::unordered_set<std::string> valid_ops({"*", "/", "%"});
 
   if (valid_ops.find(peek()->Val) != valid_ops.end()) {
     auto Factor = parseFactor();
     auto TermP = parseTermP();
-    return std::make_unique<TermPNode>(std::move(Factor), advance()->Val,
+    return std::make_shared<TermPNode>(std::move(Factor), advance()->Val,
                                        std::move(TermP));
   } else {
     reset();
@@ -193,7 +194,7 @@ std::unique_ptr<TermPNode> Parser::parseTermP() {
   }
 };
 
-std::unique_ptr<TermNode> Parser::parseTerm() {
+std::shared_ptr<TermNode> Parser::parseTerm() {
   save_loc();
   auto Factor = parseFactor();
   if (!Factor) {
@@ -203,16 +204,16 @@ std::unique_ptr<TermNode> Parser::parseTerm() {
 
   auto TermP = parseTermP();
 
-  return std::make_unique<TermNode>(std::move(Factor), std::move(TermP));
+  return std::make_shared<TermNode>(std::move(Factor), std::move(TermP));
 }
 
-std::unique_ptr<ExprPNode> Parser::parseExprP() {
+std::shared_ptr<ExprPNode> Parser::parseExprP() {
   save_loc();
   std::unordered_set<std::string> valid_ops({"+", "-"});
   if (valid_ops.find(peek()->Val) != valid_ops.end()) {
     auto Term = parseTerm();
     auto ExprP = parseExprP();
-    return std::make_unique<ExprPNode>(std::move(Term), advance()->Val,
+    return std::make_shared<ExprPNode>(std::move(Term), advance()->Val,
                                        std::move(ExprP));
   } else {
     reset();
@@ -220,7 +221,7 @@ std::unique_ptr<ExprPNode> Parser::parseExprP() {
   }
 };
 
-std::unique_ptr<ExprNode> Parser::parseExpr() {
+std::shared_ptr<ExprNode> Parser::parseExpr() {
   save_loc();
   auto Term = parseTerm();
 
@@ -230,10 +231,10 @@ std::unique_ptr<ExprNode> Parser::parseExpr() {
   }
 
   auto ExprP = parseExprP();
-  return std::make_unique<ExprNode>(std::move(Term), std::move(ExprP));
+  return std::make_shared<ExprNode>(std::move(Term), std::move(ExprP));
 };
 
-std::unique_ptr<AssignNode> Parser::parseAssign() {
+std::shared_ptr<AssignNode> Parser::parseAssign() {
   save_loc();
   auto Var = parseVariable();
 
@@ -256,10 +257,10 @@ std::unique_ptr<AssignNode> Parser::parseAssign() {
 
   expect(";");
 
-  return std::make_unique<AssignNode>(std::move(Var), std::move(Expr));
+  return std::make_shared<AssignNode>(std::move(Var), std::move(Expr));
 };
 
-std::unique_ptr<ReadNode> Parser::parseRead() {
+std::shared_ptr<ReadNode> Parser::parseRead() {
   save_loc();
   if (!match("read")) {
     reset();
@@ -275,10 +276,10 @@ std::unique_ptr<ReadNode> Parser::parseRead() {
 
   expect(";");
 
-  return std::make_unique<ReadNode>(std::move(Var));
+  return std::make_shared<ReadNode>(std::move(Var));
 };
 
-std::unique_ptr<PrintNode> Parser::parsePrint() {
+std::shared_ptr<PrintNode> Parser::parsePrint() {
   save_loc();
   if (!match("print")) {
     reset();
@@ -293,20 +294,20 @@ std::unique_ptr<PrintNode> Parser::parsePrint() {
 
   expect(";");
 
-  return std::make_unique<PrintNode>(std::move(Var));
+  return std::make_shared<PrintNode>(std::move(Var));
 };
 
-std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
+std::shared_ptr<RelFactorNode> Parser::parseRelFactor() {
   save_loc();
   auto Var = parseVariable();
   if (Var) {
-    return std::make_unique<FactorNode>(std::move(Var));
+    return std::make_shared<FactorNode>(std::move(Var));
   }
 
   auto Number = parseNumber();
 
   if (Number) {
-    return std::make_unique<FactorNode>(std::move(Number));
+    return std::make_shared<FactorNode>(std::move(Number));
   }
 
   auto Expr = parseExpr();
@@ -316,7 +317,7 @@ std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
     return nullptr;
   }
 
-  return std::make_unique<FactorNode>(std::move(Expr));
+  return std::make_shared<FactorNode>(std::move(Expr));
 };
 
 // rel_expr: rel_factor > rel_factor
@@ -325,7 +326,7 @@ std::unique_ptr<RelFactorNode> Parser::parseRelFactor() {
 // | rel_factor <= rel_factor
 // | rel_factor == rel_factor
 // | rel_factor != rel_factor
-std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
+std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
   save_loc();
   auto lhs = parseRelFactor();
 
@@ -350,7 +351,7 @@ std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
     return nullptr;
   }
 
-  return std::make_unique<RelExprNode>(std::move(lhs), op, std::move(rhs));
+  return std::make_shared<RelExprNode>(std::move(lhs), op, std::move(rhs));
 }
 
 // cond_expr: rel_expr
@@ -358,18 +359,18 @@ std::unique_ptr<RelExprNode> Parser::parseRelExpr() {
 // | ( cond_expr ) && ( cond_expr )
 // | ( cond_expr ) || ( cond_expr )
 
-std::unique_ptr<CondExprNode> Parser::parseCondExpr() {
+std::shared_ptr<CondExprNode> Parser::parseCondExpr() {
   save_loc();
   auto relExpr = parseRelExpr();
   if (relExpr) {
-    return std::make_unique<CondExprNode>(std::move(relExpr));
+    return std::make_shared<CondExprNode>(std::move(relExpr));
   }
 
   if (match("!")) {
     expect("(");
     auto condExpr = parseCondExpr();
     expect(")");
-    return std::make_unique<CondExprNode>(std::move(condExpr));
+    return std::make_shared<CondExprNode>(std::move(condExpr));
   }
 
   expect("(");
@@ -392,11 +393,11 @@ std::unique_ptr<CondExprNode> Parser::parseCondExpr() {
   auto condRHS = parseCondExpr();
   expect(")");
 
-  return std::make_unique<CondExprNode>(std::move(condLHS), op,
+  return std::make_shared<CondExprNode>(std::move(condLHS), op,
                                         std::move(condRHS));
 };
 
-std::unique_ptr<WhileNode> Parser::parseWhile() {
+std::shared_ptr<WhileNode> Parser::parseWhile() {
   save_loc();
   if (!match("while")) {
     reset();
@@ -421,10 +422,10 @@ std::unique_ptr<WhileNode> Parser::parseWhile() {
     std::cout << "Expected a stmtlist";
   }
   expect("}");
-  return std::make_unique<WhileNode>(std::move(condExpr), std::move(stmtList));
+  return std::make_shared<WhileNode>(std::move(condExpr), std::move(stmtList));
 };
 
-std::unique_ptr<IfNode> Parser::parseIf() {
+std::shared_ptr<IfNode> Parser::parseIf() {
   save_loc();
   if (!match("if")) {
     reset();
@@ -454,9 +455,9 @@ std::unique_ptr<IfNode> Parser::parseIf() {
     std::cout << "Expected a stmtlist";
   }
   expect("}");
-  return std::make_unique<IfNode>(std::move(condExpr), std::move(stmtListThen),
+  return std::make_shared<IfNode>(std::move(condExpr), std::move(stmtListThen),
                                   std::move(stmtListElse));
 };
 
 Parser::Parser(std::vector<Token*> t) : tokens(t){};
-std::unique_ptr<ProcedureNode> Parser::parse() { return parseProcedure(); }
+std::shared_ptr<ProcedureNode> Parser::parse() { return parseProcedure(); }

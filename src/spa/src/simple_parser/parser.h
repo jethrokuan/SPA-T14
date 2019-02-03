@@ -30,27 +30,27 @@ class Parser {
   Token* advance();
 
   // Parsing
-  std::unique_ptr<NumberNode> parseNumber();
-  std::unique_ptr<VariableNode> parseVariable();
-  std::unique_ptr<ProcedureNode> parseProcedure();
-  std::unique_ptr<StmtListNode> parseStmtList();
-  std::unique_ptr<Node> parseStatement();
-  std::unique_ptr<FactorNode> parseFactor();
-  std::unique_ptr<RelFactorNode> parseRelFactor();
-  std::unique_ptr<TermPNode> parseTermP();
-  std::unique_ptr<TermNode> parseTerm();
-  std::unique_ptr<ExprPNode> parseExprP();
-  std::unique_ptr<ExprNode> parseExpr();
-  std::unique_ptr<RelExprNode> parseRelExpr();
-  std::unique_ptr<AssignNode> parseAssign();
-  std::unique_ptr<ReadNode> parseRead();
-  std::unique_ptr<PrintNode> parsePrint();
-  std::unique_ptr<CondExprNode> parseCondExpr();
-  std::unique_ptr<WhileNode> parseWhile();
-  std::unique_ptr<IfNode> parseIf();
+  std::shared_ptr<NumberNode> parseNumber();
+  std::shared_ptr<VariableNode> parseVariable();
+  std::shared_ptr<ProcedureNode> parseProcedure();
+  std::shared_ptr<StmtListNode> parseStmtList();
+  std::shared_ptr<Node> parseStatement();
+  std::shared_ptr<FactorNode> parseFactor();
+  std::shared_ptr<RelFactorNode> parseRelFactor();
+  std::shared_ptr<TermPNode> parseTermP();
+  std::shared_ptr<TermNode> parseTerm();
+  std::shared_ptr<ExprPNode> parseExprP();
+  std::shared_ptr<ExprNode> parseExpr();
+  std::shared_ptr<RelExprNode> parseRelExpr();
+  std::shared_ptr<AssignNode> parseAssign();
+  std::shared_ptr<ReadNode> parseRead();
+  std::shared_ptr<PrintNode> parsePrint();
+  std::shared_ptr<CondExprNode> parseCondExpr();
+  std::shared_ptr<WhileNode> parseWhile();
+  std::shared_ptr<IfNode> parseIf();
 
  public:
   Parser(std::vector<Token*> t);
-  std::unique_ptr<ProcedureNode> parse();
+  std::shared_ptr<ProcedureNode> parse();
 };
 }  // namespace Simple

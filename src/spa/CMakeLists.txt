@@ -1,3 +1,11 @@
+# SIMPLE parser files
+set(srcs ${srcs}
+  src/structs/node.cpp
+  )
+set(headers ${headers}
+  src/structs/node.h
+  )
+
 # PQL Query Evaluator files
 set(srcs ${srcs}
   src/query_evaluator/query_evaluator.cpp

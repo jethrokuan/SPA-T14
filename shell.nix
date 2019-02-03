@@ -10,6 +10,7 @@ stdenv.mkDerivation {
     cmake
 
     # utilities
+    gdb
     ccls
   ];
 }

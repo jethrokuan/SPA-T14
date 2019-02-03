@@ -198,13 +198,19 @@ class IfNode : public Node {
 class Parser {
  private:
   int current = 0;
+  int last_good = 0;
   std::vector<Token*> tokens;
 
   // Utilities
-  bool match(TokenType type);
-  bool check(TokenType type);
-  bool expect(TokenType type);
+  bool match(TokenType t);
+  bool match(std::string s);
+  bool check(TokenType t);
+  bool check(std::string s);
+  bool expect(TokenType t);
+  bool expect(std::string s);
   bool isAtEnd();
+  void save_loc() { last_good = current; };
+  void reset() { current = last_good; };
   Token* peek();
   Token* previous();
   Token* advance();

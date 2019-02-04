@@ -1,3 +1,4 @@
+#include "simple_parser/exceptions.h"
 #include "simple_parser/lexer.h"
 
 #include "catch.hpp"
@@ -13,6 +14,7 @@ TEST_CASE ("Test Lex Tokens") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(input);
+  lexer.parse();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new NumberToken("5"),         new NumberToken("50"),
@@ -39,6 +41,7 @@ TEST_CASE ("Test Lex Assign Statement") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(input);
+  lexer.parse();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new PunctToken("{"),          new SymbolToken("i"),
@@ -58,6 +61,7 @@ TEST_CASE ("Test Lex While Statement") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(input);
+  lexer.parse();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new PunctToken("{"),          new SymbolToken("while"),
@@ -75,4 +79,28 @@ TEST_CASE ("Test Lex While Statement") {
   REQUIRE(std::equal(
       begin(lexer.tokens), end(lexer.tokens), begin(expected), end(expected),
       [](const Token* lexed, const Token* expt) { return *lexed == *expt; }));
+}
+
+TEST_CASE ("Test Lex Errors") {
+  SECTION ("Single & token") {
+    std::string filename = "tests/simple_source/lexer/errors/single_amp.txt";
+    std::ifstream input(filename);
+    auto lexer = Lexer(input);
+
+    REQUIRE_THROWS_AS(lexer.parse(), SimpleLexException);
+  }
+
+  SECTION ("Single | token") {
+    std::string filename = "tests/simple_source/lexer/errors/single_bar.txt";
+    std::ifstream input(filename);
+    auto lexer = Lexer(input);
+
+    REQUIRE_THROWS_AS(lexer.parse(), SimpleLexException);
+  }
+
+  // TODO: Test invalid tokens
+  // If possible, also test if error message is correct.
+  // - non-ascii
+  // - invalid punctuations
+  // - other weird combinations
 }

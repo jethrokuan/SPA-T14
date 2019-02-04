@@ -1,10 +1,14 @@
-/* Lexer for SIMPLE language.
+/*!
+  \file   lexer.cpp
+  \brief  Implementation for the SIMPLE Lexer.
 
-    Here we use a handwritten DFA to lex the tokens, because the
-    language is relatively simple, and this makes lexing fast compared
-    to regex approaches. The DFA can easily be extended to handle
-    changes to the language.
- */
+  Here we use a handwritten DFA to lex the tokens, because the
+  language is relatively simple, and this makes lexing fast compared
+  to regex approaches. The DFA can easily be extended to handle
+  changes to the language.
+
+  \date   2019-02-04
+*/
 
 #include <cctype>
 #include <iostream>
@@ -12,6 +16,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "simple_parser/exceptions.h"
 #include "simple_parser/lexer.h"
 #include "simple_parser/token.h"
 
@@ -20,80 +25,81 @@ using namespace Simple;
 std::unordered_set<std::string> single_token_puncts({"{", "}", "(", ")", "+",
                                                      "-", "*", "/", "%", ";"});
 
-void getSymbol(std::istream& stream, std::string& str);
-void getNumber(std::istream& stream, std::string& str);
-
-void getSymbol(std::istream& stream, std::string& str) {
-  while (isalnum(stream.peek())) {
-    str += stream.get();
+void Lexer::readSymbol() {
+  while (isalnum(peek())) {
+    str += advance();
   }
 }
 
-void getNumber(std::istream& stream, std::string& str) {
-  while (isdigit(stream.peek())) {
-    str += stream.get();
+void Lexer::readNumber() {
+  while (isdigit(peek())) {
+    str += advance();
   }
 }
 
-Simple::Lexer::Lexer(std::istream& stream) {
+Lexer::Lexer(std::istream& stream_) : stream(stream_){};
+
+void Lexer::parse() {
   char nextChar;
-  std::string str;
 
   while (!stream.eof()) {
-    nextChar = stream.get();
+    nextChar = advance();
     if (nextChar == EOF) break;
     str += nextChar;
-    if (isspace(nextChar)) {  // Ignore whitespaces
+    if (nextChar == '\n') {
+      lineno++;
+      colno = 1;
+    } else if (isspace(nextChar)) {  // Ignore whitespaces
       ;
     } else if (isalpha(nextChar)) {  // Symbols
-      getSymbol(stream, str);
+      readSymbol();
       tokens.push_back(new SymbolToken(str));
     } else if (isdigit(nextChar)) {  // Numbers
-      getNumber(stream, str);
+      readNumber();
       tokens.push_back(new NumberToken(str));
     } else {  // Punctuations
       if (nextChar == '!') {
-        if (stream.peek() == '=') {
-          str += stream.get();
+        if (peek() == '=') {
+          str += advance();
         }
       } else if (nextChar == '=') {
-        if (stream.peek() == '=') {
-          str += stream.get();
+        if (peek() == '=') {
+          str += advance();
         }
       } else if (nextChar == '&') {
-        if (stream.peek() == '&') {
-          str += stream.get();
+        if (peek() == '&') {
+          str += advance();
         } else {
-          std::cout << "Expecting another &";  // TODO: Handle Error properly
+          throw SimpleLexException(lineno, colno, '&', peek());
         }
       } else if (nextChar == '|') {
-        if (stream.peek() == '|') {
-          str += stream.get();
+        if (peek() == '|') {
+          str += advance();
         } else {
-          std::cout << "Expecting another |";  // TODO: Handle Error properly
+          throw SimpleLexException(lineno, colno, '|', peek());
         }
       } else if (nextChar == '=') {
-        if (stream.peek() == '=') {
-          str += stream.get();
+        if (peek() == '=') {
+          str += advance();
         }
       } else if (nextChar == '>') {
-        if (stream.peek() == '=') {
-          str += stream.get();
+        if (peek() == '=') {
+          str += advance();
         }
       } else if (nextChar == '<') {
-        if (stream.peek() == '=') {
-          str += stream.get();
+        if (peek() == '=') {
+          str += advance();
         }
       } else if (single_token_puncts.find(str) != single_token_puncts.end()) {
         // Is valid single punct character
         ;
       } else {
-        // TODO: HANDLE PARSE ERROR
-        std::cout << "WAT" << int(nextChar);
+        throw SimpleLexException(lineno, colno, nextChar);
       }
       tokens.push_back(new PunctToken(str));
     }
     str = "";
   }
+
   tokens.push_back(new EndOfFileToken());
 };

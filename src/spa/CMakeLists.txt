@@ -50,6 +50,7 @@ set(headers ${headers}
   src/simple_parser/lexer.h
   src/simple_parser/token.h
   src/simple_parser/parser.h
+  src/simple_parser/exceptions.h
   )
   
 add_library(spa ${srcs} ${headers})

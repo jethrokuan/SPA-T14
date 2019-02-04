@@ -16,6 +16,7 @@ TEST_CASE ("Test Parser works") {
   std::ifstream input(filename);
 
   Simple::Lexer lexer = Simple::Lexer(input);
+  lexer.parse();
 
   Simple::Parser parser = Simple::Parser(lexer.tokens);
   auto proc = parser.parse();

@@ -1,3 +1,5 @@
+#ifndef NODE_H
+#define NODE_H
 #include <memory>
 #include <vector>
 #include <string>
@@ -188,3 +190,4 @@ class IfNode : public Node {
          std::shared_ptr<StmtListNode> stmtListElse);
   bool operator==(const Node& other) const;
 };
+#endif

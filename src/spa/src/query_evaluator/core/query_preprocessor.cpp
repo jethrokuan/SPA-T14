@@ -98,11 +98,11 @@ void QueryPreprocessor::parseSuchThat(
 
   // For a Relation to match: it must match 'RelationName'+'(' since some
   // relations are substrings of other relations
-  const auto& stringToRelationMap = getRelationToStringMap();
+  const auto& relationToStringMap = getRelationToStringMap();
   size_t found_end_idx = 0;
   bool found = false;
   Relation relation;
-  for (const auto& r : stringToRelationMap) {
+  for (const auto& r : relationToStringMap) {
     auto string_to_match = r.second + '(';
     auto found_start_idx = joined_such_that.find(string_to_match);
     if (found_start_idx != std::string::npos) {
@@ -138,12 +138,18 @@ void QueryPreprocessor::parseSuchThat(
 
   // TODO: Better error handling
   if (!stmt_or_entref_1) {
-    std::cout << "Such That parse error with arg " << arg1 << "\n";
-    return;
+    throw PQLParseException(
+        "Cannot parse argument " + arg1 + " as a(n) " +
+        refTypeToString(arg_types.first) +
+        ", which is required for first argument of relation type " +
+        getStringFromRelation(relation));
   }
   if (!stmt_or_entref_2) {
-    std::cout << "Such That parse error with arg " << arg2 << "\n";
-    return;
+    throw PQLParseException(
+        "Cannot parse argument " + arg2 + " as a(n) " +
+        refTypeToString(arg_types.second) +
+        ", which is required for second argument of relation type " +
+        getStringFromRelation(relation));
   }
 
   // Construct final Such That relation
@@ -152,10 +158,10 @@ void QueryPreprocessor::parseSuchThat(
   if (opt_suchthat) {
     query->such_that = opt_suchthat.value();
   } else {
-    std::cout << "Such That parse error - did not get correct stmtref/entref "
-                 "combination for given relation (this error message should "
-                 "not be seen)"
-              << getStringFromRelation(relation) << ".\n ";
+    throw PQLParseException(
+        "Such That parse error - did not get correct stmtref/entref "
+        "combination for given relation (this error message should not be seen "
+        "- should be caught be earlier block");
   }
 }
 

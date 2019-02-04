@@ -58,21 +58,6 @@ TEST_CASE ("Test three assign one select query Preprocess") {
 }
 
 TEST_CASE (
-    "Test one assign one select one malformed such that query Preprocess") {
-  auto qp = QE::QueryPreprocessor();
-  std::string input = "assign p;Select p such that Follows(6++=sss| , s23123|)";
-  auto query = qp.getQuery(input);
-  REQUIRE(*(query->declarations) ==
-          std::vector<Declaration>{Declaration(
-              DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
-  REQUIRE(
-      *(query->selected_declaration) ==
-      Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-  REQUIRE(query->such_that == nullptr);
-  REQUIRE(query->pattern == nullptr);
-}
-
-TEST_CASE (
     "Test one assigned one select syntactically correct FOLLOWS such that "
     "Preprocess") {
   SECTION ("Follows(stmtref(_),stmtref(_))") {
@@ -132,19 +117,7 @@ TEST_CASE (
   SECTION ("Follows(stmtref(synonym), entref(\"asd\"))") {
     auto qp = QE::QueryPreprocessor();
     std::string input = "assign p;Select p such that Follows(a, \"asd\")";
-    auto query = qp.getQuery(input);
-    REQUIRE(*(query->declarations) ==
-            std::vector<Declaration>{Declaration(
-                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
-    REQUIRE(
-        *(query->selected_declaration) ==
-        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-
-    QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
-    QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
-    // No such_that - invalid parse
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
   }
 }
 
@@ -286,6 +259,25 @@ TEST_CASE ("Test Preprocess Exceptions") {
   SECTION ("Test Semantic exception for no matching relation for such_that") {
     auto qp = QE::QueryPreprocessor();
     std::string input = "assign p;Select p such that Followz(p, q)";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
+
+  SECTION ("Test malformed such that query Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input =
+        "assign p;Select p such that Follows(6++=sss| , s23123|)";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
+
+  SECTION ("Test malformed such that first arg query Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p such that Follows(6++=sss|,_)";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
+
+  SECTION ("Test malformed such that second arg query Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p such that Follows(_,6++=sss|)";
     REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
   }
 }

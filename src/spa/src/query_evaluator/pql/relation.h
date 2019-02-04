@@ -1,6 +1,7 @@
 #pragma once
 #include <regex>
 #include <string>
+#include <map>
 
 #include "query_evaluator/pql/relation.h"
 

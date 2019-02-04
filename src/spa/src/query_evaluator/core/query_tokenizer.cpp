@@ -70,7 +70,6 @@ QueryTokenizerTokens QueryTokenizer::getTokens(std::string pql_query_string) {
   return final_tokens;
 }
 
-// TODO: There is no error checking here
 // TODO: Handle left and right whitespace
 void QueryTokenizer::setClauses(std::string& select_clause,
                                 QueryTokenizerTokens& qtt) {

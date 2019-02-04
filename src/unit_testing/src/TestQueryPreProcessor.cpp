@@ -280,4 +280,28 @@ TEST_CASE ("Test Preprocess Exceptions") {
     std::string input = "assign p;Select p such that Follows(_,6++=sss|)";
     REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
   }
+
+  SECTION ("Test malformed pattern - no other arguments") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p pattern";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLTokenizeException);
+  }
+
+  SECTION ("Test malformed pattern - not synonym") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p pattern @ (x, _)";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
+
+  SECTION ("Test malformed pattern - first argument") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p pattern a (@, _)";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
+
+  SECTION ("Test malformed pattern - second argument") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p pattern a (_, @)";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
 }

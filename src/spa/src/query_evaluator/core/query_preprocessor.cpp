@@ -136,7 +136,6 @@ void QueryPreprocessor::parseSuchThat(
   auto stmt_or_entref_1 = argToStmtOrEntRef(arg1, arg_types.first);
   auto stmt_or_entref_2 = argToStmtOrEntRef(arg2, arg_types.second);
 
-  // TODO: Better error handling
   if (!stmt_or_entref_1) {
     throw PQLParseException(
         "Cannot parse argument " + arg1 + " as a(n) " +
@@ -170,10 +169,9 @@ void QueryPreprocessor::parsePattern(Query* query,
   if (pattern_tokens == nullptr) {
     return;
   } else if (pattern_tokens->size() <= 1) {
-    // Error condition: depends on error handling strategy for project
-    // TODO
-    std::cout << "Pattern tokens invalid";
-    return;
+    throw PQLTokenizeException(
+        "Expected at least 1 pattern token in pattern clause, got " +
+        std::to_string(pattern_tokens->size()));
   }
 
   // Join and all such-that tokens excluding "pattern"
@@ -203,21 +201,17 @@ void QueryPreprocessor::parsePattern(Query* query,
   auto entref = argToEntRef(arg1);
   auto exprspec = argToExprSpec(arg2);
 
-  // TODO: Better error handling
   if (!synonym) {
-    std::cout << "Pattern parse error - cannot parse arg" << arg1
-              << " as synonym\n";
-    return;
+    throw PQLParseException("Pattern parse error - cannot parse arg " +
+                            syn_assign + " as synonym");
   }
   if (!entref) {
-    std::cout << "Pattern parse error - cannot parse arg " << arg1
-              << " as entRef\n";
-    return;
+    throw PQLParseException("Pattern parse error - cannot parse arg " + arg1 +
+                            " as entref");
   }
   if (!exprspec) {
-    std::cout << "Pattern parse error - cannot parse arg " << arg2
-              << " as exprspec\n";
-    return;
+    throw PQLParseException("Pattern parse error - cannot parse arg " + arg2 +
+                            " as exprspec");
   }
 
   // Construct final Pattern relation
@@ -226,9 +220,9 @@ void QueryPreprocessor::parsePattern(Query* query,
   if (opt_pattern) {
     query->pattern = opt_pattern.value();
   } else {
-    std::cout << "Pattern parse error - could not construct final pattern from "
-                 "individually valid parts."
-              << ".\n ";
+    throw PQLParseException(
+        "Pattern parse error - could not construct final pattern from "
+        "individually valid parts.");
   }
 }
 
@@ -279,7 +273,6 @@ std::optional<StmtRef> QueryPreprocessor::argToStmtRef(std::string arg) {
   } else if ((opt_synonym = Synonym::construct(arg))) {
     s1 = opt_synonym.value();
   } else {
-    std::cout << "Cannot parse arg: " << arg << " as a stmtRef\n";
     return std::nullopt;
   }
   return s1;
@@ -296,7 +289,6 @@ std::optional<EntRef> QueryPreprocessor::argToEntRef(std::string arg) {
   } else if ((opt_quoteident = QuoteIdent::construct(arg))) {
     s1 = opt_quoteident.value();
   } else {
-    std::cout << "Cannot parse arg: " << arg << " as an entRef\n";
     return std::nullopt;
   }
   return s1;
@@ -310,7 +302,6 @@ std::optional<ExpressionSpec> QueryPreprocessor::argToExprSpec(
   } else if (arg == "_") {
     return Underscore();
   } else {
-    std::cout << "Cannot parse arg: " << arg << " as an exprspec\n";
     return std::nullopt;
   }
 }

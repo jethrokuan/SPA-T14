@@ -79,10 +79,9 @@ void QueryPreprocessor::parseSuchThat(
   if (such_that_tokens == nullptr) {
     return;
   } else if (such_that_tokens->size() <= 2) {
-    // Error condition: depends on error handling strategy for project
-    // TODO
-    std::cout << "Such that tokens invalid";
-    return;
+    throw PQLTokenizeException(
+        "Incorrect number of such that tokens found, expecting 2, saw " +
+        std::to_string(such_that_tokens->size()));
   }
 
   // Join and all such-that tokens excluding "such" and "that"
@@ -108,6 +107,7 @@ void QueryPreprocessor::parseSuchThat(
     auto found_start_idx = joined_such_that.find(string_to_match);
     if (found_start_idx != std::string::npos) {
       // Set the relation we found - args set later
+      // TODO: It also needs to be found RIGHT AFTER the such that
       relation = r.first;
       found_end_idx = found_start_idx + r.second.length();
       found = true;
@@ -115,10 +115,10 @@ void QueryPreprocessor::parseSuchThat(
     }
   }
 
-  // TODO: proper error handling
   if (!found) {
-    std::cout << "Cannot find Relation\n";
-    return;
+    throw PQLParseException(
+        "Cannot find a valid relation in such that statement: " +
+        joined_such_that);
   }
 
   auto arg1_start_idx = found_end_idx + 1;

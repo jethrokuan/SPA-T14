@@ -282,4 +282,10 @@ TEST_CASE ("Test Preprocess Exceptions") {
     std::string input = "assign p;Select q";
     REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
   }
+
+  SECTION ("Test Semantic exception for no matching relation for such_that") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p such that Followz(p, q)";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
 }

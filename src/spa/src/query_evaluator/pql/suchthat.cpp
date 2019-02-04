@@ -39,4 +39,3 @@ std::optional<SuchThat*> SuchThat::construct_heap(Relation rel,
     return new SuchThat(rel, arg1, arg2);
   }
 }
-

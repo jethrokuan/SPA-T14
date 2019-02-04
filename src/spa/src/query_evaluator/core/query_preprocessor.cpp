@@ -17,7 +17,6 @@ Query* QueryPreprocessor::getQuery(std::string& pql_query_string) {
 
   // Begin to fill up query object with components of query
   auto query = new Query();
-
   QueryPreprocessor::parseDeclarations(query, query_tokens.declaration_tokens);
   QueryPreprocessor::parseSelect(query, query_tokens.select_tokens);
   QueryPreprocessor::parseSuchThat(query, query_tokens.such_that_tokens);
@@ -43,11 +42,12 @@ void QueryPreprocessor::parseDeclarations(
       std::optional<Synonym> synonymObj = Synonym::construct(synonym);
       if (!synonymObj) {
         // Failure in synonym construction: regex invalud
-        std::ostringstream oss;
-        oss << "Could not parse synonym " << synonym
-            << " when processing design entity " << getDesignEntityString(de)
-            << std::endl;
-        throw PQLParseException(oss.str());
+        std::string ex_str;
+        // This is faster than stringstream construction
+        ex_str = "Could not parse synonym " + synonym +
+                 " when processing design entity " + getDesignEntityString(de) +
+                 "\n";
+        throw PQLParseException(ex_str);
       }
 
       decls->push_back(Declaration(de, synonymObj.value()));
@@ -69,7 +69,7 @@ void QueryPreprocessor::parseSelect(Query* query,
   std::string synonym_to_match = select_tokens->at(1);
 
   // Search declarations to find one that matches this synyonm
-  // TODO: CHECK FOR NULLPTR
+  // THIS CAN THROW AN EXCEPTION - we do not catch
   query->selected_declaration =
       findDeclaration(query->declarations, synonym_to_match);
 }
@@ -232,6 +232,12 @@ Declaration* QueryPreprocessor::findDeclaration(
   auto found_declaration = std::find_if(
       declarations->begin(), declarations->end(),
       [&](auto decl) { return decl.getSynonym() == synonym_to_match; });
+
+  if (found_declaration == declarations->end()) {
+    throw PQLParseException("Semantic Error: cannot match synonym " +
+                            synonym_to_match +
+                            " to list of declarations given");
+  }
 
   return &declarations->at(
       std::distance(declarations->begin(), found_declaration));

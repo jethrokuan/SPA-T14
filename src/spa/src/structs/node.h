@@ -1,5 +1,6 @@
 #include <memory>
 #include <vector>
+#include <string>
 
 class Node;
 class NumberNode;

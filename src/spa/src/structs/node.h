@@ -1,3 +1,12 @@
+/*!
+  \file   node.h
+  \brief  Node definitions for the SIMPLE AST.
+
+  \date   2019-02-05
+*/
+
+#pragma once
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -20,6 +29,7 @@ class RelExprNode;
 class CondExprNode;
 class WhileNode;
 
+//! Abstract base class for other AST nodes.
 class Node {
  public:
   virtual ~Node(){};
@@ -29,6 +39,7 @@ class Node {
   };
 };
 
+//! AST Node representing a Statement List
 class StmtListNode : public Node {
  public:
   std::vector<std::shared_ptr<Node>> StmtList;
@@ -36,6 +47,7 @@ class StmtListNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a Number (const_value)
 class NumberNode : public Node {
  public:
   std::string Val;
@@ -43,6 +55,7 @@ class NumberNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a Variable
 class VariableNode : public Node {
  public:
   std::string Name;
@@ -50,6 +63,7 @@ class VariableNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a Read statement
 class ReadNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
@@ -57,6 +71,7 @@ class ReadNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a Print statement
 class PrintNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
@@ -64,6 +79,7 @@ class PrintNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a procedure
 class ProcedureNode : public Node {
  public:
   std::string Name;
@@ -73,6 +89,7 @@ class ProcedureNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing term'
 class TermPNode : public Node {
  public:
   std::shared_ptr<FactorNode> Factor;
@@ -83,6 +100,7 @@ class TermPNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing term
 class TermNode : public Node {
  public:
   std::shared_ptr<FactorNode> Factor;
@@ -94,6 +112,7 @@ class TermNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing expr'
 class ExprPNode : public Node {
  public:
   std::shared_ptr<TermNode> Term;
@@ -106,6 +125,7 @@ class ExprPNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing expr
 class ExprNode : public Node {
  public:
   std::shared_ptr<TermNode> Term;
@@ -116,6 +136,7 @@ class ExprNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a factor
 class FactorNode : public Node {
  public:
   union {
@@ -132,6 +153,7 @@ class FactorNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing an Assign statement
 class AssignNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
@@ -140,6 +162,7 @@ class AssignNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a RelExpr
 class RelExprNode : public Node {
  public:
   std::shared_ptr<RelFactorNode> LHS;
@@ -150,6 +173,7 @@ class RelExprNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a CondExpr
 class CondExprNode : public Node {
  public:
   std::shared_ptr<RelExprNode> RelExpr = nullptr;
@@ -167,6 +191,7 @@ class CondExprNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a While statement
 class WhileNode : public Node {
  public:
   std::shared_ptr<CondExprNode> CondExpr;
@@ -177,6 +202,7 @@ class WhileNode : public Node {
   bool operator==(const Node& other) const;
 };
 
+//! AST Node representing a If statement
 class IfNode : public Node {
  public:
   std::shared_ptr<CondExprNode> CondExpr;

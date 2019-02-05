@@ -71,7 +71,6 @@ QueryTokenizerTokens QueryTokenizer::getTokens(std::string pql_query_string) {
 // TODO: Handle left and right whitespace
 void QueryTokenizer::setClauses(std::string& select_clause,
                                 QueryTokenizerTokens& qtt) {
-  ;
   // Space separate all tokens to begin analysis
   auto initial_clause_tokens = QueryTokenizer::splitString(
       select_clause, QueryTokenizer::SPACE_DELIMITER);

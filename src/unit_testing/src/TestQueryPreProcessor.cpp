@@ -305,3 +305,158 @@ TEST_CASE ("Test Preprocess Exceptions") {
     REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
   }
 }
+
+TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
+  SECTION (
+      "Test one assign one select query whitespace before select Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p; Select p";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+
+  SECTION (
+      "Test one assign one select query whitespace after select Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p ";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+
+  SECTION (
+      "Test one assign one select query whitespace before+after select "
+      "Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p; Select p ";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+
+  SECTION (
+      "Test one assign one select query whitespace before assign "
+      "Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = " assign p;Select p";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+  SECTION (
+      "Test one assign one select query whitespace after assign "
+      "Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p ;Select p";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+
+  SECTION (
+      "Test one assign one select query whitespace before+after assign "
+      "Preprocess") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = " assign p ;Select p";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+
+  SECTION (
+      "Test one assign one select one such that with whitespace before"
+      "Follows(stmtref(_),stmtref(_))") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p   such that Follows(_,_)";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+
+    QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
+    QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
+    REQUIRE(*(query->such_that) ==
+            SuchThat::construct(Relation::Follows, a1, a2).value());
+    REQUIRE(query->pattern == nullptr);
+  }
+
+  SECTION (
+      "Test one assign one select one such that with whitespace after "
+      "Follows(stmtref(_),stmtref(_))") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p such that Follows(_,_)   ";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+
+    QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
+    QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
+    REQUIRE(*(query->such_that) ==
+            SuchThat::construct(Relation::Follows, a1, a2).value());
+    REQUIRE(query->pattern == nullptr);
+  }
+
+  SECTION (
+      "Test one assign one select one such that with whitespace before+after "
+      "Follows(stmtref(_),stmtref(_))") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign p;Select p    such that Follows(_,_)   ";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{Declaration(
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+
+    QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
+    QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
+    REQUIRE(*(query->such_that) ==
+            SuchThat::construct(Relation::Follows, a1, a2).value());
+    REQUIRE(query->pattern == nullptr);
+  }
+}

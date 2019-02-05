@@ -37,4 +37,8 @@ std::map<T2, T1> swapPairs(std::map<T1, T2> m) {
 
 bool has_only_digits(const std::string);
 
+std::string& ltrim(std::string&, const std::string& chars = "\t ");
+std::string& rtrim(std::string&, const std::string& chars = "\t ");
+std::string& trim(std::string&, const std::string& chars = "\t ");
+
 }  // namespace QE

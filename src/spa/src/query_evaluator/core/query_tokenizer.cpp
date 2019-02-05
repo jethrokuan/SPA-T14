@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "query_evaluator/core/exceptions.h"
 
 using namespace QE;
 
@@ -61,10 +62,14 @@ QueryTokenizerTokens QueryTokenizer::getTokens(std::string pql_query_string) {
     }
     tokens_counter++;
   }
+  if (final_tokens.declaration_tokens == nullptr ||
+      final_tokens.select_tokens == nullptr) {
+    throw PQLTokenizeException(
+        "Either no declarations or no Select statement present");
+  }
   return final_tokens;
 }
 
-// TODO: There is no error checking here
 // TODO: Handle left and right whitespace
 void QueryTokenizer::setClauses(std::string& select_clause,
                                 QueryTokenizerTokens& qtt) {
@@ -74,6 +79,14 @@ void QueryTokenizer::setClauses(std::string& select_clause,
 
   // First two tokens should be "Select" and "<synonym>" always
   auto first = initial_clause_tokens->begin();
+
+  if (initial_clause_tokens->size() < 2) {
+    throw PQLTokenizeException(
+        "Invalid number of tokens found for Select statement. Expected > 2, "
+        "found " +
+        std::to_string(initial_clause_tokens->size()));
+  }
+
   auto select_tokens = new std::vector<std::string>(first, first + 2);
   qtt.select_tokens = select_tokens;
 

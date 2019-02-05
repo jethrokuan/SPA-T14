@@ -1,7 +1,7 @@
 #pragma once
+#include <iostream>
 #include <optional>
 #include <regex>
-#include <iostream>
 
 namespace QE {
 class QuoteIdent {

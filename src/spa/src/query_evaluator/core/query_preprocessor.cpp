@@ -1,7 +1,9 @@
 #include "query_evaluator/core/query_preprocessor.h"
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <variant>
+#include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/core/query_tokenizer.h"
 #include "query_evaluator/pql/pql.h"
 
@@ -15,7 +17,6 @@ Query* QueryPreprocessor::getQuery(std::string& pql_query_string) {
 
   // Begin to fill up query object with components of query
   auto query = new Query();
-
   QueryPreprocessor::parseDeclarations(query, query_tokens.declaration_tokens);
   QueryPreprocessor::parseSelect(query, query_tokens.select_tokens);
   QueryPreprocessor::parseSuchThat(query, query_tokens.such_that_tokens);
@@ -31,9 +32,7 @@ void QueryPreprocessor::parseDeclarations(
   auto decls = new std::vector<Declaration>();
   for (size_t i = 0; i < declaration_tokens->size(); i++) {
     if (i % 2 == 0) {
-      // Design entity
-      // TODO: This can throw an error if the DE isn't recognized (incorrect
-      // DE)!
+      // This might throw an error - it will terminate this process
       de = getDesignEntity((*declaration_tokens)[i]);
     } else {
       // This is the synonym half of the decl: store the DE we have into our
@@ -43,11 +42,12 @@ void QueryPreprocessor::parseDeclarations(
       std::optional<Synonym> synonymObj = Synonym::construct(synonym);
       if (!synonymObj) {
         // Failure in synonym construction: regex invalud
-        // TODO: PROPER ERROR HANDLING
-        std::cout << "Cannot recognize synonym [" << synonym
-                  << "] for design entity " << getDesignEntityString(de)
-                  << std::endl;
-        return;
+        std::string ex_str;
+        // This is faster than stringstream construction
+        ex_str = "Could not parse synonym " + synonym +
+                 " when processing design entity " + getDesignEntityString(de) +
+                 "\n";
+        throw PQLParseException(ex_str);
       }
 
       decls->push_back(Declaration(de, synonymObj.value()));
@@ -59,17 +59,17 @@ void QueryPreprocessor::parseDeclarations(
 void QueryPreprocessor::parseSelect(Query* query,
                                     std::vector<std::string>* select_tokens) {
   if (select_tokens->size() != 2) {
-    // Error condition: depends on error handling strategy for project
-    // TODO
-    std::cout << "Select tokens invalid";
-    return;
+    throw PQLParseException(
+        "Invalid number of tokens found for Select statement. Expected 2, "
+        "found " +
+        std::to_string(select_tokens->size()));
   }
 
   // The synonym in the Select statement (e.g. {"Select", "p"} --> "p")
   std::string synonym_to_match = select_tokens->at(1);
 
   // Search declarations to find one that matches this synyonm
-  // TODO: CHECK FOR NULLPTR
+  // THIS CAN THROW AN EXCEPTION - we do not catch
   query->selected_declaration =
       findDeclaration(query->declarations, synonym_to_match);
 }
@@ -79,10 +79,9 @@ void QueryPreprocessor::parseSuchThat(
   if (such_that_tokens == nullptr) {
     return;
   } else if (such_that_tokens->size() <= 2) {
-    // Error condition: depends on error handling strategy for project
-    // TODO
-    std::cout << "Such that tokens invalid";
-    return;
+    throw PQLTokenizeException(
+        "Incorrect number of such that tokens found, expecting 2, saw " +
+        std::to_string(such_that_tokens->size()));
   }
 
   // Join and all such-that tokens excluding "such" and "that"
@@ -99,15 +98,16 @@ void QueryPreprocessor::parseSuchThat(
 
   // For a Relation to match: it must match 'RelationName'+'(' since some
   // relations are substrings of other relations
-  const auto& stringToRelationMap = getRelationToStringMap();
+  const auto& relationToStringMap = getRelationToStringMap();
   size_t found_end_idx = 0;
   bool found = false;
   Relation relation;
-  for (const auto& r : stringToRelationMap) {
+  for (const auto& r : relationToStringMap) {
     auto string_to_match = r.second + '(';
     auto found_start_idx = joined_such_that.find(string_to_match);
     if (found_start_idx != std::string::npos) {
       // Set the relation we found - args set later
+      // TODO: It also needs to be found RIGHT AFTER the such that
       relation = r.first;
       found_end_idx = found_start_idx + r.second.length();
       found = true;
@@ -115,10 +115,10 @@ void QueryPreprocessor::parseSuchThat(
     }
   }
 
-  // TODO: proper error handling
   if (!found) {
-    std::cout << "Cannot find Relation\n";
-    return;
+    throw PQLParseException(
+        "Cannot find a valid relation in such that statement: " +
+        joined_such_that);
   }
 
   auto arg1_start_idx = found_end_idx + 1;
@@ -136,14 +136,19 @@ void QueryPreprocessor::parseSuchThat(
   auto stmt_or_entref_1 = argToStmtOrEntRef(arg1, arg_types.first);
   auto stmt_or_entref_2 = argToStmtOrEntRef(arg2, arg_types.second);
 
-  // TODO: Better error handling
   if (!stmt_or_entref_1) {
-    std::cout << "Such That parse error with arg " << arg1 << "\n";
-    return;
+    throw PQLParseException(
+        "Cannot parse argument " + arg1 + " as a(n) " +
+        refTypeToString(arg_types.first) +
+        ", which is required for first argument of relation type " +
+        getStringFromRelation(relation));
   }
   if (!stmt_or_entref_2) {
-    std::cout << "Such That parse error with arg " << arg2 << "\n";
-    return;
+    throw PQLParseException(
+        "Cannot parse argument " + arg2 + " as a(n) " +
+        refTypeToString(arg_types.second) +
+        ", which is required for second argument of relation type " +
+        getStringFromRelation(relation));
   }
 
   // Construct final Such That relation
@@ -152,10 +157,10 @@ void QueryPreprocessor::parseSuchThat(
   if (opt_suchthat) {
     query->such_that = opt_suchthat.value();
   } else {
-    std::cout << "Such That parse error - did not get correct stmtref/entref "
-                 "combination for given relation (this error message should "
-                 "not be seen)"
-              << getStringFromRelation(relation) << ".\n ";
+    throw PQLParseException(
+        "Such That parse error - did not get correct stmtref/entref "
+        "combination for given relation (this error message should not be seen "
+        "- should be caught be earlier block");
   }
 }
 
@@ -164,10 +169,9 @@ void QueryPreprocessor::parsePattern(Query* query,
   if (pattern_tokens == nullptr) {
     return;
   } else if (pattern_tokens->size() <= 1) {
-    // Error condition: depends on error handling strategy for project
-    // TODO
-    std::cout << "Pattern tokens invalid";
-    return;
+    throw PQLTokenizeException(
+        "Expected at least 1 pattern token in pattern clause, got " +
+        std::to_string(pattern_tokens->size()));
   }
 
   // Join and all such-that tokens excluding "pattern"
@@ -197,21 +201,17 @@ void QueryPreprocessor::parsePattern(Query* query,
   auto entref = argToEntRef(arg1);
   auto exprspec = argToExprSpec(arg2);
 
-  // TODO: Better error handling
   if (!synonym) {
-    std::cout << "Pattern parse error - cannot parse arg" << arg1
-              << " as synonym\n";
-    return;
+    throw PQLParseException("Pattern parse error - cannot parse arg " +
+                            syn_assign + " as synonym");
   }
   if (!entref) {
-    std::cout << "Pattern parse error - cannot parse arg " << arg1
-              << " as entRef\n";
-    return;
+    throw PQLParseException("Pattern parse error - cannot parse arg " + arg1 +
+                            " as entref");
   }
   if (!exprspec) {
-    std::cout << "Pattern parse error - cannot parse arg " << arg2
-              << " as exprspec\n";
-    return;
+    throw PQLParseException("Pattern parse error - cannot parse arg " + arg2 +
+                            " as exprspec");
   }
 
   // Construct final Pattern relation
@@ -220,9 +220,9 @@ void QueryPreprocessor::parsePattern(Query* query,
   if (opt_pattern) {
     query->pattern = opt_pattern.value();
   } else {
-    std::cout << "Pattern parse error - could not construct final pattern from "
-                 "individually valid parts."
-              << ".\n ";
+    throw PQLParseException(
+        "Pattern parse error - could not construct final pattern from "
+        "individually valid parts.");
   }
 }
 
@@ -232,6 +232,12 @@ Declaration* QueryPreprocessor::findDeclaration(
   auto found_declaration = std::find_if(
       declarations->begin(), declarations->end(),
       [&](auto decl) { return decl.getSynonym() == synonym_to_match; });
+
+  if (found_declaration == declarations->end()) {
+    throw PQLParseException("Semantic Error: cannot match synonym " +
+                            synonym_to_match +
+                            " to list of declarations given");
+  }
 
   return &declarations->at(
       std::distance(declarations->begin(), found_declaration));
@@ -267,7 +273,6 @@ std::optional<StmtRef> QueryPreprocessor::argToStmtRef(std::string arg) {
   } else if ((opt_synonym = Synonym::construct(arg))) {
     s1 = opt_synonym.value();
   } else {
-    std::cout << "Cannot parse arg: " << arg << " as a stmtRef\n";
     return std::nullopt;
   }
   return s1;
@@ -284,7 +289,6 @@ std::optional<EntRef> QueryPreprocessor::argToEntRef(std::string arg) {
   } else if ((opt_quoteident = QuoteIdent::construct(arg))) {
     s1 = opt_quoteident.value();
   } else {
-    std::cout << "Cannot parse arg: " << arg << " as an entRef\n";
     return std::nullopt;
   }
   return s1;
@@ -298,7 +302,6 @@ std::optional<ExpressionSpec> QueryPreprocessor::argToExprSpec(
   } else if (arg == "_") {
     return Underscore();
   } else {
-    std::cout << "Cannot parse arg: " << arg << " as an exprspec\n";
     return std::nullopt;
   }
 }

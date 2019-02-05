@@ -4,7 +4,7 @@
 #include <vector>
 #include "query_evaluator/core/query_tokenizer.h"
 
-TEST_CASE("Test Empty Query Tokenize") {
+TEST_CASE ("Test Empty Query Tokenize") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("");
   REQUIRE(tokenStruct.declaration_tokens == nullptr);
@@ -13,7 +13,7 @@ TEST_CASE("Test Empty Query Tokenize") {
   REQUIRE(tokenStruct.pattern_tokens == nullptr);
 }
 
-TEST_CASE("Test one assignment one select Tokenization") {
+TEST_CASE ("Test one assignment one select Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;Select p");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
@@ -24,7 +24,7 @@ TEST_CASE("Test one assignment one select Tokenization") {
   REQUIRE(tokenStruct.pattern_tokens == nullptr);
 }
 
-TEST_CASE("Test two assignments one select Tokenization") {
+TEST_CASE ("Test two assignments one select Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;statement w;Select p");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
@@ -35,7 +35,7 @@ TEST_CASE("Test two assignments one select Tokenization") {
   REQUIRE(tokenStruct.pattern_tokens == nullptr);
 }
 
-TEST_CASE("Test one assignment one select one such that Tokenization") {
+TEST_CASE ("Test one assignment one select one such that Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;Select p such that x y z");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
@@ -47,7 +47,7 @@ TEST_CASE("Test one assignment one select one such that Tokenization") {
   REQUIRE(tokenStruct.pattern_tokens == nullptr);
 }
 
-TEST_CASE("Test one assignment one select with newline Tokenization") {
+TEST_CASE ("Test one assignment one select with newline Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;\nSelect p");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
@@ -58,7 +58,7 @@ TEST_CASE("Test one assignment one select with newline Tokenization") {
   REQUIRE(tokenStruct.pattern_tokens == nullptr);
 }
 
-TEST_CASE("Test one assignment one select with 2x newline Tokenization") {
+TEST_CASE ("Test one assignment one select with 2x newline Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;\nSelect p\n");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
@@ -69,7 +69,7 @@ TEST_CASE("Test one assignment one select with 2x newline Tokenization") {
   REQUIRE(tokenStruct.pattern_tokens == nullptr);
 }
 
-TEST_CASE(
+TEST_CASE (
     "Test one assignment one select one such that one pattern Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct =
@@ -84,7 +84,7 @@ TEST_CASE(
           std::vector<std::string>{"pattern", "a", "b", "c", "d"});
 }
 
-TEST_CASE("Test one assignment one select one pattern Tokenization") {
+TEST_CASE ("Test one assignment one select one pattern Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;Select p pattern a b c d");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
@@ -96,7 +96,7 @@ TEST_CASE("Test one assignment one select one pattern Tokenization") {
           std::vector<std::string>{"pattern", "a", "b", "c", "d"});
 }
 
-TEST_CASE("Test two assignment one select one such that Tokenization") {
+TEST_CASE ("Test two assignment one select one such that Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct =
       qt.getTokens("assign p;statement w;Select p such that x y z");
@@ -109,7 +109,7 @@ TEST_CASE("Test two assignment one select one such that Tokenization") {
   REQUIRE(tokenStruct.pattern_tokens == nullptr);
 }
 
-TEST_CASE(
+TEST_CASE (
     "Test two assignment one select one such that one pattern Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens(
@@ -124,7 +124,7 @@ TEST_CASE(
           std::vector<std::string>{"pattern", "a", "b", "c", "d"});
 }
 
-TEST_CASE("Test two assignment one select one pattern Tokenization") {
+TEST_CASE ("Test two assignment one select one pattern Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct =
       qt.getTokens("assign p;statement w;Select p pattern a b c d");

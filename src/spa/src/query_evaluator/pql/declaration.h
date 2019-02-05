@@ -8,6 +8,7 @@
 #include "query_evaluator/pql/synonym.h"
 
 namespace QE {
+//! Represents a single declaration in a PQL query (e.g. 'assign a')
 class Declaration {
  private:
   // Spec: LETTER (LETTER | DIGIT)*

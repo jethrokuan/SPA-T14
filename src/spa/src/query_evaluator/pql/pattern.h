@@ -9,8 +9,10 @@
 #include "query_evaluator/pql/util.h"
 
 namespace QE {
+//! An ExprSpec term in PQL can be either a DUF or just an Underscore
 using ExpressionSpec = std::variant<DoubleUnderscoreFactor, Underscore>;
 
+//! Represents a pattern clause in PQL (e.g. pattern a (_,"v")
 class Pattern {
  private:
   Synonym synonym;

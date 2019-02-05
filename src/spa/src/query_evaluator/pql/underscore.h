@@ -2,6 +2,7 @@
 #include <iostream>
 
 namespace QE {
+//! Strongly-typed underscore in a PQL query (i.e. _)
 class Underscore {
  public:
   bool operator==(__attribute__((unused)) const Underscore& u) const {

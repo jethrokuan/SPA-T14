@@ -19,3 +19,8 @@ This project is known to work with
 
 ## Contributing Guidelines
 Please read [the Contribution Guidelines](./CONTRIBUTING.md) when formatting your pull request.
+
+## Generating documentation
+1. Run `doxygen` in the root project folder. 
+2. Documentation should be generated in `doxygen-docs`.
+3. `doxygen-docs/index.html` (open in browser) will lead to the documentation homepage.

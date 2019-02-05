@@ -7,6 +7,8 @@
 #include "query_evaluator/pql/util.h"
 
 namespace QE {
+//! \brief Part of Query that represents a "such that" clause (e.g. such that
+//! Follows(6,s))
 class SuchThat {
  private:
   Relation relation;

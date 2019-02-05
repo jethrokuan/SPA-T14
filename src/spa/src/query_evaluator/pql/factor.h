@@ -7,7 +7,12 @@
 #include "query_evaluator/pql/util.h"
 
 namespace QE {
+//! A factor can be either a synonym or a statement number
 using Factor = std::variant<Synonym, unsigned int>;
+/*!
+ *  \brief Represents a PQL factor term that is surrounded by two underscores.
+ *         (e.g. _"x"_)
+ */
 class DoubleUnderscoreFactor {
  private:
   // Make constructors private

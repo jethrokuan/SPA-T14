@@ -5,7 +5,7 @@
 #include <variant>
 
 namespace QE {
-// Utility templates for streaming nested variants
+//! Utility templates for streaming nested variants
 template <class T>
 struct streamer {
   const T& val;

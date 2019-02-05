@@ -10,6 +10,8 @@
  */
 
 namespace QE {
+//! \brief Calls QueryTokenizer, and parses those tokens into the appropriate
+//!        PQL clauses in the Query object
 class QueryPreprocessor {
  private:
   void parseDeclarations(Query*, std::vector<std::string>*);

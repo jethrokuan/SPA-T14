@@ -5,7 +5,8 @@
 
 namespace QE {
 
-// Aggregate class to return data from QueryTokenizer
+//! \brief Aggregate class to return token data from QueryTokenizer to
+//! QueryPreprocessor
 class QueryTokenizerTokens {
  private:
   static const std::string QUERY_TOKENIZER_TOKEN_DELIMITER;
@@ -24,9 +25,9 @@ class QueryTokenizerTokens {
         pattern_tokens(nullptr){};
 };
 
-/*
- * Utility class that when given a PQL query as a string, splits the string into
- * tokens which are stored in a struct based on their relevance to the PQL query
+/*! \brief Utility class that when given a PQL query as a string, splits the
+ * string into tokens which are stored in a QueryTokenizerTokens struct based on
+ * their role in the PQL query.
  */
 class QueryTokenizer {
  private:

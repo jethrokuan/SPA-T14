@@ -6,6 +6,7 @@
 #include "query_evaluator/pql/suchthat.h"
 
 namespace QE {
+//! Query object containing all relevant information to pass to the PKB
 class Query {
  public:
   // -- Data --

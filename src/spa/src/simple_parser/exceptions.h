@@ -1,9 +1,18 @@
+/*!
+  \file   exceptions.h
+  \brief  Exceptions concerning the SIMPLE language.
+
+  \date   2019-02-05
+*/
+
 #pragma once
 
 #include <stdexcept>
 #include <string>
 
 namespace Simple {
+
+//! Exception thrown when SIMPLE Lexer fails to lex.
 class SimpleLexException : public std::runtime_error {
  private:
   std::string msg;

@@ -26,6 +26,8 @@ TEST_CASE ("Test PKB works") {
 
   // using temp test method
   // TODO deprecate and update test cases
+
+  // test follows
   auto follows_test_1 = pkb.testFollows(1, 2);
   REQUIRE(follows_test_1 == true);
   auto follows_test_2 = pkb.testFollows(1, 4);
@@ -46,4 +48,14 @@ TEST_CASE ("Test PKB works") {
   REQUIRE(follows_test_9 == false);
   auto follows_test_10 = pkb.testFollows(8, 0);
   REQUIRE(follows_test_10 == false);
+
+  // test parent
+  auto parent_test_1 = pkb.testParent(2, 3);
+  REQUIRE(parent_test_1 == true);
+  auto parent_test_2 = pkb.testParent(1, 2);
+  REQUIRE(parent_test_2 == false);
+  auto parent_test_3 = pkb.testParent(3, 3);
+  REQUIRE(parent_test_3 == false);
+  auto parent_test_4 = pkb.testParent(4, 3);
+  REQUIRE(parent_test_4 == false);
 }

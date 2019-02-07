@@ -4,10 +4,12 @@ This project is known to work with
 1. `cmake 3.13.3`
 2. `qt 5.12`
 
+This project is **incompatible** with GCC8
+
 ## Building this project
 1. Create a build directory with `mkdir build`
 2. Enter the build directory with `cd build`
-3. Run `cmake ..` in the build directory. 
+3. Run `CXX=clang++ cmake ..` in the build directory. 
     - For Qt installations that are not automatically found (e.g. you receive errors during `make` or `cmake` related to `ui_mainwindow.h`, etc)
         - Run `cmake -DCMAKE_PREFIX_PATH=<path to Qt prefix for cmake> .`  instead. You may have to delete and re-clone this project before doing so.
         - A specific run could be `cmake -DCMAKE_PREFIX_PATH=/opt/Qt5.12.0/5.12.0/gcc_64/lib/cmake .` when the cmake prefix for the Qt installation is in `/opt/Qt5.12.0/5.12.0/gcc_64/lib/cmake`
@@ -19,3 +21,8 @@ This project is known to work with
 
 ## Contributing Guidelines
 Please read [the Contribution Guidelines](./CONTRIBUTING.md) when formatting your pull request.
+
+## Generating documentation
+1. Run `doxygen` in the root project folder. 
+2. Documentation should be generated in `doxygen-docs`.
+3. `doxygen-docs/index.html` (open in browser) will lead to the documentation homepage.

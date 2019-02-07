@@ -10,6 +10,8 @@ stdenv.mkDerivation {
     cmake
 
     # utilities
+    graphviz
+    doxygen
     gdb
     ccls
   ];

@@ -4,6 +4,7 @@
 #include <regex>
 
 namespace QE {
+//! Represents a PQL synonym (LETTER (LETTER | DIGIT), e.g. x2002y)
 class Synonym {
  private:
   // Spec: LETTER (LETTER | DIGIT)*

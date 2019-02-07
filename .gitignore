@@ -10,6 +10,9 @@
 # Unignore all dirs
 !*/
 
+# Unignore Doxyfile
+!Doxyfile
+
 # Ignore autogen
 *_autogen/
 
@@ -63,5 +66,8 @@ CTestTestfile.cmake
 # macOS
 .DS_Store
 .vscode/
+
+# Ignore doxygen generated documentation
+doxygen-docs
 
 # End of https://www.gitignore.io/api/cmake,c++

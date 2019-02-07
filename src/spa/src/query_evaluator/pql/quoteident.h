@@ -1,9 +1,10 @@
 #pragma once
+#include <iostream>
 #include <optional>
 #include <regex>
-#include <iostream>
 
 namespace QE {
+//! Represents a quoted identifier in the PQL query (e.g. "abc")
 class QuoteIdent {
  private:
   // Spec: LETTER (LETTER | DIGIT)*

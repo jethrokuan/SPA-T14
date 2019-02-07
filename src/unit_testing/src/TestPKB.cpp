@@ -12,6 +12,7 @@
 
 using namespace Simple;
 
+// TODO split up test cases into follows parent uses modifies
 TEST_CASE ("Test PKB works") {
   std::string filename = "tests/simple_source/simple_1.txt";
   std::ifstream input(filename);
@@ -58,4 +59,14 @@ TEST_CASE ("Test PKB works") {
   REQUIRE(parent_test_3 == false);
   auto parent_test_4 = pkb.testParent(4, 3);
   REQUIRE(parent_test_4 == false);
+
+  // test uses
+  auto uses_test_1 = pkb.testUses(2, "i");
+  REQUIRE(uses_test_1 == true);
+  auto uses_test_2 = pkb.testUses(1, "i");
+  REQUIRE(uses_test_2 == false);
+  auto uses_test_3 = pkb.testUses(5, "i");
+  REQUIRE(uses_test_3 == false);
+  auto uses_test_4 = pkb.testUses(2, "alpha");
+  REQUIRE(uses_test_4 == false);
 }

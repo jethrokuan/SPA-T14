@@ -15,7 +15,6 @@ namespace Simple {
 
 enum class TokenType { NUMBER, SYMBOL, PUNCT, END_OF_FILE };
 
-
 //! Abstract class representing lexical tokens in the SIMPLE language
 class Token {
  public:

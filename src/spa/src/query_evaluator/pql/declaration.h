@@ -19,7 +19,7 @@ class Declaration {
 
  public:
   DesignEntity getDesignEntity() { return design_entity; }
-  std::string getSynonym() { return synonymObj.synonym; }
+  Synonym getSynonym() { return synonymObj; }
 
   // -- Constructors --
 

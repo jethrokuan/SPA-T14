@@ -231,7 +231,7 @@ Declaration* QueryPreprocessor::findDeclaration(
     std::vector<Declaration>* declarations, std::string synonym_to_match) {
   auto found_declaration = std::find_if(
       declarations->begin(), declarations->end(),
-      [&](auto decl) { return decl.getSynonym() == synonym_to_match; });
+      [&](auto decl) { return decl.getSynonym().synonym == synonym_to_match; });
 
   if (found_declaration == declarations->end()) {
     throw PQLParseException("Semantic Error: cannot match synonym " +

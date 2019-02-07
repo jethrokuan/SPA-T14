@@ -1,12 +1,4 @@
 #pragma once
-#include <iostream>
-#include <memory>
-#include <optional>
-#include <regex>
-#include <string>
-#include <variant>
-#include <vector>
-
 #include "query_evaluator/pql/declaration.h"
 #include "query_evaluator/pql/design_entity.h"
 #include "query_evaluator/pql/factor.h"

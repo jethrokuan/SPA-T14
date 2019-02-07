@@ -69,4 +69,18 @@ TEST_CASE ("Test PKB works") {
   REQUIRE(uses_test_3 == false);
   auto uses_test_4 = pkb.testUses(2, "alpha");
   REQUIRE(uses_test_4 == false);
+
+  // test uses
+  auto modifies_test_1 = pkb.testModifies(5, "i");
+  REQUIRE(modifies_test_1 == true);
+  auto modifies_test_2 = pkb.testModifies(1, "i");
+  REQUIRE(modifies_test_2 == true);
+  auto modifies_test_3 = pkb.testModifies(1, "beta");
+  REQUIRE(modifies_test_3 == false);
+  auto modifies_test_4 = pkb.testModifies(2, "alpha");
+  REQUIRE(modifies_test_4 == false);
+  auto modifies_test_5 = pkb.testModifies(22, "alpha");
+  REQUIRE(modifies_test_5 == false);
+  auto modifies_test_6 = pkb.testModifies(10, "i");
+  REQUIRE(modifies_test_6 == false);
 }

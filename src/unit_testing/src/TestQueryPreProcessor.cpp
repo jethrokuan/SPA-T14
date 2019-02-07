@@ -14,10 +14,10 @@ TEST_CASE ("Test one entity one select query Preprocess") {
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("a").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("a").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
     REQUIRE(query->such_that == nullptr);
     REQUIRE(query->pattern == nullptr);
   }
@@ -28,10 +28,10 @@ TEST_CASE ("Test one entity one select query Preprocess") {
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::VARIABLE, QE::Synonym::construct("v").value())});
-    REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::VARIABLE, QE::Synonym::construct("v").value()));
+                DesignEntity::VARIABLE, QE::Synonym::construct("v").value())});
+    REQUIRE(*(query->selected_declaration) ==
+            Declaration(DesignEntity::VARIABLE,
+                        QE::Synonym::construct("v").value()));
     REQUIRE(query->such_that == nullptr);
     REQUIRE(query->pattern == nullptr);
   }
@@ -42,10 +42,10 @@ TEST_CASE ("Test one entity one select query Preprocess") {
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::STMT, QE::Synonym::construct("p").value())});
+                DesignEntity::STMT, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::STMT, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::STMT, QE::Synonym::construct("p").value()));
     REQUIRE(query->such_that == nullptr);
     REQUIRE(query->pattern == nullptr);
   }
@@ -56,10 +56,10 @@ TEST_CASE ("Test one entity one select query Preprocess") {
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::PROCEDURE, QE::Synonym::construct("p").value())});
-    REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::PROCEDURE, QE::Synonym::construct("p").value()));
+                DesignEntity::PROCEDURE, QE::Synonym::construct("p").value())});
+    REQUIRE(*(query->selected_declaration) ==
+            Declaration(DesignEntity::PROCEDURE,
+                        QE::Synonym::construct("p").value()));
     REQUIRE(query->such_that == nullptr);
     REQUIRE(query->pattern == nullptr);
   }
@@ -91,8 +91,7 @@ TEST_CASE ("Test three assign one select query Preprocess") {
       std::vector<Declaration>{
           Declaration(DesignEntity::ASSIGN,
                       QE::Synonym::construct("p").value()),
-          Declaration(DesignEntity::STMT,
-                      QE::Synonym::construct("s").value()),
+          Declaration(DesignEntity::STMT, QE::Synonym::construct("s").value()),
           Declaration(DesignEntity::ASSIGN,
                       QE::Synonym::construct("q").value())});
   REQUIRE(
@@ -167,18 +166,18 @@ TEST_CASE (
 }
 
 TEST_CASE (
-        "Test one assigned one select syntactically correct PARENT such that "
-        "Preprocess") {
+    "Test one assigned one select syntactically correct PARENT such that "
+    "Preprocess") {
   SECTION ("Parent(stmtref(_),stmtref(_))") {
     auto qp = QE::QueryPreprocessor();
     std::string input = "assign p;Select p such that Parent(_,_)";
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
@@ -193,10 +192,10 @@ TEST_CASE (
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(65);
     QE::StmtOrEntRef a2 = QE::StmtRef(78);
@@ -211,10 +210,10 @@ TEST_CASE (
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
@@ -231,21 +230,22 @@ TEST_CASE (
 }
 
 TEST_CASE (
-        "Test one assigned one select syntactically correct MODIFIES such that "
-        "Preprocess") {
+    "Test one assigned one select syntactically correct MODIFIES such that "
+    "Preprocess") {
   SECTION ("Modifies(stmtref(int), entref(\"asd\"))") {
     auto qp = QE::QueryPreprocessor();
     std::string input = "assign p;Select p such that Modifies(65, \"asd\")";
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(65);
-    QE::StmtOrEntRef a2 = QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
+    QE::StmtOrEntRef a2 =
+        QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
     REQUIRE(*(query->such_that) ==
             SuchThat::construct(Relation::ModifiesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
@@ -257,13 +257,14 @@ TEST_CASE (
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
-    QE::StmtOrEntRef a2 = QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
+    QE::StmtOrEntRef a2 =
+        QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
     REQUIRE(*(query->such_that) ==
             SuchThat::construct(Relation::ModifiesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
@@ -275,10 +276,10 @@ TEST_CASE (
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
@@ -295,21 +296,22 @@ TEST_CASE (
 }
 
 TEST_CASE (
-        "Test one assigned one select syntactically correct USES such that "
-        "Preprocess") {
+    "Test one assigned one select syntactically correct USES such that "
+    "Preprocess") {
   SECTION ("Uses(stmtref(int), entref(\"asd\"))") {
     auto qp = QE::QueryPreprocessor();
     std::string input = "assign p;Select p such that Uses(65, \"asd\")";
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(65);
-    QE::StmtOrEntRef a2 = QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
+    QE::StmtOrEntRef a2 =
+        QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
     REQUIRE(*(query->such_that) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
@@ -321,13 +323,14 @@ TEST_CASE (
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
-    QE::StmtOrEntRef a2 = QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
+    QE::StmtOrEntRef a2 =
+        QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
     REQUIRE(*(query->such_that) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
@@ -339,10 +342,10 @@ TEST_CASE (
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
-                    DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
+                DesignEntity::ASSIGN, QE::Synonym::construct("p").value())});
     REQUIRE(
-            *(query->selected_declaration) ==
-            Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());

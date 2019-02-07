@@ -48,7 +48,6 @@ void QueryValidator::validateModifyUsesNoFirstArgUnderscore(
   // Check one level deeper in first arg to check for underscore
   std::visit(
       [](auto&& arg) {
-        std::cout << "hi";
         if (std::holds_alternative<Underscore>(arg)) {
           throw PQLValidationException(
               "First argument of Modifies/Uses cannot be an underscore - "

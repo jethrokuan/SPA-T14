@@ -59,9 +59,9 @@ class PKB {
   // line_uses_vars
   std::unordered_map<int, std::vector<std::string>> uses_map;
   // line_modifies_var
-  std::unordered_set<std::pair<int, int>, pair_hash> modifies_set;
+  std::unordered_set<std::pair<int, std::string>, pair_hash> modifies_set;
   // line_modifies_vars
-  std::unordered_map<int, std::vector<int>> modifies_map;
+  std::unordered_map<int, std::vector<std::string>> modifies_map;
 
   // TODO change function arguments
   // current implementations assume procedure node to be the root node
@@ -75,6 +75,7 @@ class PKB {
   void setUsesRelations(std::shared_ptr<ProcedureNode> node);
   void setUsesRelationsHelper(std::shared_ptr<Node> node, int line_number);
   void setModifiesRelations(std::shared_ptr<ProcedureNode> node);
+  void setModifiesRelationsHelper(std::shared_ptr<Node> node, int line_number);
 
   // utility functions
   int getLineNumberFromNode(std::vector<std::shared_ptr<Node>> ls,

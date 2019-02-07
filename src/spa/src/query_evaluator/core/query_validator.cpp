@@ -1,4 +1,5 @@
 #include "query_evaluator/core/query_validator.h"
+#include <variant>
 #include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/pql/declaration.h"
 
@@ -31,4 +32,28 @@ void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
 }
 
 void QueryValidator::validateModifyUsesNoFirstArgUnderscore(
-    const Query& query) {}
+    const Query& query) {
+  if (query.such_that == nullptr) {
+    return;
+  }
+
+  // Early return if not modifies or uses
+  if (query.such_that->getRelation() != Relation::UsesS &&
+      query.such_that->getRelation() != Relation::ModifiesS) {
+    return;
+  }
+
+  // Error if first arg is underscore otherwise
+  auto such_that_firstarg = query.such_that->getFirstArg();
+  // Check one level deeper in first arg to check for underscore
+  std::visit(
+      [](auto&& arg) {
+        std::cout << "hi";
+        if (std::holds_alternative<Underscore>(arg)) {
+          throw PQLValidationException(
+              "First argument of Modifies/Uses cannot be an underscore - "
+              "ambiguous");
+        }
+      },
+      such_that_firstarg);
+}

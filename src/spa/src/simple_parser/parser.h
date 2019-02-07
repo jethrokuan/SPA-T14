@@ -240,7 +240,7 @@ class Parser {
   */
   std::shared_ptr<IfNode> parseIf();
 
-public:
+ public:
   // ! Initializes the parser with the lexical tokens.
   Parser(std::vector<Token*> t);
 

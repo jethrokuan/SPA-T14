@@ -66,7 +66,13 @@ class PKB {
   // TODO change function arguments
   // current implementations assume procedure node to be the root node
   // preprocessing functions
-  void setLineNumbers(std::shared_ptr<Node> node);
+  void setLineNumbers(std::shared_ptr<ProcedureNode> node);
+  void setLineNumbers(std::shared_ptr<IfNode> node);
+  void setLineNumbers(std::shared_ptr<WhileNode> node);
+  void setLineNumbers(std::shared_ptr<ReadNode> node);
+  void setLineNumbers(std::shared_ptr<PrintNode> node);
+  void setLineNumbers(std::shared_ptr<AssignNode> node);
+  void setLineNumbersIterator(std::vector<std::shared_ptr<Node>> stmt_lst);
   void setFollowsRelations(std::shared_ptr<Node> node);
   void setParentRelations(std::shared_ptr<Node> node);
   void setUsesRelations(std::shared_ptr<Node> node);

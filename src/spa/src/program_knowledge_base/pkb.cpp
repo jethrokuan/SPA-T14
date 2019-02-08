@@ -14,49 +14,68 @@ PKB::PKB(std::shared_ptr<ProcedureNode> proc) {
 
 PKB::~PKB() {}
 
+void PKB::setLineNumbers(std::shared_ptr<ProcedureNode> node) {
+  setLineNumbersIterator(node->StmtList->StmtList);
+}
+
+void PKB::setLineNumbers(std::shared_ptr<IfNode> node) {
+  lines.push_back(node);
+  std::vector<std::shared_ptr<Node>> then_stmt_lst =
+      node->StmtListThen->StmtList;
+  std::vector<std::shared_ptr<Node>> else_stmt_lst =
+      node->StmtListElse->StmtList;
+  then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
+                       else_stmt_lst.end());  // concat
+  setLineNumbersIterator(then_stmt_lst);
+}
+
+void PKB::setLineNumbers(std::shared_ptr<WhileNode> node) {
+  lines.push_back(node);
+  setLineNumbersIterator(node->StmtList->StmtList);
+}
+
+void PKB::setLineNumbers(std::shared_ptr<ReadNode> node) {
+  lines.push_back(node);
+}
+
+void PKB::setLineNumbers(std::shared_ptr<PrintNode> node) {
+  lines.push_back(node);
+}
+
+void PKB::setLineNumbers(std::shared_ptr<AssignNode> node) {
+  lines.push_back(node);
+}
+
 // TODO add return value
-void PKB::setLineNumbers(std::shared_ptr<Node> node) {
+void PKB::setLineNumbersIterator(std::vector<std::shared_ptr<Node>> stmt_lst) {
   // iterate through AST via DFS
 
-  // visit node
-  // can only visit top level nodes (those with line numbers)
-  if (dynamic_cast<IfNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else if (dynamic_cast<WhileNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else if (dynamic_cast<ReadNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else if (dynamic_cast<PrintNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else if (dynamic_cast<AssignNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else {
-    // TODO throw error
-  }
-
-  // add stmt_lst in
-  std::vector<std::shared_ptr<Node>> stmt_lst;
-  if (dynamic_cast<ProcedureNode *>(node.get()) != 0) {
-    std::shared_ptr<ProcedureNode> derived =
-        std::dynamic_pointer_cast<ProcedureNode>(node);
-    stmt_lst = derived->StmtList->StmtList;
-  } else if (dynamic_cast<WhileNode *>(node.get()) != 0) {
-    std::shared_ptr<WhileNode> derived =
-        std::dynamic_pointer_cast<WhileNode>(node);
-    stmt_lst = derived->StmtList->StmtList;
-  } else if (dynamic_cast<IfNode *>(node.get()) != 0) {
-    std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(node);
-    std::vector<std::shared_ptr<Node>> then_stmt_lst =
-        derived->StmtListThen->StmtList;
-    std::vector<std::shared_ptr<Node>> else_stmt_lst =
-        derived->StmtListElse->StmtList;
-    then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                         else_stmt_lst.end());  // concat
-    stmt_lst = then_stmt_lst;
-  }
-  // reverse iterator to do DFS
   for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
-    setLineNumbers(*it);
+    // add stmt_lst in
+    if (dynamic_cast<ProcedureNode *>((*it).get()) != 0) {
+      std::shared_ptr<ProcedureNode> derived =
+          std::dynamic_pointer_cast<ProcedureNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<IfNode *>((*it).get()) != 0) {
+      std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<WhileNode *>((*it).get()) != 0) {
+      std::shared_ptr<WhileNode> derived =
+          std::dynamic_pointer_cast<WhileNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<ReadNode *>((*it).get()) != 0) {
+      std::shared_ptr<ReadNode> derived =
+          std::dynamic_pointer_cast<ReadNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<PrintNode *>((*it).get()) != 0) {
+      std::shared_ptr<PrintNode> derived =
+          std::dynamic_pointer_cast<PrintNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<AssignNode *>((*it).get()) != 0) {
+      std::shared_ptr<AssignNode> derived =
+          std::dynamic_pointer_cast<AssignNode>(*it);
+      setLineNumbers(derived);
+    }
   }
 }
 

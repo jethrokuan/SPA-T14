@@ -61,6 +61,8 @@ class PKB {
       modifies_set;
   std::unordered_map<LineNumber, std::vector<VariableName>> modifies_map;
 
+  std::unordered_set<VariableName> variables_set;
+
   // TODO change function arguments
   // current implementations assume procedure node to be the root node
   // preprocessing functions

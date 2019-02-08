@@ -348,6 +348,7 @@ void PKB::setUsesRelationsHelper(std::shared_ptr<Node> node, int line_number) {
         std::dynamic_pointer_cast<VariableNode>(node);
     // add to map
     // TODO abstract this function
+    variables_set.insert(derived->Name);
     uses_set.insert(std::pair<int, std::string>(line_number, derived->Name));
     addToVectorMap(uses_map, line_number, derived->Name);
   } else {
@@ -429,7 +430,7 @@ void PKB::setModifiesRelationsHelper(std::shared_ptr<Node> node,
   if (dynamic_cast<VariableNode *>(node.get()) != 0) {
     std::shared_ptr<VariableNode> derived =
         std::dynamic_pointer_cast<VariableNode>(node);
-    // add to map
+    variables_set.insert(derived->Name);
     modifies_set.insert(
         std::pair<int, std::string>(line_number, derived->Name));
     addToVectorMap(modifies_map, line_number, derived->Name);

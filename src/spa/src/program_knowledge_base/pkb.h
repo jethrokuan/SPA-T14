@@ -41,27 +41,25 @@ struct pair_hash {
   }
 };
 
+using LineNumber = int;
+using VariableName = std::string;
+using ProcedureName = std::string;
+
 class PKB {
  private:
   std::shared_ptr<ProcedureNode> ast;
-  std::vector<std::shared_ptr<Node>>
-      lines;  // TODO deprecate this and use hash map
-  // line_follows_line
-  std::unordered_set<std::pair<int, int>, pair_hash> follows_set;
-  // line_follow_lines
-  std::unordered_map<int, std::vector<int>> follows_map;
-  // line_parent_line
-  std::unordered_set<std::pair<int, int>, pair_hash> parent_set;
-  // line_parent_lines
-  std::unordered_map<int, std::vector<int>> parent_map;
-  // line_uses_var
-  std::unordered_set<std::pair<int, std::string>, pair_hash> uses_set;
-  // line_uses_vars
-  std::unordered_map<int, std::vector<std::string>> uses_map;
-  // line_modifies_var
-  std::unordered_set<std::pair<int, std::string>, pair_hash> modifies_set;
-  // line_modifies_vars
-  std::unordered_map<int, std::vector<std::string>> modifies_map;
+  // TODO deprecate this and use hash map
+  std::vector<std::shared_ptr<Node>> lines;
+
+  std::unordered_set<std::pair<LineNumber, LineNumber>, pair_hash> follows_set;
+  std::unordered_map<LineNumber, std::vector<LineNumber>> follows_map;
+  std::unordered_set<std::pair<LineNumber, LineNumber>, pair_hash> parent_set;
+  std::unordered_map<LineNumber, std::vector<LineNumber>> parent_map;
+  std::unordered_set<std::pair<LineNumber, VariableName>, pair_hash> uses_set;
+  std::unordered_map<LineNumber, std::vector<VariableName>> uses_map;
+  std::unordered_set<std::pair<LineNumber, VariableName>, pair_hash>
+      modifies_set;
+  std::unordered_map<LineNumber, std::vector<VariableName>> modifies_map;
 
   // TODO change function arguments
   // current implementations assume procedure node to be the root node
@@ -76,13 +74,15 @@ class PKB {
   void setFollowsRelations(std::shared_ptr<Node> node);
   void setParentRelations(std::shared_ptr<Node> node);
   void setUsesRelations(std::shared_ptr<Node> node);
-  void setUsesRelationsHelper(std::shared_ptr<Node> node, int line_number);
+  void setUsesRelationsHelper(std::shared_ptr<Node> node,
+                              LineNumber line_number);
   void setModifiesRelations(std::shared_ptr<Node> node);
-  void setModifiesRelationsHelper(std::shared_ptr<Node> node, int line_number);
+  void setModifiesRelationsHelper(std::shared_ptr<Node> node,
+                                  LineNumber line_number);
 
   // utility functions
-  int getLineNumberFromNode(std::vector<std::shared_ptr<Node>> ls,
-                            std::shared_ptr<Node> node);
+  LineNumber getLineNumberFromNode(std::vector<std::shared_ptr<Node>> ls,
+                                   std::shared_ptr<Node> node);
   std::shared_ptr<Node> getNodeFromLineNumber(
       std::vector<std::shared_ptr<Node>> ls, int line_number);
   void addToVectorMap(std::unordered_map<int, std::vector<int>> umap, int index,
@@ -98,10 +98,10 @@ class PKB {
 
   // TODO deprecate temp testing methods
   // need to implement pkb-pql link first
-  bool testFollows(int a, int b);
-  bool testParent(int a, int b);
-  bool testUses(int line, std::string v);
-  bool testModifies(int line, std::string v);
+  bool testFollows(LineNumber a, LineNumber b);
+  bool testParent(LineNumber a, LineNumber b);
+  bool testUses(LineNumber line, VariableName v);
+  bool testModifies(LineNumber line, VariableName v);
 
   // TODO shift these to Query Manager???? or just make it as a friend class
   // would be public method in the QueryManager class

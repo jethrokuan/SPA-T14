@@ -69,9 +69,9 @@ class PKB {
   void setLineNumbers(std::shared_ptr<Node> node);
   void setFollowsRelations(std::shared_ptr<Node> node);
   void setParentRelations(std::shared_ptr<Node> node);
-  void setUsesRelations(std::shared_ptr<ProcedureNode> node);
+  void setUsesRelations(std::shared_ptr<Node> node);
   void setUsesRelationsHelper(std::shared_ptr<Node> node, int line_number);
-  void setModifiesRelations(std::shared_ptr<ProcedureNode> node);
+  void setModifiesRelations(std::shared_ptr<Node> node);
   void setModifiesRelationsHelper(std::shared_ptr<Node> node, int line_number);
 
   // utility functions

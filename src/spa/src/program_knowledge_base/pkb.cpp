@@ -115,15 +115,7 @@ void PKB::setFollowsRelations(std::shared_ptr<Node> node) {
     for (std::size_t j = i + 1; j < stmt_lst.size(); j++) {
       int following_line = getLineNumberFromNode(lines, stmt_lst[j]);
       follows_set.insert(std::pair<int, int>(ref_line, following_line));
-      if (follows_map.find(ref_line) == follows_map.end()) {
-        // create new vector
-        std::vector<int> v;
-        v.push_back(following_line);
-        follows_map[ref_line] = v;
-      } else {
-        // retrieve vector and add element
-        follows_map.at(ref_line).push_back(following_line);
-      }
+      addToVectorMap(follows_map, ref_line, following_line);
     }
   }
   // reverse iterator to do DFS
@@ -333,15 +325,7 @@ void PKB::setUsesRelationsHelper(std::shared_ptr<Node> node, int line_number) {
     // add to map
     // TODO abstract this function
     uses_set.insert(std::pair<int, std::string>(line_number, derived->Name));
-    if (uses_map.find(line_number) == uses_map.end()) {
-      // create new vector
-      std::vector<std::string> v;
-      v.push_back(derived->Name);
-      uses_map[line_number] = v;
-    } else {
-      // retrieve vector and add element
-      uses_map.at(line_number).push_back(derived->Name);
-    }
+    addToVectorMap(uses_map, line_number, derived->Name);
   } else {
     // throw error
   }
@@ -422,18 +406,9 @@ void PKB::setModifiesRelationsHelper(std::shared_ptr<Node> node,
     std::shared_ptr<VariableNode> derived =
         std::dynamic_pointer_cast<VariableNode>(node);
     // add to map
-    // TODO abstract this function
     modifies_set.insert(
         std::pair<int, std::string>(line_number, derived->Name));
-    if (modifies_map.find(line_number) == modifies_map.end()) {
-      // create new vector
-      std::vector<std::string> v;
-      v.push_back(derived->Name);
-      modifies_map[line_number] = v;
-    } else {
-      // retrieve vector and add element
-      modifies_map.at(line_number).push_back(derived->Name);
-    }
+    addToVectorMap(modifies_map, line_number, derived->Name);
   } else {
     // throw error
   }
@@ -474,5 +449,33 @@ std::vector<std::string> PKB::getUses(int line) {
     return res;
   } catch (const std::out_of_range &e) {
     return res;
+  }
+}
+
+// TODO shift this out to a utils component
+void PKB::addToVectorMap(std::unordered_map<int, std::vector<int>> umap,
+                         int index, int data) {
+  if (umap.find(index) == umap.end()) {
+    // create new vector
+    std::vector<int> v;
+    v.push_back(data);
+    umap[index] = v;
+  } else {
+    // retrieve vector and add element
+    umap.at(index).push_back(data);
+  }
+}
+
+// TODO shift this out to a utils component
+void PKB::addToVectorMap(std::unordered_map<int, std::vector<std::string>> umap,
+                         int index, std::string data) {
+  if (umap.find(index) == umap.end()) {
+    // create new vector
+    std::vector<std::string> v;
+    v.push_back(data);
+    umap[index] = v;
+  } else {
+    // retrieve vector and add element
+    umap.at(index).push_back(data);
   }
 }

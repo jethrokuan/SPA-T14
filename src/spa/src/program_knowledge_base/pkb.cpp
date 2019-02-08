@@ -136,34 +136,24 @@ void PKB::setFollowsRelations(std::shared_ptr<Node> node) {
   }
 }
 
-void PKB::setParentRelations(std::shared_ptr<ProcedureNode> proc_node) {
-  // iterate through AST via DFS
-  std::vector<int> parents;
-  setParentRelationsHelper(proc_node, parents);
-}
-
 // helper function for setParentRelations
-void PKB::setParentRelationsHelper(std::shared_ptr<Node> cur_node,
-                                   std::vector<int> parents) {
+void PKB::setParentRelations(std::shared_ptr<Node> node) {
   // iterate through AST via DFS
 
   // visit node
   // can only visit top level nodes (those with line numbers)
   // get statement list from node
   std::vector<std::shared_ptr<Node>> stmt_lst;
-  if (dynamic_cast<ProcedureNode *>(cur_node.get()) != 0) {
+  if (dynamic_cast<ProcedureNode *>(node.get()) != 0) {
     std::shared_ptr<ProcedureNode> derived =
-        std::dynamic_pointer_cast<ProcedureNode>(cur_node);
+        std::dynamic_pointer_cast<ProcedureNode>(node);
     stmt_lst = derived->StmtList->StmtList;
-  } else if (dynamic_cast<WhileNode *>(cur_node.get()) != 0) {
+  } else if (dynamic_cast<WhileNode *>(node.get()) != 0) {
     std::shared_ptr<WhileNode> derived =
-        std::dynamic_pointer_cast<WhileNode>(cur_node);
+        std::dynamic_pointer_cast<WhileNode>(node);
     stmt_lst = derived->StmtList->StmtList;
-    int current_line_number = getLineNumberFromNode(lines, cur_node);
-    parents.push_back(current_line_number);
-  } else if (dynamic_cast<IfNode *>(cur_node.get()) != 0) {
-    std::shared_ptr<IfNode> derived =
-        std::dynamic_pointer_cast<IfNode>(cur_node);
+  } else if (dynamic_cast<IfNode *>(node.get()) != 0) {
+    std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(node);
     std::vector<std::shared_ptr<Node>> then_stmt_lst =
         derived->StmtListThen->StmtList;
     std::vector<std::shared_ptr<Node>> else_stmt_lst =
@@ -172,19 +162,36 @@ void PKB::setParentRelationsHelper(std::shared_ptr<Node> cur_node,
     then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
                          else_stmt_lst.end());
     stmt_lst = then_stmt_lst;
-    int current_line_number = getLineNumberFromNode(lines, cur_node);
-    parents.push_back(current_line_number);
   }
-  for (auto it1 = stmt_lst.begin(); it1 != stmt_lst.end(); it1++) {
-    int following_line = getLineNumberFromNode(lines, *it1);
-    for (auto it2 = parents.begin(); it2 != parents.end(); it2++) {
-      parent_set.insert(std::pair<int, int>(*it2, following_line));
+
+  int current_line = getLineNumberFromNode(lines, node);
+  bool is_statement_node = false;
+
+  // if there are children for the node
+  for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
+    // if statement node
+    if (dynamic_cast<IfNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<WhileNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<ReadNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<PrintNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<AssignNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    }
+
+    if (is_statement_node) {
+      int following_line = getLineNumberFromNode(lines, *it);
+      parent_set.insert(std::pair<int, int>(current_line, following_line));
+      setParentRelations(*it);
+      is_statement_node = false;
       // DEBUG
-      // std::cout << *it2;
+      // std::cout << current_line;
       // std::cout << " is the parent of ";
       // std::cout << following_line << std::endl;
     }
-    setParentRelationsHelper(*it1, parents);
   }
 }
 

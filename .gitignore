@@ -65,6 +65,7 @@ CTestTestfile.cmake
 
 # macOS
 .DS_Store
+.vscode/
 
 # Ignore doxygen generated documentation
 doxygen-docs

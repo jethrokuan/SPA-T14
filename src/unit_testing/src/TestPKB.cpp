@@ -1,8 +1,8 @@
 // TODO remove print debug statements and iostream
 
+#include "program_knowledge_base/pkb.h"
 #include "simple_parser/lexer.h"
 #include "simple_parser/parser.h"
-#include "program_knowledge_base/pkb.h"
 
 #include "catch.hpp"
 

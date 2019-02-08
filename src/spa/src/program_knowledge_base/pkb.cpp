@@ -49,14 +49,13 @@ void PKB::setLineNumbers(std::shared_ptr<Node> node) {
         std::dynamic_pointer_cast<WhileNode>(node);
     stmt_lst = derived->StmtList->StmtList;
   } else if (dynamic_cast<IfNode *>(node.get()) != 0) {
-    std::shared_ptr<IfNode> derived =
-        std::dynamic_pointer_cast<IfNode>(node);
+    std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(node);
     std::vector<std::shared_ptr<Node>> then_stmt_lst =
         derived->StmtListThen->StmtList;
     std::vector<std::shared_ptr<Node>> else_stmt_lst =
         derived->StmtListElse->StmtList;
     then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                          else_stmt_lst.end());  // concat
+                         else_stmt_lst.end());  // concat
     stmt_lst = then_stmt_lst;
   }
   // reverse iterator to do DFS
@@ -104,15 +103,14 @@ void PKB::setFollowsRelations(std::shared_ptr<Node> node) {
         std::dynamic_pointer_cast<WhileNode>(node);
     stmt_lst = derived->StmtList->StmtList;
   } else if (dynamic_cast<IfNode *>(node.get()) != 0) {
-    std::shared_ptr<IfNode> derived =
-        std::dynamic_pointer_cast<IfNode>(node);
+    std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(node);
     std::vector<std::shared_ptr<Node>> then_stmt_lst =
         derived->StmtListThen->StmtList;
     std::vector<std::shared_ptr<Node>> else_stmt_lst =
         derived->StmtListElse->StmtList;
     // concat
     then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                          else_stmt_lst.end());
+                         else_stmt_lst.end());
     stmt_lst = then_stmt_lst;
   }
   // add relations
@@ -439,13 +437,15 @@ void PKB::setModifiesRelations(std::shared_ptr<ProcedureNode> proc_node) {
 
 // recursive function
 // node and vector as arguments
-void PKB::setModifiesRelationsHelper(std::shared_ptr<Node> node, int line_number) {
+void PKB::setModifiesRelationsHelper(std::shared_ptr<Node> node,
+                                     int line_number) {
   if (dynamic_cast<VariableNode *>(node.get()) != 0) {
     std::shared_ptr<VariableNode> derived =
         std::dynamic_pointer_cast<VariableNode>(node);
     // add to map
     // TODO abstract this function
-    modifies_set.insert(std::pair<int, std::string>(line_number, derived->Name));
+    modifies_set.insert(
+        std::pair<int, std::string>(line_number, derived->Name));
     if (modifies_map.find(line_number) == modifies_map.end()) {
       // create new vector
       std::vector<std::string> v;
@@ -484,7 +484,8 @@ bool PKB::testUses(int line, std::string v) {
 }
 
 bool PKB::testModifies(int line, std::string v) {
-  return modifies_set.find(std::pair<int, std::string>(line, v)) != modifies_set.end();
+  return modifies_set.find(std::pair<int, std::string>(line, v)) !=
+         modifies_set.end();
 }
 
 std::vector<std::string> PKB::getUses(int line) {

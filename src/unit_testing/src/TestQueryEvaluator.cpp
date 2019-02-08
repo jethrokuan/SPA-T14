@@ -15,5 +15,5 @@ TEST_CASE ("Test Query Evaluator stub functionality") {
       "procedure p; assign a; Select p such that Uses(p, \"c\") pattern a "
       "(_,_)";
   auto query_result = qe.makePqlQuery(query_string);
-  REQUIRE(query_result == nullptr);
+  REQUIRE(query_result != nullptr);
 }

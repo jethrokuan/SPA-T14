@@ -5,8 +5,7 @@
 
 using namespace QE;
 
-std::unique_ptr<QueryResult> QueryEvaluator::makePqlQuery(
-    std::string& pql_query_string) {
+Query* QueryEvaluator::makePqlQuery(std::string& pql_query_string) {
   // Debug printing of the query receives
   std::cout << pql_query_string << std::endl;
 
@@ -22,6 +21,6 @@ std::unique_ptr<QueryResult> QueryEvaluator::makePqlQuery(
   // At this point - the query is constructed and valid
   // TODO: Optimization: Short-circuit queries that obviously return no result
 
-  // The query needs to be fed into the PKB to get the QueryResult
-  return std::unique_ptr<QueryResult>(nullptr);
+  // Caller is responsible for de-allocating query
+  return query;
 }

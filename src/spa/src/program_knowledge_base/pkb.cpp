@@ -110,12 +110,17 @@ void PKB::setFollowsRelations(std::shared_ptr<Node> node) {
     stmt_lst = then_stmt_lst;
   }
   // add relations
-  for (std::size_t i = 0; i < stmt_lst.size(); i++) {
-    int ref_line = getLineNumberFromNode(lines, stmt_lst[i]);
-    for (std::size_t j = i + 1; j < stmt_lst.size(); j++) {
-      int following_line = getLineNumberFromNode(lines, stmt_lst[j]);
-      follows_set.insert(std::pair<int, int>(ref_line, following_line));
-      addToVectorMap(follows_map, ref_line, following_line);
+  if (stmt_lst.size() > 1) {
+    for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
+      int cur_line_number = getLineNumberFromNode(lines, stmt_lst[i]);
+      int next_line_number = getLineNumberFromNode(lines, stmt_lst[i + 1]);
+      follows_set.insert(
+          std::pair<int, int>(cur_line_number, next_line_number));
+      addToVectorMap(follows_map, cur_line_number, next_line_number);
+      // DEBUG
+      // std::cout << cur_line_number;
+      // std::cout << " is followed by ";
+      // std::cout << next_line_number << std::endl;
     }
   }
   // reverse iterator to do DFS

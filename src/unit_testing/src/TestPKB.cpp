@@ -32,13 +32,13 @@ TEST_CASE ("Test PKB works") {
   auto follows_test_1 = pkb.testFollows(1, 2);
   REQUIRE(follows_test_1 == true);
   auto follows_test_2 = pkb.testFollows(1, 4);
-  REQUIRE(follows_test_2 == true);
+  REQUIRE(follows_test_2 == false);
   auto follows_test_3 = pkb.testFollows(1, 5);
-  REQUIRE(follows_test_3 == true);
+  REQUIRE(follows_test_3 == false);
   auto follows_test_4 = pkb.testFollows(2, 4);
   REQUIRE(follows_test_4 == true);
   auto follows_test_5 = pkb.testFollows(2, 5);
-  REQUIRE(follows_test_5 == true);
+  REQUIRE(follows_test_5 == false);
   auto follows_test_6 = pkb.testFollows(4, 5);
   REQUIRE(follows_test_6 == true);
   auto follows_test_7 = pkb.testFollows(1, 9);

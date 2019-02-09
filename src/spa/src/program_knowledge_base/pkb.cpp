@@ -209,38 +209,25 @@ void PKB::setParentRelationsIterator(
 }
 
 void PKB::setUsesRelations(std::shared_ptr<ProcedureNode> node) {
-  if (node == 0) {
-    return;
-  }
   setUsesRelationsIterator(node->StmtList->StmtList);
 }
 
 void PKB::setUsesRelations(std::shared_ptr<IfNode> node) {
-  if (node == 0) {
-    return;
-  }
+  setUsesRelationsH(node->CondExpr, node);
   setUsesRelationsIterator(node->StmtListThen->StmtList);
   setUsesRelationsIterator(node->StmtListElse->StmtList);
 }
 
 void PKB::setUsesRelations(std::shared_ptr<WhileNode> node) {
-  if (node == 0) {
-    return;
-  }
+  setUsesRelationsH(node->CondExpr, node);
   setUsesRelationsIterator(node->StmtList->StmtList);
 }
 
 void PKB::setUsesRelations(std::shared_ptr<PrintNode> node) {
-  if (node == 0) {
-    return;
-  }
   setUsesRelationsH(node->Var, node);
 }
 
 void PKB::setUsesRelations(std::shared_ptr<AssignNode> node) {
-  if (node == 0) {
-    return;
-  }
   setUsesRelationsH(node->Expr, node);
 }
 
@@ -248,7 +235,7 @@ void PKB::setUsesRelations(std::shared_ptr<AssignNode> node) {
 
 void PKB::setUsesRelationsH(std::shared_ptr<ExprNode> node,
                             std::shared_ptr<Node> parent_node) {
-  if (node == 0) {
+  if (node == nullptr) {
     return;
   }
   setUsesRelationsH(node->ExprP, parent_node);
@@ -257,7 +244,7 @@ void PKB::setUsesRelationsH(std::shared_ptr<ExprNode> node,
 
 void PKB::setUsesRelationsH(const std::shared_ptr<ExprPNode> node,
                             const std::shared_ptr<Node> parent_node) {
-  if (node == 0) {
+  if (node == nullptr) {
     return;
   }
   setUsesRelationsH(node->ExprP, parent_node);
@@ -266,16 +253,13 @@ void PKB::setUsesRelationsH(const std::shared_ptr<ExprPNode> node,
 
 void PKB::setUsesRelationsH(const std::shared_ptr<TermNode> node,
                             const std::shared_ptr<Node> parent_node) {
-  if (node == 0) {
-    return;
-  }
   setUsesRelationsH(node->TermP, parent_node);
   setUsesRelationsH(node->Factor, parent_node);
 }
 
 void PKB::setUsesRelationsH(const std::shared_ptr<TermPNode> node,
                             const std::shared_ptr<Node> parent_node) {
-  if (node == 0) {
+  if (node == nullptr) {
     return;
   }
   setUsesRelationsH(node->TermP, parent_node);
@@ -284,18 +268,18 @@ void PKB::setUsesRelationsH(const std::shared_ptr<TermPNode> node,
 
 void PKB::setUsesRelationsH(const std::shared_ptr<FactorNode> node,
                             const std::shared_ptr<Node> parent_node) {
-  if (node == 0) {
-    return;
+  if (node->type == FactorNode::UnionType::VAR) {
+    setUsesRelationsH(node->Var, parent_node);
+  } else if (node->type == FactorNode::UnionType::EXPR) {
+    setUsesRelationsH(node->Expr, parent_node);
   }
-  setUsesRelationsH(node->Var, parent_node);
   // doesn't seem necessary for now
   // setUsesRelationsH(node->Val, parent_node);
-  setUsesRelationsH(node->Expr, parent_node);
 }
 
 void PKB::setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
                             const std::shared_ptr<Node> parent_node) {
-  if (node == 0) {
+  if (node == nullptr) {
     return;
   }
   setUsesRelationsH(node->RelExpr, parent_node);
@@ -305,7 +289,7 @@ void PKB::setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
 
 void PKB::setUsesRelationsH(const std::shared_ptr<RelExprNode> node,
                             const std::shared_ptr<Node> parent_node) {
-  if (node == 0) {
+  if (node == nullptr) {
     return;
   }
   setUsesRelationsH(node->LHS, parent_node);
@@ -322,7 +306,7 @@ void PKB::setUsesRelationsH(const std::shared_ptr<RelExprNode> node,
 
 void PKB::setUsesRelationsH(const std::shared_ptr<VariableNode> node,
                             const std::shared_ptr<Node> parent_node) {
-  if (node == 0) {
+  if (node == nullptr) {
     return;
   }
   variables_set.insert(node->Name);
@@ -334,8 +318,6 @@ void PKB::setUsesRelationsH(const std::shared_ptr<VariableNode> node,
 
 void PKB::setUsesRelationsIterator(
     const std::vector<std::shared_ptr<Node>> stmt_lst) {
-  // iterate through AST via DFS
-
   // DFS
   for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
     if (dynamic_cast<ProcedureNode *>((*it).get()) != 0) {

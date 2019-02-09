@@ -105,11 +105,16 @@ class PKB {
                          const std::shared_ptr<Node> parent_node);
   void setUsesRelationsIterator(
       const std::vector<std::shared_ptr<Node>> stmt_lst);
-  void setUsesRelationsHelper(std::shared_ptr<Node> node,
-                              LineNumber line_number);
-  void setModifiesRelations(std::shared_ptr<Node> node);
-  void setModifiesRelationsHelper(std::shared_ptr<Node> node,
-                                  LineNumber line_number);
+
+  void setModifiesRelations(const std::shared_ptr<ProcedureNode> node);
+  void setModifiesRelations(const std::shared_ptr<IfNode> node);
+  void setModifiesRelations(const std::shared_ptr<WhileNode> node);
+  void setModifiesRelations(const std::shared_ptr<ReadNode> node);
+  void setModifiesRelations(const std::shared_ptr<AssignNode> node);
+  void setModifiesRelationsH(const std::shared_ptr<VariableNode> node,
+                             const std::shared_ptr<Node> parent_node);
+  void setModifiesRelationsIterator(
+      const std::vector<std::shared_ptr<Node>> stmt_lst);
 
   // utility functions
   LineNumber getLineNumberFromNode(std::vector<std::shared_ptr<Node>> ls,

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stack>
 
-PKB::PKB(std::shared_ptr<ProcedureNode> proc) {
+PKB::PKB(const std::shared_ptr<ProcedureNode> proc) {
   ast = proc;
   setLineNumbers(ast);
   setFollowsRelations(ast);
@@ -14,459 +14,427 @@ PKB::PKB(std::shared_ptr<ProcedureNode> proc) {
 
 PKB::~PKB() {}
 
-// TODO change iterative functions to use accumulate function instead
-// this should help to reduce the repeated code??
-// could also standardise to use recursion (parent is using that)
+void PKB::setLineNumbers(const std::shared_ptr<ProcedureNode> node) {
+  setLineNumbersIterator(node->StmtList->StmtList);
+}
+
+void PKB::setLineNumbers(const std::shared_ptr<IfNode> node) {
+  lines.push_back(node);
+  setLineNumbersIterator(node->StmtListThen->StmtList);
+  setLineNumbersIterator(node->StmtListElse->StmtList);
+}
+
+void PKB::setLineNumbers(const std::shared_ptr<WhileNode> node) {
+  lines.push_back(node);
+  setLineNumbersIterator(node->StmtList->StmtList);
+}
+
+void PKB::setLineNumbers(const std::shared_ptr<ReadNode> node) {
+  lines.push_back(node);
+}
+
+void PKB::setLineNumbers(const std::shared_ptr<PrintNode> node) {
+  lines.push_back(node);
+}
+
+void PKB::setLineNumbers(const std::shared_ptr<AssignNode> node) {
+  lines.push_back(node);
+}
 
 // TODO add return value
-void PKB::setLineNumbers(std::shared_ptr<Node> node) {
+void PKB::setLineNumbersIterator(
+    const std::vector<std::shared_ptr<Node>> stmt_lst) {
   // iterate through AST via DFS
 
-  // visit node
-  // can only visit top level nodes (those with line numbers)
-  if (dynamic_cast<IfNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else if (dynamic_cast<WhileNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else if (dynamic_cast<ReadNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else if (dynamic_cast<PrintNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else if (dynamic_cast<AssignNode *>(node.get()) != 0) {
-    lines.push_back(node);
-  } else {
-    // TODO throw error
-  }
-
-  // add stmt_lst in
-  std::vector<std::shared_ptr<Node>> stmt_lst;
-  if (dynamic_cast<ProcedureNode *>(node.get()) != 0) {
-    std::shared_ptr<ProcedureNode> derived =
-        std::dynamic_pointer_cast<ProcedureNode>(node);
-    stmt_lst = derived->StmtList->StmtList;
-  } else if (dynamic_cast<WhileNode *>(node.get()) != 0) {
-    std::shared_ptr<WhileNode> derived =
-        std::dynamic_pointer_cast<WhileNode>(node);
-    stmt_lst = derived->StmtList->StmtList;
-  } else if (dynamic_cast<IfNode *>(node.get()) != 0) {
-    std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(node);
-    std::vector<std::shared_ptr<Node>> then_stmt_lst =
-        derived->StmtListThen->StmtList;
-    std::vector<std::shared_ptr<Node>> else_stmt_lst =
-        derived->StmtListElse->StmtList;
-    then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                         else_stmt_lst.end());  // concat
-    stmt_lst = then_stmt_lst;
-  }
-  // reverse iterator to do DFS
   for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
-    setLineNumbers(*it);
+    if (dynamic_cast<ProcedureNode *>((*it).get()) != 0) {
+      std::shared_ptr<ProcedureNode> derived =
+          std::dynamic_pointer_cast<ProcedureNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<IfNode *>((*it).get()) != 0) {
+      std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<WhileNode *>((*it).get()) != 0) {
+      std::shared_ptr<WhileNode> derived =
+          std::dynamic_pointer_cast<WhileNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<ReadNode *>((*it).get()) != 0) {
+      std::shared_ptr<ReadNode> derived =
+          std::dynamic_pointer_cast<ReadNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<PrintNode *>((*it).get()) != 0) {
+      std::shared_ptr<PrintNode> derived =
+          std::dynamic_pointer_cast<PrintNode>(*it);
+      setLineNumbers(derived);
+    } else if (dynamic_cast<AssignNode *>((*it).get()) != 0) {
+      std::shared_ptr<AssignNode> derived =
+          std::dynamic_pointer_cast<AssignNode>(*it);
+      setLineNumbers(derived);
+    }
   }
 }
 
+// TODO error handling
 // TODO refactor to use hashmap instead
 // would need to implement hash function of the node
 // as well as a hash table
 // return line number
-// returns -1 if node does not exist
-int PKB::getLineNumberFromNode(std::vector<std::shared_ptr<Node>> ls,
-                               std::shared_ptr<Node> node) {
+// returns empty string if node does not exist
+std::string PKB::getLineNumberFromNode(
+    const std::vector<std::shared_ptr<Node>> ls,
+    const std::shared_ptr<Node> node) {
   // loop through vector of nodes
   for (std::size_t i = 0; i < ls.size(); i++) {
     if (ls[i] == node) {
-      return i + 1;  // +1 due to 0 based index
+      return std::to_string(i + 1);  // +1 due to 0 based index
     }
   }
-  return -1;
+  return "";  // TODO error handling
 }
 
 std::shared_ptr<Node> PKB::getNodeFromLineNumber(
-    std::vector<std::shared_ptr<Node>> ls, int line_number) {
+    const std::vector<std::shared_ptr<Node>> ls, const int line_number) {
   return ls.at(line_number - 1);  // -1 due to 0 based index
 }
 
-// TODO BUG: else statement list currently follows if's
 // TODO set a return value
 // TODO error handling
-void PKB::setFollowsRelations(std::shared_ptr<Node> node) {
-  // iterate through AST via BFS
+void PKB::setFollowsRelations(const std::shared_ptr<ProcedureNode> node) {
+  setFollowsRelationsIterator(node->StmtList->StmtList);
+}
 
-  // can only visit top level nodes (those with line numbers)
-  // get statement list from node
-  std::vector<std::shared_ptr<Node>> stmt_lst;
-  if (dynamic_cast<ProcedureNode *>(node.get()) != 0) {
-    std::shared_ptr<ProcedureNode> derived =
-        std::dynamic_pointer_cast<ProcedureNode>(node);
-    stmt_lst = derived->StmtList->StmtList;
-  } else if (dynamic_cast<WhileNode *>(node.get()) != 0) {
-    std::shared_ptr<WhileNode> derived =
-        std::dynamic_pointer_cast<WhileNode>(node);
-    stmt_lst = derived->StmtList->StmtList;
-  } else if (dynamic_cast<IfNode *>(node.get()) != 0) {
-    std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(node);
-    std::vector<std::shared_ptr<Node>> then_stmt_lst =
-        derived->StmtListThen->StmtList;
-    std::vector<std::shared_ptr<Node>> else_stmt_lst =
-        derived->StmtListElse->StmtList;
-    // concat
-    then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                         else_stmt_lst.end());
-    stmt_lst = then_stmt_lst;
-  }
+void PKB::setFollowsRelations(const std::shared_ptr<IfNode> node) {
+  setFollowsRelationsIterator(node->StmtListThen->StmtList);
+  setFollowsRelationsIterator(node->StmtListElse->StmtList);
+}
+
+void PKB::setFollowsRelations(const std::shared_ptr<WhileNode> node) {
+  setFollowsRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKB::setFollowsRelationsIterator(
+    const std::vector<std::shared_ptr<Node>> stmt_lst) {
   // add relations
-  for (std::size_t i = 0; i < stmt_lst.size(); i++) {
-    int ref_line = getLineNumberFromNode(lines, stmt_lst[i]);
-    for (std::size_t j = i + 1; j < stmt_lst.size(); j++) {
-      int following_line = getLineNumberFromNode(lines, stmt_lst[j]);
-      follows_set.insert(std::pair<int, int>(ref_line, following_line));
-      if (follows_map.find(ref_line) == follows_map.end()) {
-        // create new vector
-        std::vector<int> v;
-        v.push_back(following_line);
-        follows_map[ref_line] = v;
-      } else {
-        // retrieve vector and add element
-        follows_map.at(ref_line).push_back(following_line);
-      }
+  for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
+    auto cur_line_number = getLineNumberFromNode(lines, stmt_lst[i]);
+    auto next_line_number = getLineNumberFromNode(lines, stmt_lst[i + 1]);
+    follows_set.insert(
+        std::pair<LineNumber, LineNumber>(cur_line_number, next_line_number));
+    addToVectorMap(follows_map, cur_line_number, next_line_number);
+    // DEBUG
+    // std::cout << cur_line_number;
+    // std::cout << " is followed by ";
+    // std::cout << next_line_number << std::endl;
+  }
+
+  // iterate through AST via DFS
+  for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
+    if (dynamic_cast<ProcedureNode *>((*it).get()) != 0) {
+      std::shared_ptr<ProcedureNode> derived =
+          std::dynamic_pointer_cast<ProcedureNode>(*it);
+      setFollowsRelations(derived);
+    } else if (dynamic_cast<IfNode *>((*it).get()) != 0) {
+      std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(*it);
+      setFollowsRelations(derived);
+    } else if (dynamic_cast<WhileNode *>((*it).get()) != 0) {
+      std::shared_ptr<WhileNode> derived =
+          std::dynamic_pointer_cast<WhileNode>(*it);
+      setFollowsRelations(derived);
     }
   }
-  // reverse iterator to do DFS
+}
+
+void PKB::setParentRelations(const std::shared_ptr<ProcedureNode> node) {
+  setParentRelationsIterator(node->StmtList->StmtList, node);
+}
+
+void PKB::setParentRelations(const std::shared_ptr<IfNode> node) {
+  setParentRelationsIterator(node->StmtListThen->StmtList, node);
+  setParentRelationsIterator(node->StmtListElse->StmtList, node);
+}
+
+void PKB::setParentRelations(const std::shared_ptr<WhileNode> node) {
+  setParentRelationsIterator(node->StmtList->StmtList, node);
+}
+
+void PKB::setParentRelationsIterator(
+    const std::vector<std::shared_ptr<Node>> stmt_lst,
+    const std::shared_ptr<Node> parent_node) {
+  bool is_statement_node = false;
+
+  // if there are children for the node
   for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
-    setFollowsRelations(*it);
-  }
-}
+    // if statement node
+    if (dynamic_cast<ProcedureNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<IfNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<WhileNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<ReadNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<PrintNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    } else if (dynamic_cast<AssignNode *>((*it).get()) != 0) {
+      is_statement_node = true;
+    }
 
-void PKB::setParentRelations(std::shared_ptr<ProcedureNode> proc_node) {
-  // iterate through AST via DFS
-  std::vector<int> parents;
-  setParentRelationsHelper(proc_node, parents);
-}
-
-// helper function for setParentRelations
-void PKB::setParentRelationsHelper(std::shared_ptr<Node> cur_node,
-                                   std::vector<int> parents) {
-  // iterate through AST via DFS
-
-  // visit node
-  // can only visit top level nodes (those with line numbers)
-  // get statement list from node
-  std::vector<std::shared_ptr<Node>> stmt_lst;
-  if (dynamic_cast<ProcedureNode *>(cur_node.get()) != 0) {
-    std::shared_ptr<ProcedureNode> derived =
-        std::dynamic_pointer_cast<ProcedureNode>(cur_node);
-    stmt_lst = derived->StmtList->StmtList;
-  } else if (dynamic_cast<WhileNode *>(cur_node.get()) != 0) {
-    std::shared_ptr<WhileNode> derived =
-        std::dynamic_pointer_cast<WhileNode>(cur_node);
-    stmt_lst = derived->StmtList->StmtList;
-    int current_line_number = getLineNumberFromNode(lines, cur_node);
-    parents.push_back(current_line_number);
-  } else if (dynamic_cast<IfNode *>(cur_node.get()) != 0) {
-    std::shared_ptr<IfNode> derived =
-        std::dynamic_pointer_cast<IfNode>(cur_node);
-    std::vector<std::shared_ptr<Node>> then_stmt_lst =
-        derived->StmtListThen->StmtList;
-    std::vector<std::shared_ptr<Node>> else_stmt_lst =
-        derived->StmtListElse->StmtList;
-    // concat
-    then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                         else_stmt_lst.end());
-    stmt_lst = then_stmt_lst;
-    int current_line_number = getLineNumberFromNode(lines, cur_node);
-    parents.push_back(current_line_number);
-  }
-  for (auto it1 = stmt_lst.begin(); it1 != stmt_lst.end(); it1++) {
-    int following_line = getLineNumberFromNode(lines, *it1);
-    for (auto it2 = parents.begin(); it2 != parents.end(); it2++) {
-      parent_set.insert(std::pair<int, int>(*it2, following_line));
+    if (is_statement_node) {
+      auto current_line = getLineNumberFromNode(lines, *it);
+      parent_set.insert(std::pair<Parent, LineNumber>(getNodeValue(parent_node),
+                                                      current_line));
+      is_statement_node = false;
       // DEBUG
-      // std::cout << *it2;
+      // std::cout << current_line;
       // std::cout << " is the parent of ";
       // std::cout << following_line << std::endl;
     }
-    setParentRelationsHelper(*it1, parents);
+  }
+
+  // iterate through AST via DFS
+  for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
+    if (dynamic_cast<ProcedureNode *>((*it).get()) != 0) {
+      std::shared_ptr<ProcedureNode> derived =
+          std::dynamic_pointer_cast<ProcedureNode>(*it);
+      setParentRelations(derived);
+    } else if (dynamic_cast<IfNode *>((*it).get()) != 0) {
+      std::shared_ptr<IfNode> derived = std::dynamic_pointer_cast<IfNode>(*it);
+      setParentRelations(derived);
+    } else if (dynamic_cast<WhileNode *>((*it).get()) != 0) {
+      std::shared_ptr<WhileNode> derived =
+          std::dynamic_pointer_cast<WhileNode>(*it);
+      setParentRelations(derived);
+    }
   }
 }
 
-void PKB::setUsesRelations(std::shared_ptr<ProcedureNode> proc_node) {
-  // iterate through AST via DFS
-  std::stack<std::shared_ptr<Node>> visit_stack;
-  visit_stack.push(proc_node);
-  std::shared_ptr<Node> cur_node;
+void PKB::setUsesRelations(std::shared_ptr<ProcedureNode> node) {
+  setUsesRelationsIterator(node->StmtList->StmtList);
+}
 
-  while (!visit_stack.empty()) {
-    // visit node
-    // can only visit top level nodes (those with line numbers)
-    cur_node = visit_stack.top();
-    visit_stack.pop();
+void PKB::setUsesRelations(std::shared_ptr<IfNode> node) {
+  setUsesRelationsH(node->CondExpr, node);
+  setUsesRelationsIterator(node->StmtListThen->StmtList);
+  setUsesRelationsIterator(node->StmtListElse->StmtList);
+}
 
-    // call helper function to traverse down the nodes to form relationships
-    int line_number;
-    if (dynamic_cast<AssignNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<AssignNode> derived =
-          std::dynamic_pointer_cast<AssignNode>(cur_node);
-      line_number = getLineNumberFromNode(lines, derived);
-      setUsesRelationsHelper(derived->Expr, line_number);
-    } else if (dynamic_cast<IfNode *>(cur_node.get()) != 0) {
+void PKB::setUsesRelations(std::shared_ptr<WhileNode> node) {
+  setUsesRelationsH(node->CondExpr, node);
+  setUsesRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKB::setUsesRelations(std::shared_ptr<PrintNode> node) {
+  setUsesRelationsH(node->Var, node);
+}
+
+void PKB::setUsesRelations(std::shared_ptr<AssignNode> node) {
+  setUsesRelationsH(node->Expr, node);
+}
+
+//
+
+void PKB::setUsesRelationsH(std::shared_ptr<ExprNode> node,
+                            std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  setUsesRelationsH(node->ExprP, parent_node);
+  setUsesRelationsH(node->Term, parent_node);
+}
+
+void PKB::setUsesRelationsH(const std::shared_ptr<ExprPNode> node,
+                            const std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  setUsesRelationsH(node->ExprP, parent_node);
+  setUsesRelationsH(node->Term, parent_node);
+}
+
+void PKB::setUsesRelationsH(const std::shared_ptr<TermNode> node,
+                            const std::shared_ptr<Node> parent_node) {
+  setUsesRelationsH(node->TermP, parent_node);
+  setUsesRelationsH(node->Factor, parent_node);
+}
+
+void PKB::setUsesRelationsH(const std::shared_ptr<TermPNode> node,
+                            const std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  setUsesRelationsH(node->TermP, parent_node);
+  setUsesRelationsH(node->Factor, parent_node);
+}
+
+void PKB::setUsesRelationsH(const std::shared_ptr<FactorNode> node,
+                            const std::shared_ptr<Node> parent_node) {
+  if (node->type == FactorNode::UnionType::VAR) {
+    setUsesRelationsH(node->Var, parent_node);
+  } else if (node->type == FactorNode::UnionType::EXPR) {
+    setUsesRelationsH(node->Expr, parent_node);
+  }
+  // doesn't seem necessary for now
+  // setUsesRelationsH(node->Val, parent_node);
+}
+
+void PKB::setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
+                            const std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  setUsesRelationsH(node->RelExpr, parent_node);
+  setUsesRelationsH(node->CondLHS, parent_node);
+  setUsesRelationsH(node->CondRHS, parent_node);
+}
+
+void PKB::setUsesRelationsH(const std::shared_ptr<RelExprNode> node,
+                            const std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  setUsesRelationsH(node->LHS, parent_node);
+  setUsesRelationsH(node->RHS, parent_node);
+}
+
+// void PKB::setUsesRelationsH(const std::shared_ptr<RelFactorNode> node,
+//                             const std::shared_ptr<Node> parent_node) {
+//   setUsesRelationsH(node->Var, parent_node);
+//   // doesn't seem necessary for now
+//   // setUsesRelationsH(node->Val, parent_node);
+//   setUsesRelationsH(node->Expr, parent_node);
+// }
+
+void PKB::setUsesRelationsH(const std::shared_ptr<VariableNode> node,
+                            const std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  variables_set.insert(node->Name);
+  uses_set.insert(std::pair<LineNumber, VariableName>(
+      getLineNumberFromNode(lines, parent_node), node->Name));
+  addToVectorMap(uses_map, getLineNumberFromNode(lines, parent_node),
+                 node->Name);
+}
+
+void PKB::setUsesRelationsIterator(
+    const std::vector<std::shared_ptr<Node>> stmt_lst) {
+  // DFS
+  for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
+    if (dynamic_cast<ProcedureNode *>((*it).get()) != 0) {
+      std::shared_ptr<ProcedureNode> derived =
+          std::dynamic_pointer_cast<ProcedureNode>((*it));
+      setUsesRelations(derived);
+    } else if (dynamic_cast<IfNode *>((*it).get()) != 0) {
       std::shared_ptr<IfNode> derived =
-          std::dynamic_pointer_cast<IfNode>(cur_node);
-      line_number = getLineNumberFromNode(lines, derived);
-      setUsesRelationsHelper(derived->CondExpr, line_number);
-    } else if (dynamic_cast<WhileNode *>(cur_node.get()) != 0) {
+          std::dynamic_pointer_cast<IfNode>((*it));
+      setUsesRelations(derived);
+    } else if (dynamic_cast<WhileNode *>((*it).get()) != 0) {
       std::shared_ptr<WhileNode> derived =
-          std::dynamic_pointer_cast<WhileNode>(cur_node);
-      line_number = getLineNumberFromNode(lines, derived);
-      setUsesRelationsHelper(derived->CondExpr, line_number);
-    } else if (dynamic_cast<PrintNode *>(cur_node.get()) != 0) {
+          std::dynamic_pointer_cast<WhileNode>((*it));
+      setUsesRelations(derived);
+    } else if (dynamic_cast<PrintNode *>((*it).get()) != 0) {
       std::shared_ptr<PrintNode> derived =
-          std::dynamic_pointer_cast<PrintNode>(cur_node);
-      line_number = getLineNumberFromNode(lines, derived);
-      setUsesRelationsHelper(derived->Var, line_number);
-    } else {
-      // TODO throw error
-    }
-
-    // add stmt_lst in
-    std::vector<std::shared_ptr<Node>> stmt_lst;
-    if (dynamic_cast<ProcedureNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<ProcedureNode> derived =
-          std::dynamic_pointer_cast<ProcedureNode>(cur_node);
-      stmt_lst = derived->StmtList->StmtList;
-    } else if (dynamic_cast<WhileNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<WhileNode> derived =
-          std::dynamic_pointer_cast<WhileNode>(cur_node);
-      stmt_lst = derived->StmtList->StmtList;
-    } else if (dynamic_cast<IfNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<IfNode> derived =
-          std::dynamic_pointer_cast<IfNode>(cur_node);
-      std::vector<std::shared_ptr<Node>> then_stmt_lst =
-          derived->StmtListThen->StmtList;
-      std::vector<std::shared_ptr<Node>> else_stmt_lst =
-          derived->StmtListElse->StmtList;
-      then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                           else_stmt_lst.end());  // concat
-      stmt_lst = then_stmt_lst;
-    }
-    // reverse iterator to do DFS
-    for (auto it = stmt_lst.rbegin(); it != stmt_lst.rend(); it++) {
-      visit_stack.push(*it);
-    }
-  }
-}
-
-// recursive function
-// node and vector as arguments
-void PKB::setUsesRelationsHelper(std::shared_ptr<Node> node, int line_number) {
-  if (dynamic_cast<ExprNode *>(node.get()) != 0) {
-    std::shared_ptr<ExprNode> derived =
-        std::dynamic_pointer_cast<ExprNode>(node);
-    // check if it has a ExprPNode
-    if (derived->ExprP != 0) {
-      // traverse both TermNode and ExprPNode
-      setUsesRelationsHelper(derived->ExprP, line_number);
-      setUsesRelationsHelper(derived->Term, line_number);
-    } else {
-      // traverse down TermNode only
-      setUsesRelationsHelper(derived->Term, line_number);
-    }
-  } else if (dynamic_cast<ExprPNode *>(node.get()) != 0) {
-    std::shared_ptr<ExprPNode> derived =
-        std::dynamic_pointer_cast<ExprPNode>(node);
-    // check if it has a ExprPNode
-    if (derived->ExprP != 0) {
-      // traverse both TermNode and ExprPNode
-      setUsesRelationsHelper(derived->ExprP, line_number);
-      setUsesRelationsHelper(derived->Term, line_number);
-    } else {
-      // traverse down TermNode only
-      setUsesRelationsHelper(derived->Term, line_number);
-    }
-  } else if (dynamic_cast<TermNode *>(node.get()) != 0) {
-    std::shared_ptr<TermNode> derived =
-        std::dynamic_pointer_cast<TermNode>(node);
-    // check if it has a ExprPNode
-    if (derived->TermP != 0) {
-      // traverse both TermPNode and FactorPNode
-      setUsesRelationsHelper(derived->TermP, line_number);
-      setUsesRelationsHelper(derived->Factor, line_number);
-    } else {
-      // traverse down TermNode only
-      setUsesRelationsHelper(derived->Factor, line_number);
-    }
-  } else if (dynamic_cast<TermPNode *>(node.get()) != 0) {
-    std::shared_ptr<TermPNode> derived =
-        std::dynamic_pointer_cast<TermPNode>(node);
-    setUsesRelationsHelper(derived->TermP, line_number);
-    setUsesRelationsHelper(derived->Factor, line_number);
-  } else if (dynamic_cast<FactorNode *>(node.get()) != 0) {
-    std::shared_ptr<FactorNode> derived =
-        std::dynamic_pointer_cast<FactorNode>(node);
-    // check if it has a ExprPNode
-    if (derived->Var != 0) {
-      setUsesRelationsHelper(derived->Var, line_number);
-    } else if (derived->Val != 0) {
-      setUsesRelationsHelper(derived->Val, line_number);
-    } else {
-      setUsesRelationsHelper(derived->Expr, line_number);
-    }
-  } else if (dynamic_cast<CondExprNode *>(node.get()) != 0) {
-    std::shared_ptr<CondExprNode> derived =
-        std::dynamic_pointer_cast<CondExprNode>(node);
-    if (derived->RelExpr != 0) {
-      setUsesRelationsHelper(derived->RelExpr, line_number);
-    } else if (derived->CondRHS != 0) {
-      setUsesRelationsHelper(derived->CondRHS, line_number);
-    } else {
-      setUsesRelationsHelper(derived->CondLHS, line_number);
-      setUsesRelationsHelper(derived->CondRHS, line_number);
-    }
-  } else if (dynamic_cast<RelExprNode *>(node.get()) != 0) {
-    std::shared_ptr<RelExprNode> derived =
-        std::dynamic_pointer_cast<RelExprNode>(node);
-    setUsesRelationsHelper(derived->LHS, line_number);
-    setUsesRelationsHelper(derived->RHS, line_number);
-  } else if (dynamic_cast<RelFactorNode *>(node.get()) != 0) {
-    std::shared_ptr<RelFactorNode> derived =
-        std::dynamic_pointer_cast<RelFactorNode>(node);
-    // check if it has a ExprPNode
-    if (derived->Var != 0) {
-      setUsesRelationsHelper(derived->Var, line_number);
-    } else if (derived->Val != 0) {
-      setUsesRelationsHelper(derived->Val, line_number);
-    } else {
-      setUsesRelationsHelper(derived->Expr, line_number);
-    }
-  } else if (dynamic_cast<VariableNode *>(node.get()) != 0) {
-    std::shared_ptr<VariableNode> derived =
-        std::dynamic_pointer_cast<VariableNode>(node);
-    // add to map
-    // TODO abstract this function
-    uses_set.insert(std::pair<int, std::string>(line_number, derived->Name));
-    if (uses_map.find(line_number) == uses_map.end()) {
-      // create new vector
-      std::vector<std::string> v;
-      v.push_back(derived->Name);
-      uses_map[line_number] = v;
-    } else {
-      // retrieve vector and add element
-      uses_map.at(line_number).push_back(derived->Name);
-    }
-  } else {
-    // throw error
-  }
-}
-
-void PKB::setModifiesRelations(std::shared_ptr<ProcedureNode> proc_node) {
-  // iterate through AST via DFS
-  std::stack<std::shared_ptr<Node>> visit_stack;
-  visit_stack.push(proc_node);
-  std::shared_ptr<Node> cur_node;
-
-  while (!visit_stack.empty()) {
-    // visit node
-    // can only visit top level nodes (those with line numbers)
-    cur_node = visit_stack.top();
-    visit_stack.pop();
-
-    // call helper function to traverse down the nodes to form relationships
-    int line_number;
-    std::vector<std::shared_ptr<Node>> stmt_lst;
-
-    if (dynamic_cast<AssignNode *>(cur_node.get()) != 0) {
+          std::dynamic_pointer_cast<PrintNode>((*it));
+      setUsesRelations(derived);
+    } else if (dynamic_cast<AssignNode *>((*it).get()) != 0) {
       std::shared_ptr<AssignNode> derived =
-          std::dynamic_pointer_cast<AssignNode>(cur_node);
-      line_number = getLineNumberFromNode(lines, derived);
-      setModifiesRelationsHelper(derived->Var, line_number);
-    } else if (dynamic_cast<IfNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<IfNode> derived =
-          std::dynamic_pointer_cast<IfNode>(cur_node);
-      line_number = getLineNumberFromNode(lines, derived);
-      std::vector<std::shared_ptr<Node>> then_stmt_lst =
-          derived->StmtListThen->StmtList;
-      std::vector<std::shared_ptr<Node>> else_stmt_lst =
-          derived->StmtListElse->StmtList;
-      then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                           else_stmt_lst.end());  // concat
-      stmt_lst = then_stmt_lst;
-      for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
-        setModifiesRelationsHelper(*it, line_number);
-      }
-    } else if (dynamic_cast<WhileNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<WhileNode> derived =
-          std::dynamic_pointer_cast<WhileNode>(cur_node);
-      line_number = getLineNumberFromNode(lines, derived);
-      stmt_lst = derived->StmtList->StmtList;
-      for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
-        setModifiesRelationsHelper(*it, line_number);
-      }
-    } else if (dynamic_cast<ReadNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<ReadNode> derived =
-          std::dynamic_pointer_cast<ReadNode>(cur_node);
-      line_number = getLineNumberFromNode(lines, derived);
-      setModifiesRelationsHelper(derived->Var, line_number);
-    } else {
-      // TODO throw error
-    }
-
-    // DFS
-    if (dynamic_cast<ProcedureNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<ProcedureNode> derived =
-          std::dynamic_pointer_cast<ProcedureNode>(cur_node);
-      stmt_lst = derived->StmtList->StmtList;
-    } else if (dynamic_cast<WhileNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<WhileNode> derived =
-          std::dynamic_pointer_cast<WhileNode>(cur_node);
-      stmt_lst = derived->StmtList->StmtList;
-    } else if (dynamic_cast<IfNode *>(cur_node.get()) != 0) {
-      std::shared_ptr<IfNode> derived =
-          std::dynamic_pointer_cast<IfNode>(cur_node);
-      std::vector<std::shared_ptr<Node>> then_stmt_lst =
-          derived->StmtListThen->StmtList;
-      std::vector<std::shared_ptr<Node>> else_stmt_lst =
-          derived->StmtListElse->StmtList;
-      then_stmt_lst.insert(then_stmt_lst.end(), else_stmt_lst.begin(),
-                           else_stmt_lst.end());  // concat
-      stmt_lst = then_stmt_lst;
-    }
-    // reverse iterator to do DFS
-    for (auto it = stmt_lst.rbegin(); it != stmt_lst.rend(); it++) {
-      visit_stack.push(*it);
+          std::dynamic_pointer_cast<AssignNode>((*it));
+      setUsesRelations(derived);
     }
   }
 }
 
-// recursive function
-// node and vector as arguments
-void PKB::setModifiesRelationsHelper(std::shared_ptr<Node> node,
-                                     int line_number) {
-  if (dynamic_cast<VariableNode *>(node.get()) != 0) {
-    std::shared_ptr<VariableNode> derived =
-        std::dynamic_pointer_cast<VariableNode>(node);
-    // add to map
-    // TODO abstract this function
-    modifies_set.insert(
-        std::pair<int, std::string>(line_number, derived->Name));
-    if (modifies_map.find(line_number) == modifies_map.end()) {
-      // create new vector
-      std::vector<std::string> v;
-      v.push_back(derived->Name);
-      modifies_map[line_number] = v;
-    } else {
-      // retrieve vector and add element
-      modifies_map.at(line_number).push_back(derived->Name);
+void PKB::setModifiesRelations(const std::shared_ptr<ProcedureNode> node) {
+  setModifiesRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKB::setModifiesRelations(const std::shared_ptr<IfNode> node) {
+  setModifiesRelationsIterator(node->StmtListThen->StmtList);
+  setModifiesRelationsIterator(node->StmtListElse->StmtList);
+}
+
+void PKB::setModifiesRelations(const std::shared_ptr<WhileNode> node) {
+  setModifiesRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKB::setModifiesRelations(const std::shared_ptr<ReadNode> node) {
+  setModifiesRelationsH(node->Var, node);
+}
+
+void PKB::setModifiesRelations(const std::shared_ptr<AssignNode> node) {
+  setModifiesRelationsH(node->Var, node);
+}
+
+void PKB::setModifiesRelationsH(const std::shared_ptr<VariableNode> node,
+                                const std::shared_ptr<Node> parent_node) {
+  variables_set.insert(node->Name);
+  modifies_set.insert(std::pair<LineNumber, VariableName>(
+      getLineNumberFromNode(lines, parent_node), node->Name));
+  addToVectorMap(modifies_map, getLineNumberFromNode(lines, parent_node),
+                 node->Name);
+}
+
+void PKB::setModifiesRelationsIterator(
+    const std::vector<std::shared_ptr<Node>> stmt_lst) {
+  // DFS
+  for (auto it = stmt_lst.begin(); it != stmt_lst.end(); it++) {
+    if (dynamic_cast<ProcedureNode *>((*it).get()) != 0) {
+      std::shared_ptr<ProcedureNode> derived =
+          std::dynamic_pointer_cast<ProcedureNode>((*it));
+      setModifiesRelations(derived);
+    } else if (dynamic_cast<IfNode *>((*it).get()) != 0) {
+      std::shared_ptr<IfNode> derived =
+          std::dynamic_pointer_cast<IfNode>((*it));
+      setModifiesRelations(derived);
+    } else if (dynamic_cast<WhileNode *>((*it).get()) != 0) {
+      std::shared_ptr<WhileNode> derived =
+          std::dynamic_pointer_cast<WhileNode>((*it));
+      setModifiesRelations(derived);
+    } else if (dynamic_cast<ReadNode *>((*it).get()) != 0) {
+      std::shared_ptr<ReadNode> derived =
+          std::dynamic_pointer_cast<ReadNode>((*it));
+      setModifiesRelations(derived);
+    } else if (dynamic_cast<AssignNode *>((*it).get()) != 0) {
+      std::shared_ptr<AssignNode> derived =
+          std::dynamic_pointer_cast<AssignNode>((*it));
+      setModifiesRelations(derived);
     }
+  }
+}
+
+ProcedureName PKB::getNodeValue(std::shared_ptr<Node> node) {
+  if (dynamic_cast<ProcedureNode *>(node.get()) != 0) {
+    std::shared_ptr<ProcedureNode> derived =
+        std::dynamic_pointer_cast<ProcedureNode>(node);
+    return derived->Name;
   } else {
-    // throw error
+    return getLineNumberFromNode(lines, node);
   }
 }
 
 // TODO deprecate temp testing methods
-bool PKB::testFollows(int a, int b) {
-  return follows_set.find(std::pair<int, int>(a, b)) != follows_set.end();
+bool PKB::testFollows(LineNumber a, LineNumber b) {
+  return follows_set.find(std::pair<LineNumber, LineNumber>(a, b)) !=
+         follows_set.end();
 }
 
-std::vector<int> PKB::getFollows(int line) {
-  std::vector<int> res;
+bool PKB::testParent(Parent a, LineNumber b) {
+  return parent_set.find(std::pair<Parent, LineNumber>(a, b)) !=
+         parent_set.end();
+}
+
+bool PKB::testUses(LineNumber a, VariableName b) {
+  return uses_set.find(std::pair<LineNumber, VariableName>(a, b)) !=
+         uses_set.end();
+}
+
+bool PKB::testModifies(LineNumber a, VariableName b) {
+  return modifies_set.find(std::pair<LineNumber, VariableName>(a, b)) !=
+         modifies_set.end();
+}
+
+std::vector<LineNumber> PKB::getFollows(LineNumber line) {
+  std::vector<LineNumber> res;
   try {
     res = follows_map.at(line);
     return res;
@@ -475,25 +443,27 @@ std::vector<int> PKB::getFollows(int line) {
   }
 }
 
-bool PKB::testParent(int a, int b) {
-  return parent_set.find(std::pair<int, int>(a, b)) != parent_set.end();
-}
-
-bool PKB::testUses(int line, std::string v) {
-  return uses_set.find(std::pair<int, std::string>(line, v)) != uses_set.end();
-}
-
-bool PKB::testModifies(int line, std::string v) {
-  return modifies_set.find(std::pair<int, std::string>(line, v)) !=
-         modifies_set.end();
-}
-
-std::vector<std::string> PKB::getUses(int line) {
-  std::vector<std::string> res;
+std::vector<LineNumber> PKB::getUses(LineNumber line) {
+  std::vector<LineNumber> res;
   try {
     res = uses_map.at(line);
     return res;
   } catch (const std::out_of_range &e) {
     return res;
+  }
+}
+
+// TODO shift this out to a utils component
+void PKB::addToVectorMap(
+    std::unordered_map<std::string, std::vector<std::string>> umap,
+    std::string index, std::string data) {
+  if (umap.find(index) == umap.end()) {
+    // create new vector
+    std::vector<std::string> v;
+    v.push_back(data);
+    umap[index] = v;
+  } else {
+    // retrieve vector and add element
+    umap.at(index).push_back(data);
   }
 }

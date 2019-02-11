@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -153,7 +154,7 @@ class Parser {
   /*!
     stmt: read | print | while | if | assign
   */
-  std::shared_ptr<Node> parseStatement();
+  std::optional<StmtNode> parseStatement();
 
   //! Parses a Factor expression.
   /*!

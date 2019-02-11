@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <string>
+#include <variant>
 #include <vector>
 
 class Node;
@@ -28,6 +29,12 @@ using RelFactorNode = FactorNode;
 class RelExprNode;
 class CondExprNode;
 class WhileNode;
+class IfNode;
+
+using StmtNode =
+    std::variant<std::shared_ptr<ReadNode>, std::shared_ptr<PrintNode>,
+                 std::shared_ptr<WhileNode>, std::shared_ptr<IfNode>,
+                 std::shared_ptr<AssignNode>>;
 
 //! Abstract base class for other AST nodes.
 class Node {
@@ -42,8 +49,8 @@ class Node {
 //! AST Node representing a Statement List
 class StmtListNode : public Node {
  public:
-  std::vector<std::shared_ptr<Node>> StmtList;
-  StmtListNode(std::vector<std::shared_ptr<Node>> stmtList);
+  std::vector<StmtNode> StmtList;
+  StmtListNode(std::vector<StmtNode> stmtList);
   bool operator==(const Node& other) const;
 };
 

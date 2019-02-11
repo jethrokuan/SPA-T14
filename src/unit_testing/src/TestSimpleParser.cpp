@@ -20,7 +20,7 @@ TEST_CASE ("Test Parser works") {
 
   Simple::Parser parser = Simple::Parser(lexer.tokens);
   auto proc = parser.parse();
-  std::vector<shared_ptr<Node>> stmtList;
+  std::vector<StmtNode> stmtList;
 
   // i = 5;
   auto assign = std::make_shared<AssignNode>(
@@ -32,7 +32,7 @@ TEST_CASE ("Test Parser works") {
   //   print i;
   // }
 
-  std::vector<shared_ptr<Node>> whileStmtList;
+  std::vector<StmtNode> whileStmtList;
   auto print_j = make_shared<PrintNode>(make_shared<VariableNode>("j"));
   whileStmtList.push_back(std::move(print_j));
 
@@ -123,13 +123,18 @@ TEST_CASE ("Node equality comparisons") {
     auto r2 = make_shared<ReadNode>(make_shared<VariableNode>("i"));
     auto r3 = make_shared<ReadNode>(make_shared<VariableNode>("j"));
 
-    std::vector<shared_ptr<Node>> s1;
-    std::vector<shared_ptr<Node>> s2;
-    std::vector<shared_ptr<Node>> s3;
+    std::vector<StmtNode> s1;
+    std::vector<StmtNode> s2;
+    std::vector<StmtNode> s3;
 
     s1.push_back(std::move(r1));
     s2.push_back(std::move(r2));
     s3.push_back(std::move(r3));
+
+    StmtNode v1 = r1;
+    StmtNode v2 = r2;
+
+    REQUIRE(v1 == v2);
 
     auto sl1 = make_shared<StmtListNode>(std::move(s1));
     auto sl2 = make_shared<StmtListNode>(std::move(s2));
@@ -144,9 +149,9 @@ TEST_CASE ("Node equality comparisons") {
     auto r2 = make_shared<ReadNode>(make_shared<VariableNode>("i"));
     auto r3 = make_shared<ReadNode>(make_shared<VariableNode>("j"));
 
-    std::vector<shared_ptr<Node>> s1;
-    std::vector<shared_ptr<Node>> s2;
-    std::vector<shared_ptr<Node>> s3;
+    std::vector<StmtNode> s1;
+    std::vector<StmtNode> s2;
+    std::vector<StmtNode> s3;
 
     s1.push_back(std::move(r1));
     s2.push_back(std::move(r2));

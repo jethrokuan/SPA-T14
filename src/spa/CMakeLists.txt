@@ -1,10 +1,10 @@
 # PKB files
-set(srcs ${srcs}
-  src/program_knowledge_base/pkb.cpp
-  )
-set(headers ${headers}
-  src/program_knowledge_base/pkb.h
-  )
+# set(srcs ${srcs}
+#   src/program_knowledge_base/pkb.cpp
+#   )
+# set(headers ${headers}
+#   src/program_knowledge_base/pkb.h
+#   )
 
 # SIMPLE parser files
 set(srcs ${srcs}

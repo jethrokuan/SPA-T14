@@ -1,6 +1,6 @@
 set(srcs
   src/main.cpp
-  # src/TestPKB.cpp
+  src/TestPKB.cpp
   src/TestQueryEvaluator.cpp
   src/TestQueryPreProcessor.cpp
   src/TestQueryTokenizer.cpp

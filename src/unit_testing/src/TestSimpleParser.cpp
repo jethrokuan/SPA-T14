@@ -131,11 +131,6 @@ TEST_CASE ("Node equality comparisons") {
     s2.push_back(std::move(r2));
     s3.push_back(std::move(r3));
 
-    StmtNode v1 = r1;
-    StmtNode v2 = r2;
-
-    REQUIRE(v1 == v2);
-
     auto sl1 = make_shared<StmtListNode>(std::move(s1));
     auto sl2 = make_shared<StmtListNode>(std::move(s2));
     auto sl3 = make_shared<StmtListNode>(std::move(s3));

@@ -36,7 +36,6 @@ set(srcs ${srcs}
   src/query_evaluator/pql/relation.cpp
   src/query_evaluator/pql/suchthat.cpp
   src/query_evaluator/pql/synonym.cpp
-  src/query_evaluator/pql/util.cpp
  )
 set(headers ${headers}
   src/query_evaluator/query_evaluator.h
@@ -55,7 +54,6 @@ set(headers ${headers}
   src/query_evaluator/pql/suchthat.h
   src/query_evaluator/pql/synonym.h
   src/query_evaluator/pql/underscore.h
-  src/query_evaluator/pql/util.h
  )
   
 # SIMPLE parser files

@@ -4,7 +4,9 @@
 #include <variant>
 
 #include "query_evaluator/pql/synonym.h"
-#include "query_evaluator/pql/util.h"
+#include "utils/utils.h"
+
+using namespace Utils;
 
 namespace QE {
 //! A factor can be either a synonym or a statement number

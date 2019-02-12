@@ -1,10 +1,12 @@
 #include "query_evaluator/pql/design_entity.h"
 #include "query_evaluator/core/exceptions.h"
-#include "query_evaluator/pql/util.h"
+#include "utils/utils.h"
 
 #include <stdexcept>
 
 #include <map>
+
+using namespace Utils;
 
 namespace QE {
 // Hard to use unordered_map even though faster

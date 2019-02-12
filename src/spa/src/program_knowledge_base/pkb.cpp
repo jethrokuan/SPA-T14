@@ -454,18 +454,4 @@ std::vector<LineNumber> PKB::getUses(LineNumber line) {
   }
 }
 
-// TODO shift this out to a utils component
-void PKB::addToVectorMap(
-    std::unordered_map<std::string, std::vector<std::string>> umap,
-    std::string index, std::string data) {
-  if (umap.find(index) == umap.end()) {
-    // create new vector
-    std::vector<std::string> v;
-    v.push_back(data);
-    umap[index] = v;
-  } else {
-    // retrieve vector and add element
-    umap.at(index).push_back(data);
-  }
-}
-}
+}  // namespace KB

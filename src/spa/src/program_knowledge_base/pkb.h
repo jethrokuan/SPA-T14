@@ -4,31 +4,11 @@
 #include <unordered_set>
 #include <vector>
 #include "structs/node.h"
+#include "utils/utils.h"
+
+using namespace Utils;
 
 namespace KB {
-
-// https://stackoverflow.com/a/15161034/3826254
-// How to make unordered set of pairs of integers in C++?
-// http://ticki.github.io/blog/designing-a-good-non-cryptographic-hash-function/
-// good hash function
-struct pair_hash {
- public:
-  inline std::size_t operator()(
-      const std::pair<std::string, std::string> &v) const {
-    std::hash<std::string> hash_str;
-    size_t hash_val = 0;
-    hash_val = hash_str(v.first) + 1;
-    hash_val = hash_val ^ (hash_val >> 6);
-    hash_val = hash_val * 31;
-    hash_val = hash_val ^ (hash_val << 2);
-    hash_val = hash_val + hash_str(v.second) + 1;
-    hash_val = hash_val ^ (hash_val >> 7);
-    hash_val = hash_val * 29;
-    hash_val = hash_val ^ (hash_val << 1);
-
-    return hash_val;
-  }
-};
 
 // using string for line numbers since it's easier to just handle a single type
 // procedure and variables names also can't begin with a number anyway
@@ -124,9 +104,6 @@ class PKB {
                                    std::shared_ptr<Node> node);
   std::shared_ptr<Node> getNodeFromLineNumber(
       std::vector<std::shared_ptr<Node>> ls, int line_number);
-  void addToVectorMap(
-      std::unordered_map<std::string, std::vector<std::string>> umap,
-      std::string index, std::string data);
   ProcedureName getNodeValue(std::shared_ptr<Node> node);
 
   // bool lineFollows(int a, int b); // currently testFollows make friend
@@ -147,4 +124,4 @@ class PKB {
   std::vector<LineNumber> getFollows(LineNumber line);
   std::vector<LineNumber> getUses(LineNumber line);
 };
-}
+}  // namespace KB

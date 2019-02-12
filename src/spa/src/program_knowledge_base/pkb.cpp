@@ -51,7 +51,7 @@ void PKB::setLineNumbersIterator(const std::vector<StmtNode> stmt_lst) {
   // iterate through AST via DFS
 
   for (const auto &stmt : stmt_lst) {
-    std::visit([this](auto &&s) { setLineNumbers(s); }, stmt);
+    std::visit([this](const auto &s) { setLineNumbers(s); }, stmt);
   }
 }
 
@@ -96,13 +96,13 @@ void PKB::setFollowsRelations(const std::shared_ptr<WhileNode> node) {
 void PKB::setFollowsRelationsIterator(const std::vector<StmtNode> stmt_lst) {
   // add relations
   for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
-    auto cur_line_number =
-        std::visit([this](auto &&s) { return getLineNumberFromNode(lines, s); },
-                   stmt_lst[i]);
+    auto cur_line_number = std::visit(
+        [this](const auto &s) { return getLineNumberFromNode(lines, s); },
+        stmt_lst[i]);
 
-    auto next_line_number =
-        std::visit([this](auto &&s) { return getLineNumberFromNode(lines, s); },
-                   stmt_lst[i + 1]);
+    auto next_line_number = std::visit(
+        [this](const auto &s) { return getLineNumberFromNode(lines, s); },
+        stmt_lst[i + 1]);
     follows_set.insert(
         std::pair<LineNumber, LineNumber>(cur_line_number, next_line_number));
     addToVectorMap(follows_map, cur_line_number, next_line_number);
@@ -115,7 +115,7 @@ void PKB::setFollowsRelationsIterator(const std::vector<StmtNode> stmt_lst) {
   // iterate through AST via DFS
   for (const auto &stmt : stmt_lst) {
     std::visit(
-        [this](auto &&s) {
+        [this](const auto &s) {
           using T = std::decay_t<decltype(s)>;
           if constexpr (std::is_same_v<T, std::shared_ptr<ProcedureNode>> ||
                         std::is_same_v<T, std::shared_ptr<IfNode>> ||
@@ -144,7 +144,7 @@ void PKB::setParentRelationsIterator(const std::vector<StmtNode> stmt_lst,
                                      const std::shared_ptr<Node> parent_node) {
   for (const auto &stmt : stmt_lst) {
     std::visit(
-        [this, parent_node](auto &&s) {
+        [this, parent_node](const auto &s) {
           auto current_line = getLineNumberFromNode(lines, s);
           parent_set.insert(std::pair<Parent, LineNumber>(
               getNodeValue(parent_node), current_line));
@@ -154,7 +154,7 @@ void PKB::setParentRelationsIterator(const std::vector<StmtNode> stmt_lst,
 
   for (const auto &stmt : stmt_lst) {
     std::visit(
-        [this](auto &&s) {
+        [this](const auto &s) {
           using T = std::decay_t<decltype(s)>;
           if constexpr (std::is_same_v<T, std::shared_ptr<ProcedureNode>> ||
                         std::is_same_v<T, std::shared_ptr<IfNode>> ||
@@ -278,7 +278,7 @@ void PKB::setUsesRelationsH(const std::shared_ptr<VariableNode> node,
 
 void PKB::setUsesRelationsIterator(const std::vector<StmtNode> stmt_lst) {
   for (const auto &stmt : stmt_lst) {
-    std::visit([this](auto &&s) { setUsesRelations(s); }, stmt);
+    std::visit([this](const auto &s) { setUsesRelations(s); }, stmt);
   }
 }
 
@@ -316,7 +316,7 @@ void PKB::setModifiesRelationsH(const std::shared_ptr<VariableNode> node,
 
 void PKB::setModifiesRelationsIterator(const std::vector<StmtNode> stmt_lst) {
   for (const auto &stmt : stmt_lst) {
-    std::visit([this](auto &&s) { setModifiesRelations(s); }, stmt);
+    std::visit([this](const auto &s) { setModifiesRelations(s); }, stmt);
   }
 }
 

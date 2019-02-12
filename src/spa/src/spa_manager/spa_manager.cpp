@@ -11,12 +11,9 @@
 using namespace Simple;
 using namespace QE;
 
-void SPAManager::loadSimpleSource(std::string& source_code) {
-  // Lexer expects a stream
-  std::istringstream iss(source_code);
-
+void SPAManager::loadSimpleSource(std::ifstream& source_stream) {
   // Complete parse of code to AST
-  Simple::Lexer lexer = Simple::Lexer(iss);
+  Simple::Lexer lexer = Simple::Lexer(source_stream);
   lexer.parse();
 
   // Load AST into PKB

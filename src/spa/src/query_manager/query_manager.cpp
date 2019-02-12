@@ -1,3 +1,3 @@
 #include "query_manager/query_manager.h"
 
-void makeQuery(QE::Query* query) { return; }
+void QueryManager::makeQuery(QE::Query* query) { return; }

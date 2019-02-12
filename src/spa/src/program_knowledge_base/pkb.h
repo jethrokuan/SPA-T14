@@ -5,6 +5,8 @@
 #include <vector>
 #include "structs/node.h"
 
+namespace KB {
+
 // https://stackoverflow.com/a/15161034/3826254
 // How to make unordered set of pairs of integers in C++?
 // http://ticki.github.io/blog/designing-a-good-non-cryptographic-hash-function/
@@ -145,3 +147,4 @@ class PKB {
   std::vector<LineNumber> getFollows(LineNumber line);
   std::vector<LineNumber> getUses(LineNumber line);
 };
+}

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stack>
 
+namespace KB {
 PKB::PKB(const std::shared_ptr<ProcedureNode> proc) {
   ast = proc;
   setLineNumbers(ast);
@@ -466,4 +467,5 @@ void PKB::addToVectorMap(
     // retrieve vector and add element
     umap.at(index).push_back(data);
   }
+}
 }

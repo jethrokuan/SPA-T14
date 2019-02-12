@@ -4,6 +4,7 @@
 #include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/pql/pql.h"
 #include "query_evaluator/query_evaluator.h"
+#include "query_manager/query_manager.h"
 #include "simple_parser/lexer.h"
 #include "simple_parser/parser.h"
 
@@ -24,13 +25,20 @@ void SPAManager::loadSimpleSource(std::string& source_code) {
 
   // Store PKB variable in class for querying laster
   pkb = new PKB(proc);
+  qm = new QueryManager(pkb);
 }
 
 void SPAManager::query(std::string& pql_query) {
   auto qe = QueryEvaluator();
   auto query = qe.makePqlQuery(pql_query);
+  // Stub call - no result yet
+  qm->makeQuery(query);
 
-  // Make the query call to a QueryManager1
+  // Cleanup
+  delete query;
 }
 
-SPAManager::~SPAManager() { delete pkb; }
+SPAManager::~SPAManager() {
+  delete pkb;
+  delete qm;
+}

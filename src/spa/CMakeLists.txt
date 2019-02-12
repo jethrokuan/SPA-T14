@@ -30,6 +30,14 @@ set(headers ${headers}
   src/spa_manager/spa_manager.h
   )
 
+# Query Manager files
+set(srcs ${srcs}
+  src/query_manager/query_manager.cpp
+  )
+set(headers ${headers}
+  src/query_manager/query_manager.h
+  )
+
 # PQL Query Evaluator files
 set(srcs ${srcs}
   src/query_evaluator/query_evaluator.cpp

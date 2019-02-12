@@ -1,10 +1,12 @@
 #pragma once
 #include <string>
 #include "program_knowledge_base/pkb.h"
+#include "query_manager/query_manager.h"
 
 class SPAManager {
  private:
   PKB* pkb;
+  QueryManager* qm;
 
  public:
   void loadSimpleSource(std::string& source_code);

@@ -6,6 +6,14 @@ set(headers ${headers}
   src/program_knowledge_base/pkb.h
   )
 
+# PKB files
+set(srcs ${srcs}
+  src/utils/utils.cpp
+  )
+set(headers ${headers}
+  src/utils/utils.h
+  )
+
 # SIMPLE parser files
 set(srcs ${srcs}
   src/structs/node.cpp

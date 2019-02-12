@@ -69,6 +69,17 @@ bool TermPNode::operator==(const Node& other) const {
          *this->Factor == *casted_other->Factor;
 };
 
+BinOpNode::BinOpNode(ExprNNode left, ExprNNode right, std::string& op)
+    : Left(std::move(left)), Right(std::move(right)), Op(op){};
+bool BinOpNode::operator==(const Node& other) const {
+  auto casted_other = dynamic_cast<const BinOpNode*>(&other);
+  return casted_other != 0 &&
+         std::visit([](auto& t, auto& o) { return *t == *o; }, this->Left,
+                    casted_other->Left) &&
+         std::visit([](auto& t, auto& o) { return *t == *o; }, this->Right,
+                    casted_other->Right);
+};
+
 TermNode::TermNode(std::shared_ptr<FactorNode> factor,
                    std::shared_ptr<TermPNode> termP)
     : Factor(std::move(factor)), TermP(std::move(termP)){};

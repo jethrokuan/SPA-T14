@@ -21,6 +21,10 @@ class FactorNode;
 class ProcedureNode;
 class TermNode;
 class TermPNode;
+class BinOpNode;
+using ExprNNode =
+    std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
+                 std::shared_ptr<BinOpNode>>;
 class ExprNode;
 class ExprPNode;
 class AssignNode;
@@ -93,6 +97,15 @@ class ProcedureNode : public Node {
   std::shared_ptr<StmtListNode> StmtList;
   ProcedureNode(const std::string& name,
                 std::shared_ptr<StmtListNode> stmtList);
+  bool operator==(const Node& other) const;
+};
+
+class BinOpNode : public Node {
+ public:
+  ExprNNode Left;
+  ExprNNode Right;
+  std::string Op;
+  BinOpNode(ExprNNode left, ExprNNode right, std::string& op);
   bool operator==(const Node& other) const;
 };
 

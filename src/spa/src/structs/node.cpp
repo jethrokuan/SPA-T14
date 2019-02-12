@@ -1,6 +1,16 @@
 #include "structs/node.h"
 
-StmtListNode::StmtListNode(std::vector<std::shared_ptr<Node>> stmtList)
+#include <iostream>
+
+template <class... Ts>
+struct overload : Ts... {
+  using Ts::operator()...;
+};
+
+template <class... Ts>
+overload(Ts...)->overload<Ts...>;
+
+StmtListNode::StmtListNode(std::vector<StmtNode> stmtList)
     : StmtList(std::move(stmtList)){};
 bool StmtListNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const StmtListNode*>(&other);
@@ -8,8 +18,12 @@ bool StmtListNode::operator==(const Node& other) const {
          this->StmtList.size() == casted_other->StmtList.size() &&
          std::equal(begin(this->StmtList), end(this->StmtList),
                     begin(casted_other->StmtList), end(casted_other->StmtList),
-                    [](const std::shared_ptr<Node>& t,
-                       const std::shared_ptr<Node>& o) { return *t == *o; });
+                    [](const auto t, const auto o) {
+                      return std::visit(overload{[](auto& tp, auto& op) {
+                                          return *tp == *op;
+                                        }},
+                                        t, o);
+                    });
 };
 
 NumberNode::NumberNode(const std::string& val) : Val(val){};

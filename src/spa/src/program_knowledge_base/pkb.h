@@ -63,21 +63,18 @@ class PKB {
   void setLineNumbers(const std::shared_ptr<ReadNode> node);
   void setLineNumbers(const std::shared_ptr<PrintNode> node);
   void setLineNumbers(const std::shared_ptr<AssignNode> node);
-  void setLineNumbersIterator(
-      const std::vector<std::shared_ptr<Node>> stmt_lst);
+  void setLineNumbersIterator(const std::vector<StmtNode> stmt_lst);
 
   void setFollowsRelations(const std::shared_ptr<ProcedureNode> node);
   void setFollowsRelations(const std::shared_ptr<IfNode> node);
   void setFollowsRelations(const std::shared_ptr<WhileNode> node);
-  void setFollowsRelationsIterator(
-      const std::vector<std::shared_ptr<Node>> stmt_lst);
+  void setFollowsRelationsIterator(const std::vector<StmtNode> stmt_lst);
 
   void setParentRelations(const std::shared_ptr<ProcedureNode> node);
   void setParentRelations(const std::shared_ptr<IfNode> node);
   void setParentRelations(const std::shared_ptr<WhileNode> node);
-  void setParentRelationsIterator(
-      const std::vector<std::shared_ptr<Node>> stmt_lst,
-      const std::shared_ptr<Node> parent_node);
+  void setParentRelationsIterator(const std::vector<StmtNode> stmt_lst,
+                                  const std::shared_ptr<Node> parent_node);
 
   // omitted NumberNode since it does not seem to be necessary
   void setUsesRelations(const std::shared_ptr<ProcedureNode> node);
@@ -85,6 +82,7 @@ class PKB {
   void setUsesRelations(const std::shared_ptr<WhileNode> node);
   void setUsesRelations(const std::shared_ptr<PrintNode> node);
   void setUsesRelations(const std::shared_ptr<AssignNode> node);
+  void setUsesRelations(const std::shared_ptr<ReadNode> node);
   void setUsesRelationsH(const std::shared_ptr<ExprNode> node,
                          const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<ExprPNode> node,
@@ -103,18 +101,17 @@ class PKB {
   //                        const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<VariableNode> node,
                          const std::shared_ptr<Node> parent_node);
-  void setUsesRelationsIterator(
-      const std::vector<std::shared_ptr<Node>> stmt_lst);
+  void setUsesRelationsIterator(const std::vector<StmtNode> stmt_lst);
 
   void setModifiesRelations(const std::shared_ptr<ProcedureNode> node);
   void setModifiesRelations(const std::shared_ptr<IfNode> node);
   void setModifiesRelations(const std::shared_ptr<WhileNode> node);
   void setModifiesRelations(const std::shared_ptr<ReadNode> node);
   void setModifiesRelations(const std::shared_ptr<AssignNode> node);
+  void setModifiesRelations(const std::shared_ptr<PrintNode> node);
   void setModifiesRelationsH(const std::shared_ptr<VariableNode> node,
                              const std::shared_ptr<Node> parent_node);
-  void setModifiesRelationsIterator(
-      const std::vector<std::shared_ptr<Node>> stmt_lst);
+  void setModifiesRelationsIterator(const std::vector<StmtNode> stmt_lst);
 
   // utility functions
   LineNumber getLineNumberFromNode(std::vector<std::shared_ptr<Node>> ls,

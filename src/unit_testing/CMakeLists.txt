@@ -1,4 +1,16 @@
-file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+set(srcs
+  src/main.cpp
+  src/TestPKB.cpp
+  src/TestQueryEvaluator.cpp
+  src/TestQueryPreProcessor.cpp
+  src/TestQueryTokenizer.cpp
+  src/TestQueryValidator.cpp
+  src/TestQuoteIdent.cpp
+  src/TestSimpleLexer.cpp
+  src/TestSimpleParser.cpp
+  src/TestSuchThat.cpp
+  src/TestSynonym.cpp
+  )
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_executable(unit_testing ${srcs})
 

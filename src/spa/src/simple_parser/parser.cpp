@@ -114,11 +114,11 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
 
 std::shared_ptr<StmtListNode> Parser::parseStmtList() {
   save_loc();
-  std::vector<std::shared_ptr<Node>> stmts;
+  std::vector<StmtNode> stmts;
   while (true) {
     auto stmt = parseStatement();
     if (stmt) {
-      stmts.push_back(std::move(stmt));
+      stmts.push_back(std::move(*stmt));
     } else {
       break;
     }
@@ -129,35 +129,35 @@ std::shared_ptr<StmtListNode> Parser::parseStmtList() {
   return std::make_shared<StmtListNode>(std::move(stmts));
 };
 
-std::shared_ptr<Node> Parser::parseStatement() {
+std::optional<StmtNode> Parser::parseStatement() {
   save_loc();
-  std::shared_ptr<Node> stmt = parseRead();
-  if (stmt) {
-    return stmt;
+  auto readStmt = parseRead();
+  if (readStmt) {
+    return readStmt;
   }
 
-  stmt = parsePrint();
-  if (stmt) {
-    return stmt;
+  auto printStmt = parsePrint();
+  if (printStmt) {
+    return printStmt;
   }
 
-  stmt = parseAssign();
-  if (stmt) {
-    return stmt;
+  auto assignStmt = parseAssign();
+  if (assignStmt) {
+    return assignStmt;
   }
 
-  stmt = parseWhile();
-  if (stmt) {
-    return stmt;
+  auto whileStmt = parseWhile();
+  if (whileStmt) {
+    return whileStmt;
   }
 
-  stmt = parseIf();
-  if (stmt) {
-    return stmt;
+  auto ifStmt = parseIf();
+  if (ifStmt) {
+    return ifStmt;
   }
 
   reset();
-  return nullptr;
+  return std::nullopt;
 };
 
 std::shared_ptr<FactorNode> Parser::parseFactor() {

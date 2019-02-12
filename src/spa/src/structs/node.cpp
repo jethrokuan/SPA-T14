@@ -59,14 +59,15 @@ bool ProcedureNode::operator==(const Node& other) const {
          *this->StmtList == *casted_other->StmtList;
 };
 
-TermPNode::TermPNode(std::shared_ptr<FactorNode> factor, std::string& op,
+TermPNode::TermPNode(FactorNode factor, std::string& op,
                      std::shared_ptr<TermPNode> termP)
-    : Factor(std::move(factor)), Op(op), TermP(std::move(termP)){};
+    : Factor(factor), Op(op), TermP(std::move(termP)){};
 
 bool TermPNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const TermPNode*>(&other);
   return casted_other != 0 && this->Op.compare(casted_other->Op) == 0 &&
-         *this->Factor == *casted_other->Factor;
+         std::visit([](auto& t, auto& o) { return *t == *o; }, this->Factor,
+                    casted_other->Factor);
 };
 
 BinOpNode::BinOpNode(ExprNNode left, ExprNNode right, std::string& op)
@@ -80,15 +81,14 @@ bool BinOpNode::operator==(const Node& other) const {
                     casted_other->Right);
 };
 
-TermNode::TermNode(std::shared_ptr<FactorNode> factor,
-                   std::shared_ptr<TermPNode> termP)
-    : Factor(std::move(factor)), TermP(std::move(termP)){};
-TermNode::TermNode(std::shared_ptr<FactorNode> factor)
-    : Factor(std::move(factor)), TermP(nullptr){};
+TermNode::TermNode(FactorNode factor, std::shared_ptr<TermPNode> termP)
+    : Factor(factor), TermP(std::move(termP)){};
+TermNode::TermNode(FactorNode factor) : Factor(factor), TermP(nullptr){};
 bool TermNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const TermNode*>(&other);
-  return casted_other != 0;
-  return casted_other != 0 && *this->Factor == *casted_other->Factor &&
+  return casted_other != 0 &&
+         std::visit([](auto& t, auto& o) { return *t == *o; }, this->Factor,
+                    casted_other->Factor) &&
          (this->TermP == casted_other->TermP ||
           *this->TermP == *casted_other->TermP);
 }
@@ -121,50 +121,6 @@ bool ExprNode::operator==(const Node& other) const {
           *this->ExprP == *casted_other->ExprP);
 };
 
-FactorNode::FactorNode(){};
-FactorNode::FactorNode(std::shared_ptr<VariableNode> var) {
-  new (&Var) std::shared_ptr<VariableNode>{std::move(var)};
-  type = UnionType::VAR;
-};
-FactorNode::FactorNode(std::shared_ptr<NumberNode> val) {
-  new (&Val) std::shared_ptr<NumberNode>{std::move(val)};
-  type = UnionType::VAL;
-};
-FactorNode::FactorNode(std::shared_ptr<ExprNode> expr) {
-  new (&Expr) std::shared_ptr<ExprNode>{std::move(expr)};
-  type = UnionType::EXPR;
-};
-FactorNode::~FactorNode() {
-  switch (type) {
-    case UnionType::VAR:
-      Var.~shared_ptr<VariableNode>();
-      break;
-    case UnionType::VAL:
-      Val.~shared_ptr<NumberNode>();
-      break;
-    case UnionType::EXPR:
-      Expr.~shared_ptr<ExprNode>();
-      break;
-    case UnionType::NONE:
-      break;
-  };
-}
-bool FactorNode::operator==(const Node& other) const {
-  auto casted_other = dynamic_cast<const FactorNode*>(&other);
-  if (casted_other == 0) return false;
-  if (this->type != casted_other->type) return false;
-  switch (this->type) {
-    case UnionType::VAR:
-      return *this->Var == *casted_other->Var;
-    case UnionType::VAL:
-      return *this->Val == *casted_other->Val;
-    case UnionType::EXPR:
-      return *this->Expr == *casted_other->Expr;
-    case UnionType::NONE:
-      return true;
-  }
-};
-
 AssignNode::AssignNode(std::shared_ptr<VariableNode> var,
                        std::shared_ptr<ExprNode> expr)
     : Var(std::move(var)), Expr(std::move(expr)){};
@@ -174,13 +130,15 @@ bool AssignNode::operator==(const Node& other) const {
          *this->Expr == *casted_other->Expr;
 };
 
-RelExprNode::RelExprNode(std::shared_ptr<RelFactorNode> lhs, std::string& op,
-                         std::shared_ptr<RelFactorNode> rhs)
-    : LHS(std::move(lhs)), Op(op), RHS(std::move(rhs)){};
+RelExprNode::RelExprNode(RelFactorNode lhs, std::string& op, RelFactorNode rhs)
+    : LHS(lhs), Op(op), RHS(rhs){};
 bool RelExprNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const RelExprNode*>(&other);
-  return casted_other != 0 && *this->LHS == *casted_other->LHS &&
-         *this->RHS == *casted_other->RHS &&
+  return casted_other != 0 &&
+         std::visit([](auto& t, auto& o) { return *t == *o; }, this->LHS,
+                    casted_other->LHS) &&
+         std::visit([](auto& t, auto& o) { return *t == *o; }, this->RHS,
+                    casted_other->RHS) &&
          this->Op.compare(casted_other->Op) == 0;
 };
 

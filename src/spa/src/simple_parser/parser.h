@@ -160,13 +160,13 @@ class Parser {
   /*!
     factor: var_name | const_value | '(' expr ')'
    */
-  std::shared_ptr<FactorNode> parseFactor();
+  FactorNode parseFactor();
 
   //! Parses a Rel Factor expression.
   /*!
     rel_factor: var_name | const_value | expr
    */
-  std::shared_ptr<RelFactorNode> parseRelFactor();
+  RelFactorNode parseRelFactor();
 
   //! Parses a term' expression.
   /*!

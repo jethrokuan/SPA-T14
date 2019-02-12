@@ -25,8 +25,8 @@ TEST_CASE ("Test Parser works") {
   // i = 5;
   auto assign = std::make_shared<AssignNode>(
       make_shared<VariableNode>("i"),
-      make_shared<ExprNode>(make_shared<TermNode>(
-          make_shared<FactorNode>(make_shared<NumberNode>("5")))));
+      make_shared<ExprNode>(
+          make_shared<TermNode>(make_shared<NumberNode>("5"))));
 
   // while (i==5) {
   //   print i;
@@ -39,8 +39,7 @@ TEST_CASE ("Test Parser works") {
   std::string op = "==";
   auto whileStmt = make_shared<WhileNode>(
       make_shared<CondExprNode>(make_shared<RelExprNode>(
-          make_shared<RelFactorNode>(make_shared<VariableNode>("i")), op,
-          make_shared<RelFactorNode>(make_shared<NumberNode>("5")))),
+          make_shared<VariableNode>("i"), op, make_shared<NumberNode>("5"))),
       make_shared<StmtListNode>(std::move(whileStmtList)));
 
   // print i;
@@ -96,26 +95,6 @@ TEST_CASE ("Node equality comparisons") {
 
     REQUIRE(*p1 == *p2);
     REQUIRE(*p1 != *p3);
-  }
-
-  SECTION ("FactorNode") {
-    auto f_var1 = make_shared<FactorNode>(make_shared<VariableNode>("i"));
-    auto f_var2 = make_shared<FactorNode>(make_shared<VariableNode>("i"));
-    auto f_var3 = make_shared<FactorNode>(make_shared<VariableNode>("j"));
-
-    REQUIRE(*f_var1 == *f_var2);
-    REQUIRE(*f_var1 != *f_var3);
-
-    auto f_val1 = make_shared<FactorNode>(make_shared<NumberNode>("1"));
-    auto f_val2 = make_shared<FactorNode>(make_shared<NumberNode>("1"));
-    auto f_val3 = make_shared<FactorNode>(make_shared<NumberNode>("2"));
-
-    REQUIRE(*f_val1 == *f_val2);
-    REQUIRE(*f_val1 != *f_val3);
-
-    // TODO: Test f_expr
-
-    REQUIRE(*f_val1 != *f_var1);
   }
 
   SECTION ("StmtListNode") {

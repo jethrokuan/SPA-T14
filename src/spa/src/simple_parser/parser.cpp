@@ -160,23 +160,23 @@ std::optional<StmtNode> Parser::parseStatement() {
   return std::nullopt;
 };
 
-std::shared_ptr<FactorNode> Parser::parseFactor() {
+FactorNode Parser::parseFactor() {
   save_loc();
   auto Var = parseVariable();
   if (Var) {
-    return std::make_shared<FactorNode>(std::move(Var));
+    return Var;
   }
 
   auto Number = parseNumber();
 
   if (Number) {
-    return std::make_shared<FactorNode>(std::move(Number));
+    return Number;
   }
 
   expect("(");
   auto Expr = parseExpr();
   expect(")");
-  return std::make_shared<FactorNode>(std::move(Expr));
+  return Expr;
 };
 
 std::shared_ptr<TermPNode> Parser::parseTermP() {
@@ -186,7 +186,7 @@ std::shared_ptr<TermPNode> Parser::parseTermP() {
   if (valid_ops.find(peek()->Val) != valid_ops.end()) {
     auto Factor = parseFactor();
     auto TermP = parseTermP();
-    return std::make_shared<TermPNode>(std::move(Factor), advance()->Val,
+    return std::make_shared<TermPNode>(Factor, advance()->Val,
                                        std::move(TermP));
   } else {
     reset();
@@ -197,14 +197,14 @@ std::shared_ptr<TermPNode> Parser::parseTermP() {
 std::shared_ptr<TermNode> Parser::parseTerm() {
   save_loc();
   auto Factor = parseFactor();
-  if (!Factor) {
-    reset();
-    return nullptr;
-  }
+  // if (!Factor) {
+  //   reset();
+  //   return nullptr;
+  // }
 
   auto TermP = parseTermP();
 
-  return std::make_shared<TermNode>(std::move(Factor), std::move(TermP));
+  return std::make_shared<TermNode>(Factor, std::move(TermP));
 }
 
 std::shared_ptr<ExprPNode> Parser::parseExprP() {
@@ -297,27 +297,27 @@ std::shared_ptr<PrintNode> Parser::parsePrint() {
   return std::make_shared<PrintNode>(std::move(Var));
 };
 
-std::shared_ptr<RelFactorNode> Parser::parseRelFactor() {
+RelFactorNode Parser::parseRelFactor() {
   save_loc();
   auto Var = parseVariable();
   if (Var) {
-    return std::make_shared<FactorNode>(std::move(Var));
+    return Var;
   }
 
   auto Number = parseNumber();
 
   if (Number) {
-    return std::make_shared<FactorNode>(std::move(Number));
+    return Number;
   }
 
   auto Expr = parseExpr();
 
-  if (!Expr) {
-    reset();
-    return nullptr;
-  }
+  // if (!Expr) {
+  //   reset();
+  //   return nullptr;
+  // }
 
-  return std::make_shared<FactorNode>(std::move(Expr));
+  return Expr;
 };
 
 // rel_expr: rel_factor > rel_factor
@@ -330,10 +330,10 @@ std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
   save_loc();
   auto lhs = parseRelFactor();
 
-  if (!lhs) {
-    reset();
-    return nullptr;
-  }
+  // if (!lhs) {
+  //   reset();
+  //   return nullptr;
+  // }
   std::unordered_set<std::string> valid_ops({">", ">=", "<", "<=", "==", "!="});
   auto op = peek()->Val;
   if (valid_ops.find(op) == valid_ops.end()) {
@@ -346,12 +346,12 @@ std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
 
   auto rhs = parseRelFactor();
 
-  if (!rhs) {
-    reset();
-    return nullptr;
-  }
+  // if (!rhs) {
+  //   reset();
+  //   return nullptr;
+  // }
 
-  return std::make_shared<RelExprNode>(std::move(lhs), op, std::move(rhs));
+  return std::make_shared<RelExprNode>(lhs, op, rhs);
 }
 
 // cond_expr: rel_expr

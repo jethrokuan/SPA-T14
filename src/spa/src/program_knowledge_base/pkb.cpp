@@ -226,15 +226,11 @@ void PKB::setUsesRelationsH(const std::shared_ptr<TermPNode> node,
   setUsesRelationsH(node->Factor, parent_node);
 }
 
-void PKB::setUsesRelationsH(const std::shared_ptr<FactorNode> node,
+void PKB::setUsesRelationsH(const FactorNode node,
                             const std::shared_ptr<Node> parent_node) {
-  if (node->type == FactorNode::UnionType::VAR) {
-    setUsesRelationsH(node->Var, parent_node);
-  } else if (node->type == FactorNode::UnionType::EXPR) {
-    setUsesRelationsH(node->Expr, parent_node);
-  }
-  // doesn't seem necessary for now
-  // setUsesRelationsH(node->Val, parent_node);
+  std::visit(
+      [this, parent_node](const auto &n) { setUsesRelationsH(n, parent_node); },
+      node);
 }
 
 void PKB::setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
@@ -247,7 +243,7 @@ void PKB::setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
   setUsesRelationsH(node->CondRHS, parent_node);
 }
 
-void PKB::setUsesRelationsH(const std::shared_ptr<RelExprNode> node,
+void PKB::setUsesRelationsH(std::shared_ptr<RelExprNode> node,
                             const std::shared_ptr<Node> parent_node) {
   if (node == nullptr) {
     return;
@@ -263,6 +259,9 @@ void PKB::setUsesRelationsH(const std::shared_ptr<RelExprNode> node,
 //   // setUsesRelationsH(node->Val, parent_node);
 //   setUsesRelationsH(node->Expr, parent_node);
 // }
+
+void PKB::setUsesRelationsH(std::shared_ptr<NumberNode>,
+                            const std::shared_ptr<Node>){};
 
 void PKB::setUsesRelationsH(const std::shared_ptr<VariableNode> node,
                             const std::shared_ptr<Node> parent_node) {

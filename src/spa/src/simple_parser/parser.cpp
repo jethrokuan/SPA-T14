@@ -179,48 +179,7 @@ FactorNode Parser::parseFactor() {
   return Expr;
 };
 
-std::shared_ptr<TermPNode> Parser::parseTermP() {
-  save_loc();
-  std::unordered_set<std::string> valid_ops({"*", "/", "%"});
-
-  if (valid_ops.find(peek()->Val) != valid_ops.end()) {
-    auto Factor = parseFactor();
-    auto TermP = parseTermP();
-    return std::make_shared<TermPNode>(Factor, advance()->Val,
-                                       std::move(TermP));
-  } else {
-    reset();
-    return nullptr;
-  }
-};
-
-std::shared_ptr<TermNode> Parser::parseTerm() {
-  save_loc();
-  auto Factor = parseFactor();
-  // if (!Factor) {
-  //   reset();
-  //   return nullptr;
-  // }
-
-  auto TermP = parseTermP();
-
-  return std::make_shared<TermNode>(Factor, std::move(TermP));
-}
-
-std::shared_ptr<ExprPNode> Parser::parseExprP() {
-  save_loc();
-  std::unordered_set<std::string> valid_ops({"+", "-"});
-  if (valid_ops.find(peek()->Val) != valid_ops.end()) {
-    auto Term = parseTerm();
-    auto ExprP = parseExprP();
-    return std::make_shared<ExprPNode>(std::move(Term), advance()->Val,
-                                       std::move(ExprP));
-  } else {
-    reset();
-    return nullptr;
-  }
-};
-
+// TODO: Refactor
 ExprNode Parser::nud(Token* t) {
   if (t->T == TokenType::NUMBER) {
     return std::make_shared<NumberNode>(t->Val);
@@ -231,8 +190,9 @@ ExprNode Parser::nud(Token* t) {
     expect(")");
     return expr;
   } else {
-    std::cout << t->Val << std::endl;
-    std::cout << "nud called on non-number or symbol.";
+    // TODO: Handle Error
+    std::cout << "nud called on invalid token" << t->Val << std::endl;
+    return std::make_shared<VariableNode>("FAIL");
   }
 }
 
@@ -241,13 +201,14 @@ int Parser::lbp(Token* t) {
     return 0;
   } else if (t->Val == "+" || t->Val == "-") {
     return 10;
-  } else if (t->Val == "*" || t->Val == "/") {
+  } else if (t->Val == "*" || t->Val == "/" || t->Val == "%") {
     return 20;
   }
 
   return -1;
 }
 
+// TODO: Refactor
 ExprNode Parser::led(Token* t, ExprNode left) {
   if (t->Val.compare("+") == 0) {
     ExprNode right = prattParse(10);
@@ -261,6 +222,13 @@ ExprNode Parser::led(Token* t, ExprNode left) {
   } else if (t->Val.compare("/") == 0) {
     ExprNode right = prattParse(20);
     return std::make_shared<BinOpNode>(left, right, "/");
+  } else if (t->Val.compare("%") == 0) {
+    ExprNode right = prattParse(20);
+    return std::make_shared<BinOpNode>(left, right, "%");
+  } else {
+    // TODO: Handle error
+    std::cout << t->Val << std::endl;
+    return std::make_shared<VariableNode>("FAIL");
   }
 
   // return left;
@@ -282,19 +250,7 @@ ExprNode Parser::prattParse(int rbp) {
 
 ExprNode Parser::prattParse() { return prattParse(0); }
 
-ExprNode Parser::parseExpr() {
-  return prattParse(0);
-
-  // auto Term = parseTerm();
-
-  // // if (!Term) {
-  // //   reset();
-  // //   return nullptr;
-  // // }
-
-  // auto ExprP = parseExprP();
-  // return std::make_shared<ExprNode>(std::move(Term), std::move(ExprP));
-};
+ExprNode Parser::parseExpr() { return prattParse(); };
 
 std::shared_ptr<AssignNode> Parser::parseAssign() {
   save_loc();

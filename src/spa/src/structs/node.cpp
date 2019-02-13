@@ -59,17 +59,6 @@ bool ProcedureNode::operator==(const Node& other) const {
          *this->StmtList == *casted_other->StmtList;
 };
 
-TermPNode::TermPNode(FactorNode factor, std::string op,
-                     std::shared_ptr<TermPNode> termP)
-    : Factor(factor), Op(op), TermP(std::move(termP)){};
-
-bool TermPNode::operator==(const Node& other) const {
-  auto casted_other = dynamic_cast<const TermPNode*>(&other);
-  return casted_other != 0 && this->Op.compare(casted_other->Op) == 0 &&
-         std::visit([](auto& t, auto& o) { return *t == *o; }, this->Factor,
-                    casted_other->Factor);
-};
-
 BinOpNode::BinOpNode(ExprNode left, ExprNode right, std::string op)
     : Left(std::move(left)), Right(std::move(right)), Op(op){};
 bool BinOpNode::operator==(const Node& other) const {
@@ -79,33 +68,6 @@ bool BinOpNode::operator==(const Node& other) const {
                     casted_other->Left) &&
          std::visit([](auto& t, auto& o) { return *t == *o; }, this->Right,
                     casted_other->Right);
-};
-
-TermNode::TermNode(FactorNode factor, std::shared_ptr<TermPNode> termP)
-    : Factor(factor), TermP(std::move(termP)){};
-TermNode::TermNode(FactorNode factor) : Factor(factor), TermP(nullptr){};
-bool TermNode::operator==(const Node& other) const {
-  auto casted_other = dynamic_cast<const TermNode*>(&other);
-  return casted_other != 0 &&
-         std::visit([](auto& t, auto& o) { return *t == *o; }, this->Factor,
-                    casted_other->Factor) &&
-         (this->TermP == casted_other->TermP ||
-          *this->TermP == *casted_other->TermP);
-}
-
-ExprPNode::ExprPNode(std::shared_ptr<TermNode> term, std::string op)
-    : Term(std::move(term)), Op(op){};
-
-ExprPNode::ExprPNode(std::shared_ptr<TermNode> term, std::string op,
-                     std::shared_ptr<ExprPNode> exprP)
-    : Term(std::move(term)), Op(op), ExprP(std::move(exprP)){};
-
-bool ExprPNode::operator==(const Node& other) const {
-  auto casted_other = dynamic_cast<const ExprPNode*>(&other);
-  return casted_other != 0 && *this->Term == *casted_other->Term &&
-         (this->ExprP == casted_other->ExprP ||
-          *this->ExprP == *casted_other->ExprP) &&
-         this->Op.compare(casted_other->Op) == 0;
 };
 
 AssignNode::AssignNode(std::shared_ptr<VariableNode> var, ExprNode expr)

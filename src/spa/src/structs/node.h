@@ -18,8 +18,6 @@ class VariableNode;
 class ReadNode;
 class PrintNode;
 class ProcedureNode;
-class TermNode;
-class TermPNode;
 class BinOpNode;
 using ExprNode =
     std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
@@ -104,41 +102,6 @@ class BinOpNode : public Node {
   ExprNode Right;
   std::string Op;
   BinOpNode(ExprNode left, ExprNode right, std::string op);
-  bool operator==(const Node& other) const;
-};
-
-//! AST Node representing term'
-class TermPNode : public Node {
- public:
-  FactorNode Factor;
-  std::string Op;
-  std::shared_ptr<TermPNode> TermP;
-  TermPNode(FactorNode factor, std::string op,
-            std::shared_ptr<TermPNode> termP);
-  bool operator==(const Node& other) const;
-};
-
-//! AST Node representing term
-class TermNode : public Node {
- public:
-  FactorNode Factor;
-  std::shared_ptr<TermPNode> TermP;
-
-  TermNode(FactorNode factor, std::shared_ptr<TermPNode> termP);
-  TermNode(FactorNode factor);
-  bool operator==(const Node& other) const;
-};
-
-//! AST Node representing expr'
-class ExprPNode : public Node {
- public:
-  std::shared_ptr<TermNode> Term;
-  std::string Op;
-  std::shared_ptr<ExprPNode> ExprP;
-
-  ExprPNode(std::shared_ptr<TermNode> term, std::string op);
-  ExprPNode(std::shared_ptr<TermNode> term, std::string op,
-            std::shared_ptr<ExprPNode> exprP);
   bool operator==(const Node& other) const;
 };
 

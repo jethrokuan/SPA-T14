@@ -123,7 +123,7 @@ std::string AssignNode::to_str() {
   return acc;
 }
 
-RelExprNode::RelExprNode(RelFactorNode lhs, std::string op, RelFactorNode rhs)
+RelExprNode::RelExprNode(RelFactor lhs, std::string op, RelFactor rhs)
     : LHS(lhs), Op(op), RHS(rhs){};
 bool RelExprNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const RelExprNode*>(&other);

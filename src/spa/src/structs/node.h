@@ -23,10 +23,10 @@ using ExprNode =
     std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
                  std::shared_ptr<BinOpNode>>;
 class AssignNode;
-using FactorNode =
+using Factor =
     std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
                  std::shared_ptr<BinOpNode>>;
-using RelFactorNode = FactorNode;
+using RelFactor = Factor;
 class RelExprNode;
 class CondExprNode;
 class WhileNode;
@@ -126,10 +126,10 @@ class AssignNode : public Node {
 //! AST Node representing a RelExpr
 class RelExprNode : public Node {
  public:
-  RelFactorNode LHS;
+  RelFactor LHS;
   std::string Op;
-  RelFactorNode RHS;
-  RelExprNode(RelFactorNode lhs, std::string op, RelFactorNode rhs);
+  RelFactor RHS;
+  RelExprNode(RelFactor lhs, std::string op, RelFactor rhs);
   bool operator==(const Node& other) const;
   std::string to_str();
 };

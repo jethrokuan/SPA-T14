@@ -154,13 +154,13 @@ class Parser {
   /*!
     factor: var_name | const_value | '(' expr ')'
    */
-  FactorNode parseFactor();
+  Factor parseFactor();
 
   //! Parses a Rel Factor expression.
   /*!
     rel_factor: var_name | const_value | expr
    */
-  RelFactorNode parseRelFactor();
+  RelFactor parseRelFactor();
 
   //! Parses a expr expression.
   /*!

@@ -160,7 +160,7 @@ std::optional<StmtNode> Parser::parseStatement() {
   return std::nullopt;
 };
 
-FactorNode Parser::parseFactor() {
+Factor Parser::parseFactor() {
   save_loc();
   auto Var = parseVariable();
   if (Var) {
@@ -313,7 +313,7 @@ std::shared_ptr<PrintNode> Parser::parsePrint() {
   return std::make_shared<PrintNode>(std::move(Var));
 };
 
-RelFactorNode Parser::parseRelFactor() {
+RelFactor Parser::parseRelFactor() {
   save_loc();
   auto Var = parseVariable();
   if (Var) {

@@ -199,7 +199,7 @@ void PKB::setUsesRelationsH(const ExprNode node,
       node);
 }
 
-// void PKB::setUsesRelationsH(const FactorNode node,
+// void PKB::setUsesRelationsH(const Factor node,
 //                             const std::shared_ptr<Node> parent_node) {
 //   std::visit(
 //       [this, parent_node](const auto &n) { setUsesRelationsH(n, parent_node);
@@ -225,7 +225,7 @@ void PKB::setUsesRelationsH(std::shared_ptr<RelExprNode> node,
   setUsesRelationsH(node->RHS, parent_node);
 }
 
-// void PKB::setUsesRelationsH(const std::shared_ptr<RelFactorNode> node,
+// void PKB::setUsesRelationsH(const std::shared_ptr<RelFactor> node,
 //                             const std::shared_ptr<Node> parent_node) {
 //   setUsesRelationsH(node->Var, parent_node);
 //   // doesn't seem necessary for now

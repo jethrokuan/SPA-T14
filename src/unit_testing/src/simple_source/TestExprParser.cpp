@@ -147,4 +147,43 @@ TEST_CASE ("Test Expr Parser works") {
 
     REQUIRE(*proc == *expected);
   }
+
+  SECTION ("while (i > (2 + 5) * j)") {
+    std::string filename = "tests/simple_source/arithmetic/6.txt";
+    std::ifstream input(filename);
+
+    Simple::Lexer lexer = Simple::Lexer(input);
+    lexer.parse();
+
+    Simple::Parser parser = Simple::Parser(lexer.tokens);
+    auto proc = parser.parse();
+
+    std::vector<StmtNode> stmtList;
+
+    std::vector<StmtNode> ws;
+    auto assign = make_shared<AssignNode>(
+        make_shared<VariableNode>("i"),
+        make_shared<BinOpNode>(make_shared<VariableNode>("i"),
+                               make_shared<NumberNode>("1"), "+"));
+
+    ws.push_back(std::move(assign));
+
+    auto w = std::make_shared<WhileNode>(
+        make_shared<CondExprNode>(make_shared<RelExprNode>(
+            make_shared<VariableNode>("i"), ">",
+            make_shared<BinOpNode>(
+                make_shared<BinOpNode>(make_shared<NumberNode>("2"),
+                                       make_shared<NumberNode>("5"), "+"),
+                make_shared<VariableNode>("j"), "*"))),
+        make_shared<StmtListNode>(std::move(ws)));
+
+    stmtList.push_back(std::move(w));
+
+    auto StmtList = std::make_shared<StmtListNode>(std::move(stmtList));
+
+    auto expected =
+        std::make_shared<ProcedureNode>("main", std::move(StmtList));
+
+    REQUIRE(*proc == *expected);
+  }
 }

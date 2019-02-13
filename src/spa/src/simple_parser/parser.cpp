@@ -4,7 +4,7 @@
 
 using namespace Simple;
 
-#include "simple_parser/parser.h"
+#include <iostream>
 
 bool Parser::match(TokenType type) {
   if (check(type)) {
@@ -221,17 +221,79 @@ std::shared_ptr<ExprPNode> Parser::parseExprP() {
   }
 };
 
-std::shared_ptr<ExprNode> Parser::parseExpr() {
-  save_loc();
-  auto Term = parseTerm();
+ExprNode Parser::nud(Token* t) {
+  if (t->T == TokenType::NUMBER) {
+    return std::make_shared<NumberNode>(t->Val);
+  } else if (t->T == TokenType::SYMBOL) {
+    return std::make_shared<VariableNode>(t->Val);
+  } else if (t->Val == "(") {
+    ExprNode expr = prattParse();
+    expect(")");
+    return expr;
+  } else {
+    std::cout << t->Val << std::endl;
+    std::cout << "nud called on non-number or symbol.";
+  }
+}
 
-  if (!Term) {
-    reset();
-    return nullptr;
+int Parser::lbp(Token* t) {
+  if (t->Val == ";") {
+    return 0;
+  } else if (t->Val == "+" || t->Val == "-") {
+    return 10;
+  } else if (t->Val == "*" || t->Val == "/") {
+    return 20;
   }
 
-  auto ExprP = parseExprP();
-  return std::make_shared<ExprNode>(std::move(Term), std::move(ExprP));
+  return -1;
+}
+
+ExprNode Parser::led(Token* t, ExprNode left) {
+  if (t->Val.compare("+") == 0) {
+    ExprNode right = prattParse(10);
+    return std::make_shared<BinOpNode>(left, right, "+");
+  } else if (t->Val.compare("-") == 0) {
+    ExprNode right = prattParse(10);
+    return std::make_shared<BinOpNode>(left, right, "-");
+  } else if (t->Val.compare("*") == 0) {
+    ExprNode right = prattParse(20);
+    return std::make_shared<BinOpNode>(left, right, "*");
+  } else if (t->Val.compare("/") == 0) {
+    ExprNode right = prattParse(20);
+    return std::make_shared<BinOpNode>(left, right, "/");
+  }
+
+  // return left;
+}
+
+ExprNode Parser::prattParse(int rbp) {
+  Token* t = advance();
+  Token* token = peek();
+  ExprNode left = nud(t);
+
+  while (rbp < lbp(token)) {
+    t = advance();
+    token = peek();
+    left = led(t, left);
+  }
+
+  return left;
+}
+
+ExprNode Parser::prattParse() { return prattParse(0); }
+
+ExprNode Parser::parseExpr() {
+  return prattParse(0);
+
+  // auto Term = parseTerm();
+
+  // // if (!Term) {
+  // //   reset();
+  // //   return nullptr;
+  // // }
+
+  // auto ExprP = parseExprP();
+  // return std::make_shared<ExprNode>(std::move(Term), std::move(ExprP));
 };
 
 std::shared_ptr<AssignNode> Parser::parseAssign() {
@@ -250,10 +312,10 @@ std::shared_ptr<AssignNode> Parser::parseAssign() {
 
   auto Expr = parseExpr();
 
-  if (!Expr) {
-    reset();
-    return nullptr;
-  }
+  // if (!Expr) {
+  //   reset();
+  //   return nullptr;
+  // }
 
   expect(";");
 

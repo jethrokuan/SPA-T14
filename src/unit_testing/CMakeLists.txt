@@ -6,8 +6,9 @@ set(srcs
   src/TestQueryTokenizer.cpp
   src/TestQueryValidator.cpp
   src/TestQuoteIdent.cpp
-  src/TestSimpleLexer.cpp
-  src/TestSimpleParser.cpp
+  src/simple_source/TestSimpleLexer.cpp
+  src/simple_source/TestExprParser.cpp
+  src/simple_source/TestSimpleParser.cpp
   src/TestSuchThat.cpp
   src/TestSynonym.cpp
   )

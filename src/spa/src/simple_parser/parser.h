@@ -190,7 +190,12 @@ class Parser {
   /*!
     expr: term expr'
    */
-  std::shared_ptr<ExprNode> parseExpr();
+  ExprNode nud(Token* t);
+  int lbp(Token* t);
+  ExprNode led(Token* t, ExprNode left);
+  ExprNode prattParse();
+  ExprNode prattParse(int rbp);
+  ExprNode parseExpr();
 
   //! Parses a rel_expr expression.
   /*!

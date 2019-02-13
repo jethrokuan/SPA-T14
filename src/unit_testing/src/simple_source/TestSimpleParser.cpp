@@ -23,10 +23,8 @@ TEST_CASE ("Test Parser works") {
   std::vector<StmtNode> stmtList;
 
   // i = 5;
-  auto assign = std::make_shared<AssignNode>(
-      make_shared<VariableNode>("i"),
-      make_shared<ExprNode>(
-          make_shared<TermNode>(make_shared<NumberNode>("5"))));
+  auto assign = std::make_shared<AssignNode>(make_shared<VariableNode>("i"),
+                                             make_shared<NumberNode>("5"));
 
   // while (i==5) {
   //   print i;

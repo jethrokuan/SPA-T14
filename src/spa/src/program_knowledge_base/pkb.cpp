@@ -192,46 +192,19 @@ void PKB::setUsesRelations(const std::shared_ptr<AssignNode> node) {
 void PKB::setUsesRelations(const std::shared_ptr<ReadNode>) {}
 
 //
-
-void PKB::setUsesRelationsH(std::shared_ptr<ExprNode> node,
+void PKB::setUsesRelationsH(const ExprNode node,
                             std::shared_ptr<Node> parent_node) {
-  if (node == nullptr) {
-    return;
-  }
-  setUsesRelationsH(node->ExprP, parent_node);
-  setUsesRelationsH(node->Term, parent_node);
-}
-
-void PKB::setUsesRelationsH(const std::shared_ptr<ExprPNode> node,
-                            const std::shared_ptr<Node> parent_node) {
-  if (node == nullptr) {
-    return;
-  }
-  setUsesRelationsH(node->ExprP, parent_node);
-  setUsesRelationsH(node->Term, parent_node);
-}
-
-void PKB::setUsesRelationsH(const std::shared_ptr<TermNode> node,
-                            const std::shared_ptr<Node> parent_node) {
-  setUsesRelationsH(node->TermP, parent_node);
-  setUsesRelationsH(node->Factor, parent_node);
-}
-
-void PKB::setUsesRelationsH(const std::shared_ptr<TermPNode> node,
-                            const std::shared_ptr<Node> parent_node) {
-  if (node == nullptr) {
-    return;
-  }
-  setUsesRelationsH(node->TermP, parent_node);
-  setUsesRelationsH(node->Factor, parent_node);
-}
-
-void PKB::setUsesRelationsH(const FactorNode node,
-                            const std::shared_ptr<Node> parent_node) {
   std::visit(
       [this, parent_node](const auto &n) { setUsesRelationsH(n, parent_node); },
       node);
 }
+
+// void PKB::setUsesRelationsH(const FactorNode node,
+//                             const std::shared_ptr<Node> parent_node) {
+//   std::visit(
+//       [this, parent_node](const auto &n) { setUsesRelationsH(n, parent_node);
+//       }, node);
+// }
 
 void PKB::setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
                             const std::shared_ptr<Node> parent_node) {

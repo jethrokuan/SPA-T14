@@ -11,6 +11,7 @@
 #include <memory>
 
 using namespace Simple;
+using namespace KB;
 
 // TODO split up test cases into follows parent uses modifies
 TEST_CASE ("Test PKB works") {
@@ -23,7 +24,7 @@ TEST_CASE ("Test PKB works") {
   Simple::Parser parser = Simple::Parser(lexer.tokens);
   auto proc = parser.parse();
 
-  PKB pkb = PKB(proc);
+  KB::PKB pkb = KB::PKB(proc);
 
   // using temp test method
   // TODO deprecate and update test cases

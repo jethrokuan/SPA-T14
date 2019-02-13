@@ -1,6 +1,7 @@
-#include "query_evaluator/pql/util.h"
+#include "utils/utils.h"
 
-namespace QE {
+namespace Utils {
+
 bool has_only_digits(const std::string s) {
   return s.find_first_not_of("0123456789") == std::string::npos;
 }
@@ -19,4 +20,4 @@ std::string& trim(std::string& str, const std::string& chars) {
   return ltrim(rtrim(str, chars), chars);
 }
 
-}  // namespace QE
+}  // namespace Utils

@@ -1,6 +1,7 @@
 #include "query_evaluator/pql/factor.h"
-#include "query_evaluator/pql/util.h"
+#include "utils/utils.h"
 
+using namespace Utils;
 using namespace QE;
 
 std::optional<DoubleUnderscoreFactor> DoubleUnderscoreFactor::construct(

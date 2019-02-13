@@ -4,7 +4,9 @@
 
 #include "query_evaluator/pql/relation.h"
 #include "query_evaluator/pql/stmtentref.h"
-#include "query_evaluator/pql/util.h"
+#include "utils/utils.h"
+
+using namespace Utils;
 
 namespace QE {
 

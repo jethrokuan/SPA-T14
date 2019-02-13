@@ -6,7 +6,9 @@
 #include "query_evaluator/pql/stmtentref.h"
 #include "query_evaluator/pql/synonym.h"
 #include "query_evaluator/pql/underscore.h"
-#include "query_evaluator/pql/util.h"
+#include "utils/utils.h"
+
+using namespace Utils;
 
 namespace QE {
 //! An ExprSpec term in PQL can be either a DUF or just an Underscore

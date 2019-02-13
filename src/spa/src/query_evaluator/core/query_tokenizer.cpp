@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 #include "query_evaluator/core/exceptions.h"
-#include "query_evaluator/pql/util.h"
+#include "utils/utils.h"
 
 using namespace QE;
+using namespace Utils;
 
 // Define static members that need it
 const std::string QueryTokenizerTokens::QUERY_TOKENIZER_TOKEN_DELIMITER = "|";

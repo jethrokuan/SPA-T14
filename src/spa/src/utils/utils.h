@@ -1,11 +1,30 @@
 #pragma once
-#include <iostream>
 #include <map>
 #include <string>
+#include <unordered_map>
 #include <variant>
+#include <vector>
 
-namespace QE {
-//! Utility templates for streaming nested variants
+namespace Utils {
+struct pair_hash {
+ public:
+  inline std::size_t operator()(
+      const std::pair<std::string, std::string>& v) const {
+    std::hash<std::string> hash_str;
+    size_t hash_val = 0;
+    hash_val = hash_str(v.first) + 1;
+    hash_val = hash_val ^ (hash_val >> 6);
+    hash_val = hash_val * 31;
+    hash_val = hash_val ^ (hash_val << 2);
+    hash_val = hash_val + hash_str(v.second) + 1;
+    hash_val = hash_val ^ (hash_val >> 7);
+    hash_val = hash_val * 29;
+    hash_val = hash_val ^ (hash_val << 1);
+
+    return hash_val;
+  }
+};
+
 template <class T>
 struct streamer {
   const T& val;
@@ -40,5 +59,4 @@ bool has_only_digits(const std::string);
 std::string& ltrim(std::string&, const std::string& chars = "\t ");
 std::string& rtrim(std::string&, const std::string& chars = "\t ");
 std::string& trim(std::string&, const std::string& chars = "\t ");
-
-}  // namespace QE
+}  // namespace Utils

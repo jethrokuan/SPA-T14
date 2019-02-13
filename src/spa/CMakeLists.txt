@@ -6,6 +6,14 @@ set(headers ${headers}
   src/program_knowledge_base/pkb.h
   )
 
+# PKB files
+set(srcs ${srcs}
+  src/utils/utils.cpp
+  )
+set(headers ${headers}
+  src/utils/utils.h
+  )
+
 # SIMPLE parser files
 set(srcs ${srcs}
   src/structs/node.cpp
@@ -28,7 +36,6 @@ set(srcs ${srcs}
   src/query_evaluator/pql/relation.cpp
   src/query_evaluator/pql/suchthat.cpp
   src/query_evaluator/pql/synonym.cpp
-  src/query_evaluator/pql/util.cpp
  )
 set(headers ${headers}
   src/query_evaluator/query_evaluator.h
@@ -47,7 +54,6 @@ set(headers ${headers}
   src/query_evaluator/pql/suchthat.h
   src/query_evaluator/pql/synonym.h
   src/query_evaluator/pql/underscore.h
-  src/query_evaluator/pql/util.h
  )
   
 # SIMPLE parser files

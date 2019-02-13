@@ -4,7 +4,9 @@
 
 #include "query_evaluator/pql/relation.h"
 #include "query_evaluator/pql/stmtentref.h"
-#include "query_evaluator/pql/util.h"
+#include "utils/utils.h"
+
+using namespace Utils;
 
 namespace QE {
 //! \brief Part of Query that represents a "such that" clause (e.g. such that

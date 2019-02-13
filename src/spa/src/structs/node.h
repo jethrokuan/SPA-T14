@@ -17,15 +17,16 @@ class NumberNode;
 class VariableNode;
 class ReadNode;
 class PrintNode;
-class FactorNode;
 class ProcedureNode;
-class TermNode;
-class TermPNode;
-class ExprNode;
-class ExprPNode;
+class BinOpNode;
+using Expr =
+    std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
+                 std::shared_ptr<BinOpNode>>;
 class AssignNode;
-class FactorNode;
-using RelFactorNode = FactorNode;
+using Factor =
+    std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
+                 std::shared_ptr<BinOpNode>>;
+using RelFactor = Factor;
 class RelExprNode;
 class CondExprNode;
 class WhileNode;
@@ -44,6 +45,7 @@ class Node {
   virtual bool operator!=(const Node& other) const {
     return !operator==(other);
   };
+  virtual std::string to_str() = 0;
 };
 
 //! AST Node representing a Statement List
@@ -52,22 +54,25 @@ class StmtListNode : public Node {
   std::vector<StmtNode> StmtList;
   StmtListNode(std::vector<StmtNode> stmtList);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a Number (const_value)
 class NumberNode : public Node {
  public:
   std::string Val;
-  NumberNode(const std::string& val);
+  NumberNode(const std::string val);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a Variable
 class VariableNode : public Node {
  public:
   std::string Name;
-  VariableNode(const std::string& name);
+  VariableNode(const std::string name);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a Read statement
@@ -76,6 +81,7 @@ class ReadNode : public Node {
   std::shared_ptr<VariableNode> Var;
   ReadNode(std::shared_ptr<VariableNode> var);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a Print statement
@@ -84,6 +90,7 @@ class PrintNode : public Node {
   std::shared_ptr<VariableNode> Var;
   PrintNode(std::shared_ptr<VariableNode> var);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a procedure
@@ -91,93 +98,40 @@ class ProcedureNode : public Node {
  public:
   std::string Name;
   std::shared_ptr<StmtListNode> StmtList;
-  ProcedureNode(const std::string& name,
-                std::shared_ptr<StmtListNode> stmtList);
+  ProcedureNode(const std::string name, std::shared_ptr<StmtListNode> stmtList);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
-//! AST Node representing term'
-class TermPNode : public Node {
+class BinOpNode : public Node {
  public:
-  std::shared_ptr<FactorNode> Factor;
+  Expr Left;
+  Expr Right;
   std::string Op;
-  std::shared_ptr<TermPNode> TermP;
-  TermPNode(std::shared_ptr<FactorNode> factor, std::string& op,
-            std::shared_ptr<TermPNode> termP);
+  BinOpNode(Expr left, Expr right, std::string op);
   bool operator==(const Node& other) const;
-};
-
-//! AST Node representing term
-class TermNode : public Node {
- public:
-  std::shared_ptr<FactorNode> Factor;
-  std::shared_ptr<TermPNode> TermP;
-
-  TermNode(std::shared_ptr<FactorNode> factor,
-           std::shared_ptr<TermPNode> termP);
-  TermNode(std::shared_ptr<FactorNode> factor);
-  bool operator==(const Node& other) const;
-};
-
-//! AST Node representing expr'
-class ExprPNode : public Node {
- public:
-  std::shared_ptr<TermNode> Term;
-  std::string Op;
-  std::shared_ptr<ExprPNode> ExprP;
-
-  ExprPNode(std::shared_ptr<TermNode> term, std::string& op);
-  ExprPNode(std::shared_ptr<TermNode> term, std::string& op,
-            std::shared_ptr<ExprPNode> exprP);
-  bool operator==(const Node& other) const;
-};
-
-//! AST Node representing expr
-class ExprNode : public Node {
- public:
-  std::shared_ptr<TermNode> Term;
-  std::shared_ptr<ExprPNode> ExprP;
-
-  ExprNode(std::shared_ptr<TermNode> term, std::shared_ptr<ExprPNode> exprP);
-  ExprNode(std::shared_ptr<TermNode> term);
-  bool operator==(const Node& other) const;
-};
-
-//! AST Node representing a factor
-class FactorNode : public Node {
- public:
-  union {
-    std::shared_ptr<VariableNode> Var;
-    std::shared_ptr<NumberNode> Val;
-    std::shared_ptr<ExprNode> Expr;
-  };
-  enum class UnionType { VAR, VAL, EXPR, NONE } type = UnionType::NONE;
-  FactorNode();
-  FactorNode(std::shared_ptr<VariableNode> var);
-  FactorNode(std::shared_ptr<NumberNode> val);
-  FactorNode(std::shared_ptr<ExprNode> expr);
-  ~FactorNode();
-  bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing an Assign statement
 class AssignNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
-  std::shared_ptr<ExprNode> Expr;
-  AssignNode(std::shared_ptr<VariableNode> var, std::shared_ptr<ExprNode> expr);
+  Expr Exp;
+  AssignNode(std::shared_ptr<VariableNode> var, Expr exp);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a RelExpr
 class RelExprNode : public Node {
  public:
-  std::shared_ptr<RelFactorNode> LHS;
+  RelFactor LHS;
   std::string Op;
-  std::shared_ptr<RelFactorNode> RHS;
-  RelExprNode(std::shared_ptr<RelFactorNode> lhs, std::string& op,
-              std::shared_ptr<RelFactorNode> rhs);
+  RelFactor RHS;
+  RelExprNode(RelFactor lhs, std::string op, RelFactor rhs);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a CondExpr
@@ -193,9 +147,10 @@ class CondExprNode : public Node {
   // ! ( cond_expr )
   CondExprNode(std::shared_ptr<CondExprNode> condLHS);
   // ( cond_expr ) && ( cond_expr )
-  CondExprNode(std::shared_ptr<CondExprNode> condLHS, std::string& op,
+  CondExprNode(std::shared_ptr<CondExprNode> condLHS, std::string op,
                std::shared_ptr<CondExprNode> condRHS);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a While statement
@@ -207,6 +162,7 @@ class WhileNode : public Node {
   WhileNode(std::shared_ptr<CondExprNode> condExpr,
             std::shared_ptr<StmtListNode> stmtList);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };
 
 //! AST Node representing a If statement
@@ -220,4 +176,5 @@ class IfNode : public Node {
          std::shared_ptr<StmtListNode> stmtListThen,
          std::shared_ptr<StmtListNode> stmtListElse);
   bool operator==(const Node& other) const;
+  std::string to_str();
 };

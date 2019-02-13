@@ -52,17 +52,11 @@ namespace Simple {
  *     rel_factor: var_name
  *       | const_value
  *       | expr
- *     expr: expr '+' term | expr '-' term | term
- *     term: term '*' factor | term '/' factor | term '%' factor | factor
+ *     expr: const_value | variable | bin_op
+ *     bin_op: expr '+' expr | expr '-' expr | expr '*' expr
+ *       | expr '/' expr | expr '%' expr
  *     factor: var_name | const_value | '(' expr ')'
  *
- * We do left-recursion elimination on expr and term.
- *
- *     expr: term expr'
- *     expr': '-' term expr' | '+' term expr' | nullptr
- *
- *     term: factor term'
- *     term': '*' factor term' | '/' factor term' | '%' factor term' | nullptr
  */
 class Parser {
  private:
@@ -160,37 +154,24 @@ class Parser {
   /*!
     factor: var_name | const_value | '(' expr ')'
    */
-  std::shared_ptr<FactorNode> parseFactor();
+  Factor parseFactor();
 
   //! Parses a Rel Factor expression.
   /*!
     rel_factor: var_name | const_value | expr
    */
-  std::shared_ptr<RelFactorNode> parseRelFactor();
-
-  //! Parses a term' expression.
-  /*!
-    term': '*' factor term' | '/' factor term' | '%' factor term' | nullptr
-   */
-  std::shared_ptr<TermPNode> parseTermP();
-
-  //! Parses a term expression.
-  /*!
-    term: factor term'
-   */
-  std::shared_ptr<TermNode> parseTerm();
-
-  //! Parses a expr' expression.
-  /*!
-    expr': '-' term expr' | '+' term expr' | nullptr
-   */
-  std::shared_ptr<ExprPNode> parseExprP();
+  RelFactor parseRelFactor();
 
   //! Parses a expr expression.
   /*!
     expr: term expr'
    */
-  std::shared_ptr<ExprNode> parseExpr();
+  Expr nud(Token* t);
+  int lbp(Token* t);
+  Expr led(Token* t, Expr left);
+  Expr prattParse();
+  Expr prattParse(int rbp);
+  Expr parseExpr();
 
   //! Parses a rel_expr expression.
   /*!

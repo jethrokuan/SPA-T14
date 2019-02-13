@@ -1,0 +1,5 @@
+procedure main {
+  while (i > (2 + 5) * j)  {
+    i = i + 1;
+  }
+}

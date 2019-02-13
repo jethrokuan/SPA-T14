@@ -45,7 +45,8 @@ TEST_CASE ("Test Lex Assign Statement") {
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new PunctToken("{"),          new SymbolToken("i"),
-      new PunctToken("="),          new NumberToken("5"),
+      new PunctToken("="),          new NumberToken("2"),
+      new PunctToken("+"),          new NumberToken("5"),
       new PunctToken(";"),          new PunctToken("}"),
       new EndOfFileToken(),
   };

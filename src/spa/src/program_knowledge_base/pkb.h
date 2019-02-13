@@ -66,21 +66,16 @@ class PKB {
   void setUsesRelations(const std::shared_ptr<PrintNode> node);
   void setUsesRelations(const std::shared_ptr<AssignNode> node);
   void setUsesRelations(const std::shared_ptr<ReadNode> node);
-  void setUsesRelationsH(const std::shared_ptr<ExprNode> node,
-                         const std::shared_ptr<Node> parent_node);
-  void setUsesRelationsH(const std::shared_ptr<ExprPNode> node,
-                         const std::shared_ptr<Node> parent_node);
-  void setUsesRelationsH(const std::shared_ptr<TermNode> node,
-                         const std::shared_ptr<Node> parent_node);
-  void setUsesRelationsH(const std::shared_ptr<TermPNode> node,
-                         const std::shared_ptr<Node> parent_node);
-  void setUsesRelationsH(const std::shared_ptr<FactorNode> node,
-                         const std::shared_ptr<Node> parent_node);
+  void setUsesRelationsH(Expr node, const std::shared_ptr<Node> parent_node);
+  // void setUsesRelationsH(Factor node,
+  //                        const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
                          const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<RelExprNode> node,
                          const std::shared_ptr<Node> parent_node);
-  // void setUsesRelationsH(const std::shared_ptr<RelFactorNode> node,
+  void setUsesRelationsH(std::shared_ptr<NumberNode>,
+                         const std::shared_ptr<Node>);
+  // void setUsesRelationsH(const std::shared_ptr<RelFactor> node,
   //                        const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<VariableNode> node,
                          const std::shared_ptr<Node> parent_node);

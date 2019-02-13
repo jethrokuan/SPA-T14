@@ -216,7 +216,7 @@ void PKB::setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
   setUsesRelationsH(node->CondRHS, parent_node);
 }
 
-void PKB::setUsesRelationsH(std::shared_ptr<RelExprNode> node,
+void PKB::setUsesRelationsH(const std::shared_ptr<RelExprNode> node,
                             const std::shared_ptr<Node> parent_node) {
   if (node == nullptr) {
     return;

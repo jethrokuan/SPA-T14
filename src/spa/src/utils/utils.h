@@ -24,9 +24,6 @@ struct pair_hash {
     return hash_val;
   }
 };
-void addToVectorMap(
-    std::unordered_map<std::string, std::vector<std::string>> umap,
-    std::string index, std::string data);
 
 template <class T>
 struct streamer {

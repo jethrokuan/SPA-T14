@@ -105,6 +105,9 @@ class PKB {
   std::shared_ptr<Node> getNodeFromLineNumber(
       std::vector<std::shared_ptr<Node>> ls, int line_number);
   ProcedureName getNodeValue(std::shared_ptr<Node> node);
+  void addToVectorMap(
+      std::unordered_map<std::string, std::vector<std::string>> umap,
+      std::string index, std::string data);
 
   // bool lineFollows(int a, int b); // currently testFollows make friend
 

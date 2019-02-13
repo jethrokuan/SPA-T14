@@ -88,7 +88,7 @@ std::string ProcedureNode::to_str() {
   return acc;
 }
 
-BinOpNode::BinOpNode(ExprNode left, ExprNode right, std::string op)
+BinOpNode::BinOpNode(Expr left, Expr right, std::string op)
     : Left(std::move(left)), Right(std::move(right)), Op(op){};
 bool BinOpNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const BinOpNode*>(&other);
@@ -107,18 +107,18 @@ std::string BinOpNode::to_str() {
   return acc;
 }
 
-AssignNode::AssignNode(std::shared_ptr<VariableNode> var, ExprNode expr)
-    : Var(std::move(var)), Expr(expr){};
+AssignNode::AssignNode(std::shared_ptr<VariableNode> var, Expr exp)
+    : Var(std::move(var)), Exp(exp){};
 bool AssignNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const AssignNode*>(&other);
   return casted_other != 0 && *this->Var == *casted_other->Var &&
-         std::visit([](auto& t, auto& o) { return *t == *o; }, this->Expr,
-                    casted_other->Expr);
+         std::visit([](auto& t, auto& o) { return *t == *o; }, this->Exp,
+                    casted_other->Exp);
 };
 std::string AssignNode::to_str() {
   std::string acc = "(AssignNode ";
   acc += this->Var->to_str() + " ";
-  acc += std::visit([](auto& s) { return s->to_str(); }, this->Expr);
+  acc += std::visit([](auto& s) { return s->to_str(); }, this->Exp);
   acc += ")";
   return acc;
 }

@@ -166,12 +166,12 @@ class Parser {
   /*!
     expr: term expr'
    */
-  ExprNode nud(Token* t);
+  Expr nud(Token* t);
   int lbp(Token* t);
-  ExprNode led(Token* t, ExprNode left);
-  ExprNode prattParse();
-  ExprNode prattParse(int rbp);
-  ExprNode parseExpr();
+  Expr led(Token* t, Expr left);
+  Expr prattParse();
+  Expr prattParse(int rbp);
+  Expr parseExpr();
 
   //! Parses a rel_expr expression.
   /*!

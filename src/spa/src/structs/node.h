@@ -19,7 +19,7 @@ class ReadNode;
 class PrintNode;
 class ProcedureNode;
 class BinOpNode;
-using ExprNode =
+using Expr =
     std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
                  std::shared_ptr<BinOpNode>>;
 class AssignNode;
@@ -105,10 +105,10 @@ class ProcedureNode : public Node {
 
 class BinOpNode : public Node {
  public:
-  ExprNode Left;
-  ExprNode Right;
+  Expr Left;
+  Expr Right;
   std::string Op;
-  BinOpNode(ExprNode left, ExprNode right, std::string op);
+  BinOpNode(Expr left, Expr right, std::string op);
   bool operator==(const Node& other) const;
   std::string to_str();
 };
@@ -117,8 +117,8 @@ class BinOpNode : public Node {
 class AssignNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
-  ExprNode Expr;
-  AssignNode(std::shared_ptr<VariableNode> var, ExprNode expr);
+  Expr Exp;
+  AssignNode(std::shared_ptr<VariableNode> var, Expr exp);
   bool operator==(const Node& other) const;
   std::string to_str();
 };

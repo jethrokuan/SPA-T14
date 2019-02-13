@@ -186,13 +186,13 @@ void PKB::setUsesRelations(const std::shared_ptr<PrintNode> node) {
 }
 
 void PKB::setUsesRelations(const std::shared_ptr<AssignNode> node) {
-  setUsesRelationsH(node->Expr, node);
+  setUsesRelationsH(node->Exp, node);
 }
 
 void PKB::setUsesRelations(const std::shared_ptr<ReadNode>) {}
 
 //
-void PKB::setUsesRelationsH(const ExprNode node,
+void PKB::setUsesRelationsH(const Expr node,
                             std::shared_ptr<Node> parent_node) {
   std::visit(
       [this, parent_node](const auto &n) { setUsesRelationsH(n, parent_node); },

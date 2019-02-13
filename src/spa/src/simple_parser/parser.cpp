@@ -180,13 +180,13 @@ Factor Parser::parseFactor() {
 };
 
 // TODO: Refactor
-ExprNode Parser::nud(Token* t) {
+Expr Parser::nud(Token* t) {
   if (t->T == TokenType::NUMBER) {
     return std::make_shared<NumberNode>(t->Val);
   } else if (t->T == TokenType::SYMBOL) {
     return std::make_shared<VariableNode>(t->Val);
   } else if (t->Val == "(") {
-    ExprNode expr = prattParse();
+    Expr expr = prattParse();
     expect(")");
     return expr;
   } else {
@@ -209,21 +209,21 @@ int Parser::lbp(Token* t) {
 }
 
 // TODO: Refactor
-ExprNode Parser::led(Token* t, ExprNode left) {
+Expr Parser::led(Token* t, Expr left) {
   if (t->Val.compare("+") == 0) {
-    ExprNode right = prattParse(10);
+    Expr right = prattParse(10);
     return std::make_shared<BinOpNode>(left, right, "+");
   } else if (t->Val.compare("-") == 0) {
-    ExprNode right = prattParse(10);
+    Expr right = prattParse(10);
     return std::make_shared<BinOpNode>(left, right, "-");
   } else if (t->Val.compare("*") == 0) {
-    ExprNode right = prattParse(20);
+    Expr right = prattParse(20);
     return std::make_shared<BinOpNode>(left, right, "*");
   } else if (t->Val.compare("/") == 0) {
-    ExprNode right = prattParse(20);
+    Expr right = prattParse(20);
     return std::make_shared<BinOpNode>(left, right, "/");
   } else if (t->Val.compare("%") == 0) {
-    ExprNode right = prattParse(20);
+    Expr right = prattParse(20);
     return std::make_shared<BinOpNode>(left, right, "%");
   } else {
     // TODO: Handle error
@@ -234,9 +234,9 @@ ExprNode Parser::led(Token* t, ExprNode left) {
   // return left;
 }
 
-ExprNode Parser::prattParse(int rbp) {
+Expr Parser::prattParse(int rbp) {
   Token* t = advance();
-  ExprNode left = nud(t);
+  Expr left = nud(t);
 
   while (rbp < lbp(peek())) {
     t = advance();
@@ -246,9 +246,9 @@ ExprNode Parser::prattParse(int rbp) {
   return left;
 }
 
-ExprNode Parser::prattParse() { return prattParse(0); }
+Expr Parser::prattParse() { return prattParse(0); }
 
-ExprNode Parser::parseExpr() { return prattParse(); };
+Expr Parser::parseExpr() { return prattParse(); };
 
 std::shared_ptr<AssignNode> Parser::parseAssign() {
   save_loc();

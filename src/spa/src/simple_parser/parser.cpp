@@ -236,12 +236,10 @@ ExprNode Parser::led(Token* t, ExprNode left) {
 
 ExprNode Parser::prattParse(int rbp) {
   Token* t = advance();
-  Token* token = peek();
   ExprNode left = nud(t);
 
-  while (rbp < lbp(token)) {
+  while (rbp < lbp(peek())) {
     t = advance();
-    token = peek();
     left = led(t, left);
   }
 

@@ -117,7 +117,7 @@ bool AssignNode::operator==(const Node& other) const {
 };
 std::string AssignNode::to_str() {
   std::string acc = "(AssignNode ";
-  acc += this->Var->to_str();
+  acc += this->Var->to_str() + " ";
   acc += std::visit([](auto& s) { return s->to_str(); }, this->Expr);
   acc += ")";
   return acc;

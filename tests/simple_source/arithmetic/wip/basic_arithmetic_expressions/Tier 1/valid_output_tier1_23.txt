@@ -1,3 +1,0 @@
-procedure main {
-  64*9;
-}

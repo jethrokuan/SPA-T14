@@ -1,3 +1,0 @@
-procedure main {
-  760*46/6*15;
-}

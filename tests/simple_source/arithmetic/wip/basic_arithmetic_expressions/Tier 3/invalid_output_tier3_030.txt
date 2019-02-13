@@ -1,3 +1,0 @@
-procedure main {
-  463+94/31+7;
-}

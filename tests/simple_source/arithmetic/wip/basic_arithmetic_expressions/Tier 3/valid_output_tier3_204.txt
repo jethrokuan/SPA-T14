@@ -1,3 +1,0 @@
-procedure main {
-  567*61+83%9;
-}

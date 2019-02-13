@@ -1,3 +1,0 @@
-procedure main {
-  713%27*69*9;
-}

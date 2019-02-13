@@ -1,3 +1,0 @@
-procedure main {
-  632/9+15/22;
-}

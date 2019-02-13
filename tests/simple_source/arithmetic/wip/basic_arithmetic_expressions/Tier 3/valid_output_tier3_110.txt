@@ -1,3 +1,0 @@
-procedure main {
-  815-51-67+3;
-}

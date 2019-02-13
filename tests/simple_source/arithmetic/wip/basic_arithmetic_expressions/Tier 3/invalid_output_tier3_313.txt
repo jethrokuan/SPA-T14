@@ -1,3 +1,0 @@
-procedure main {
-  936/19-30/1;
-}

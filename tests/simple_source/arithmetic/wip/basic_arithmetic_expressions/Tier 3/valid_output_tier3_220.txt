@@ -1,3 +1,0 @@
-procedure main {
-  522*88*8+17;
-}

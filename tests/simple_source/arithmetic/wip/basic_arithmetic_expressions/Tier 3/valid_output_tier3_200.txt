@@ -1,3 +1,0 @@
-procedure main {
-  20*90+44+49;
-}

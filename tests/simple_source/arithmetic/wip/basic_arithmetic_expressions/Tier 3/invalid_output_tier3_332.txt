@@ -1,3 +1,0 @@
-procedure main {
-  970/20/97*1;
-}

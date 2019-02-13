@@ -1,0 +1,3 @@
+procedure main {
+  296/63+53*7;
+}

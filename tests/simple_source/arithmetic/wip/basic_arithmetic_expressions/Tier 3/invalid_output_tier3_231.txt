@@ -1,0 +1,3 @@
+procedure main {
+  943*84/79-3;
+}

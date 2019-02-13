@@ -1,0 +1,3 @@
+procedure main {
+  236/1%23;
+}

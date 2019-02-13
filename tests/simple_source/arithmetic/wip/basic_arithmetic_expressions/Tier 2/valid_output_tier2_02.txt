@@ -1,0 +1,3 @@
+procedure main {
+  77+49*21;
+}

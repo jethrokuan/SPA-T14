@@ -1,0 +1,3 @@
+procedure main {
+  996*20+47-8;
+}

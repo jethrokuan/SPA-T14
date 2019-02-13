@@ -1,0 +1,3 @@
+procedure main {
+  562+70%62%6;
+}

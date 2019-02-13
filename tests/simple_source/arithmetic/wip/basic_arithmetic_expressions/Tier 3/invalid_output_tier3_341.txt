@@ -1,0 +1,3 @@
+procedure main {
+  558/25%47-9;
+}

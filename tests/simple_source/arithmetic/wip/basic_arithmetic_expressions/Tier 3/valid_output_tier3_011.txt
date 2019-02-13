@@ -1,0 +1,3 @@
+procedure main {
+  884+21-79-5;
+}

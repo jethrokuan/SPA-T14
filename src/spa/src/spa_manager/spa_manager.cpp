@@ -30,9 +30,6 @@ void SPAManager::query(std::string& pql_query) {
   auto query = qe.makePqlQuery(pql_query);
   // Stub call - no result yet
   qm->makeQuery(query);
-
-  // Cleanup
-  delete query;
 }
 
 SPAManager::~SPAManager() {

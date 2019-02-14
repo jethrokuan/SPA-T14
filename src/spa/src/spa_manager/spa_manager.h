@@ -3,6 +3,8 @@
 #include "program_knowledge_base/pkb.h"
 #include "query_manager/query_manager.h"
 
+using namespace KB;
+
 class SPAManager {
  private:
   PKB* pkb;

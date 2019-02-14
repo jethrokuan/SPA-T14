@@ -3,6 +3,8 @@
 #include "program_knowledge_base/pkb.h"
 #include "query_evaluator/pql/pql.h"
 
+using namespace KB;
+
 class QueryManager {
  private:
   PKB* pkb;

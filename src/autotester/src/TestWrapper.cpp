@@ -23,15 +23,25 @@ void TestWrapper::parse(std::string filename) {
   // call your parser to do the parsing
   // ...rest of your code...
   std::ifstream input(filename);
-  spa_manager->loadSimpleSource(input);
+  try {
+    spa_manager->loadSimpleSource(input);
+    std::cout << "parsed " << filename << std::endl;
+  } catch (const std::runtime_error e) {
+    std::cout << e.what() << std::endl;
+    std::cout << "Failed to parse " << filename << std::endl;
+  }
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   // call your evaluator to evaluate the query here
   // ...code to evaluate query...
-  spa_manager->query(query);
-
+  try {
+    spa_manager->query(query);
+  } catch (const std::runtime_error e) {
+    std::cout << e.what() << std::endl;
+    std::cout << "Failed to parse query " << query << std::endl;
+  }
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
 }

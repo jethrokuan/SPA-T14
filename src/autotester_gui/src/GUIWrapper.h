@@ -1,11 +1,16 @@
-#ifndef TESTWRAPPER_H
-#define TESTWRAPPER_H
+#ifndef GUIWRAPPER_H
+#define GUIWRAPPER_H
 
 #include <iostream>
 #include <list>
 #include <string>
 
+#include "spa_manager/spa_manager.h"
+
 class GUIWrapper {
+ private:
+  SPAManager* spa_manager;
+
  public:
   // default constructor
   GUIWrapper();

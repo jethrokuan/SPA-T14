@@ -10,6 +10,11 @@
 using namespace QE;
 
 Query* QueryPreprocessor::getQuery(std::string& pql_query_string) {
+  // If empty query - throw error
+  if (pql_query_string.empty()) {
+    throw PQLTokenizeException("Query string is empty.");
+  }
+
   // Tokenize the query string into a struct containing vector of strings
   auto query_tokenizer = QueryTokenizer();
   QueryTokenizerTokens query_tokens =

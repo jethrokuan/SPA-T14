@@ -14,6 +14,8 @@ class QueryValidator {
   void validatePatternVariableAsAssign(const Query&);
   //! Checks neither Modify nor Uses has _ as the first argument (ambiguous)
   void validateModifyUsesNoFirstArgUnderscore(const Query&);
+  //! Checks that all the synonyms in the such_that clause are declared
+  void validateSuchThatSynonyms(const Query&);
 
  public:
   //! \brief Checks the semantics in the Query, throws PQLValidationException if

@@ -155,3 +155,22 @@ TEST_CASE ("Test such that no suchthat Validate") {
 
   REQUIRE_NOTHROW(qv.validateQuery(q));
 }
+
+TEST_CASE ("Test such that with not-found synonym firstarg Validate") {
+  // procedure q; Select p pattern p (_,_)
+  auto decl = new std::vector<Declaration>{
+      Declaration(DesignEntity::ASSIGN, Synonym::construct("a").value())};
+  auto select =
+      new Declaration(DesignEntity::ASSIGN, Synonym::construct("a").value());
+  StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a1").value());
+  StmtOrEntRef a2 = QE::EntRef(QE::Underscore());
+  auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
+  Query q = Query();
+  q.declarations = decl;
+  q.selected_declaration = select;
+  q.such_that = suchthat;
+
+  QueryValidator qv = QueryValidator();
+
+  REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
+}

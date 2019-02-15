@@ -17,6 +17,7 @@ This project is **incompatible** with GCC8
         - `CC=clang CXX=clang++ ...`
         - Combining this with the command above:  
             - `CC=clang CXX=clang++ cmake -DCMAKE_PREFIX_PATH=/opt/Qt5.12.0/5.12.0/gcc_64/lib/cmake .`
+    - To compile `autotester_gui`, add the flag `-DBUILD_GUI=ON` to your `cmake` invocation.
 4. Run `make` in the build directory. The build can be parallelized with `make -j<num>`, e.g. `make -j4`.
 
 ## Contributing Guidelines

@@ -1,7 +1,7 @@
 // TODO remove debug print statements and iostream
+#include "program_knowledge_base/pkb.h"
 #include <iostream>
 #include <stack>
-#include "program_knowledge_base/pkb.h"
 
 template <class... Ts>
 struct overload : Ts... {

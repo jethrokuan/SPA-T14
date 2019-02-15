@@ -7,6 +7,8 @@ if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
   message(FATAL_ERROR "In-source builds are forbidden.")
 endif()
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(CMAKE_CXX_FLAGS "-std=c++1z -Wall -Wextra -Wcast-qual -Wcast-align -Wstrict-aliasing -Wpointer-arith -Winit-self -Wshadow -Wswitch-enum -Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls -Wfloat-equal -Wundef -Wvla -Wdeclaration-after-statement -Wc++-compat")
 
 if (WIN32)
@@ -29,7 +31,9 @@ include_directories("${CMAKE_CURRENT_LIST_DIR}/lib")#include catch.hpp
 
 add_subdirectory(src/spa)
 add_subdirectory(src/autotester)
-# add_subdirectory(src/autotester_gui)
+if (BUILD_GUI)
+  add_subdirectory(src/autotester_gui)
+endif()
 add_subdirectory(src/unit_testing)
 add_subdirectory(src/integration_testing)
 

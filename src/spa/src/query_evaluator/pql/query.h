@@ -20,7 +20,6 @@ class Query {
 
   // -- Accessors and constructors --
 
-  Query(std::vector<Declaration>*, Declaration*);
   Query();
   ~Query();
 };

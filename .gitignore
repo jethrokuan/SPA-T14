@@ -1,15 +1,6 @@
 # Created by https://www.gitignore.io/api/cmake,c++
 # Edit at https://www.gitignore.io/?templates=cmake,c++
 
-# Ignore all
-*
-
-# Unignore all with extensions
-!*.*
-
-# Unignore all dirs
-!*/
-
 # Unignore Doxyfile
 !Doxyfile
 

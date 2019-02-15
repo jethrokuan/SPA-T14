@@ -2,16 +2,9 @@
 #include <string>
 #include <vector>
 #include "query_manager/query_manager.h"
+#include "utils/utils.h"
 
 using namespace QE;
-
-template <class... Ts>
-struct overload : Ts... {
-  using Ts::operator()...;
-};
-
-template <class... Ts>
-overload(Ts...)->overload<Ts...>;
 
 bool QueryManager::isBooleanSuchThat(SuchThat* such_that) {
   // Must be true from earlier query processing

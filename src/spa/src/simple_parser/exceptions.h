@@ -18,7 +18,6 @@ class SimpleLexException : public std::runtime_error {
   std::string msg;
 
  public:
-  SimpleLexException(const std::string& msg_ = "") : std::runtime_error(msg_) {}
   SimpleLexException(int lineno, int colno, char expectedChar,
                      char obtainedChar)
       : std::runtime_error(std::to_string(lineno) + ":" +
@@ -28,5 +27,9 @@ class SimpleLexException : public std::runtime_error {
       : std::runtime_error(std::to_string(lineno) + ":" +
                            std::to_string(colno) + " Unexpected token '" +
                            obtainedChar + "'"){};
+};
+class SimpleParseException : public std::runtime_error {
+ public:
+  SimpleParseException(const std::string& msg_) : std::runtime_error(msg_){};
 };
 }  // namespace Simple

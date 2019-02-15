@@ -33,11 +33,13 @@ class QueryTokenizer {
  private:
   const static char QUERY_DELIMITER;
   const static char SPACE_DELIMITER;
+  const static char COMMA_DELIMITER;
   const static std::string QUERY_SELECT;
   void setClauses(std::string&, QueryTokenizerTokens&);
   std::vector<std::string>* splitString(std::string, const char);
 
  public:
+  const static std::string DECLARATION_DUMMY_SEPARATOR;
   // Given a PQL query as a string, splits the string into tokens
   // Returns the list of tokens as in a combined result struct
   QueryTokenizerTokens getTokens(std::string);

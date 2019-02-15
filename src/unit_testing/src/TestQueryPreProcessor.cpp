@@ -65,6 +65,78 @@ TEST_CASE ("Test one entity one select query Preprocess") {
   }
 }
 
+TEST_CASE ("Test multi-declaration one select query Preprocess") {
+  SECTION ("Test two assign one select query") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign a, a1;Select a";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{
+                Declaration(DesignEntity::ASSIGN,
+                            QE::Synonym::construct("a").value()),
+                Declaration(DesignEntity::ASSIGN,
+                            QE::Synonym::construct("a1").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+  SECTION ("Test two assign compressed whitespace one select query") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign a,a1;Select a";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{
+                Declaration(DesignEntity::ASSIGN,
+                            QE::Synonym::construct("a").value()),
+                Declaration(DesignEntity::ASSIGN,
+                            QE::Synonym::construct("a1").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+  SECTION ("Test three assign one select query") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "assign a, a1, a2;Select a";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{
+                Declaration(DesignEntity::ASSIGN,
+                            QE::Synonym::construct("a").value()),
+                Declaration(DesignEntity::ASSIGN,
+                            QE::Synonym::construct("a1").value()),
+                Declaration(DesignEntity::ASSIGN,
+                            QE::Synonym::construct("a2").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+
+  SECTION ("Test three stmt one select query") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input = "stmt a, a1, a2;Select a";
+    auto query = qp.getQuery(input);
+    REQUIRE(*(query->declarations) ==
+            std::vector<Declaration>{
+                Declaration(DesignEntity::STMT,
+                            QE::Synonym::construct("a").value()),
+                Declaration(DesignEntity::STMT,
+                            QE::Synonym::construct("a1").value()),
+                Declaration(DesignEntity::STMT,
+                            QE::Synonym::construct("a2").value())});
+    REQUIRE(
+        *(query->selected_declaration) ==
+        Declaration(DesignEntity::STMT, QE::Synonym::construct("a").value()));
+    REQUIRE(query->such_that == nullptr);
+    REQUIRE(query->pattern == nullptr);
+  }
+}
+
 TEST_CASE ("Test two assign one select query Preprocess") {
   auto qp = QE::QueryPreprocessor();
   std::string input = "assign p;stmt s;Select p";

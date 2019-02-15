@@ -37,6 +37,7 @@ set(headers ${headers}
 # Query Manager files
 set(srcs ${srcs}
   src/query_manager/query_manager.cpp
+  src/query_manager/query_manager_suchthat.cpp
   )
 set(headers ${headers}
   src/query_manager/query_manager.h

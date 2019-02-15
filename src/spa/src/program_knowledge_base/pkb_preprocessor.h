@@ -1,45 +1,30 @@
 #pragma once
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
+#include "program_knowledge_base/pkb_storage.h"
 #include "structs/node.h"
 #include "utils/utils.h"
 
-using namespace Utils;
+namespace PKB {
 
-namespace KB {
-
-// using string for line numbers since it's easier to just handle a single type
-// procedure and variables names also can't begin with a number anyway
-// in particular helps with storing both line numbers and procedure names
-// for parent relationships
-using LineNumber = std::string;
-using VariableName = std::string;
-using ProcedureName = std::string;
-using Parent = std::string;  // ProcedureName or LineNumber
-
-class PKB {
+class PKBPreprocessor {
  private:
-  std::shared_ptr<ProcedureNode> ast;
-  // TODO deprecate this and use hash map
-  std::vector<std::shared_ptr<Node>> lines;
+  std::shared_ptr<PKBStorage> storage;
 
-  std::unordered_set<std::pair<LineNumber, LineNumber>, pair_hash> follows_set;
-  std::unordered_map<LineNumber, std::vector<LineNumber>> follows_map;
-  std::unordered_set<std::pair<Parent, LineNumber>, pair_hash> parent_set;
-  std::unordered_map<Parent, LineNumber> parent_map;
-  std::unordered_set<std::pair<LineNumber, VariableName>, pair_hash> uses_set;
-  std::unordered_map<LineNumber, std::vector<VariableName>> uses_map;
-  std::unordered_set<std::pair<LineNumber, VariableName>, pair_hash>
-      modifies_set;
-  std::unordered_map<LineNumber, std::vector<VariableName>> modifies_map;
+  void setDesignEntities(const std::shared_ptr<Node> node);
+  void setDesignEntities(const std::shared_ptr<ProcedureNode> node);
+  void setDesignEntities(const std::shared_ptr<IfNode> node);
+  void setDesignEntities(const std::shared_ptr<WhileNode> node);
+  void setDesignEntities(const std::shared_ptr<ReadNode> node);
+  void setDesignEntities(const std::shared_ptr<PrintNode> node);
+  void setDesignEntities(const std::shared_ptr<AssignNode> node);
 
-  std::unordered_set<VariableName> variables_set;
+  // void setDesignEntities(const Expr node);
+  // void setDesignEntities(const std::shared_ptr<CondExprNode> node);
+  // void setDesignEntities(const std::shared_ptr<RelExprNode> node);
+  // void setDesignEntities(const std::shared_ptr<NumberNode> node);
+  // void setDesignEntities(const std::shared_ptr<VariableNode> node);
 
-  // TODO change function arguments
-  // current implementations assume procedure node to be the root node
-  // preprocessing functions
+  void setDesignEntitiesIterator(const std::vector<StmtNode> stmt_lst);
+
   void setLineNumbers(const std::shared_ptr<ProcedureNode> node);
   void setLineNumbers(const std::shared_ptr<IfNode> node);
   void setLineNumbers(const std::shared_ptr<WhileNode> node);
@@ -91,32 +76,10 @@ class PKB {
                              const std::shared_ptr<Node> parent_node);
   void setModifiesRelationsIterator(const std::vector<StmtNode> stmt_lst);
 
-  // utility functions
-  LineNumber getLineNumberFromNode(std::vector<std::shared_ptr<Node>> ls,
-                                   std::shared_ptr<Node> node);
-  std::shared_ptr<Node> getNodeFromLineNumber(
-      std::vector<std::shared_ptr<Node>> ls, int line_number);
-  ProcedureName getNodeValue(std::shared_ptr<Node> node);
-  void addToVectorMap(
-      std::unordered_map<std::string, std::vector<std::string>> umap,
-      std::string index, std::string data);
-
-  // bool lineFollows(int a, int b); // currently testFollows make friend
-
  public:
-  PKB(const std::shared_ptr<ProcedureNode> proc);
-  ~PKB();
-
-  // TODO deprecate temp testing methods
-  // need to implement pkb-pql link first
-  bool testFollows(LineNumber a, LineNumber b);
-  bool testParent(Parent a, LineNumber b);
-  bool testUses(LineNumber line, VariableName v);
-  bool testModifies(LineNumber line, VariableName v);
-
-  // TODO shift these to Query Manager???? or just make it as a friend class
-  // would be public method in the QueryManager class
-  std::vector<LineNumber> getFollows(LineNumber line);
-  std::vector<LineNumber> getUses(LineNumber line);
+  PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
+                  std::shared_ptr<PKBStorage> pkb_storage);
+  ~PKBPreprocessor();
 };
-}  // namespace KB
+
+}  // namespace PKB

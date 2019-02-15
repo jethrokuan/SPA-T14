@@ -1,9 +1,13 @@
 # PKB files
 set(srcs ${srcs}
-  src/program_knowledge_base/pkb.cpp
+  src/program_knowledge_base/pkb_manager.cpp
+  src/program_knowledge_base/pkb_preprocessor.cpp
+  src/program_knowledge_base/pkb_storage.cpp
   )
 set(headers ${headers}
-  src/program_knowledge_base/pkb.h
+  src/program_knowledge_base/pkb_manager.h
+  src/program_knowledge_base/pkb_preprocessor.h
+  src/program_knowledge_base/pkb_storage.h
   )
 
 # PKB files

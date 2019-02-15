@@ -1,3 +1,4 @@
+#include "simple_parser/exceptions.h"
 #include "simple_parser/parser.h"
 
 #include <unordered_set>
@@ -37,9 +38,8 @@ bool Parser::expect(std::string s) {
   if (match(s)) {
     return true;
   } else {
-    // TODO: Handle this better
-    std::cout << "expected " << s << ", got " << peek()->Val << std::endl;
-    return false;
+    throw SimpleParseException("Expected '" + s + "', got '" + peek()->Val +
+                               "'.");
   }
 };
 
@@ -190,22 +190,25 @@ Expr Parser::nud(Token* t) {
     expect(")");
     return expr;
   } else {
-    // TODO: Handle Error
-    std::cout << "nud called on invalid token" << t->Val << std::endl;
-    return std::make_shared<VariableNode>("FAIL");
+    throw SimpleParseException(
+        "Expecting a number, variable or expression, got '" + t->Val + "'.");
+    // // TODO: Handle Error
+    // std::cout << "nud called on invalid token" << t->Val << std::endl;
+    // return std::make_shared<VariableNode>("FAIL");
   }
 }
 
 int Parser::lbp(Token* t) {
-  if (t->Val == ";") {
+  if (t->Val == ";" || t->Val == ")") {
     return 0;
   } else if (t->Val == "+" || t->Val == "-") {
     return 10;
   } else if (t->Val == "*" || t->Val == "/" || t->Val == "%") {
     return 20;
+  } else {
+    throw SimpleParseException("Expecting operator or semicolon, got '" +
+                               t->Val + "'.");
   }
-
-  return -1;
 }
 
 // TODO: Refactor
@@ -226,9 +229,7 @@ Expr Parser::led(Token* t, Expr left) {
     Expr right = prattParse(20);
     return std::make_shared<BinOpNode>(left, right, "%");
   } else {
-    // TODO: Handle error
-    std::cout << t->Val << std::endl;
-    return std::make_shared<VariableNode>("FAIL");
+    throw SimpleParseException("led called on invalid token " + t->Val);
   }
 
   // return left;

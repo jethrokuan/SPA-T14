@@ -11,15 +11,15 @@ using namespace Simple;
 using std::make_shared;
 using std::shared_ptr;
 
-TEST_CASE ("Test Expr Parser works") {
+TEST_CASE ("Test Expr parse works") {
   SECTION ("i = 5") {
     std::string filename = "tests/simple_source/arithmetic/1.txt";
     std::ifstream input(filename);
 
-    Simple::Lexer lexer = Simple::Lexer(input);
+    Lexer lexer = Lexer(input);
     lexer.parse();
 
-    Simple::Parser parser = Simple::Parser(lexer.tokens);
+    Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
     std::vector<StmtNode> stmtList;
 
@@ -40,10 +40,10 @@ TEST_CASE ("Test Expr Parser works") {
     std::string filename = "tests/simple_source/arithmetic/2.txt";
     std::ifstream input(filename);
 
-    Simple::Lexer lexer = Simple::Lexer(input);
+    Lexer lexer = Lexer(input);
     lexer.parse();
 
-    Simple::Parser parser = Simple::Parser(lexer.tokens);
+    Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
     std::vector<StmtNode> stmtList;
 
@@ -66,10 +66,10 @@ TEST_CASE ("Test Expr Parser works") {
     std::string filename = "tests/simple_source/arithmetic/3.txt";
     std::ifstream input(filename);
 
-    Simple::Lexer lexer = Simple::Lexer(input);
+    Lexer lexer = Lexer(input);
     lexer.parse();
 
-    Simple::Parser parser = Simple::Parser(lexer.tokens);
+    Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
     std::vector<StmtNode> stmtList;
 
@@ -95,10 +95,10 @@ TEST_CASE ("Test Expr Parser works") {
     std::string filename = "tests/simple_source/arithmetic/4.txt";
     std::ifstream input(filename);
 
-    Simple::Lexer lexer = Simple::Lexer(input);
+    Lexer lexer = Lexer(input);
     lexer.parse();
 
-    Simple::Parser parser = Simple::Parser(lexer.tokens);
+    Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
     std::vector<StmtNode> stmtList;
 
@@ -124,10 +124,10 @@ TEST_CASE ("Test Expr Parser works") {
     std::string filename = "tests/simple_source/arithmetic/5.txt";
     std::ifstream input(filename);
 
-    Simple::Lexer lexer = Simple::Lexer(input);
+    Lexer lexer = Lexer(input);
     lexer.parse();
 
-    Simple::Parser parser = Simple::Parser(lexer.tokens);
+    Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
     std::vector<StmtNode> stmtList;
 
@@ -152,10 +152,10 @@ TEST_CASE ("Test Expr Parser works") {
     std::string filename = "tests/simple_source/arithmetic/6.txt";
     std::ifstream input(filename);
 
-    Simple::Lexer lexer = Simple::Lexer(input);
+    Lexer lexer = Lexer(input);
     lexer.parse();
 
-    Simple::Parser parser = Simple::Parser(lexer.tokens);
+    Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
 
     std::vector<StmtNode> stmtList;
@@ -185,5 +185,84 @@ TEST_CASE ("Test Expr Parser works") {
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
     REQUIRE(*proc == *expected);
+  }
+
+  SECTION ("valid assign statements") {
+    std::string filename = "tests/simple_source/arithmetic/valid.txt";
+    std::ifstream input(filename);
+
+    Lexer lexer = Lexer(input);
+    lexer.parse();
+
+    Parser parser = Parser(lexer.tokens);
+    REQUIRE_NOTHROW(parser.parse());
+  }
+}
+
+TEST_CASE ("Test Expr parse throws when invalid") {
+  SECTION ("consecutive operands") {
+    std::string filename =
+        "tests/simple_source/arithmetic/consecutive_operands.txt";
+    std::ifstream input(filename);
+
+    Lexer lexer = Lexer(input);
+    lexer.parse();
+
+    Parser parser = Parser(lexer.tokens);
+    REQUIRE_THROWS_WITH(parser.parse(),
+                        "Expecting operator or semicolon, got '9'.");
+  }
+
+  SECTION ("double operators") {
+    std::string filename =
+        "tests/simple_source/arithmetic/double_operators.txt";
+    std::ifstream input(filename);
+
+    Lexer lexer = Lexer(input);
+    lexer.parse();
+
+    Parser parser = Parser(lexer.tokens);
+    REQUIRE_THROWS_WITH(parser.parse(),
+                        "Expecting a number, variable or expression, got '-'.");
+  }
+
+  SECTION ("empty parentheses") {
+    std::string filename =
+        "tests/simple_source/arithmetic/empty_parentheses.txt";
+    std::ifstream input(filename);
+
+    Lexer lexer = Lexer(input);
+    lexer.parse();
+
+    Parser parser = Parser(lexer.tokens);
+    REQUIRE_THROWS_WITH(parser.parse(),
+                        "Expecting a number, variable or expression, got ')'.");
+  }
+
+  SECTION ("incomplete parentheses") {
+    std::string filename =
+        "tests/simple_source/arithmetic/incomplete_parentheses.txt";
+    std::ifstream input(filename);
+
+    Lexer lexer = Lexer(input);
+    lexer.parse();
+
+    Parser parser = Parser(lexer.tokens);
+    REQUIRE_THROWS_WITH(parser.parse(), "Expected ')', got ';'.");
+  }
+
+  SECTION ("other invalid expressions") {
+    int NUM_TESTCASES = 21;
+    for (int i = 0; i < NUM_TESTCASES; i++) {
+      std::string filename = "tests/simple_source/arithmetic/other_invalids/" +
+                             std::to_string(i) + ".txt";
+      std::ifstream input(filename);
+
+      Lexer lexer = Lexer(input);
+      lexer.parse();
+
+      Parser parser = Parser(lexer.tokens);
+      REQUIRE_THROWS(parser.parse());
+    }
   }
 }

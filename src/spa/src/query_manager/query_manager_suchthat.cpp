@@ -6,6 +6,7 @@
 
 using namespace QE;
 
+//! If all args are statement number / quoted ident - can return bool from PKB
 bool QueryManager::isBooleanSuchThat(SuchThat* such_that) {
   // Must be true from earlier query processing
   assert(such_that != nullptr);
@@ -25,5 +26,6 @@ bool QueryManager::isBooleanSuchThatTrue(SuchThat* such_that) {
   // Must be true from earlier query processing
   assert(such_that != nullptr);
 
+  // Assuming we have a boolean such_that - send the correct API call to PKB
   return true;
 }

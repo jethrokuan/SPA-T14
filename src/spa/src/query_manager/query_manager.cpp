@@ -19,9 +19,10 @@ std::vector<std::string> QueryManager::makeQuery(Query* query) {
   if (query->such_that && isBooleanSuchThat(query->such_that)) {
     std::cout << "IS A BOOLEAN SUCH THAT!";
     if (isBooleanSuchThatTrue(query->such_that)) {
+      // TODO: This shouldn't be a return - pattern still matters
       return getSelect(query->selected_declaration->getDesignEntity());
     } else {
-      // Empty result if our such_that is false
+      // Empty result if our such_that is false - at least one clause is false!
       return std::vector<std::string>();
     }
   }

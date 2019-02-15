@@ -8,6 +8,8 @@ using namespace PKB;
 class QueryManager {
  private:
   PKBManager* pkb;
+  //! Gets the result of a select query (everything from a design entity)
+  std::vector<std::string> getSelect(QE::DesignEntity);
 
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};

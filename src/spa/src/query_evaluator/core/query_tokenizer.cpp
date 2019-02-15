@@ -13,6 +13,8 @@ using namespace Utils;
 const std::string QueryTokenizerTokens::QUERY_TOKENIZER_TOKEN_DELIMITER = "|";
 const char QueryTokenizer::QUERY_DELIMITER = ';';
 const char QueryTokenizer::SPACE_DELIMITER = ' ';
+const char QueryTokenizer::COMMA_DELIMITER = ',';
+const std::string QueryTokenizer::DECLARATION_DUMMY_SEPARATOR = ";";
 const std::string QueryTokenizer::QUERY_SELECT = "Select";
 
 QueryTokenizerTokens QueryTokenizer::getTokens(std::string pql_query_string) {
@@ -44,16 +46,41 @@ QueryTokenizerTokens QueryTokenizer::getTokens(std::string pql_query_string) {
     // Make sure this is the token with the select inside
     if (tok.compare(0, QueryTokenizer::QUERY_SELECT.length(),
                     QueryTokenizer::QUERY_SELECT) == 0) {
-      // For each assignment token, split the tokens by space
+      // This gets all the declaration strings (all semicolon delim) until the
+      // select clause
       auto declaration_token_strings = std::vector<std::string>(
           tokens.begin(), tokens.begin() + tokens_counter);
+      // Start parsing each of the declarations (by each design entity)
       final_tokens.declaration_tokens = new std::vector<std::string>();
       for (std::string s : declaration_token_strings) {
-        auto split_declaration_tokens =
-            QueryTokenizer::splitString(s, QueryTokenizer::SPACE_DELIMITER);
+        // Get the design entity (string until first space)
+        auto first_space_pos = s.find(' ');
+        // If no space found: tokenize error
+        if (first_space_pos == std::string::npos) {
+          throw PQLTokenizeException(
+              "Could not find any synonyms when parsing declaration string " +
+              s);
+        }
+        // If we found space, separate declaration into DE and synonyms
+        auto de_token = s.substr(0, first_space_pos);
+        auto synonym_string = s.substr(first_space_pos);
+
+        // Remove all whitespace from synonyms
+        std::string::iterator end_pos =
+            std::remove(synonym_string.begin(), synonym_string.end(), ' ');
+        synonym_string.erase(end_pos, synonym_string.end());
+        // Get all synonyms that are currently stuck together - comma delimited
+        auto synonym_tokens = QueryTokenizer::splitString(
+            synonym_string, QueryTokenizer::COMMA_DELIMITER);
+        // Add the design entity, and then every synonym associated with it
+        final_tokens.declaration_tokens->push_back(de_token);
         final_tokens.declaration_tokens->insert(
-            final_tokens.declaration_tokens->end(),
-            split_declaration_tokens->begin(), split_declaration_tokens->end());
+            final_tokens.declaration_tokens->end(), synonym_tokens->begin(),
+            synonym_tokens->end());
+        // Indicate to pre-processor that this is the end of a single
+        // declaration entity type
+        final_tokens.declaration_tokens->push_back(
+            QueryTokenizer::DECLARATION_DUMMY_SEPARATOR);
       }
       // Add the other token lists (select, such_that, pattern)
       setClauses(tok, final_tokens);

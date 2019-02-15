@@ -35,10 +35,16 @@ void QueryPreprocessor::parseDeclarations(
   // Default value for de
   auto de = DesignEntity::ASSIGN;
   auto decls = new std::vector<Declaration>();
+  bool parsing_declaration = true;
   for (size_t i = 0; i < declaration_tokens->size(); i++) {
-    if (i % 2 == 0) {
+    if (parsing_declaration) {
       // This might throw an error - it will terminate this process
       de = getDesignEntity((*declaration_tokens)[i]);
+      parsing_declaration = false;
+    } else if ((*declaration_tokens)[i] ==
+               QueryTokenizer::DECLARATION_DUMMY_SEPARATOR) {
+      // Move to parsing next design entity type
+      parsing_declaration = true;
     } else {
       // This is the synonym half of the decl: store the DE we have into our
       // list

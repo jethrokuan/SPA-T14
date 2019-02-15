@@ -17,7 +17,8 @@ TEST_CASE ("Test one assignment one select Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;Select p");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(tokenStruct.such_that_tokens == nullptr);
@@ -28,7 +29,10 @@ TEST_CASE ("Test two assignments one select Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;statement w;Select p");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p", "statement", "w"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR,
+              "statement", "w",
+              QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(tokenStruct.such_that_tokens == nullptr);
@@ -39,7 +43,8 @@ TEST_CASE ("Test one assignment one select one such that Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;Select p such that x y z");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(*(tokenStruct.such_that_tokens) ==
@@ -51,7 +56,8 @@ TEST_CASE ("Test one assignment one select with newline Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;\nSelect p");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(tokenStruct.such_that_tokens == nullptr);
@@ -62,7 +68,8 @@ TEST_CASE ("Test one assignment one select with 2x newline Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;\nSelect p\n");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(tokenStruct.such_that_tokens == nullptr);
@@ -75,7 +82,8 @@ TEST_CASE (
   auto tokenStruct =
       qt.getTokens("assign p;Select p such that x y z pattern a b c d");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(*(tokenStruct.such_that_tokens) ==
@@ -88,7 +96,8 @@ TEST_CASE ("Test one assignment one select one pattern Tokenization") {
   auto qt = QE::QueryTokenizer();
   auto tokenStruct = qt.getTokens("assign p;Select p pattern a b c d");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(tokenStruct.such_that_tokens == nullptr);
@@ -101,7 +110,10 @@ TEST_CASE ("Test two assignment one select one such that Tokenization") {
   auto tokenStruct =
       qt.getTokens("assign p;statement w;Select p such that x y z");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p", "statement", "w"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR,
+              "statement", "w",
+              QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(*(tokenStruct.such_that_tokens) ==
@@ -115,7 +127,10 @@ TEST_CASE (
   auto tokenStruct = qt.getTokens(
       "assign p;statement w;Select p such that x y z pattern a b c d");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p", "statement", "w"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR,
+              "statement", "w",
+              QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(*(tokenStruct.such_that_tokens) ==
@@ -129,7 +144,10 @@ TEST_CASE ("Test two assignment one select one pattern Tokenization") {
   auto tokenStruct =
       qt.getTokens("assign p;statement w;Select p pattern a b c d");
   REQUIRE(*(tokenStruct.declaration_tokens) ==
-          std::vector<std::string>{"assign", "p", "statement", "w"});
+          std::vector<std::string>{
+              "assign", "p", QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR,
+              "statement", "w",
+              QE::QueryTokenizer::DECLARATION_DUMMY_SEPARATOR});
   REQUIRE(*(tokenStruct.select_tokens) ==
           std::vector<std::string>{"Select", "p"});
   REQUIRE(tokenStruct.such_that_tokens == nullptr);

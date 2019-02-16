@@ -68,5 +68,22 @@ assign a; if i;
 Select a such that Parent*(i,a)
 14, 15, 16, 17, 18
 5000
-
-
+15 - valid query (Uses; select variables within while container, does not consider call statements)
+variable v; while w;
+Select v such that Uses(w,v)
+numInserts, 
+16 - valid query (uses)
+print p; variable v;
+Select v such that Uses(p,v)
+high, low, none
+5000
+17 - valid query (uses)
+print p; variable v;
+Select p such that Uses(p,v)
+26, 27, 28
+5000
+18 - valid query (uses)
+procedure p; variable v;
+Select p such that Uses(p,v)
+main, retrieveCellStatus
+5000

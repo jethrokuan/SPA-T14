@@ -17,11 +17,12 @@ class PKBPreprocessor {
   void setDesignEntities(const std::shared_ptr<PrintNode> node);
   void setDesignEntities(const std::shared_ptr<AssignNode> node);
 
-  // void setDesignEntities(const Expr node);
-  // void setDesignEntities(const std::shared_ptr<CondExprNode> node);
-  // void setDesignEntities(const std::shared_ptr<RelExprNode> node);
-  // void setDesignEntities(const std::shared_ptr<NumberNode> node);
-  // void setDesignEntities(const std::shared_ptr<VariableNode> node);
+  void setDesignEntities(const Expr node);
+  void setDesignEntities(const std::shared_ptr<BinOpNode> node);
+  void setDesignEntities(const std::shared_ptr<CondExprNode> node);
+  void setDesignEntities(const std::shared_ptr<RelExprNode> node);
+  void setDesignEntities(const std::shared_ptr<NumberNode> node);
+  void setDesignEntities(const std::shared_ptr<VariableNode> node);
 
   void setDesignEntitiesIterator(const std::vector<StmtNode> stmt_lst);
 

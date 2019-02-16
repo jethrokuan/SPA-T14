@@ -23,6 +23,16 @@ TEST_CASE ("Test PKB works") {
 
   PKB::PKBManager pkb = PKB::PKBManager(proc);
 
+  // variable
+  auto var_exist_test_1 = pkb.isVariableExists("i");
+  REQUIRE(var_exist_test_1 == true);
+  auto var_exist_test_2 = pkb.isVariableExists("j");
+  REQUIRE(var_exist_test_2 == true);
+  auto var_exist_test_3 = pkb.isVariableExists("k");
+  REQUIRE(var_exist_test_3 == false);
+  auto var_exist_test_4 = pkb.isVariableExists("l");
+  REQUIRE(var_exist_test_4 == false);
+
   // procedure
   auto proc_exist_test_1 = pkb.isProcedureExists("main");
   REQUIRE(proc_exist_test_1 == true);

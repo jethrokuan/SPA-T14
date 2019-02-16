@@ -240,6 +240,14 @@ std::vector<Procedure> PKBManager::getProcedureList() {
   return pkb_storage->procedure_list;
 }
 
+bool PKBManager::isVariableExists(Variable var) {
+  if (pkb_storage->var_set.find(var) != pkb_storage->var_set.end()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool PKBManager::isAssignExists(Line line) {
   if (pkb_storage->assign_set.find(line) != pkb_storage->assign_set.end()) {
     return true;

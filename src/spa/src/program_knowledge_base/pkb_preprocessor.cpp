@@ -25,69 +25,76 @@ void PKBPreprocessor::setDesignEntities(
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<IfNode> node) {
   storage->storeIf(storage->getLineFromNode(node));
+  setDesignEntities(node->CondExpr);
   setDesignEntitiesIterator(node->StmtListThen->StmtList);
   setDesignEntitiesIterator(node->StmtListElse->StmtList);
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<WhileNode> node) {
   storage->storeWhile(storage->getLineFromNode(node));
+  setDesignEntities(node->CondExpr);
   setDesignEntitiesIterator(node->StmtList->StmtList);
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<ReadNode> node) {
   storage->storeRead(storage->getLineFromNode(node));
+  setDesignEntities(node->Var);
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<PrintNode> node) {
   storage->storePrint(storage->getLineFromNode(node));
+  setDesignEntities(node->Var);
 }
 
 void PKBPreprocessor::setDesignEntities(
     const std::shared_ptr<AssignNode> node) {
   storage->storeAssign(storage->getLineFromNode(node));
+  setDesignEntities(node->Exp);
 }
 
-// void PKBPreprocessor::setDesignEntities(
-//     const Expr node) {
-//   std::visit(
-//       [this](const auto &n) { setDesignEntities(n); },
-//       node);
-// }
+void PKBPreprocessor::setDesignEntities(const Expr node) {
+  std::visit([this](const auto &n) { setDesignEntities(n); }, node);
+}
 
-// void PKBPreprocessor::setDesignEntities(
-//     const std::shared_ptr<CondExprNode> node) {
-//   if (node == nullptr) {
-//     return;
-//   }
-//   setDesignEntities(node->RelExpr);
-//   setDesignEntities(node->CondLHS);
-//   setDesignEntities(node->CondRHS);
-// }
+void PKBPreprocessor::setDesignEntities(const std::shared_ptr<BinOpNode> node) {
+  setDesignEntities(node->Left);
+  setDesignEntities(node->Right);
+}
 
-// void PKBPreprocessor::setDesignEntities(
-//     const std::shared_ptr<RelExprNode> node) {
-//   if (node == nullptr) {
-//     return;
-//   }
-//   setDesignEntities(node->LHS);
-//   setDesignEntities(node->RHS);
-// }
+void PKBPreprocessor::setDesignEntities(
+    const std::shared_ptr<CondExprNode> node) {
+  if (node == nullptr) {
+    return;
+  }
+  setDesignEntities(node->RelExpr);
+  setDesignEntities(node->CondLHS);
+  setDesignEntities(node->CondRHS);
+}
 
-// void PKBPreprocessor::setDesignEntities(
-//     const std::shared_ptr<NumberNode> node) {
-//   if (node == nullptr) {
-//     return;
-//   }
-//   storage->storeConstant(node->Val);
-// }
+void PKBPreprocessor::setDesignEntities(
+    const std::shared_ptr<RelExprNode> node) {
+  if (node == nullptr) {
+    return;
+  }
+  setDesignEntities(node->LHS);
+  setDesignEntities(node->RHS);
+}
 
-// void PKBPreprocessor::setDesignEntities(
-//     const std::shared_ptr<VariableNode> node) {
-//   if (node == nullptr) {
-//     return;
-//   }
-//   storage->storeVariable(storage->getLineFromNode(node));
-// }
+void PKBPreprocessor::setDesignEntities(
+    const std::shared_ptr<NumberNode> node) {
+  if (node == nullptr) {
+    return;
+  }
+  storage->storeConstant(node->Val);
+}
+
+void PKBPreprocessor::setDesignEntities(
+    const std::shared_ptr<VariableNode> node) {
+  if (node == nullptr) {
+    return;
+  }
+  storage->storeVariable(node->Name);
+}
 
 void PKBPreprocessor::setDesignEntitiesIterator(
     const std::vector<StmtNode> stmt_lst) {

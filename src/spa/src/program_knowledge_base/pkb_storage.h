@@ -33,26 +33,41 @@ class PKBStorage {
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set;
   std::unordered_map<LineBefore, LineAfter> line_before_line_after_map;
   std::unordered_map<LineAfter, LineBefore> line_after_line_before_map;
-  // std::unordered_map<LineBefore, std::vector<LineAfter>>
-  //     line_before_line_after_map_s;
-  // std::unordered_map<LineAfter, std::vector<LineBefore>>
-  //     line_after_line_before_map_s;
+  std::unordered_map<LineBefore, std::vector<LineAfter>>
+      line_before_line_after_map_s;
+  std::unordered_map<LineAfter, std::vector<LineBefore>>
+      line_after_line_before_map_s;
 
+  // parent
   std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set;
+  std::unordered_map<ChildLine, ParentLine> child_line_parent_line_map;
+  std::unordered_map<ParentLine, std::vector<ChildLine>>
+      parent_line_child_line_map;
+  std::unordered_map<ChildLine, std::vector<ParentLine>>
+      child_line_parent_line_map_s;
+  std::unordered_map<ParentLine, std::vector<ChildLine>>
+      parent_line_child_line_map_s;
+
+  // uses
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
       procedure_uses_var_set;
   std::unordered_set<std::pair<Line, Variable>, pair_hash> line_uses_var_set;
+  std::unordered_map<Procedure, std::vector<Variable>> procedure_uses_var_map;
+  std::unordered_map<Line, std::vector<Variable>> line_uses_var_map;
+  std::unordered_map<Variable, std::vector<Procedure>> var_used_by_procedure;
+  std::unordered_map<Variable, std::vector<Line>> var_used_by_line;
+
+  // modifies
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
       procedure_modifies_var_set;
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
       line_modifies_var_set;
-
-  std::unordered_map<ParentLine, Line> parent_line_child_line_map;
-  std::unordered_map<ParentLine, std::vector<Line>>
-      child_line_to_parent_line_map;
-  std::unordered_map<Line, std::vector<Line>> line_parent_map;
-  std::unordered_map<Line, std::vector<Variable>> uses_map;
-  std::unordered_map<Line, std::vector<Variable>> modifies_map;
+  std::unordered_map<Procedure, std::vector<Variable>>
+      procedure_modifies_var_map;
+  std::unordered_map<Line, std::vector<Variable>> line_modifies_var_map;
+  std::unordered_map<Variable, std::vector<Procedure>>
+      var_modified_by_procedure;
+  std::unordered_map<Variable, std::vector<Line>> var_modified_by_line;
 
   std::unordered_set<Variable> var_set;
   std::unordered_set<Line> assign_set;

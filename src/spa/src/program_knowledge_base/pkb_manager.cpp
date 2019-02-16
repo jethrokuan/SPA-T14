@@ -208,10 +208,6 @@ void PKBManager::addToVectorMap(
 }
 
 // TODO deprecate temp testing methods
-bool PKBManager::testParent(ParentLine a, Line b) {
-  return parent_set.find(std::pair<ParentLine, Line>(a, b)) != parent_set.end();
-}
-
 bool PKBManager::testUses(Line a, Variable b) {
   return uses_set.find(std::pair<Line, Variable>(a, b)) != uses_set.end();
 }
@@ -287,7 +283,7 @@ bool PKBManager::isLineFollowLine(const LineBefore line_before,
   }
 }
 
-bool PKBManager::isLineParentLine(const ParentLine parent_line, 
+bool PKBManager::isLineParentLine(const ParentLine parent_line,
                                   const ChildLine child_line) {
   if (pkb_storage->parent_set.find(std::pair<ParentLine, ChildLine>(
           parent_line, child_line)) != pkb_storage->follows_set.end()) {

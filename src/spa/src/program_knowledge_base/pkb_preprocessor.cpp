@@ -203,11 +203,12 @@ void PKBPreprocessor::setParentRelationsIterator(
     std::visit(
         [this, parent_node](const auto &s) {
           auto current_line = storage->getLineFromNode(s);
-          storage->storeParentRelation(storage->getLineFromNode(parent_node), current_line);
-        // DEBUG
-        // std::cout << storage->getLineFromNode(parent_node);
-        // std::cout << " is parent of ";
-        // std::cout << current_line << std::endl;
+          storage->storeParentRelation(storage->getLineFromNode(parent_node),
+                                       current_line);
+          // DEBUG
+          // std::cout << storage->getLineFromNode(parent_node);
+          // std::cout << " is parent of ";
+          // std::cout << current_line << std::endl;
         },
         stmt);
   }

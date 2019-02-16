@@ -33,15 +33,19 @@ std::string PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
 void PKBStorage::storeFollowsRelation(const LineBefore line_before,
                                       const LineAfter line_after) {
   follows_set.insert(std::pair<LineBefore, LineAfter>(line_before, line_after));
-  // line_before_line_after_map.insert(line_before, line_after);
-  // line_after_line_before_map.insert(line_after, line_before);
+  line_before_line_after_map[line_before] = line_after;
+  line_after_line_before_map[line_after] = line_before;
 }
 
 // void storeFollowsRelationS(const LineBefore, const LineAfter);
+
 void PKBStorage::storeParentRelation(const ParentLine parent_line,
                                      const ChildLine child_line) {
   parent_set.insert(std::pair<ParentLine, ChildLine>(parent_line, child_line));
+  child_line_parent_line_map[child_line] = parent_line;
+  addToVectorMap(parent_line_child_line_map, parent_line, child_line);
 }
+
 // void storeParentRelationS(const ParentLine, const ChildLine);
 // void storeProcedureUsesVarRelation(const Procedure, const Variable);
 // void storeLineUsesVarRelation(const Line, const Variable);

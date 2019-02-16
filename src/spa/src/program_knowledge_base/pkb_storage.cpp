@@ -38,7 +38,10 @@ void PKBStorage::storeFollowsRelation(const LineBefore line_before,
 }
 
 // void storeFollowsRelationS(const LineBefore, const LineAfter);
-// void storeParentRelation(const ParentLine, const ChildLine);
+void PKBStorage::storeParentRelation(const ParentLine parent_line,
+                                     const ChildLine child_line) {
+  parent_set.insert(std::pair<ParentLine, ChildLine>(parent_line, child_line));
+}
 // void storeParentRelationS(const ParentLine, const ChildLine);
 // void storeProcedureUsesVarRelation(const Procedure, const Variable);
 // void storeLineUsesVarRelation(const Line, const Variable);

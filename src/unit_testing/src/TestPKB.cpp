@@ -55,18 +55,14 @@ TEST_CASE ("Test PKB works") {
   REQUIRE(follows_test_10 == false);
 
   // // test parent
-  // auto parent_test_1 = pkb.testParent("2", "3");
-  // REQUIRE(parent_test_1 == true);
-  // auto parent_test_2 = pkb.testParent("1", "2");
-  // REQUIRE(parent_test_2 == false);
-  // auto parent_test_3 = pkb.testParent("3", "3");
-  // REQUIRE(parent_test_3 == false);
-  // auto parent_test_4 = pkb.testParent("4", "3");
-  // REQUIRE(parent_test_4 == false);
-  // auto parent_test_5 = pkb.testParent("main", "1");
-  // REQUIRE(parent_test_5 == true);
-  // auto parent_test_6 = pkb.testParent("main", "33");
-  // REQUIRE(parent_test_6 == false);
+  auto parent_test_1 = pkb.isLineParentLine("2", "3");
+  REQUIRE(parent_test_1 == true);
+  auto parent_test_2 = pkb.isLineParentLine("1", "2");
+  REQUIRE(parent_test_2 == false);
+  auto parent_test_3 = pkb.isLineParentLine("3", "3");
+  REQUIRE(parent_test_3 == false);
+  auto parent_test_4 = pkb.isLineParentLine("4", "3");
+  REQUIRE(parent_test_4 == false);
 
   // // test uses
   // auto uses_test_1 = pkb.testUses("2", "i");

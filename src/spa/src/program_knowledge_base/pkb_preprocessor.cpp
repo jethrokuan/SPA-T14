@@ -10,7 +10,7 @@ PKBPreprocessor::PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
   setLineNumbers(ast);
   setDesignEntities(ast);
   setFollowsRelations(ast);
-  // setParentRelations(ast);
+  setParentRelations(ast);
   // setUsesRelations(ast);
   // setModifiesRelations(ast);
 }
@@ -175,6 +175,51 @@ void PKBPreprocessor::setFollowsRelationsIterator(
                         std::is_same_v<T, std::shared_ptr<IfNode>> ||
                         std::is_same_v<T, std::shared_ptr<WhileNode>>) {
             setFollowsRelations(s);
+          }
+        },
+        stmt);
+  }
+}
+
+void PKBPreprocessor::setParentRelations(
+    const std::shared_ptr<ProcedureNode> node) {
+  setParentRelationsIterator(node->StmtList->StmtList, node);
+}
+
+void PKBPreprocessor::setParentRelations(const std::shared_ptr<IfNode> node) {
+  setParentRelationsIterator(node->StmtListThen->StmtList, node);
+  setParentRelationsIterator(node->StmtListElse->StmtList, node);
+}
+
+void PKBPreprocessor::setParentRelations(
+    const std::shared_ptr<WhileNode> node) {
+  setParentRelationsIterator(node->StmtList->StmtList, node);
+}
+
+void PKBPreprocessor::setParentRelationsIterator(
+    const std::vector<StmtNode> stmt_lst,
+    const std::shared_ptr<Node> parent_node) {
+  for (const auto &stmt : stmt_lst) {
+    std::visit(
+        [this, parent_node](const auto &s) {
+          auto current_line = storage->getLineFromNode(s);
+          storage->storeParentRelation(storage->getLineFromNode(parent_node), current_line);
+        // DEBUG
+        // std::cout << storage->getLineFromNode(parent_node);
+        // std::cout << " is parent of ";
+        // std::cout << current_line << std::endl;
+        },
+        stmt);
+  }
+
+  for (const auto &stmt : stmt_lst) {
+    std::visit(
+        [this](const auto &s) {
+          using T = std::decay_t<decltype(s)>;
+          if constexpr (std::is_same_v<T, std::shared_ptr<ProcedureNode>> ||
+                        std::is_same_v<T, std::shared_ptr<IfNode>> ||
+                        std::is_same_v<T, std::shared_ptr<WhileNode>>) {
+            setParentRelations(s);
           }
         },
         stmt);

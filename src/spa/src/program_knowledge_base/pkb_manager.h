@@ -40,12 +40,6 @@ class PKBManager {
   void setLineNumbers(const std::shared_ptr<AssignNode> node);
   void setLineNumbersIterator(const std::vector<StmtNode> stmt_lst);
 
-  void setParentRelations(const std::shared_ptr<ProcedureNode> node);
-  void setParentRelations(const std::shared_ptr<IfNode> node);
-  void setParentRelations(const std::shared_ptr<WhileNode> node);
-  void setParentRelationsIterator(const std::vector<StmtNode> stmt_lst,
-                                  const std::shared_ptr<Node> parent_node);
-
   // omitted NumberNode since it does not seem to be necessary
   void setUsesRelations(const std::shared_ptr<ProcedureNode> node);
   void setUsesRelations(const std::shared_ptr<IfNode> node);
@@ -145,8 +139,8 @@ class PKBManager {
   std::vector<Variable> getVarUsedByLine(const Line);
 
   // is relationship valid
-  bool isLineParentLine(const ParentLine, const ChildLine);
   bool isLineFollowLine(const LineBefore, const LineAfter);
+  bool isLineParentLine(const ParentLine, const ChildLine);
   bool isProcedureModifiesVar(const Procedure, const Variable);
   bool isLineModifiesVar(const Line, const Variable);
   bool isProcedureUsesVar(const Procedure, const Variable);

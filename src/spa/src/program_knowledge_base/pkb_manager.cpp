@@ -70,46 +70,6 @@ std::string PKBManager::getLineFromNode(
   return "";  // TODO error handling
 }
 
-void PKBManager::setParentRelations(const std::shared_ptr<ProcedureNode> node) {
-  setParentRelationsIterator(node->StmtList->StmtList, node);
-}
-
-void PKBManager::setParentRelations(const std::shared_ptr<IfNode> node) {
-  setParentRelationsIterator(node->StmtListThen->StmtList, node);
-  setParentRelationsIterator(node->StmtListElse->StmtList, node);
-}
-
-void PKBManager::setParentRelations(const std::shared_ptr<WhileNode> node) {
-  setParentRelationsIterator(node->StmtList->StmtList, node);
-}
-
-void PKBManager::setParentRelationsIterator(
-    const std::vector<StmtNode> stmt_lst,
-    const std::shared_ptr<Node> parent_node) {
-  for (const auto &stmt : stmt_lst) {
-    std::visit(
-        [this, parent_node](const auto &s) {
-          auto current_line = getLineFromNode(lines, s);
-          parent_set.insert(std::pair<ParentLine, Line>(
-              getNodeValue(parent_node), current_line));
-        },
-        stmt);
-  }
-
-  for (const auto &stmt : stmt_lst) {
-    std::visit(
-        [this](const auto &s) {
-          using T = std::decay_t<decltype(s)>;
-          if constexpr (std::is_same_v<T, std::shared_ptr<ProcedureNode>> ||
-                        std::is_same_v<T, std::shared_ptr<IfNode>> ||
-                        std::is_same_v<T, std::shared_ptr<WhileNode>>) {
-            setParentRelations(s);
-          }
-        },
-        stmt);
-  }
-}
-
 void PKBManager::setUsesRelations(const std::shared_ptr<ProcedureNode> node) {
   setUsesRelationsIterator(node->StmtList->StmtList);
 }
@@ -321,6 +281,16 @@ bool PKBManager::isLineFollowLine(const LineBefore line_before,
                                   const LineAfter line_after) {
   if (pkb_storage->follows_set.find(std::pair<LineBefore, LineAfter>(
           line_before, line_after)) != pkb_storage->follows_set.end()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool PKBManager::isLineParentLine(const ParentLine parent_line, 
+                                  const ChildLine child_line) {
+  if (pkb_storage->parent_set.find(std::pair<ParentLine, ChildLine>(
+          parent_line, child_line)) != pkb_storage->follows_set.end()) {
     return true;
   } else {
     return false;

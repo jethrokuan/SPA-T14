@@ -1,3 +1,4 @@
+10: Most of the basic queries are covered with this source. The idea is to reuse the queries for the different SIMPLE source, while updating the expected results
 ======================================================================================
 110: One Synonym, No Clauses: Emphasis on Synonym format and Design Entities
 ======================================================================================
@@ -54,3 +55,12 @@ Testing Parent and Parent* select clause (10-11)
 Testing Follows and Follows* select clause (12-14)
 =============================================
 - tested basic case of follows and follows* (12-14)
+=========================================================================================================================
+20: A more complex SIMPLE Source; with multiple procedures, call statements and others
+=========================================================================================================================
+
+=============================================
+
+
+
+

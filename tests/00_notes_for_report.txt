@@ -1,0 +1,56 @@
+======================================================================================
+110: One Synonym, No Clauses: Emphasis on Synonym format and Design Entities
+======================================================================================
+- test for retrieval of all design entities, i.e assign, variables, print, read, procedure, etc
+- test for valid and invalid synonyms
+======================================================================================
+111: One Synonym, One Clauses - Valid
+======================================================================================
+=============================================
+Testing Follows and Follows* select clause (1-16)
+=============================================
+- Follows* query created for all indentation levels (1 - 5)
+- Follows query created for all statements at the first level indentation (6 - 12)
+* The reason why Follows is only done for one level of indentation is because if all Follows* query are successful, all indentation level for Follows query should also be successful
+- Follows(_,_) and Follows*(_,_) created to test for all statements (13-14)
+- Testing select clause for other design entities and different nesting levels (15-16)
+=============================================
+Testing Parent and Parent* select clause (17 - 26)
+=============================================
+- Parent query created for all while loops (17-20)
+- Parent query created for first while loop, to retrieve all the statements that are directly and indirectly nested within the loop (21)
+- Flipped the order of design entity query: i.e. look for parent of a child (22 - 24)
+- Find parents that are of specific design entities (25 - 26)
+=============================================
+Testing Uses select clause (27-31)
+=============================================
+- select variable/constants used given statement number (27-28)
+- select design entities that uses specific variable (29-31)
+* it feels like Uses are mostly queries that uses two synonyms
+=============================================
+Testing Modifies select clause (32)
+=============================================
+- select all variables that are modified (32), this is done with "_", so all variables that are modified should be returned 
+* UPDATE:the query 32 is actually semantically invalid according to Basic SPA requirements, page 21 
+=============================================
+TO BE ADDED: Invalid Queries for the 4 clauses
+=============================================
+======================================================================================
+112: Two Synonym, One Clause - WIP
+=========================================================================================================================
+Testing Uses select clause (1-4)
+=============================================
+- tested some combinations of design entities (1-4)
+=============================================
+Testing Modifies select clause (5-9)
+=============================================
+- tested some combinations of design entities (5-9)
+- TODO: need a wider variety of SIMPLE Source to test the queries
+=============================================
+Testing Parent and Parent* select clause (10-11)
+=============================================
+- tested basic case of parent and parent* (10-11)
+=============================================
+Testing Follows and Follows* select clause (12-14)
+=============================================
+- tested basic case of follows and follows* (12-14)

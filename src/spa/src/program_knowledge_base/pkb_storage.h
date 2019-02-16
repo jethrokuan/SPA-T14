@@ -29,7 +29,15 @@ class PKBStorage {
 
   std::string getLineFromNode(const std::shared_ptr<Node> node);
 
+  // follows
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set;
+  std::unordered_map<LineBefore, LineAfter> line_before_line_after_map;
+  std::unordered_map<LineAfter, LineBefore> line_after_line_before_map;
+  // std::unordered_map<LineBefore, std::vector<LineAfter>>
+  //     line_before_line_after_map_s;
+  // std::unordered_map<LineAfter, std::vector<LineBefore>>
+  //     line_after_line_before_map_s;
+
   std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set;
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
       procedure_uses_var_set;
@@ -39,7 +47,6 @@ class PKBStorage {
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
       line_modifies_var_set;
 
-  std::unordered_map<Line, std::vector<Line>> line_before_line_after_map;
   std::unordered_map<ParentLine, Line> parent_line_child_line_map;
   std::unordered_map<ParentLine, std::vector<Line>>
       child_line_to_parent_line_map;

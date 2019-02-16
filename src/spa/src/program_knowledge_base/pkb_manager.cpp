@@ -70,62 +70,6 @@ std::string PKBManager::getLineFromNode(
   return "";  // TODO error handling
 }
 
-std::shared_ptr<Node> PKBManager::getNodeFromLine(
-    const std::vector<std::shared_ptr<Node>> ls, const int line_number) {
-  return ls.at(line_number - 1);  // -1 due to 0 based index
-}
-
-// TODO set a return value
-// TODO error handling
-void PKBManager::setFollowsRelations(
-    const std::shared_ptr<ProcedureNode> node) {
-  setFollowsRelationsIterator(node->StmtList->StmtList);
-}
-
-void PKBManager::setFollowsRelations(const std::shared_ptr<IfNode> node) {
-  setFollowsRelationsIterator(node->StmtListThen->StmtList);
-  setFollowsRelationsIterator(node->StmtListElse->StmtList);
-}
-
-void PKBManager::setFollowsRelations(const std::shared_ptr<WhileNode> node) {
-  setFollowsRelationsIterator(node->StmtList->StmtList);
-}
-
-void PKBManager::setFollowsRelationsIterator(
-    const std::vector<StmtNode> stmt_lst) {
-  // add relations
-  for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
-    auto cur_line_number =
-        std::visit([this](const auto &s) { return getLineFromNode(lines, s); },
-                   stmt_lst[i]);
-
-    auto next_line_number =
-        std::visit([this](const auto &s) { return getLineFromNode(lines, s); },
-                   stmt_lst[i + 1]);
-    follows_set.insert(
-        std::pair<Line, Line>(cur_line_number, next_line_number));
-    addToVectorMap(follows_map, cur_line_number, next_line_number);
-    // DEBUG
-    // std::cout << cur_line_number;
-    // std::cout << " is followed by ";
-    // std::cout << next_line_number << std::endl;
-  }
-
-  // iterate through AST via DFS
-  for (const auto &stmt : stmt_lst) {
-    std::visit(
-        [this](const auto &s) {
-          using T = std::decay_t<decltype(s)>;
-          if constexpr (std::is_same_v<T, std::shared_ptr<ProcedureNode>> ||
-                        std::is_same_v<T, std::shared_ptr<IfNode>> ||
-                        std::is_same_v<T, std::shared_ptr<WhileNode>>) {
-            setFollowsRelations(s);
-          }
-        },
-        stmt);
-  }
-}
-
 void PKBManager::setParentRelations(const std::shared_ptr<ProcedureNode> node) {
   setParentRelationsIterator(node->StmtList->StmtList, node);
 }
@@ -304,10 +248,6 @@ void PKBManager::addToVectorMap(
 }
 
 // TODO deprecate temp testing methods
-bool PKBManager::testFollows(Line a, Line b) {
-  return follows_set.find(std::pair<Line, Line>(a, b)) != follows_set.end();
-}
-
 bool PKBManager::testParent(ParentLine a, Line b) {
   return parent_set.find(std::pair<ParentLine, Line>(a, b)) != parent_set.end();
 }
@@ -319,16 +259,6 @@ bool PKBManager::testUses(Line a, Variable b) {
 bool PKBManager::testModifies(Line a, Variable b) {
   return modifies_set.find(std::pair<Line, Variable>(a, b)) !=
          modifies_set.end();
-}
-
-std::vector<Line> PKBManager::getFollows(Line line) {
-  std::vector<Line> res;
-  try {
-    res = follows_map.at(line);
-    return res;
-  } catch (const std::out_of_range &e) {
-    return res;
-  }
 }
 
 std::vector<Line> PKBManager::getUses(Line line) {
@@ -381,6 +311,16 @@ bool PKBManager::isReadExists(Line line) {
 bool PKBManager::isProcedureExists(Procedure proc) {
   if (pkb_storage->procedure_set.find(proc) !=
       pkb_storage->procedure_set.end()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool PKBManager::isLineFollowLine(const LineBefore line_before,
+                                  const LineAfter line_after) {
+  if (pkb_storage->follows_set.find(std::pair<LineBefore, LineAfter>(
+          line_before, line_after)) != pkb_storage->follows_set.end()) {
     return true;
   } else {
     return false;

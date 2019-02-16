@@ -20,8 +20,6 @@ class PKBManager {
   // TODO deprecate this and use hash map
   std::vector<std::shared_ptr<Node>> lines;
 
-  std::unordered_set<std::pair<Line, Line>, pair_hash> follows_set;
-  std::unordered_map<Line, std::vector<Line>> follows_map;
   std::unordered_set<std::pair<ParentLine, Line>, pair_hash> parent_set;
   std::unordered_map<ParentLine, Line> parent_map;
   std::unordered_set<std::pair<Line, Variable>, pair_hash> uses_set;
@@ -41,11 +39,6 @@ class PKBManager {
   void setLineNumbers(const std::shared_ptr<PrintNode> node);
   void setLineNumbers(const std::shared_ptr<AssignNode> node);
   void setLineNumbersIterator(const std::vector<StmtNode> stmt_lst);
-
-  void setFollowsRelations(const std::shared_ptr<ProcedureNode> node);
-  void setFollowsRelations(const std::shared_ptr<IfNode> node);
-  void setFollowsRelations(const std::shared_ptr<WhileNode> node);
-  void setFollowsRelationsIterator(const std::vector<StmtNode> stmt_lst);
 
   void setParentRelations(const std::shared_ptr<ProcedureNode> node);
   void setParentRelations(const std::shared_ptr<IfNode> node);
@@ -88,8 +81,6 @@ class PKBManager {
   // utility functions
   Line getLineFromNode(std::vector<std::shared_ptr<Node>> ls,
                        std::shared_ptr<Node> node);
-  std::shared_ptr<Node> getNodeFromLine(std::vector<std::shared_ptr<Node>> ls,
-                                        int line_number);
   Procedure getNodeValue(std::shared_ptr<Node> node);
   void addToVectorMap(
       std::unordered_map<std::string, std::vector<std::string>> umap,
@@ -103,12 +94,10 @@ class PKBManager {
 
   // TODO deprecate temp testing methods
   // need to implement pkb-pql link first
-  bool testFollows(Line a, Line b);
   bool testParent(ParentLine a, Line b);
   bool testUses(Line line, Variable v);
   bool testModifies(Line line, Variable v);
 
-  std::vector<Line> getFollows(Line line);
   std::vector<Line> getUses(Line line);
 
   // API exposed to Query Manager

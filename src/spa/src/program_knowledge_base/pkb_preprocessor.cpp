@@ -9,7 +9,7 @@ PKBPreprocessor::PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
   storage = pkb_storage;
   setLineNumbers(ast);
   setDesignEntities(ast);
-  // setFollowsRelations(ast);
+  setFollowsRelations(ast);
   // setParentRelations(ast);
   // setUsesRelations(ast);
   // setModifiesRelations(ast);
@@ -130,6 +130,54 @@ void PKBPreprocessor::setLineNumbersIterator(
   // iterate through AST via DFS
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setLineNumbers(s); }, stmt);
+  }
+}
+
+void PKBPreprocessor::setFollowsRelations(
+    const std::shared_ptr<ProcedureNode> node) {
+  setFollowsRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setFollowsRelations(const std::shared_ptr<IfNode> node) {
+  setFollowsRelationsIterator(node->StmtListThen->StmtList);
+  setFollowsRelationsIterator(node->StmtListElse->StmtList);
+}
+
+void PKBPreprocessor::setFollowsRelations(
+    const std::shared_ptr<WhileNode> node) {
+  setFollowsRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setFollowsRelationsIterator(
+    const std::vector<StmtNode> stmt_lst) {
+  // add relations
+  for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
+    auto cur_line_number = std::visit(
+        [this](const auto &s) { return storage->getLineFromNode(s); },
+        stmt_lst[i]);
+
+    auto next_line_number = std::visit(
+        [this](const auto &s) { return storage->getLineFromNode(s); },
+        stmt_lst[i + 1]);
+    storage->storeFollowsRelation(cur_line_number, next_line_number);
+    // DEBUG
+    // std::cout << cur_line_number;
+    // std::cout << " is followed by ";
+    // std::cout << next_line_number << std::endl;
+  }
+
+  // iterate through AST via DFS
+  for (const auto &stmt : stmt_lst) {
+    std::visit(
+        [this](const auto &s) {
+          using T = std::decay_t<decltype(s)>;
+          if constexpr (std::is_same_v<T, std::shared_ptr<ProcedureNode>> ||
+                        std::is_same_v<T, std::shared_ptr<IfNode>> ||
+                        std::is_same_v<T, std::shared_ptr<WhileNode>>) {
+            setFollowsRelations(s);
+          }
+        },
+        stmt);
   }
 }
 

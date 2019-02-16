@@ -30,7 +30,13 @@ std::string PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
   return "";  // TODO error handling
 }
 
-// void storeFollowsRelation(const LineBefore, const LineAfter);
+void PKBStorage::storeFollowsRelation(const LineBefore line_before,
+                                      const LineAfter line_after) {
+  follows_set.insert(std::pair<LineBefore, LineAfter>(line_before, line_after));
+  // line_before_line_after_map.insert(line_before, line_after);
+  // line_after_line_before_map.insert(line_after, line_before);
+}
+
 // void storeFollowsRelationS(const LineBefore, const LineAfter);
 // void storeParentRelation(const ParentLine, const ChildLine);
 // void storeParentRelationS(const ParentLine, const ChildLine);

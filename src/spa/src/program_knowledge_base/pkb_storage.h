@@ -113,15 +113,6 @@ class PKBStorage {
   void storeIf(const Line);
   void storeConstant(const Constant);
   void storeProcedure(const Procedure);
-
-  std::vector<Procedure> getProc() {
-    std::cout << procedure_list.size() << std::endl;
-    std::cout << procedure_list.size() << std::endl;
-    std::cout << procedure_list.size() << std::endl;
-    std::cout << procedure_list.size() << std::endl;
-    std::cout << procedure_list.size() << std::endl;
-    return procedure_list;
-  }
 };
 
 }  // namespace PKB

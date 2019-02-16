@@ -45,7 +45,6 @@ class PKBPreprocessor {
   void setParentRelationsIterator(const std::vector<StmtNode> stmt_lst,
                                   const std::shared_ptr<Node> parent_node);
 
-  // omitted NumberNode since it does not seem to be necessary
   void setUsesRelations(const std::shared_ptr<ProcedureNode> node);
   void setUsesRelations(const std::shared_ptr<IfNode> node);
   void setUsesRelations(const std::shared_ptr<WhileNode> node);

@@ -46,11 +46,21 @@ void PKBStorage::storeParentRelation(const ParentLine parent_line,
   addToVectorMap(parent_line_child_line_map, parent_line, child_line);
 }
 
-// void storeParentRelationS(const ParentLine, const ChildLine);
-// void storeProcedureUsesVarRelation(const Procedure, const Variable);
-// void storeLineUsesVarRelation(const Line, const Variable);
-// void storeProcedureModifiesVarRelation(const Procedure, const Variable);
-// void storeLineModifiesVarRelation(const Line, const Variable);
+// void PKBStorage::storeParentRelationS(const ParentLine, const ChildLine);
+// void PKBStorage::storeProcedureUsesVarRelation(const Procedure, const
+// Variable);
+
+void PKBStorage::storeLineUsesVarRelation(const Line line, const Variable var) {
+  line_uses_var_set.insert(std::pair<Line, Variable>(line, var));
+}
+
+// void PKBStorage::storeProcedureModifiesVarRelation(const Procedure, const
+// Variable);
+
+void PKBStorage::storeLineModifiesVarRelation(const Line line,
+                                              const Variable var) {
+  line_modifies_var_set.insert(std::pair<Line, Variable>(line, var));
+}
 
 void PKBStorage::storeVariable(const Variable var) {
   var_set.insert(var);

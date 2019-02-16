@@ -11,8 +11,8 @@ PKBPreprocessor::PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
   setDesignEntities(ast);
   setFollowsRelations(ast);
   setParentRelations(ast);
-  // setUsesRelations(ast);
-  // setModifiesRelations(ast);
+  setUsesRelations(ast);
+  setModifiesRelations(ast);
 }
 
 PKBPreprocessor::~PKBPreprocessor() {}
@@ -231,6 +231,122 @@ void PKBPreprocessor::setParentRelationsIterator(
           }
         },
         stmt);
+  }
+}
+
+void PKBPreprocessor::setUsesRelations(
+    const std::shared_ptr<ProcedureNode> node) {
+  setUsesRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setUsesRelations(const std::shared_ptr<IfNode> node) {
+  setUsesRelationsH(node->CondExpr, node);
+  setUsesRelationsIterator(node->StmtListThen->StmtList);
+  setUsesRelationsIterator(node->StmtListElse->StmtList);
+}
+
+void PKBPreprocessor::setUsesRelations(const std::shared_ptr<WhileNode> node) {
+  setUsesRelationsH(node->CondExpr, node);
+  setUsesRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setUsesRelations(const std::shared_ptr<PrintNode> node) {
+  setUsesRelationsH(node->Var, node);
+}
+
+void PKBPreprocessor::setUsesRelations(const std::shared_ptr<AssignNode> node) {
+  setUsesRelationsH(node->Exp, node);
+}
+
+void PKBPreprocessor::setUsesRelations(const std::shared_ptr<ReadNode>) {}
+
+//
+void PKBPreprocessor::setUsesRelationsH(const Expr node,
+                                        std::shared_ptr<Node> parent_node) {
+  std::visit(
+      [this, parent_node](const auto &n) { setUsesRelationsH(n, parent_node); },
+      node);
+}
+
+void PKBPreprocessor::setUsesRelationsH(
+    const std::shared_ptr<CondExprNode> node,
+    const std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  setUsesRelationsH(node->RelExpr, parent_node);
+  setUsesRelationsH(node->CondLHS, parent_node);
+  setUsesRelationsH(node->CondRHS, parent_node);
+}
+
+void PKBPreprocessor::setUsesRelationsH(
+    const std::shared_ptr<RelExprNode> node,
+    const std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  setUsesRelationsH(node->LHS, parent_node);
+  setUsesRelationsH(node->RHS, parent_node);
+}
+
+void PKBPreprocessor::setUsesRelationsH(std::shared_ptr<NumberNode>,
+                                        const std::shared_ptr<Node>){};
+
+void PKBPreprocessor::setUsesRelationsH(
+    const std::shared_ptr<VariableNode> node,
+    const std::shared_ptr<Node> parent_node) {
+  if (node == nullptr) {
+    return;
+  }
+  storage->storeLineUsesVarRelation(storage->getLineFromNode(parent_node),
+                                    node->Name);
+}
+
+void PKBPreprocessor::setUsesRelationsIterator(
+    const std::vector<StmtNode> stmt_lst) {
+  for (const auto &stmt : stmt_lst) {
+    std::visit([this](const auto &s) { setUsesRelations(s); }, stmt);
+  }
+}
+
+void PKBPreprocessor::setModifiesRelations(
+    const std::shared_ptr<ProcedureNode> node) {
+  setModifiesRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setModifiesRelations(const std::shared_ptr<PrintNode>) {}
+
+void PKBPreprocessor::setModifiesRelations(const std::shared_ptr<IfNode> node) {
+  setModifiesRelationsIterator(node->StmtListThen->StmtList);
+  setModifiesRelationsIterator(node->StmtListElse->StmtList);
+}
+
+void PKBPreprocessor::setModifiesRelations(
+    const std::shared_ptr<WhileNode> node) {
+  setModifiesRelationsIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setModifiesRelations(
+    const std::shared_ptr<ReadNode> node) {
+  setModifiesRelationsH(node->Var, node);
+}
+
+void PKBPreprocessor::setModifiesRelations(
+    const std::shared_ptr<AssignNode> node) {
+  setModifiesRelationsH(node->Var, node);
+}
+
+void PKBPreprocessor::setModifiesRelationsH(
+    const std::shared_ptr<VariableNode> node,
+    const std::shared_ptr<Node> parent_node) {
+  storage->storeLineModifiesVarRelation(storage->getLineFromNode(parent_node),
+                                        node->Name);
+}
+
+void PKBPreprocessor::setModifiesRelationsIterator(
+    const std::vector<StmtNode> stmt_lst) {
+  for (const auto &stmt : stmt_lst) {
+    std::visit([this](const auto &s) { setModifiesRelations(s); }, stmt);
   }
 }
 

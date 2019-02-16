@@ -17,6 +17,42 @@ PKBPreprocessor::PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
 
 PKBPreprocessor::~PKBPreprocessor() {}
 
+void PKBPreprocessor::setLineNumbers(
+    const std::shared_ptr<ProcedureNode> node) {
+  setLineNumbersIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setLineNumbers(const std::shared_ptr<IfNode> node) {
+  storage->storeLine(node);
+  setLineNumbersIterator(node->StmtListThen->StmtList);
+  setLineNumbersIterator(node->StmtListElse->StmtList);
+}
+
+void PKBPreprocessor::setLineNumbers(const std::shared_ptr<WhileNode> node) {
+  storage->storeLine(node);
+  setLineNumbersIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setLineNumbers(const std::shared_ptr<ReadNode> node) {
+  storage->storeLine(node);
+}
+
+void PKBPreprocessor::setLineNumbers(const std::shared_ptr<PrintNode> node) {
+  storage->storeLine(node);
+}
+
+void PKBPreprocessor::setLineNumbers(const std::shared_ptr<AssignNode> node) {
+  storage->storeLine(node);
+}
+
+void PKBPreprocessor::setLineNumbersIterator(
+    const std::vector<StmtNode> stmt_lst) {
+  // iterate through AST via DFS
+  for (const auto &stmt : stmt_lst) {
+    std::visit([this](const auto &s) { setLineNumbers(s); }, stmt);
+  }
+}
+
 void PKBPreprocessor::setDesignEntities(
     const std::shared_ptr<ProcedureNode> node) {
   storage->storeProcedure(node->Name);
@@ -24,6 +60,7 @@ void PKBPreprocessor::setDesignEntities(
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<IfNode> node) {
+  storage->storeStatement(storage->getLineFromNode(node));
   storage->storeIf(storage->getLineFromNode(node));
   setDesignEntities(node->CondExpr);
   setDesignEntitiesIterator(node->StmtListThen->StmtList);
@@ -31,23 +68,27 @@ void PKBPreprocessor::setDesignEntities(const std::shared_ptr<IfNode> node) {
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<WhileNode> node) {
+  storage->storeStatement(storage->getLineFromNode(node));
   storage->storeWhile(storage->getLineFromNode(node));
   setDesignEntities(node->CondExpr);
   setDesignEntitiesIterator(node->StmtList->StmtList);
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<ReadNode> node) {
+  storage->storeStatement(storage->getLineFromNode(node));
   storage->storeRead(storage->getLineFromNode(node));
   setDesignEntities(node->Var);
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<PrintNode> node) {
+  storage->storeStatement(storage->getLineFromNode(node));
   storage->storePrint(storage->getLineFromNode(node));
   setDesignEntities(node->Var);
 }
 
 void PKBPreprocessor::setDesignEntities(
     const std::shared_ptr<AssignNode> node) {
+  storage->storeStatement(storage->getLineFromNode(node));
   storage->storeAssign(storage->getLineFromNode(node));
   setDesignEntities(node->Exp);
 }
@@ -101,42 +142,6 @@ void PKBPreprocessor::setDesignEntitiesIterator(
   // iterate through AST via DFS
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setDesignEntities(s); }, stmt);
-  }
-}
-
-void PKBPreprocessor::setLineNumbers(
-    const std::shared_ptr<ProcedureNode> node) {
-  setLineNumbersIterator(node->StmtList->StmtList);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<IfNode> node) {
-  storage->storeLine(node);
-  setLineNumbersIterator(node->StmtListThen->StmtList);
-  setLineNumbersIterator(node->StmtListElse->StmtList);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<WhileNode> node) {
-  storage->storeLine(node);
-  setLineNumbersIterator(node->StmtList->StmtList);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<ReadNode> node) {
-  storage->storeLine(node);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<PrintNode> node) {
-  storage->storeLine(node);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<AssignNode> node) {
-  storage->storeLine(node);
-}
-
-void PKBPreprocessor::setLineNumbersIterator(
-    const std::vector<StmtNode> stmt_lst) {
-  // iterate through AST via DFS
-  for (const auto &stmt : stmt_lst) {
-    std::visit([this](const auto &s) { setLineNumbers(s); }, stmt);
   }
 }
 

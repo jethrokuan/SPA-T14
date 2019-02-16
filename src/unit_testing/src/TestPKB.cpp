@@ -36,6 +36,22 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   auto assign_exist_test_2 = pkb.isAssignExists("2");
   REQUIRE(assign_exist_test_2 == false);
 
+  // assign
+  auto statement_exist_test_1 = pkb.isStatementExists("1");
+  REQUIRE(statement_exist_test_1 == true);
+  auto statement_exist_test_2 = pkb.isStatementExists("2");
+  REQUIRE(statement_exist_test_2 == true);
+  auto statement_exist_test_3 = pkb.isStatementExists("3");
+  REQUIRE(statement_exist_test_3 == true);
+  auto statement_exist_test_4 = pkb.isStatementExists("4");
+  REQUIRE(statement_exist_test_4 == true);
+  auto statement_exist_test_5 = pkb.isStatementExists("5");
+  REQUIRE(statement_exist_test_5 == true);
+  auto statement_exist_test_6 = pkb.isStatementExists("6");
+  REQUIRE(statement_exist_test_6 == false);
+  auto statement_exist_test_7 = pkb.isStatementExists("0");
+  REQUIRE(statement_exist_test_7 == false);
+
   // print
   auto print_exist_test_1 = pkb.isPrintExists("3");
   REQUIRE(print_exist_test_1 == true);

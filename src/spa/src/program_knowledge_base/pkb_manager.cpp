@@ -35,6 +35,11 @@ bool PKBManager::isAssignExists(Line line) {
   return pkb_storage->assign_set.find(line) != pkb_storage->assign_set.end();
 }
 
+bool PKBManager::isStatementExists(Line line) {
+  return pkb_storage->statement_set.find(line) !=
+         pkb_storage->statement_set.end();
+}
+
 bool PKBManager::isPrintExists(Line line) {
   return pkb_storage->print_set.find(line) != pkb_storage->assign_set.end();
 }

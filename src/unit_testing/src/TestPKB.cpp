@@ -33,6 +33,44 @@ TEST_CASE ("Test PKB works") {
   auto var_exist_test_4 = pkb.isVariableExists("l");
   REQUIRE(var_exist_test_4 == false);
 
+  // assign
+  auto assign_exist_test_1 = pkb.isAssignExists("1");
+  REQUIRE(assign_exist_test_1 == true);
+  auto assign_exist_test_2 = pkb.isAssignExists("2");
+  REQUIRE(assign_exist_test_2 == false);
+
+  // print
+  auto print_exist_test_1 = pkb.isPrintExists("3");
+  REQUIRE(print_exist_test_1 == true);
+  auto print_exist_test_2 = pkb.isPrintExists("4");
+  REQUIRE(print_exist_test_2 == true);
+  auto print_exist_test_3 = pkb.isPrintExists("5");
+  REQUIRE(print_exist_test_3 == false);
+
+  // read
+  auto read_exist_test_1 = pkb.isReadExists("5");
+  REQUIRE(read_exist_test_1 == true);
+  auto read_exist_test_2 = pkb.isReadExists("2");
+  REQUIRE(read_exist_test_2 == false);
+
+  // while
+  auto while_exist_test_1 = pkb.isWhileExists("2");
+  REQUIRE(while_exist_test_1 == true);
+  auto while_exist_test_2 = pkb.isWhileExists("3");
+  REQUIRE(while_exist_test_2 == false);
+
+  // if
+  auto if_exist_test_1 = pkb.isIfExists("1");
+  REQUIRE(if_exist_test_1 == false);
+  auto if_exist_test_2 = pkb.isIfExists("2");
+  REQUIRE(if_exist_test_2 == false);
+
+  // constant
+  auto constant_exist_test_1 = pkb.isConstantExists("5");
+  REQUIRE(constant_exist_test_1 == true);
+  auto constant_exist_test_2 = pkb.isConstantExists("222");
+  REQUIRE(constant_exist_test_2 == false);
+
   // procedure
   auto proc_exist_test_1 = pkb.isProcedureExists("main");
   REQUIRE(proc_exist_test_1 == true);

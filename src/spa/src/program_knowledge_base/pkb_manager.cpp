@@ -272,6 +272,33 @@ bool PKBManager::isReadExists(Line line) {
   }
 }
 
+bool PKBManager::isWhileExists(Line line) {
+  if (pkb_storage->while_set.find(line) !=
+      pkb_storage->while_set.end()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool PKBManager::isIfExists(Line line) {
+  if (pkb_storage->if_set.find(line) !=
+      pkb_storage->if_set.end()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool PKBManager::isConstantExists(Constant c) {
+  if (pkb_storage->constant_set.find(c) !=
+      pkb_storage->constant_set.end()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool PKBManager::isProcedureExists(Procedure proc) {
   if (pkb_storage->procedure_set.find(proc) !=
       pkb_storage->procedure_set.end()) {

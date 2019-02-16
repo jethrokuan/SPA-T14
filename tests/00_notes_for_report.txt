@@ -30,13 +30,27 @@ Testing Uses select clause (27-31)
 =============================================
 Testing Modifies select clause (32)
 =============================================
-- select all variables that are modified (32), this is done with "_", so all variables that are modified should be returned
+- select all variables that are modified (32), this is done with "_", so all variables that are modified should be returned 
+* UPDATE:the query 32 is actually semantically invalid according to Basic SPA requirements, page 21 
 =============================================
 TO BE ADDED: Invalid Queries for the 4 clauses
 =============================================
 ======================================================================================
 112: Two Synonym, One Clause - WIP
-======================================================================================
-
-
-
+=========================================================================================================================
+Testing Uses select clause (1-4)
+=============================================
+- tested some combinations of design entities (1-4)
+=============================================
+Testing Modifies select clause (5-9)
+=============================================
+- tested some combinations of design entities (5-9)
+- TODO: need a wider variety of SIMPLE Source to test the queries
+=============================================
+Testing Parent and Parent* select clause (10-11)
+=============================================
+- tested basic case of parent and parent* (10-11)
+=============================================
+Testing Follows and Follows* select clause (12-14)
+=============================================
+- tested basic case of follows and follows* (12-14)

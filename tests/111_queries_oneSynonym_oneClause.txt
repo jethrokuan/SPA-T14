@@ -146,8 +146,8 @@ while w;
 Select w such that Uses(w, "x")
 4, 7, 11, 16
 5000
-32 - valid query (START OF MODIFIES SELECT CLAUSE)
+32 - invalid query (START OF MODIFIES SELECT CLAUSE) / Semantic Error
 variable v;
 Select v such that Modifies(_,v)
-x, y, z
+invalid
 5000

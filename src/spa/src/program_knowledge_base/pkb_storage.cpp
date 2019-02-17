@@ -60,28 +60,28 @@ void PKBStorage::storeParentRelationS(const ParentLine parent_line,
 void PKBStorage::storeProcedureUsesVarRelation(const Procedure proc,
                                                const Variable var) {
   procedure_uses_var_set.insert(std::pair<Procedure, Variable>(proc, var));
-  addToVectorMap(procedure_uses_var_map, proc, var);
-  addToVectorMap(var_used_by_procedure_map, var, proc);
+  addToVectorMap(procedure_uses_var_map, var, proc);
+  addToVectorMap(var_used_by_procedure_map, proc, var);
 }
 
 void PKBStorage::storeLineUsesVarRelation(const Line line, const Variable var) {
   line_uses_var_set.insert(std::pair<Line, Variable>(line, var));
-  addToVectorMap(line_uses_var_map, line, var);
-  addToVectorMap(var_used_by_line_map, var, line);
+  addToVectorMap(line_uses_var_map, var, line);
+  addToVectorMap(var_used_by_line_map, line, var);
 }
 
 void PKBStorage::storeProcedureModifiesVarRelation(const Procedure proc,
                                                    const Variable var) {
   procedure_modifies_var_set.insert(std::pair<Procedure, Variable>(proc, var));
-  addToVectorMap(procedure_modifies_var_map, proc, var);
-  addToVectorMap(var_modified_by_procedure_map, var, proc);
+  addToVectorMap(procedure_modifies_var_map, var, proc);
+  addToVectorMap(var_modified_by_procedure_map, proc, var);
 }
 
 void PKBStorage::storeLineModifiesVarRelation(const Line line,
                                               const Variable var) {
   line_modifies_var_set.insert(std::pair<Line, Variable>(line, var));
-  addToVectorMap(line_modifies_var_map, line, var);
-  addToVectorMap(var_modified_by_line_map, var, line);
+  addToVectorMap(line_modifies_var_map, var, line);
+  addToVectorMap(var_modified_by_line_map, line, var);
 }
 
 void PKBStorage::storeVariable(const Variable var) {
@@ -139,8 +139,12 @@ Procedure PKBStorage::getProcedureFromLine(const Line line) {
 }
 
 // helper
+// TODO currently adds duplicates which is undesirable)
+// should be checking if it exists in the set before adding them?
+// can perhaps ask Sri if we should simply use set instead of vector
+// since ordering does not matter
 void PKBStorage::addToVectorMap(
-    std::unordered_map<std::string, std::vector<std::string>> umap,
+    std::unordered_map<std::string, std::vector<std::string>> &umap,
     std::string index, std::string data) {
   if (umap.find(index) == umap.end()) {
     // create new vector

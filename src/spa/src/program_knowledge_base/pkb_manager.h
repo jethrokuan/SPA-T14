@@ -17,6 +17,10 @@ class PKBManager {
  private:
   std::shared_ptr<PKBStorage> pkb_storage = std::make_shared<PKBStorage>();
 
+  std::vector<std::string> getUniqueVectorFromMap(
+      const std::unordered_map<std::string, std::vector<std::string>> &,
+      const std::string);
+
  public:
   PKBManager(const std::shared_ptr<ProcedureNode> ast);
   ~PKBManager();
@@ -24,15 +28,15 @@ class PKBManager {
   // API exposed to Query Manager
 
   // is design entity exists
-  bool isVariableExists(Variable);
-  bool isAssignExists(Line);
-  bool isStatementExists(Line);
-  bool isPrintExists(Line);
-  bool isReadExists(Line);
-  bool isWhileExists(Line);
-  bool isIfExists(Line);
-  bool isConstantExists(Constant);
-  bool isProcedureExists(Procedure);
+  bool isVariableExists(const Variable);
+  bool isAssignExists(const Line);
+  bool isStatementExists(const Line);
+  bool isPrintExists(const Line);
+  bool isReadExists(const Line);
+  bool isWhileExists(const Line);
+  bool isIfExists(const Line);
+  bool isConstantExists(const Constant);
+  bool isProcedureExists(const Procedure);
 
   // get design entities
   std::vector<Variable> getVariableList();

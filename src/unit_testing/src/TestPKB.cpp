@@ -143,6 +143,14 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   auto uses_test_8 = pkb.isProcedureUsesVar("test", "alpha");
   REQUIRE(uses_test_8 == false);
 
+  std::unordered_set<std::string> uses_test_9_check;
+  uses_test_9_check.insert("i");
+  uses_test_9_check.insert("j");
+  auto uses_test_9_vector = pkb.getVarUsedByProcedure("main");
+  std::unordered_set<Variable> uses_test_9_set(uses_test_9_vector.begin(),
+                                               uses_test_9_vector.end());
+  REQUIRE(uses_test_9_set == uses_test_9_check);
+
   // test modifies
   auto modifies_test_1 = pkb.isLineModifiesVar("5", "i");
   REQUIRE(modifies_test_1 == true);
@@ -165,4 +173,11 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   REQUIRE(modifies_test_9 == false);
   auto modifies_test_10 = pkb.isProcedureModifiesVar("test", "asd");
   REQUIRE(modifies_test_10 == false);
+
+  std::unordered_set<std::string> modifies_test_11_check;
+  modifies_test_11_check.insert("i");
+  auto modifies_test_11_vector = pkb.getVarModifiedByProcedure("main");
+  std::unordered_set<Variable> modifies_test_11_set(
+      modifies_test_11_vector.begin(), modifies_test_11_vector.end());
+  REQUIRE(modifies_test_11_set == modifies_test_11_check);
 }

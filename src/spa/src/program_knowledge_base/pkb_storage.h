@@ -17,7 +17,7 @@ class PKBStorage {
   // helper
   std::unordered_map<Line, Procedure> line_procedure_map;
   void addToVectorMap(
-      std::unordered_map<std::string, std::vector<std::string>> umap,
+      std::unordered_map<std::string, std::vector<std::string>> &umap,
       std::string index, std::string data);
 
  public:
@@ -53,11 +53,10 @@ class PKBStorage {
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
       procedure_uses_var_set;
   std::unordered_set<std::pair<Line, Variable>, pair_hash> line_uses_var_set;
-  std::unordered_map<Procedure, std::vector<Variable>> procedure_uses_var_map;
-  std::unordered_map<Line, std::vector<Variable>> line_uses_var_map;
-  std::unordered_map<Variable, std::vector<Procedure>>
-      var_used_by_procedure_map;
-  std::unordered_map<Variable, std::vector<Line>> var_used_by_line_map;
+  std::unordered_map<Procedure, std::vector<Line>> var_used_by_procedure_map;
+  std::unordered_map<Line, std::vector<Variable>> var_used_by_line_map;
+  std::unordered_map<Variable, std::vector<Procedure>> procedure_uses_var_map;
+  std::unordered_map<Variable, std::vector<Variable>> line_uses_var_map;
 
   // modifies
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
@@ -65,11 +64,11 @@ class PKBStorage {
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
       line_modifies_var_set;
   std::unordered_map<Procedure, std::vector<Variable>>
-      procedure_modifies_var_map;
-  std::unordered_map<Line, std::vector<Variable>> line_modifies_var_map;
-  std::unordered_map<Variable, std::vector<Procedure>>
       var_modified_by_procedure_map;
-  std::unordered_map<Variable, std::vector<Line>> var_modified_by_line_map;
+  std::unordered_map<Line, std::vector<Variable>> var_modified_by_line_map;
+  std::unordered_map<Variable, std::vector<Procedure>>
+      procedure_modifies_var_map;
+  std::unordered_map<Variable, std::vector<Line>> line_modifies_var_map;
 
   // design entities
   std::unordered_set<Variable> var_set;

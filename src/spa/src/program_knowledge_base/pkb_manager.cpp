@@ -15,41 +15,56 @@ PKBManager::PKBManager(const std::shared_ptr<ProcedureNode> ast) {
 
 PKBManager::~PKBManager() {}
 
+// helper
+// returns empty vector if key does not exist
+std::vector<std::string> PKBManager::getUniqueVectorFromMap(
+    const std::unordered_map<std::string, std::vector<std::string>> &umap,
+    const std::string key) {
+  std::vector<std::string> v;
+  if (umap.find(key) != umap.end()) {
+    v = umap.at(key);
+  }
+  std::sort(v.begin(), v.end());
+  v.erase(std::unique(v.begin(), v.end()), v.end());
+
+  return v;
+}
+
 // is design entity exists
-bool PKBManager::isVariableExists(Variable var) {
+bool PKBManager::isVariableExists(const Variable var) {
   return pkb_storage->var_set.find(var) != pkb_storage->var_set.end();
 }
 
-bool PKBManager::isAssignExists(Line line) {
+bool PKBManager::isAssignExists(const Line line) {
   return pkb_storage->assign_set.find(line) != pkb_storage->assign_set.end();
 }
 
-bool PKBManager::isStatementExists(Line line) {
+bool PKBManager::isStatementExists(const Line line) {
   return pkb_storage->statement_set.find(line) !=
          pkb_storage->statement_set.end();
 }
 
-bool PKBManager::isPrintExists(Line line) {
+bool PKBManager::isPrintExists(const Line line) {
   return pkb_storage->print_set.find(line) != pkb_storage->assign_set.end();
 }
 
-bool PKBManager::isReadExists(Line line) {
+bool PKBManager::isReadExists(const Line line) {
   return pkb_storage->read_set.find(line) != pkb_storage->assign_set.end();
 }
 
-bool PKBManager::isWhileExists(Line line) {
+bool PKBManager::isWhileExists(const Line line) {
   return pkb_storage->while_set.find(line) != pkb_storage->while_set.end();
 }
 
-bool PKBManager::isIfExists(Line line) {
+bool PKBManager::isIfExists(const Line line) {
   return pkb_storage->if_set.find(line) != pkb_storage->if_set.end();
 }
 
-bool PKBManager::isConstantExists(Constant c) {
+bool PKBManager::isConstantExists(const Constant c) {
   return pkb_storage->constant_set.find(c) != pkb_storage->constant_set.end();
 }
 
-bool PKBManager::isProcedureExists(Procedure proc) {
+bool PKBManager::isProcedureExists(const Procedure proc) {
   return pkb_storage->procedure_set.find(proc) !=
          pkb_storage->procedure_set.end();
 }
@@ -126,36 +141,37 @@ bool PKBManager::isLineModifiesVar(const Line line, const Variable var) {
 // get relationship mapping
 
 std::vector<Procedure> PKBManager::getProcedureUsesVar(const Variable var) {
-  return pkb_storage->procedure_uses_var_map.at(var);
+  return getUniqueVectorFromMap(pkb_storage->procedure_uses_var_map, var);
 }
 
 std::vector<Line> PKBManager::getLineUsesVar(const Variable var) {
-  return pkb_storage->line_uses_var_map.at(var);
+  return getUniqueVectorFromMap(pkb_storage->line_uses_var_map, var);
 }
 
 std::vector<Variable> PKBManager::getVarUsedByProcedure(const Procedure proc) {
-  return pkb_storage->var_used_by_procedure_map.at(proc);
+  return getUniqueVectorFromMap(pkb_storage->var_used_by_procedure_map, proc);
 }
 
 std::vector<Variable> PKBManager::getVarUsedByLine(const Line line) {
-  return pkb_storage->var_used_by_line_map.at(line);
+  return getUniqueVectorFromMap(pkb_storage->var_used_by_line_map, line);
 }
 
 std::vector<Variable> PKBManager::getVarModifiedByProcedure(
     const Procedure proc) {
-  return pkb_storage->var_modified_by_procedure_map.at(proc);
+  return getUniqueVectorFromMap(pkb_storage->var_modified_by_procedure_map,
+                                proc);
 }
 
 std::vector<Variable> PKBManager::getVarModifiedByLine(const Line line) {
-  return pkb_storage->var_modified_by_line_map.at(line);
+  return getUniqueVectorFromMap(pkb_storage->var_modified_by_line_map, line);
 }
 
 std::vector<Procedure> PKBManager::getProcedureModifiesVar(const Variable var) {
-  return pkb_storage->procedure_modifies_var_map.at(var);
+  return getUniqueVectorFromMap(pkb_storage->procedure_modifies_var_map, var);
 }
 
 std::vector<Line> PKBManager::getLineModifiesVar(const Variable var) {
-  return pkb_storage->line_modifies_var_map.at(var);
+  return getUniqueVectorFromMap(pkb_storage->line_modifies_var_map, var);
 }
 
 }  // namespace PKB

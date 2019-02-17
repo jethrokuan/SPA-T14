@@ -40,6 +40,8 @@ void PKBStorage::storeFollowsRelation(const LineBefore line_before,
 
 void PKBStorage::storeFollowsRelationS(const LineBefore line_before,
                                        const LineAfter line_after) {
+  follows_set_s.insert(
+      std::pair<LineBefore, LineAfter>(line_before, line_after));
   addToVectorMap(line_before_line_after_map_s, line_before, line_after);
   addToVectorMap(line_after_line_before_map_s, line_after, line_before);
 }
@@ -53,6 +55,8 @@ void PKBStorage::storeParentRelation(const ParentLine parent_line,
 
 void PKBStorage::storeParentRelationS(const ParentLine parent_line,
                                       const ChildLine child_line) {
+  parent_set_s.insert(
+      std::pair<ParentLine, ChildLine>(parent_line, child_line));
   addToVectorMap(child_line_parent_line_map_s, child_line, parent_line);
   addToVectorMap(parent_line_child_line_map_s, parent_line, child_line);
 }
@@ -145,7 +149,7 @@ Procedure PKBStorage::getProcedureFromLine(const Line line) {
 // since ordering does not matter
 void PKBStorage::addToVectorMap(
     std::unordered_map<std::string, std::vector<std::string>> &umap,
-    std::string index, std::string data) {
+    const std::string index, std::string data) {
   if (umap.find(index) == umap.end()) {
     // create new vector
     std::vector<std::string> v;

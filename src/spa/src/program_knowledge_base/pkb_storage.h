@@ -18,7 +18,7 @@ class PKBStorage {
   std::unordered_map<Line, Procedure> line_procedure_map;
   void addToVectorMap(
       std::unordered_map<std::string, std::vector<std::string>> &umap,
-      std::string index, std::string data);
+      const std::string index, std::string data);
 
  public:
   PKBStorage();
@@ -32,6 +32,7 @@ class PKBStorage {
 
   // follows
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set;
+  std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set_s;
   std::unordered_map<LineBefore, LineAfter> line_before_line_after_map;
   std::unordered_map<LineAfter, LineBefore> line_after_line_before_map;
   std::unordered_map<LineBefore, std::vector<LineAfter>>
@@ -41,6 +42,7 @@ class PKBStorage {
 
   // parent
   std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set;
+  std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set_s;
   std::unordered_map<ChildLine, ParentLine> child_line_parent_line_map;
   std::unordered_map<ParentLine, std::vector<ChildLine>>
       parent_line_child_line_map;

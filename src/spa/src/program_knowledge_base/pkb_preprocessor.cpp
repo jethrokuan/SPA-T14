@@ -172,20 +172,29 @@ void PKBPreprocessor::setFollowsRelations(
 
 void PKBPreprocessor::setFollowsRelationsIterator(
     const std::vector<StmtNode> stmt_lst) {
-  // add relations
+  // add direct relations
   for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
-    auto cur_line_number = std::visit(
+    Line cur_line_number = std::visit(
         [this](const auto &s) { return storage->getLineFromNode(s); },
         stmt_lst[i]);
 
-    auto next_line_number = std::visit(
+    Line next_line_number = std::visit(
         [this](const auto &s) { return storage->getLineFromNode(s); },
         stmt_lst[i + 1]);
     storage->storeFollowsRelation(cur_line_number, next_line_number);
-    // DEBUG
-    // std::cout << cur_line_number;
-    // std::cout << " is followed by ";
-    // std::cout << next_line_number << std::endl;
+  }
+  // add indirect relations
+  for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
+    for (std::size_t j = i + 1; j < stmt_lst.size(); j++) {
+      Line cur_line_number = std::visit(
+          [this](const auto &s) { return storage->getLineFromNode(s); },
+          stmt_lst[i]);
+
+      Line next_line_number = std::visit(
+          [this](const auto &s) { return storage->getLineFromNode(s); },
+          stmt_lst[j]);
+      storage->storeFollowsRelationS(cur_line_number, next_line_number);
+    }
   }
 
   // iterate through AST via DFS

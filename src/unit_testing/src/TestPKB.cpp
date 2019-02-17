@@ -113,6 +113,22 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   REQUIRE(follows_test_9 == false);
   auto follows_test_10 = pkb.isLineFollowLine("8", "0");
   REQUIRE(follows_test_10 == false);
+  auto follows_test_11 = pkb.isLineFollowLineS("1", "2");
+  REQUIRE(follows_test_11 == true);
+  auto follows_test_12 = pkb.isLineFollowLineS("1", "3");
+  REQUIRE(follows_test_12 == false);
+  auto follows_test_13 = pkb.isLineFollowLineS("1", "4");
+  REQUIRE(follows_test_13 == true);
+  auto follows_test_14 = pkb.isLineFollowLineS("1", "5");
+  REQUIRE(follows_test_14 == true);
+  auto follows_test_15 = pkb.isLineFollowLineS("2", "3");
+  REQUIRE(follows_test_15 == false);
+  auto follows_test_16 = pkb.isLineFollowLineS("2", "4");
+  REQUIRE(follows_test_16 == true);
+  auto follows_test_17 = pkb.isLineFollowLineS("2", "5");
+  REQUIRE(follows_test_17 == true);
+  auto follows_test_18 = pkb.isLineFollowLineS("3", "4");
+  REQUIRE(follows_test_18 == false);
 
   // test parent
   auto parent_test_1 = pkb.isLineParentLine("2", "3");

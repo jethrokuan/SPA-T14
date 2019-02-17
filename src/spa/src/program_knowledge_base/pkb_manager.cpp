@@ -109,9 +109,21 @@ bool PKBManager::isLineFollowLine(const LineBefore line_before,
              line_before, line_after)) != pkb_storage->follows_set.end();
 }
 
+bool PKBManager::isLineFollowLineS(const LineBefore line_before,
+                                   const LineAfter line_after) {
+  return pkb_storage->follows_set_s.find(std::pair<LineBefore, LineAfter>(
+             line_before, line_after)) != pkb_storage->follows_set.end();
+}
+
 bool PKBManager::isLineParentLine(const ParentLine parent_line,
                                   const ChildLine child_line) {
   return pkb_storage->parent_set.find(std::pair<ParentLine, ChildLine>(
+             parent_line, child_line)) != pkb_storage->follows_set.end();
+}
+
+bool PKBManager::isLineParentLineS(const ParentLine parent_line,
+                                   const ChildLine child_line) {
+  return pkb_storage->parent_set_s.find(std::pair<ParentLine, ChildLine>(
              parent_line, child_line)) != pkb_storage->follows_set.end();
 }
 

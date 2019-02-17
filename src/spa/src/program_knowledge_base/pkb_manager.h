@@ -51,7 +51,9 @@ class PKBManager {
 
   // is relationship valid
   bool isLineFollowLine(const LineBefore, const LineAfter);
+  bool isLineFollowLineS(const LineBefore, const LineAfter);
   bool isLineParentLine(const ParentLine, const ChildLine);
+  bool isLineParentLineS(const ParentLine, const ChildLine);
   bool isProcedureModifiesVar(const Procedure, const Variable);
   bool isLineModifiesVar(const Line, const Variable);
   bool isProcedureUsesVar(const Procedure, const Variable);

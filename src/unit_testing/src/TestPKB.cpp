@@ -51,6 +51,8 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   REQUIRE(statement_exist_test_6 == false);
   auto statement_exist_test_7 = pkb.isStatementExists("0");
   REQUIRE(statement_exist_test_7 == false);
+  auto statement_exist_test_8 = pkb.isStatementExists("-12");
+  REQUIRE(statement_exist_test_8 == false);
 
   // print
   auto print_exist_test_1 = pkb.isPrintExists("3");
@@ -132,7 +134,16 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   auto uses_test_4 = pkb.isLineUsesVar("2", "alpha");
   REQUIRE(uses_test_4 == false);
 
-  // test uses
+  auto uses_test_5 = pkb.isProcedureUsesVar("main", "i");
+  REQUIRE(uses_test_5 == true);
+  auto uses_test_6 = pkb.isProcedureUsesVar("main", "j");
+  REQUIRE(uses_test_6 == true);
+  auto uses_test_7 = pkb.isProcedureUsesVar("main", "k");
+  REQUIRE(uses_test_7 == false);
+  auto uses_test_8 = pkb.isProcedureUsesVar("test", "alpha");
+  REQUIRE(uses_test_8 == false);
+
+  // test modifies
   auto modifies_test_1 = pkb.isLineModifiesVar("5", "i");
   REQUIRE(modifies_test_1 == true);
   auto modifies_test_2 = pkb.isLineModifiesVar("1", "i");
@@ -145,4 +156,13 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   REQUIRE(modifies_test_5 == false);
   auto modifies_test_6 = pkb.isLineModifiesVar("10", "i");
   REQUIRE(modifies_test_6 == false);
+
+  auto modifies_test_7 = pkb.isProcedureModifiesVar("main", "i");
+  REQUIRE(modifies_test_7 == true);
+  auto modifies_test_8 = pkb.isProcedureModifiesVar("main", "j");
+  REQUIRE(modifies_test_8 == false);
+  auto modifies_test_9 = pkb.isProcedureModifiesVar("test", "i");
+  REQUIRE(modifies_test_9 == false);
+  auto modifies_test_10 = pkb.isProcedureModifiesVar("test", "asd");
+  REQUIRE(modifies_test_10 == false);
 }

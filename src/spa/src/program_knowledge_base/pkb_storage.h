@@ -14,7 +14,8 @@ namespace PKB {
 
 class PKBStorage {
  private:
-  // helpers
+  // helper
+  std::unordered_map<Line, Procedure> line_procedure_map;
   void addToVectorMap(
       std::unordered_map<std::string, std::vector<std::string>> umap,
       std::string index, std::string data);
@@ -69,6 +70,7 @@ class PKBStorage {
       var_modified_by_procedure;
   std::unordered_map<Variable, std::vector<Line>> var_modified_by_line;
 
+  // design entities
   std::unordered_set<Variable> var_set;
   std::unordered_set<Line> assign_set;
   std::unordered_set<Line> statement_set;
@@ -94,7 +96,7 @@ class PKBStorage {
   // TODO upon adding the hash function for line number mapping
   // change the parameters for storeLine to take in both
   // the node and the line number (instead of just the node)
-  void storeLine(const std::shared_ptr<Node> node);
+  Line storeLine(const std::shared_ptr<Node> node);
   void storeFollowsRelation(const LineBefore, const LineAfter);
   void storeFollowsRelationS(const LineBefore, const LineAfter);
   void storeParentRelation(const ParentLine, const ChildLine);
@@ -113,6 +115,10 @@ class PKBStorage {
   void storeIf(const Line);
   void storeConstant(const Constant);
   void storeProcedure(const Procedure);
+
+  // helper
+  void storeLineProcedureRelation(const Line, const Procedure);
+  Procedure getProcedureFromLine(const Line);
 };
 
 }  // namespace PKB

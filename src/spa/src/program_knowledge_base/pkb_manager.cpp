@@ -77,24 +77,23 @@ bool PKBManager::isLineParentLine(const ParentLine parent_line,
              parent_line, child_line)) != pkb_storage->follows_set.end();
 }
 
-// bool PKBManager::isProcedureUsesVar(const Procedure proc, const Variable var)
-// {
-//   return pkb_storage->procedure_uses_var_set.find(
-//              std::pair<Procedure, Variable>(proc, var)) !=
-//          pkb_storage->procedure_uses_var_set.end();
-// }
+bool PKBManager::isProcedureUsesVar(const Procedure proc, const Variable var) {
+  return pkb_storage->procedure_uses_var_set.find(
+             std::pair<Procedure, Variable>(proc, var)) !=
+         pkb_storage->procedure_uses_var_set.end();
+}
 
 bool PKBManager::isLineUsesVar(const Line line, const Variable var) {
   return pkb_storage->line_uses_var_set.find(std::pair<Line, Variable>(
              line, var)) != pkb_storage->line_uses_var_set.end();
 }
 
-// bool PKBManager::isProcedureModifiesVar(const Procedure proc,
-//                                         const Variable var) {
-//   return pkb_storage->procedure_modifies_var_set.find(
-//              std::pair<Procedure, Variable>(proc, var)) !=
-//          pkb_storage->procedure_modifies_var_set.end();
-// }
+bool PKBManager::isProcedureModifiesVar(const Procedure proc,
+                                        const Variable var) {
+  return pkb_storage->procedure_modifies_var_set.find(
+             std::pair<Procedure, Variable>(proc, var)) !=
+         pkb_storage->procedure_modifies_var_set.end();
+}
 
 bool PKBManager::isLineModifiesVar(const Line line, const Variable var) {
   return pkb_storage->line_modifies_var_set.find(std::pair<Line, Variable>(

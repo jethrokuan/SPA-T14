@@ -10,8 +10,9 @@ void PKBStorage::storeAST(const std::shared_ptr<ProcedureNode> proc) {
   ast = proc;
 };
 
-void PKBStorage::storeLine(const std::shared_ptr<Node> node) {
+Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
   lines.push_back(node);
+  return std::to_string(lines.size());
 }
 
 // TODO error handling
@@ -37,7 +38,11 @@ void PKBStorage::storeFollowsRelation(const LineBefore line_before,
   line_after_line_before_map[line_after] = line_before;
 }
 
-// void storeFollowsRelationS(const LineBefore, const LineAfter);
+void PKBStorage::storeFollowsRelationS(const LineBefore line_before,
+                                       const LineAfter line_after) {
+  addToVectorMap(line_before_line_after_map_s, line_before, line_after);
+  addToVectorMap(line_after_line_before_map_s, line_after, line_before);
+}
 
 void PKBStorage::storeParentRelation(const ParentLine parent_line,
                                      const ChildLine child_line) {
@@ -46,16 +51,27 @@ void PKBStorage::storeParentRelation(const ParentLine parent_line,
   addToVectorMap(parent_line_child_line_map, parent_line, child_line);
 }
 
-// void PKBStorage::storeParentRelationS(const ParentLine, const ChildLine);
-// void PKBStorage::storeProcedureUsesVarRelation(const Procedure, const
-// Variable);
+void PKBStorage::storeParentRelationS(const ParentLine parent_line,
+                                      const ChildLine child_line) {
+  addToVectorMap(child_line_parent_line_map_s, child_line, parent_line);
+  addToVectorMap(parent_line_child_line_map_s, parent_line, child_line);
+}
+
+void PKBStorage::storeProcedureUsesVarRelation(const Procedure proc,
+                                               const Variable var) {
+  procedure_uses_var_set.insert(std::pair<Procedure, Variable>(proc, var));
+  addToVectorMap(procedure_uses_var_map, proc, var);
+}
 
 void PKBStorage::storeLineUsesVarRelation(const Line line, const Variable var) {
   line_uses_var_set.insert(std::pair<Line, Variable>(line, var));
 }
 
-// void PKBStorage::storeProcedureModifiesVarRelation(const Procedure, const
-// Variable);
+void PKBStorage::storeProcedureModifiesVarRelation(const Procedure proc,
+                                                   const Variable var) {
+  procedure_modifies_var_set.insert(std::pair<Procedure, Variable>(proc, var));
+  addToVectorMap(procedure_modifies_var_map, proc, var);
+}
 
 void PKBStorage::storeLineModifiesVarRelation(const Line line,
                                               const Variable var) {
@@ -107,6 +123,16 @@ void PKBStorage::storeProcedure(const Procedure proc) {
   procedure_list.push_back(proc);
 }
 
+void PKBStorage::storeLineProcedureRelation(const Line line,
+                                            const Procedure proc) {
+  line_procedure_map[line] = proc;
+}
+
+Procedure PKBStorage::getProcedureFromLine(const Line line) {
+  return line_procedure_map.at(line);
+}
+
+// helper
 void PKBStorage::addToVectorMap(
     std::unordered_map<std::string, std::vector<std::string>> umap,
     std::string index, std::string data) {

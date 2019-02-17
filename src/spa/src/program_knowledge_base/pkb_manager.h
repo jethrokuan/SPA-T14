@@ -23,6 +23,17 @@ class PKBManager {
 
   // API exposed to Query Manager
 
+  // is design entity exists
+  bool isVariableExists(Variable);
+  bool isAssignExists(Line);
+  bool isStatementExists(Line);
+  bool isPrintExists(Line);
+  bool isReadExists(Line);
+  bool isWhileExists(Line);
+  bool isIfExists(Line);
+  bool isConstantExists(Constant);
+  bool isProcedureExists(Procedure);
+
   // get design entities
   std::vector<Variable> getVariableList();
   std::vector<Line> getAssignList();
@@ -34,37 +45,6 @@ class PKBManager {
   std::vector<Constant> getConstantList();
   std::vector<Procedure> getProcedureList();
 
-  bool isVariableExists(Variable);
-  bool isAssignExists(Line);
-  bool isStatementExists(Line);
-  bool isPrintExists(Line);
-  bool isReadExists(Line);
-  bool isWhileExists(Line);
-  bool isIfExists(Line);
-  bool isConstantExists(Constant);
-  bool isProcedureExists(Procedure);
-
-  // get mapping
-  ParentLine getParentLine(const ChildLine);
-  std::vector<ChildLine> getChildLine(const ParentLine);
-  std::vector<ParentLine> getParentLineS(const ChildLine);
-  std::vector<ChildLine> getChildLineS(const ParentLine);
-
-  LineAfter getFollowingLine(const LineBefore);
-  LineBefore getBeforeLine(const LineAfter);
-  std::vector<LineAfter> getFollowingLineS(const LineBefore);
-  std::vector<LineBefore> getBeforeLineS(const LineAfter);
-
-  Procedure getProcedureModifiesVar(const Variable);
-  Line getLineModifiesVar(const Variable);
-  std::vector<Variable> getVarModifiedByProcedure(const Procedure);
-  Variable getVarModifiedByLine(const Line);
-
-  std::vector<Procedure> getProcedureUsesVar(const Variable);
-  std::vector<Line> getLineUsesVar(const Variable);
-  std::vector<Variable> getVarUsedByProcedure(const Procedure);
-  std::vector<Variable> getVarUsedByLine(const Line);
-
   // is relationship valid
   bool isLineFollowLine(const LineBefore, const LineAfter);
   bool isLineParentLine(const ParentLine, const ChildLine);
@@ -72,6 +52,27 @@ class PKBManager {
   bool isLineModifiesVar(const Line, const Variable);
   bool isProcedureUsesVar(const Procedure, const Variable);
   bool isLineUsesVar(const Line, const Variable);
+
+  // get relationship mapping
+  LineAfter getFollowingLine(const LineBefore);
+  LineBefore getBeforeLine(const LineAfter);
+  std::vector<LineAfter> getFollowingLineS(const LineBefore);
+  std::vector<LineBefore> getBeforeLineS(const LineAfter);
+
+  ParentLine getParentLine(const ChildLine);
+  std::vector<ChildLine> getChildLine(const ParentLine);
+  std::vector<ParentLine> getParentLineS(const ChildLine);
+  std::vector<ChildLine> getChildLineS(const ParentLine);
+
+  std::vector<Variable> getVarModifiedByProcedure(const Procedure);
+  std::vector<Variable> getVarModifiedByLine(const Line);
+  std::vector<Procedure> getProcedureModifiesVar(const Variable);
+  std::vector<Line> getLineModifiesVar(const Variable);
+
+  std::vector<Variable> getVarUsedByProcedure(const Procedure);
+  std::vector<Variable> getVarUsedByLine(const Line);
+  std::vector<Procedure> getProcedureUsesVar(const Variable);
+  std::vector<Line> getLineUsesVar(const Variable);
 };
 
 }  // namespace PKB

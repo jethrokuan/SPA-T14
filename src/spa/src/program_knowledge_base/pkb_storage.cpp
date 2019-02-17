@@ -61,21 +61,27 @@ void PKBStorage::storeProcedureUsesVarRelation(const Procedure proc,
                                                const Variable var) {
   procedure_uses_var_set.insert(std::pair<Procedure, Variable>(proc, var));
   addToVectorMap(procedure_uses_var_map, proc, var);
+  addToVectorMap(var_used_by_procedure_map, var, proc);
 }
 
 void PKBStorage::storeLineUsesVarRelation(const Line line, const Variable var) {
   line_uses_var_set.insert(std::pair<Line, Variable>(line, var));
+  addToVectorMap(line_uses_var_map, line, var);
+  addToVectorMap(var_used_by_line_map, var, line);
 }
 
 void PKBStorage::storeProcedureModifiesVarRelation(const Procedure proc,
                                                    const Variable var) {
   procedure_modifies_var_set.insert(std::pair<Procedure, Variable>(proc, var));
   addToVectorMap(procedure_modifies_var_map, proc, var);
+  addToVectorMap(var_modified_by_procedure_map, var, proc);
 }
 
 void PKBStorage::storeLineModifiesVarRelation(const Line line,
                                               const Variable var) {
   line_modifies_var_set.insert(std::pair<Line, Variable>(line, var));
+  addToVectorMap(line_modifies_var_map, line, var);
+  addToVectorMap(var_modified_by_line_map, var, line);
 }
 
 void PKBStorage::storeVariable(const Variable var) {

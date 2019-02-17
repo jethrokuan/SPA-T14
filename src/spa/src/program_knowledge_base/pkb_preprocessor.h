@@ -52,16 +52,12 @@ class PKBPreprocessor {
   void setUsesRelations(const std::shared_ptr<AssignNode> node);
   void setUsesRelations(const std::shared_ptr<ReadNode> node);
   void setUsesRelationsH(Expr node, const std::shared_ptr<Node> parent_node);
-  // void setUsesRelationsH(Factor node,
-  //                        const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
                          const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<RelExprNode> node,
                          const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(std::shared_ptr<NumberNode>,
                          const std::shared_ptr<Node>);
-  // void setUsesRelationsH(const std::shared_ptr<RelFactor> node,
-  //                        const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<VariableNode> node,
                          const std::shared_ptr<Node> parent_node);
   void setUsesRelationsIterator(const std::vector<StmtNode> stmt_lst);

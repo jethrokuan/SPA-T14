@@ -40,10 +40,14 @@ class PKBPreprocessor {
   void setFollowsRelationsIterator(const std::vector<StmtNode> stmt_lst);
 
   void setParentRelations(const std::shared_ptr<ProcedureNode> node);
-  void setParentRelations(const std::shared_ptr<IfNode> node);
-  void setParentRelations(const std::shared_ptr<WhileNode> node);
+  void setParentRelationsH(const std::shared_ptr<ProcedureNode> node,
+                           std::vector<ParentLine> parent_lines);
+  void setParentRelationsH(const std::shared_ptr<IfNode> node,
+                           std::vector<ParentLine> parent_lines);
+  void setParentRelationsH(const std::shared_ptr<WhileNode> node,
+                           std::vector<ParentLine> parent_lines);
   void setParentRelationsIterator(const std::vector<StmtNode> stmt_lst,
-                                  const std::shared_ptr<Node> parent_node);
+                                  const std::vector<ParentLine> parent_lines);
 
   void setUsesRelations(const std::shared_ptr<ProcedureNode> node);
   void setUsesRelations(const std::shared_ptr<IfNode> node);

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "program_knowledge_base/pkb.h"
+#include "program_knowledge_base/pkb_manager.h"
 #include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/pql/pql.h"
 #include "query_evaluator/query_evaluator.h"
@@ -25,7 +25,7 @@ TEST_CASE ("Test Query Manager stub functionality") {
   auto proc = parser.parse();
 
   // Store PKB variable in class for querying later
-  auto pkb = new PKB(proc);
+  auto pkb = new PKBManager(proc);
   auto qm = new QueryManager(pkb);
 
   auto querystr = std::string("assign a; Select a;");

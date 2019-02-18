@@ -30,6 +30,14 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   auto var_exist_test_4 = pkb.isVariableExists("l");
   REQUIRE(var_exist_test_4 == false);
 
+  std::unordered_set<std::string> var_get_test_1_check;
+  var_get_test_1_check.insert("i");
+  var_get_test_1_check.insert("j");
+  auto var_get_test_1_vector = pkb.getVariableList();
+  std::unordered_set<Variable> var_get_test_1_set(var_get_test_1_vector.begin(),
+                                                  var_get_test_1_vector.end());
+  REQUIRE(var_get_test_1_set == var_get_test_1_check);
+
   // assign
   auto assign_exist_test_1 = pkb.isAssignExists("1");
   REQUIRE(assign_exist_test_1 == true);

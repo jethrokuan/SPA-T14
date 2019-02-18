@@ -1,6 +1,5 @@
 #include "program_knowledge_base/pkb_manager.h"
-#include <algorithm>
-#include <iostream>
+
 template <class... Ts>
 struct overload : Ts... {
   using Ts::operator()...;
@@ -23,12 +22,18 @@ std::vector<std::string> PKBManager::getUniqueVectorFromMap(
     const std::string key) {
   std::vector<std::string> v;
   if (umap.find(key) != umap.end()) {
-    v = umap.at(key);
+    v = getUniqueVector(umap.at(key));
   }
-  std::sort(v.begin(), v.end());
-  v.erase(std::unique(v.begin(), v.end()), v.end());
 
   return v;
+}
+
+std::vector<std::string> PKBManager::getUniqueVector(
+    std::vector<std::string> dupe_vec) {
+  std::unordered_set<std::string> unique_set(dupe_vec.begin(), dupe_vec.end());
+  std::vector<std::string> unique_vec(unique_set.begin(), unique_set.end());
+
+  return unique_vec;
 }
 
 // is design entity exists
@@ -73,33 +78,40 @@ bool PKBManager::isProcedureExists(const Procedure proc) {
 // get design entities
 
 std::vector<Line> PKBManager::getVariableList() {
-  return pkb_storage->var_list;
+  // return getUniqueVector(pkb_storage->var_list);
+  return getUniqueVector(pkb_storage->var_list);
 }
 
 std::vector<Line> PKBManager::getAssignList() {
-  return pkb_storage->assign_list;
+  return getUniqueVector(pkb_storage->assign_list);
 }
 
 std::vector<Line> PKBManager::getStatementList() {
-  return pkb_storage->statement_list;
+  return getUniqueVector(pkb_storage->statement_list);
 }
 
-std::vector<Line> PKBManager::getPrintList() { return pkb_storage->print_list; }
+std::vector<Line> PKBManager::getPrintList() {
+  return getUniqueVector(pkb_storage->print_list);
+}
 
-std::vector<Line> PKBManager::getReadList() { return pkb_storage->read_list; }
+std::vector<Line> PKBManager::getReadList() {
+  return getUniqueVector(pkb_storage->read_list);
+}
 
 std::vector<Procedure> PKBManager::getWhileList() {
-  return pkb_storage->while_list;
+  return getUniqueVector(pkb_storage->while_list);
 }
 
-std::vector<Procedure> PKBManager::getIfList() { return pkb_storage->if_list; }
+std::vector<Procedure> PKBManager::getIfList() {
+  return getUniqueVector(pkb_storage->if_list);
+}
 
 std::vector<Procedure> PKBManager::getConstantList() {
-  return pkb_storage->constant_list;
+  return getUniqueVector(pkb_storage->constant_list);
 }
 
 std::vector<Procedure> PKBManager::getProcedureList() {
-  return pkb_storage->procedure_list;
+  return getUniqueVector(pkb_storage->procedure_list);
 }
 
 // is relationship valid

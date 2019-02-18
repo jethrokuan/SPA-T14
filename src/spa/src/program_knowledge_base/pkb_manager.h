@@ -20,6 +20,7 @@ class PKBManager {
   std::vector<std::string> getUniqueVectorFromMap(
       const std::unordered_map<std::string, std::vector<std::string>> &,
       const std::string);
+  std::vector<std::string> getUniqueVector(std::vector<std::string>);
 
  public:
   PKBManager(const std::shared_ptr<ProcedureNode> ast);

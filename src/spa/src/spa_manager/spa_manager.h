@@ -1,13 +1,13 @@
 #pragma once
 #include <string>
-#include "program_knowledge_base/pkb.h"
+#include "program_knowledge_base/pkb_manager.h"
 #include "query_manager/query_manager.h"
 
-using namespace KB;
+using namespace PKB;
 
 class SPAManager {
  private:
-  PKB* pkb;
+  PKBManager* pkb;
   QueryManager* qm;
 
  public:

@@ -132,6 +132,11 @@ std::shared_ptr<StmtListNode> Parser::parseStmtList() {
 };
 
 std::optional<StmtNode> Parser::parseStatement() {
+  if (check("}")) {
+    // End of statement list, return early
+    return std::nullopt;
+  }
+
   save_loc();
   auto readStmt = parseRead();
   if (readStmt) {
@@ -141,11 +146,6 @@ std::optional<StmtNode> Parser::parseStatement() {
   auto printStmt = parsePrint();
   if (printStmt) {
     return printStmt;
-  }
-
-  auto assignStmt = parseAssign();
-  if (assignStmt) {
-    return assignStmt;
   }
 
   auto whileStmt = parseWhile();
@@ -158,7 +158,16 @@ std::optional<StmtNode> Parser::parseStatement() {
     return ifStmt;
   }
 
+  // We try the assign statement last, since it's the "most generic",
+  // accepting any symbol token. Any parse error is attributed here
+  auto assignStmt = parseAssign();
+
+  if (assignStmt) {
+    return assignStmt;
+  }
+
   reset();
+  // Shouldn't reach here
   return std::nullopt;
 };
 
@@ -193,7 +202,7 @@ Expr Parser::nud(Token* t) {
     return expr;
   } else {
     throw SimpleParseException(
-        "Expecting a number, variable or expression, got '" + t->Val + "'.");
+        "Expected a number, variable or expression, got '" + t->Val + "'.");
     // // TODO: Handle Error
     // std::cout << "nud called on invalid token" << t->Val << std::endl;
     // return std::make_shared<VariableNode>("FAIL");
@@ -208,7 +217,7 @@ int Parser::lbp(Token* t) {
   } else if (t->Val == "*" || t->Val == "/" || t->Val == "%") {
     return 20;
   } else {
-    throw SimpleParseException("Expecting operator or semicolon, got '" +
+    throw SimpleParseException("Expected operator or semicolon, got '" +
                                t->Val + "'.");
   }
 }
@@ -258,8 +267,9 @@ std::shared_ptr<AssignNode> Parser::parseAssign() {
   auto Var = parseVariable();
 
   if (!Var) {
-    reset();
-    return nullptr;
+    throw SimpleParseException(
+        "Expected a variable name for assign statement, got '" + peek()->Val +
+        "'.");
   }
 
   if (!match("=")) {
@@ -451,7 +461,14 @@ std::shared_ptr<IfNode> Parser::parseIf() {
     return nullptr;
   }
 
-  expect("(");
+  if (!match("(")) {
+    reset();
+    return nullptr;
+  }
+
+  // From this point on, it is safe to assume that the parser is trying to
+  // parse an if statement.
+
   auto condExpr = parseCondExpr();
   if (!condExpr) {
     // TODO: HANDLE ERROR BETTER

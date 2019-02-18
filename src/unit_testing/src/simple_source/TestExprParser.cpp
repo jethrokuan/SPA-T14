@@ -210,7 +210,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(),
-                        "Expecting operator or semicolon, got '9'.");
+                        "Expected operator or semicolon, got '9'.");
   }
 
   SECTION ("double operators") {
@@ -223,7 +223,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(),
-                        "Expecting a number, variable or expression, got '-'.");
+                        "Expected a number, variable or expression, got '-'.");
   }
 
   SECTION ("empty parentheses") {
@@ -236,7 +236,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(),
-                        "Expecting a number, variable or expression, got ')'.");
+                        "Expected a number, variable or expression, got ')'.");
   }
 
   SECTION ("incomplete parentheses") {

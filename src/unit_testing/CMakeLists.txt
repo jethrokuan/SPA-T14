@@ -8,6 +8,7 @@ set(srcs
   src/TestQueryValidator.cpp
   src/TestQuoteIdent.cpp
   src/simple_source/parser/TestProcedure.cpp
+  src/simple_source/parser/TestStatementList.cpp
   src/simple_source/TestSimpleLexer.cpp
   src/simple_source/TestExprParser.cpp
   src/simple_source/TestSimpleParser.cpp

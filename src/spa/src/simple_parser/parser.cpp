@@ -124,7 +124,9 @@ std::shared_ptr<StmtListNode> Parser::parseStmtList() {
     }
   }
 
-  // TODO: Handle case where statement list is empty
+  if (stmts.size() == 0) {
+    throw SimpleParseException("Statement list cannot be empty.");
+  }
 
   return std::make_shared<StmtListNode>(std::move(stmts));
 };

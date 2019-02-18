@@ -37,7 +37,19 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   // call your evaluator to evaluate the query here
   // ...code to evaluate query...
   try {
-    spa_manager->query(query);
+    auto query_results = spa_manager->query(query);
+    if (query_results.empty()) {
+      results.push_back("none");
+    } else {
+      // We have results - return to screen
+      for (unsigned int i = 0; i < query_results.size(); i++) {
+        results.push_back(query_results[i]);
+        // Comma addition only for non-last results
+        if (i != (query_results.size() - 1)) {
+          results.push_back(", ");
+        }
+      }
+    }
   } catch (const std::runtime_error e) {
     std::cout << e.what() << std::endl;
     std::cout << "Failed to parse query " << query << std::endl;

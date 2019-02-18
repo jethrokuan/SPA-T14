@@ -7,7 +7,7 @@ using namespace QE;
 
 Query* QueryEvaluator::makePqlQuery(std::string& pql_query_string) {
   // Debug printing of the query receives
-  std::cout << pql_query_string << std::endl;
+  // std::cout << pql_query_string << std::endl;
 
   // Get the query object from the query
   // getQuery can throw PQLParseException / PQLTokenizeException

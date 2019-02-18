@@ -89,19 +89,19 @@ std::shared_ptr<VariableNode> Parser::parseVariable() {
 };
 
 std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
-  save_loc();
   if (!match("procedure")) {
-    reset();
-    return nullptr;
+    throw SimpleParseException("Expected 'procedure', got '" + peek()->Val +
+                               "'.");
   }
 
   auto Var = parseVariable();
-  auto procName = Var->Name;
 
   if (!Var) {
-    reset();
-    return nullptr;
+    throw SimpleParseException("Expected a valid procedure name, got '" +
+                               peek()->Val + "'.");
   }
+
+  auto procName = Var->Name;
 
   expect("{");
 

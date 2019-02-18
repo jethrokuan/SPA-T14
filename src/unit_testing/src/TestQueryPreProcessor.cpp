@@ -464,7 +464,7 @@ TEST_CASE (
   SECTION ("Pattern test UnderScore QuoteIdent") {
     auto qp = QE::QueryPreprocessor();
     std::string input =
-        "assign p;Select p such that Follows(a, b) pattern p (_, \"x\")";
+        "assign p;Select p such that Follows(a, b) pattern p (_, _\"y\"_)";
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
@@ -480,9 +480,9 @@ TEST_CASE (
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
     QE::EntRef entRef = QE::EntRef(QE::Underscore());
-    QE::ExpressionSpec expr =
-        QE::QuoteIdent::construct("\"x\"").value() auto pat =
-            Pattern::construct(syn, entRef, expr);
+    QE::ExpressionSpec expr = QE::ExpressionSpec(
+        QE::DoubleUnderscoreFactor::construct("_\"y\"_").value());
+    auto pat = Pattern::construct(syn, entRef, expr);
     REQUIRE(*(query->pattern) == pat);
   }
   SECTION ("Pattern test QuoteIdent UnderScore") {
@@ -594,7 +594,7 @@ TEST_CASE (
   SECTION ("Pattern test UnderScore QuoteIdent") {
     auto qp = QE::QueryPreprocessor();
     std::string input =
-        "assign p;Select p such that Uses(a, b) pattern p (_, \"x\")";
+        "assign p;Select p such that Uses(a, b) pattern p (_, _\"y\"_)";
     auto query = qp.getQuery(input);
     REQUIRE(*(query->declarations) ==
             std::vector<Declaration>{Declaration(
@@ -610,9 +610,9 @@ TEST_CASE (
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
     QE::EntRef entRef = QE::EntRef(QE::Underscore());
-    QE::ExpressionSpec expr =
-        QE::QuoteIdent::construct("\"x\"").value() auto pat =
-            Pattern::construct(syn, entRef, expr);
+    QE::ExpressionSpec expr = QE::ExpressionSpec(
+        QE::DoubleUnderscoreFactor::construct("_\"y\"_").value());
+    auto pat = Pattern::construct(syn, entRef, expr);
     REQUIRE(*(query->pattern) == pat);
   }
   SECTION ("Pattern test QuoteIdent UnderScore") {

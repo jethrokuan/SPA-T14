@@ -1,5 +1,7 @@
 #include "spa_manager/spa_manager.h"
 #include <sstream>
+#include <string>
+#include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/pql/pql.h"
@@ -26,11 +28,11 @@ void SPAManager::loadSimpleSource(std::ifstream& source_stream) {
   qm = new QueryManager(pkb);
 }
 
-void SPAManager::query(std::string& pql_query) {
+std::vector<std::string> SPAManager::query(std::string& pql_query) {
   auto qe = QueryEvaluator();
   auto query = qe.makePqlQuery(pql_query);
-  // Stub call - no result yet
-  qm->makeQuery(query);
+  auto query_results = qm->makeQuery(query);
+  return query_results;
 }
 
 SPAManager::~SPAManager() {

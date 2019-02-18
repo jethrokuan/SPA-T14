@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_manager/query_manager.h"
 
@@ -12,6 +13,6 @@ class SPAManager {
 
  public:
   void loadSimpleSource(std::ifstream& source_stream);
-  void query(std::string& pql_query);
+  std::vector<std::string> query(std::string& pql_query);
   ~SPAManager();
 };

@@ -16,6 +16,11 @@ class QueryManager {
   //! Evaluates the SuchThat clause as a boolean
   bool isBooleanSuchThatTrue(QE::SuchThat*);
 
+  //! Convert a StmtOrEntRef to a string to pass to PKB
+  std::string suchThatArgToString(QE::StmtOrEntRef);
+  std::string stmtRefToString(QE::StmtRef);
+  std::string entRefToString(QE::EntRef);
+
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};
   std::vector<std::string> makeQuery(QE::Query* query);

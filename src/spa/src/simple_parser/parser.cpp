@@ -201,8 +201,7 @@ Expr Parser::nud(Token* t) {
     expect(")");
     return expr;
   } else {
-    throw SimpleParseException(
-        "Expected a number, variable or expression, got '" + t->Val + "'.");
+    throw SimpleParseException("Expected an expression, got '" + t->Val + "'.");
     // // TODO: Handle Error
     // std::cout << "nud called on invalid token" << t->Val << std::endl;
     // return std::make_shared<VariableNode>("FAIL");
@@ -210,15 +209,17 @@ Expr Parser::nud(Token* t) {
 }
 
 int Parser::lbp(Token* t) {
-  if (t->Val == ";" || t->Val == ")") {
+  std::unordered_set<std::string> valid_ops({">", ">=", "<", "<=", "==", "!="});
+  if (t->Val == ";" || t->Val == ")" ||
+      valid_ops.find(t->Val) != valid_ops.end()) {
+    // Any of these tokens signify end of expr
     return 0;
   } else if (t->Val == "+" || t->Val == "-") {
     return 10;
   } else if (t->Val == "*" || t->Val == "/" || t->Val == "%") {
     return 20;
   } else {
-    throw SimpleParseException("Expected operator or semicolon, got '" +
-                               t->Val + "'.");
+    throw SimpleParseException("Unexpected token '" + t->Val + "'.");
   }
 }
 
@@ -327,18 +328,6 @@ std::shared_ptr<PrintNode> Parser::parsePrint() {
 };
 
 RelFactor Parser::parseRelFactor() {
-  save_loc();
-  auto Var = parseVariable();
-  if (Var) {
-    return Var;
-  }
-
-  auto Number = parseNumber();
-
-  if (Number) {
-    return Number;
-  }
-
   auto Expr = parseExpr();
 
   // if (!Expr) {
@@ -356,29 +345,18 @@ RelFactor Parser::parseRelFactor() {
 // | rel_factor == rel_factor
 // | rel_factor != rel_factor
 std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
-  save_loc();
   auto lhs = parseRelFactor();
 
-  // if (!lhs) {
-  //   reset();
-  //   return nullptr;
-  // }
+  std::cout << peek()->Val;
   std::unordered_set<std::string> valid_ops({">", ">=", "<", "<=", "==", "!="});
   auto op = peek()->Val;
   if (valid_ops.find(op) == valid_ops.end()) {
-    std::cout << "Expected an op, got " << op << std::endl;
-    reset();
-    return nullptr;
+    throw SimpleParseException("Expected a comparator, got '" + op + "'.");
   }
 
   advance();
 
   auto rhs = parseRelFactor();
-
-  // if (!rhs) {
-  //   reset();
-  //   return nullptr;
-  // }
 
   return std::make_shared<RelExprNode>(lhs, op, rhs);
 }
@@ -389,41 +367,42 @@ std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
 // | ( cond_expr ) || ( cond_expr )
 
 std::shared_ptr<CondExprNode> Parser::parseCondExpr() {
-  save_loc();
-  auto relExpr = parseRelExpr();
-  if (relExpr) {
-    return std::make_shared<CondExprNode>(std::move(relExpr));
-  }
-
-  if (match("!")) {
+  if (match("!")) {  // !(condExpr)
     expect("(");
     auto condExpr = parseCondExpr();
     expect(")");
     return std::make_shared<CondExprNode>(std::move(condExpr));
+  } else if (check("(")) {  // () op ()
+    expect("(");
+    auto condLHS = parseCondExpr();
+    expect(")");
+
+    std::string op;
+
+    if (match("&&")) {
+      op = "&&";
+    } else if (match("||")) {
+      op = "||";
+    } else {
+      throw SimpleParseException("Expected '||' or '&&', got '" + peek()->Val +
+                                 "'.");
+    }
+
+    expect("(");
+    auto condRHS = parseCondExpr();
+    expect(")");
+
+    return std::make_shared<CondExprNode>(std::move(condLHS), op,
+                                          std::move(condRHS));
+  } else {  // relExpr
+    auto relExpr = parseRelExpr();
+
+    if (relExpr) {
+      return std::make_shared<CondExprNode>(std::move(relExpr));
+    }
   }
-
-  expect("(");
-  auto condLHS = parseCondExpr();
-  expect(")");
-
-  std::string op;
-
-  if (match("&&")) {
-    op = "&&";
-  } else if (match("||")) {
-    op = "||";
-  } else {
-    // TODO: HANDLE BETTER
-    std::cout << "EXPECTING AN OP";
-    reset();
-  }
-
-  expect("(");
-  auto condRHS = parseCondExpr();
-  expect(")");
-
-  return std::make_shared<CondExprNode>(std::move(condLHS), op,
-                                        std::move(condRHS));
+  // Shouldn't reach here
+  return nullptr;
 };
 
 std::shared_ptr<WhileNode> Parser::parseWhile() {

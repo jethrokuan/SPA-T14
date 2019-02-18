@@ -57,13 +57,13 @@ TEST_CASE ("Test invalid assign statement") {
     REQUIRE_THROWS_WITH(
         SimpleInterface::getAstFromFile(
             "tests/simple_source/assign/invalid/missing_semicolon.txt"),
-        "Expected operator or semicolon, got '}'.");
+        "Unexpected token '}'.");
   }
 
   SECTION ("invalid expr") {
     REQUIRE_THROWS_WITH(
         SimpleInterface::getAstFromFile(
             "tests/simple_source/assign/invalid/invalid_expr.txt"),
-        "Expected a number, variable or expression, got '='.");
+        "Expected an expression, got '='.");
   }
 }

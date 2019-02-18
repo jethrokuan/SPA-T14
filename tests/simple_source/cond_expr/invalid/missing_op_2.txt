@@ -1,0 +1,5 @@
+procedure main {
+  while ((i == 0) (a == j)) {
+    read x;
+  }
+}

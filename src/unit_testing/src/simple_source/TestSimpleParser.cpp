@@ -1,5 +1,4 @@
-#include "simple_parser/lexer.h"
-#include "simple_parser/parser.h"
+#include "simple_parser/interface.h"
 
 #include "catch.hpp"
 
@@ -12,14 +11,9 @@ using std::make_shared;
 using std::shared_ptr;
 
 TEST_CASE ("Test Parser works") {
-  std::string filename = "tests/simple_source/simple_1.txt";
-  std::ifstream input(filename);
+  auto ast =
+      SimpleInterface::getAstFromFile("tests/simple_source/simple_1.txt");
 
-  Simple::Lexer lexer = Simple::Lexer(input);
-  lexer.parse();
-
-  Simple::Parser parser = Simple::Parser(lexer.tokens);
-  auto proc = parser.parse();
   std::vector<StmtNode> stmtList;
 
   // i = 5;
@@ -55,7 +49,7 @@ TEST_CASE ("Test Parser works") {
 
   auto expected = std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-  REQUIRE(*proc == *expected);
+  REQUIRE(*ast == *expected);
 }
 
 TEST_CASE ("Node equality comparisons") {

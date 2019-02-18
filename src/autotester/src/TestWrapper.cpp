@@ -1,5 +1,5 @@
-#include "TestWrapper.h"
 #include <fstream>
+#include "TestWrapper.h"
 #include "spa_manager/spa_manager.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
@@ -22,9 +22,8 @@ TestWrapper::TestWrapper() {
 void TestWrapper::parse(std::string filename) {
   // call your parser to do the parsing
   // ...rest of your code...
-  std::ifstream input(filename);
   try {
-    spa_manager->loadSimpleSource(input);
+    spa_manager->loadSimpleSource(filename);
     std::cout << "parsed " << filename << std::endl;
   } catch (const std::runtime_error e) {
     std::cout << e.what() << std::endl;

@@ -1,24 +1,17 @@
 // TODO remove print debug statements and iostream
 
 #include "program_knowledge_base/pkb_manager.h"
-#include "simple_parser/lexer.h"
-#include "simple_parser/parser.h"
+#include "simple_parser/interface.h"
 
 #include "catch.hpp"
 
 #include <fstream>
 
 TEST_CASE ("Test PKB for simple_1.txt") {
-  std::string filename = "tests/simple_source/simple_1.txt";
-  std::ifstream input(filename);
+  auto ast = Simple::SimpleInterface::getAstFromFile(
+      "tests/simple_source/simple_1.txt");
 
-  Simple::Lexer lexer = Simple::Lexer(input);
-  lexer.parse();
-
-  Simple::Parser parser = Simple::Parser(lexer.tokens);
-  auto proc = parser.parse();
-
-  PKB::PKBManager pkb = PKB::PKBManager(proc);
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
 
   // variable
   auto var_exist_test_1 = pkb.isVariableExists("i");

@@ -79,15 +79,17 @@ set(headers ${headers}
   
 # SIMPLE parser files
 set(srcs ${srcs}
+  src/simple_parser/interface.cpp
   src/simple_parser/lexer.cpp
-  src/simple_parser/token.cpp
   src/simple_parser/parser.cpp
+  src/simple_parser/token.cpp
   )
 set(headers ${headers}
-  src/simple_parser/lexer.h
-  src/simple_parser/token.h
-  src/simple_parser/parser.h
   src/simple_parser/exceptions.h
+  src/simple_parser/interface.h
+  src/simple_parser/lexer.h
+  src/simple_parser/parser.h
+  src/simple_parser/token.h
   )
   
 add_library(spa ${srcs} ${headers})

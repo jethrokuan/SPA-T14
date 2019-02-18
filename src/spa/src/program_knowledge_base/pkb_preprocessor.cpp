@@ -133,17 +133,11 @@ void PKBPreprocessor::setDesignEntities(
 
 void PKBPreprocessor::setDesignEntities(
     const std::shared_ptr<NumberNode> node) {
-  if (node == nullptr) {
-    return;
-  }
   storage->storeConstant(node->Val);
 }
 
 void PKBPreprocessor::setDesignEntities(
     const std::shared_ptr<VariableNode> node) {
-  if (node == nullptr) {
-    return;
-  }
   storage->storeVariable(node->Name);
 }
 
@@ -297,7 +291,6 @@ void PKBPreprocessor::setUsesRelations(const std::shared_ptr<AssignNode> node) {
 
 void PKBPreprocessor::setUsesRelations(const std::shared_ptr<ReadNode>) {}
 
-//
 void PKBPreprocessor::setUsesRelationsH(const Expr node,
                                         std::shared_ptr<Node> parent_node) {
   std::visit(
@@ -332,9 +325,6 @@ void PKBPreprocessor::setUsesRelationsH(std::shared_ptr<NumberNode>,
 void PKBPreprocessor::setUsesRelationsH(
     const std::shared_ptr<VariableNode> node,
     const std::shared_ptr<Node> parent_node) {
-  if (node == nullptr) {
-    return;
-  }
   Line cur_line_number = storage->getLineFromNode(parent_node);
   Procedure proc = storage->getProcedureFromLine(cur_line_number);
   storage->storeProcedureUsesVarRelation(proc, node->Name);

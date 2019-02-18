@@ -152,6 +152,43 @@ bool PKBManager::isLineModifiesVar(const Line line, const Variable var) {
 }
 
 // get relationship mapping
+LineAfter PKBManager::getFollowingLine(const LineBefore line_before) {
+  return pkb_storage->line_before_line_after_map[line_before];
+}
+
+LineBefore PKBManager::getBeforeLine(const LineAfter line_after) {
+  return pkb_storage->line_after_line_before_map[line_after];
+}
+
+std::vector<LineAfter> PKBManager::getFollowingLineS(
+    const LineBefore line_before) {
+  return getUniqueVectorFromMap(pkb_storage->line_before_line_after_map_s,
+                                line_before);
+}
+
+std::vector<LineBefore> PKBManager::getBeforeLineS(const LineAfter line_after) {
+  return getUniqueVectorFromMap(pkb_storage->line_after_line_before_map_s,
+                                line_after);
+}
+
+ParentLine PKBManager::getParentLine(const ChildLine child_line) {
+  return pkb_storage->child_line_parent_line_map[child_line];
+}
+
+std::vector<ChildLine> PKBManager::getChildLine(const ParentLine parent_line) {
+  return getUniqueVectorFromMap(pkb_storage->parent_line_child_line_map,
+                                parent_line);
+}
+
+std::vector<ParentLine> PKBManager::getParentLineS(const ChildLine child_line) {
+  return getUniqueVectorFromMap(pkb_storage->child_line_parent_line_map_s,
+                                child_line);
+}
+
+std::vector<ChildLine> PKBManager::getChildLineS(const ParentLine parent_line) {
+  return getUniqueVectorFromMap(pkb_storage->parent_line_child_line_map_s,
+                                parent_line);
+}
 
 std::vector<Procedure> PKBManager::getProcedureUsesVar(const Variable var) {
   return getUniqueVectorFromMap(pkb_storage->procedure_uses_var_map, var);

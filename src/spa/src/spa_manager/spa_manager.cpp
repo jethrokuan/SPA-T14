@@ -1,4 +1,3 @@
-#include "spa_manager/spa_manager.h"
 #include <sstream>
 #include <string>
 #include <vector>
@@ -7,24 +6,19 @@
 #include "query_evaluator/pql/pql.h"
 #include "query_evaluator/query_evaluator.h"
 #include "query_manager/query_manager.h"
-#include "simple_parser/lexer.h"
-#include "simple_parser/parser.h"
+#include "simple_parser/interface.h"
+#include "spa_manager/spa_manager.h"
 
 using namespace PKB;
 using namespace Simple;
 using namespace QE;
 
-void SPAManager::loadSimpleSource(std::ifstream& source_stream) {
+void SPAManager::loadSimpleSource(std::string filename) {
   // Complete parse of code to AST
-  Simple::Lexer lexer = Simple::Lexer(source_stream);
-  lexer.parse();
-
-  // Load AST into PKB
-  Simple::Parser parser = Simple::Parser(lexer.tokens);
-  auto proc = parser.parse();
+  auto ast = Simple::SimpleInterface::getAstFromFile(filename);
 
   // Store PKB variable in class for querying laster
-  pkb = new PKBManager(proc);
+  pkb = new PKBManager(ast);
   qm = new QueryManager(pkb);
 }
 

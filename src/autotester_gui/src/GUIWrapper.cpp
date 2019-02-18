@@ -13,10 +13,8 @@ GUIWrapper::GUIWrapper() {
 // method for parsing the SIMPLE source
 void GUIWrapper::parse(std::string filename) {
   // call your parser to do the parsing
-  std::ifstream input(filename);
-
   try {
-    spa_manager->loadSimpleSource(input);
+    spa_manager->loadSimpleSource(filename);
     std::cout << "parsed " << filename << std::endl;
   } catch (const std::runtime_error e) {
     std::cout << e.what() << std::endl;

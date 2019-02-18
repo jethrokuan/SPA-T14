@@ -12,7 +12,7 @@ class SPAManager {
   QueryManager* qm;
 
  public:
-  void loadSimpleSource(std::ifstream& source_stream);
+  void loadSimpleSource(std::string filename);
   std::vector<std::string> query(std::string& pql_query);
   ~SPAManager();
 };

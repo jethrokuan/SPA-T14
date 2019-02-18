@@ -1,6 +1,6 @@
 #include "spa_manager/spa_manager.h"
 #include <sstream>
-#include "program_knowledge_base/pkb.h"
+#include "program_knowledge_base/pkb_manager.h"
 #include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/pql/pql.h"
 #include "query_evaluator/query_evaluator.h"
@@ -8,6 +8,7 @@
 #include "simple_parser/lexer.h"
 #include "simple_parser/parser.h"
 
+using namespace PKB;
 using namespace Simple;
 using namespace QE;
 
@@ -21,7 +22,7 @@ void SPAManager::loadSimpleSource(std::ifstream& source_stream) {
   auto proc = parser.parse();
 
   // Store PKB variable in class for querying laster
-  pkb = new PKB(proc);
+  pkb = new PKBManager(proc);
   qm = new QueryManager(pkb);
 }
 

@@ -7,6 +7,48 @@
 
 #include <fstream>
 
+TEST_CASE ("Test PKB for assign.txt") {
+  std::string filename = "tests/simple_source/assign.txt";
+  std::ifstream input(filename);
+
+  Simple::Lexer lexer = Simple::Lexer(input);
+  lexer.parse();
+
+  Simple::Parser parser = Simple::Parser(lexer.tokens);
+  auto proc = parser.parse();
+
+  PKB::PKBManager pkb = PKB::PKBManager(proc);
+
+  // variable
+  auto var_exist_test_1 = pkb.isVariableExists("i");
+  REQUIRE(var_exist_test_1 == true);
+  auto var_exist_test_2 = pkb.isVariableExists("j");
+  REQUIRE(var_exist_test_2 == false);
+
+  std::unordered_set<std::string> var_get_test_1_check;
+  var_get_test_1_check.insert("i");
+  auto var_get_test_1_vector = pkb.getVariableList();
+  std::unordered_set<Variable> var_get_test_1_set(var_get_test_1_vector.begin(),
+                                                  var_get_test_1_vector.end());
+  REQUIRE(var_get_test_1_set == var_get_test_1_check);
+
+  // assign
+  auto assign_exist_test_1 = pkb.isAssignExists("1");
+  REQUIRE(assign_exist_test_1 == true);
+  auto assign_exist_test_2 = pkb.isAssignExists("2");
+  REQUIRE(assign_exist_test_2 == false);
+
+  // statement
+  auto statement_exist_test_1 = pkb.isStatementExists("1");
+  REQUIRE(statement_exist_test_1 == true);
+  auto statement_exist_test_2 = pkb.isStatementExists("2");
+  REQUIRE(statement_exist_test_2 == false);
+
+  // test modifies
+  auto modifies_test_1 = pkb.isLineModifiesVar("1", "i");
+  REQUIRE(modifies_test_1 == true);
+}
+
 TEST_CASE ("Test PKB for simple_1.txt") {
   auto ast = Simple::SimpleInterface::getAstFromFile(
       "tests/simple_source/simple_1.txt");
@@ -197,4 +239,27 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   std::unordered_set<Variable> modifies_test_11_set(
       modifies_test_11_vector.begin(), modifies_test_11_vector.end());
   REQUIRE(modifies_test_11_set == modifies_test_11_check);
+}
+
+TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
+  std::string filename = "tests/10_simple_source_deep_nesting.txt";
+  std::ifstream input(filename);
+
+  Simple::Lexer lexer = Simple::Lexer(input);
+  lexer.parse();
+
+  Simple::Parser parser = Simple::Parser(lexer.tokens);
+  auto proc = parser.parse();
+
+  PKB::PKBManager pkb = PKB::PKBManager(proc);
+
+  // variable
+  auto var_exist_test_1 = pkb.isVariableExists("x");
+  REQUIRE(var_exist_test_1 == true);
+  auto var_exist_test_2 = pkb.isVariableExists("y");
+  REQUIRE(var_exist_test_2 == true);
+  auto var_exist_test_3 = pkb.isVariableExists("z");
+  REQUIRE(var_exist_test_3 == true);
+  auto var_exist_test_4 = pkb.isVariableExists("a");
+  REQUIRE(var_exist_test_4 == false);
 }

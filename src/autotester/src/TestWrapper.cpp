@@ -1,5 +1,5 @@
-#include <fstream>
 #include "TestWrapper.h"
+#include <fstream>
 #include "spa_manager/spa_manager.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
@@ -38,15 +38,15 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   try {
     auto query_results = spa_manager->query(query);
     if (query_results.empty()) {
-      results.push_back("none");
+      // results.push_back("none");
     } else {
       // We have results - return to screen
       for (unsigned int i = 0; i < query_results.size(); i++) {
         results.push_back(query_results[i]);
         // Comma addition only for non-last results
-        if (i != (query_results.size() - 1)) {
-          results.push_back(", ");
-        }
+        // if (i != (query_results.size() - 1)) {
+        //  results.push_back(", ");
+        // }
       }
     }
   } catch (const std::runtime_error e) {

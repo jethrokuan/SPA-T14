@@ -5,11 +5,8 @@ namespace QE {
 //! Strongly-typed underscore in a PQL query (i.e. _)
 class Underscore {
  public:
-  bool operator==(__attribute__((unused)) const Underscore& u) const {
-    return true;
-  }
-  friend std::ostream& operator<<(std::ostream& os,
-                                  __attribute__((unused)) Underscore const& u) {
+  bool operator==(const Underscore&) const { return true; }
+  friend std::ostream& operator<<(std::ostream& os, Underscore const&) {
     os << "_";
     return os;
   }

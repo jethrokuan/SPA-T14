@@ -79,18 +79,14 @@ std::string QueryManager::suchThatArgToString(StmtOrEntRef arg) {
 std::string QueryManager::stmtRefToString(StmtRef arg) {
   return std::visit(
       overload{[](Synonym& s) { return s.synonym; },
-               [](Underscore& e __attribute__((unused))) {
-                 return std::string("_");
-               },
+               [](Underscore&) { return std::string("_"); },
                [](StatementNumber& s) { return std::to_string(s); }},
       arg);
 }
 
 std::string QueryManager::entRefToString(EntRef arg) {
   return std::visit(overload{[](Synonym& s) { return s.synonym; },
-                             [](Underscore& e __attribute__((unused))) {
-                               return std::string("_");
-                             },
+                             [](Underscore&) { return std::string("_"); },
                              [](QuoteIdent& s) {
                                // Remove quotes
                                return s.quote_ident.substr(

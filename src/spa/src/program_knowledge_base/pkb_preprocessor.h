@@ -10,13 +10,17 @@ class PKBPreprocessor {
   std::shared_ptr<PKBStorage> storage;
 
   void setLineNumbers(const std::shared_ptr<ProcedureNode> node);
-  void setLineNumbers(const std::shared_ptr<IfNode> node, Procedure proc);
-  void setLineNumbers(const std::shared_ptr<WhileNode> node, Procedure proc);
-  void setLineNumbers(const std::shared_ptr<ReadNode> node, Procedure proc);
-  void setLineNumbers(const std::shared_ptr<PrintNode> node, Procedure proc);
-  void setLineNumbers(const std::shared_ptr<AssignNode> node, Procedure proc);
+  void setLineNumbers(const std::shared_ptr<IfNode> node, const Procedure proc);
+  void setLineNumbers(const std::shared_ptr<WhileNode> node,
+                      const Procedure proc);
+  void setLineNumbers(const std::shared_ptr<ReadNode> node,
+                      const Procedure proc);
+  void setLineNumbers(const std::shared_ptr<PrintNode> node,
+                      const Procedure proc);
+  void setLineNumbers(const std::shared_ptr<AssignNode> node,
+                      const Procedure proc);
   void setLineNumbersIterator(const std::vector<StmtNode> stmt_lst,
-                              Procedure proc);
+                              const Procedure proc);
 
   void setDesignEntities(const std::shared_ptr<ProcedureNode> node);
   void setDesignEntities(const std::shared_ptr<IfNode> node);
@@ -56,6 +60,8 @@ class PKBPreprocessor {
   void setUsesRelations(const std::shared_ptr<AssignNode> node);
   void setUsesRelations(const std::shared_ptr<ReadNode> node);
   void setUsesRelationsH(Expr node, const std::shared_ptr<Node> parent_node);
+  void setUsesRelationsH(const std::shared_ptr<BinOpNode> node,
+                         const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<CondExprNode> node,
                          const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<RelExprNode> node,

@@ -23,40 +23,40 @@ void PKBPreprocessor::setLineNumbers(
 }
 
 void PKBPreprocessor::setLineNumbers(const std::shared_ptr<IfNode> node,
-                                     Procedure proc) {
-  auto line_number = storage->storeLine(node);
+                                     const Procedure proc) {
+  Line line_number = storage->storeLine(node);
   storage->storeLineProcedureRelation(line_number, proc);
   setLineNumbersIterator(node->StmtListThen->StmtList, proc);
   setLineNumbersIterator(node->StmtListElse->StmtList, proc);
 }
 
 void PKBPreprocessor::setLineNumbers(const std::shared_ptr<WhileNode> node,
-                                     Procedure proc) {
-  auto line_number = storage->storeLine(node);
+                                     const Procedure proc) {
+  Line line_number = storage->storeLine(node);
   storage->storeLineProcedureRelation(line_number, proc);
   setLineNumbersIterator(node->StmtList->StmtList, proc);
 }
 
 void PKBPreprocessor::setLineNumbers(const std::shared_ptr<ReadNode> node,
-                                     Procedure proc) {
-  auto line_number = storage->storeLine(node);
+                                     const Procedure proc) {
+  Line line_number = storage->storeLine(node);
   storage->storeLineProcedureRelation(line_number, proc);
 }
 
 void PKBPreprocessor::setLineNumbers(const std::shared_ptr<PrintNode> node,
-                                     Procedure proc) {
-  auto line_number = storage->storeLine(node);
+                                     const Procedure proc) {
+  Line line_number = storage->storeLine(node);
   storage->storeLineProcedureRelation(line_number, proc);
 }
 
 void PKBPreprocessor::setLineNumbers(const std::shared_ptr<AssignNode> node,
-                                     Procedure proc) {
-  auto line_number = storage->storeLine(node);
+                                     const Procedure proc) {
+  Line line_number = storage->storeLine(node);
   storage->storeLineProcedureRelation(line_number, proc);
 }
 
 void PKBPreprocessor::setLineNumbersIterator(
-    const std::vector<StmtNode> stmt_lst, Procedure proc) {
+    const std::vector<StmtNode> stmt_lst, const Procedure proc) {
   // iterate through AST via DFS
   for (const auto &stmt : stmt_lst) {
     std::visit([this, proc](const auto &s) { setLineNumbers(s, proc); }, stmt);
@@ -100,6 +100,7 @@ void PKBPreprocessor::setDesignEntities(
     const std::shared_ptr<AssignNode> node) {
   storage->storeStatement(storage->getLineFromNode(node));
   storage->storeAssign(storage->getLineFromNode(node));
+  setDesignEntities(node->Var);
   setDesignEntities(node->Exp);
 }
 
@@ -296,6 +297,13 @@ void PKBPreprocessor::setUsesRelationsH(const Expr node,
   std::visit(
       [this, parent_node](const auto &n) { setUsesRelationsH(n, parent_node); },
       node);
+}
+
+void PKBPreprocessor::setUsesRelationsH(
+    const std::shared_ptr<BinOpNode> node,
+    const std::shared_ptr<Node> parent_node) {
+  setUsesRelationsH(node->Left, parent_node);
+  setUsesRelationsH(node->Right, parent_node);
 }
 
 void PKBPreprocessor::setUsesRelationsH(

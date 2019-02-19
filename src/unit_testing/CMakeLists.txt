@@ -13,6 +13,7 @@ set(srcs
   src/simple_source/parser/TestCondExpr.cpp
   src/simple_source/parser/TestIf.cpp
   src/simple_source/parser/TestWhile.cpp
+  src/simple_source/parser/TestRead.cpp
   src/simple_source/TestSimpleLexer.cpp
   src/simple_source/TestExprParser.cpp
   src/simple_source/TestSimpleParser.cpp

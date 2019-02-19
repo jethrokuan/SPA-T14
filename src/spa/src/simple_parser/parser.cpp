@@ -65,25 +65,25 @@ Token* Parser::peek() { return tokens[current]; };
 Token* Parser::previous() { return tokens[current - 1]; };
 
 std::shared_ptr<NumberNode> Parser::parseNumber() {
-  save_loc();
+  auto current_loc = current;
   if (match(TokenType::NUMBER)) {
     std::string num = static_cast<NumberToken*>(previous())->Val;
     auto result = std::make_shared<NumberNode>(num);
     return result;
   } else {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 }
 
 std::shared_ptr<VariableNode> Parser::parseVariable() {
-  save_loc();
+  auto current_loc = current;
   if (match(TokenType::SYMBOL)) {
     std::string name = static_cast<SymbolToken*>(previous())->Val;
     auto result = std::make_shared<VariableNode>(name);
     return result;
   } else {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 };
@@ -112,7 +112,6 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
 };
 
 std::shared_ptr<StmtListNode> Parser::parseStmtList() {
-  save_loc();
   std::vector<StmtNode> stmts;
   while (true) {
     auto stmt = parseStatement();
@@ -136,7 +135,7 @@ std::optional<StmtNode> Parser::parseStatement() {
     return std::nullopt;
   }
 
-  save_loc();
+  auto current_loc = current;
   auto readStmt = parseRead();
   if (readStmt) {
     return readStmt;
@@ -165,13 +164,12 @@ std::optional<StmtNode> Parser::parseStatement() {
     return assignStmt;
   }
 
-  reset();
+  current = current_loc;
   // Shouldn't reach here
   return std::nullopt;
 };
 
 Factor Parser::parseFactor() {
-  save_loc();
   auto Var = parseVariable();
   if (Var) {
     return Var;
@@ -263,7 +261,6 @@ Expr Parser::prattParse() { return prattParse(0); }
 Expr Parser::parseExpr() { return prattParse(); };
 
 std::shared_ptr<AssignNode> Parser::parseAssign() {
-  save_loc();
   auto Var = parseVariable();
 
   if (!Var) {
@@ -273,16 +270,10 @@ std::shared_ptr<AssignNode> Parser::parseAssign() {
   }
 
   if (!match("=")) {
-    reset();
-    return nullptr;
+    throw SimpleParseException("Expected '=', got '" + peek()->Val + "'.");
   }
 
   auto Expr = parseExpr();
-
-  // if (!Expr) {
-  //   reset();
-  //   return nullptr;
-  // }
 
   expect(";");
 
@@ -290,16 +281,16 @@ std::shared_ptr<AssignNode> Parser::parseAssign() {
 };
 
 std::shared_ptr<ReadNode> Parser::parseRead() {
-  save_loc();
+  auto current_loc = current;
   if (!match("read")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
   auto Var = parseVariable();
 
   if (!Var) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
@@ -309,15 +300,15 @@ std::shared_ptr<ReadNode> Parser::parseRead() {
 };
 
 std::shared_ptr<PrintNode> Parser::parsePrint() {
-  save_loc();
+  auto current_loc = current;
   if (!match("print")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
   auto Var = parseVariable();
   if (!Var) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
@@ -328,11 +319,6 @@ std::shared_ptr<PrintNode> Parser::parsePrint() {
 
 RelFactor Parser::parseRelFactor() {
   auto Expr = parseExpr();
-
-  // if (!Expr) {
-  //   reset();
-  //   return nullptr;
-  // }
 
   return Expr;
 };
@@ -405,14 +391,14 @@ std::shared_ptr<CondExprNode> Parser::parseCondExpr() {
 };
 
 std::shared_ptr<WhileNode> Parser::parseWhile() {
-  save_loc();
+  auto current_loc = current;
   if (!match("while")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
   if (!match("(")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
@@ -433,14 +419,14 @@ std::shared_ptr<WhileNode> Parser::parseWhile() {
 };
 
 std::shared_ptr<IfNode> Parser::parseIf() {
-  save_loc();
+  auto current_loc = current;
   if (!match("if")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
   if (!match("(")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 

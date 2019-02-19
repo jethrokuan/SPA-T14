@@ -332,7 +332,6 @@ RelFactor Parser::parseRelFactor() {
 std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
   auto lhs = parseRelFactor();
 
-  std::cout << peek()->Val;
   std::unordered_set<std::string> valid_ops({">", ">=", "<", "<=", "==", "!="});
   auto op = peek()->Val;
   if (valid_ops.find(op) == valid_ops.end()) {

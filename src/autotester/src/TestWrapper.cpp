@@ -38,15 +38,19 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   try {
     auto query_results = spa_manager->query(query);
     if (query_results.empty()) {
-      // results.push_back("none");
+      std::cout << "Query Result: NONE\n";
     } else {
       // We have results - return to screen
+      std::cout << "Query Results: \n";
       for (unsigned int i = 0; i < query_results.size(); i++) {
+        // For autotester
         results.push_back(query_results[i]);
+        // For display
+        std::cout << query_results[i];
         // Comma addition only for non-last results
-        // if (i != (query_results.size() - 1)) {
-        //  results.push_back(", ");
-        // }
+        if (i != (query_results.size() - 1)) {
+          std::cout << ", ";
+        }
       }
     }
   } catch (const std::runtime_error e) {

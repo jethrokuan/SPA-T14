@@ -1,0 +1,55 @@
+1 - valid syntax (no clauses: test if the program can retrieve all the program design entities)
+procedure p;
+Select p
+main, insertCell, retrieveCellStatus
+5000
+2 - valid syntax (no clauses)
+variable v;
+Select v
+numInserts, cellIndex, retrieveNumCells, newcellValue, cellPriority, cellDetails, cellStatus, high, low, none
+5000
+3 - valid syntax (no clauses)
+stmt s;
+Select s
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28
+5000
+4 - valid syntax (no clauses)
+read r;
+Select r
+1, 6, 9, 11, 12, 22, 24 
+5000
+5 - valid syntax (no clauses)
+print p;
+Select p
+26, 27, 28
+5000
+6 - valid syntax (no clauses, synonym with digit)
+assign a1;
+Select a1
+4, 5, 14, 15, 16, 17, 18, 19, 20, 21
+5000
+7 - valid syntax (no clauses, longer synonym)
+while wwwwwwwwwww1111111111;
+Select wwwwwwwwwww1111111111
+2, 7 
+5000
+8 - valid syntax (no clauses)
+if i;
+Select i
+10, 13, 23, 25
+5000
+9 - invalid synonym (synonym begins with DIGIT)
+if 1i;
+Select 1i;
+none
+5000
+10 - invalid synonym (synonym contains special characters)
+if a$;
+Select a$;
+none
+5000
+11 - invalid synonym (synonym contains special characters)
+if a$;
+Select a$;
+none
+5000

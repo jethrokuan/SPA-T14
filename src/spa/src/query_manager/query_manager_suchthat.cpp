@@ -45,22 +45,22 @@ bool QueryManager::isBooleanSuchThatTrue(SuchThat* such_that) {
 
   switch (relation) {
     case Relation::Follows:
-      std::cout << "FOLLOWS BOOLEAN DETECTED";
+      // std::cout << "FOLLOWS BOOLEAN DETECTED";
       return pkb->isLineFollowLine(arg1, arg2);
     case Relation::FollowsT:
-      std::cout << "FOLLOWS* BOOLEAN DETECTED";
+      // std::cout << "FOLLOWS* BOOLEAN DETECTED";
       return pkb->isLineFollowLineS(arg1, arg2);
     case Relation::Parent:
-      std::cout << "PARENT BOOLEAN DETECTED";
+      // std::cout << "PARENT BOOLEAN DETECTED";
       return pkb->isLineParentLine(arg1, arg2);
     case Relation::ParentT:
-      std::cout << "PARENT* BOOLEAN DETECTED";
+      // std::cout << "PARENT* BOOLEAN DETECTED";
       return pkb->isLineParentLineS(arg1, arg2);
     case Relation::ModifiesS:
-      std::cout << "Modifies-Statement BOOLEAN DETECTED";
+      // std::cout << "Modifies-Statement BOOLEAN DETECTED";
       return pkb->isLineModifiesVar(arg1, arg2);
     case Relation::UsesS:
-      std::cout << "Uses-Statement BOOLEAN DETECTED";
+      // std::cout << "Uses-Statement BOOLEAN DETECTED";
       return pkb->isLineUsesVar(arg1, arg2);
     default:
       assert(false);

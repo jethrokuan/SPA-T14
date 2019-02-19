@@ -94,14 +94,13 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
                                "'.");
   }
 
-  auto Var = parseVariable();
-
-  if (!Var) {
+  std::string procName;
+  if (match(TokenType::SYMBOL)) {
+    procName = static_cast<SymbolToken*>(previous())->Val;
+  } else {
     throw SimpleParseException("Expected a valid procedure name, got '" +
                                peek()->Val + "'.");
   }
-
-  auto procName = Var->Name;
 
   expect("{");
 

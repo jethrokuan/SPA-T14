@@ -63,14 +63,6 @@ class Parser {
   //! Current index in `tokens`
   int current = 0;
 
-  //! Index of last successful parse
-  /*!
-    The parser will attempt to parse expressions using all production rules.
-    In the case where using a certain production rule fails, the parser needs to
-    rewind to the index of the last successful parse using this value.
-  */
-  int last_good = 0;
-
   //! The vector of lexical tokens
   std::vector<Token*> tokens;
 
@@ -98,18 +90,6 @@ class Parser {
 
   //! Returns true if the parser is at the end of file.
   bool isAtEnd();
-
-  //! Updates the last good index.
-  /*!
-    Called when the parse of an expression Is successful.
-  */
-  void save_loc() { last_good = current; };
-
-  //! Resets the parser to the last good index.
-  /*!
-    Called when a production rule fails to parse the expression.
-  */
-  void reset() { current = last_good; };
 
   //! Returns the current token
   Token* peek();

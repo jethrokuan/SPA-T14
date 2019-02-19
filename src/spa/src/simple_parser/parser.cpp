@@ -65,42 +65,41 @@ Token* Parser::peek() { return tokens[current]; };
 Token* Parser::previous() { return tokens[current - 1]; };
 
 std::shared_ptr<NumberNode> Parser::parseNumber() {
-  save_loc();
+  auto current_loc = current;
   if (match(TokenType::NUMBER)) {
     std::string num = static_cast<NumberToken*>(previous())->Val;
     auto result = std::make_shared<NumberNode>(num);
     return result;
   } else {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 }
 
 std::shared_ptr<VariableNode> Parser::parseVariable() {
-  save_loc();
+  auto current_loc = current;
   if (match(TokenType::SYMBOL)) {
     std::string name = static_cast<SymbolToken*>(previous())->Val;
     auto result = std::make_shared<VariableNode>(name);
     return result;
   } else {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 };
 
 std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
-  save_loc();
   if (!match("procedure")) {
-    reset();
-    return nullptr;
+    throw SimpleParseException("Expected 'procedure', got '" + peek()->Val +
+                               "'.");
   }
 
-  auto Var = parseVariable();
-  auto procName = Var->Name;
-
-  if (!Var) {
-    reset();
-    return nullptr;
+  std::string procName;
+  if (match(TokenType::SYMBOL)) {
+    procName = static_cast<SymbolToken*>(previous())->Val;
+  } else {
+    throw SimpleParseException("Expected a valid procedure name, got '" +
+                               peek()->Val + "'.");
   }
 
   expect("{");
@@ -113,7 +112,6 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
 };
 
 std::shared_ptr<StmtListNode> Parser::parseStmtList() {
-  save_loc();
   std::vector<StmtNode> stmts;
   while (true) {
     auto stmt = parseStatement();
@@ -124,13 +122,20 @@ std::shared_ptr<StmtListNode> Parser::parseStmtList() {
     }
   }
 
-  // TODO: Handle case where statement list is empty
+  if (stmts.size() == 0) {
+    throw SimpleParseException("Statement list cannot be empty.");
+  }
 
   return std::make_shared<StmtListNode>(std::move(stmts));
 };
 
 std::optional<StmtNode> Parser::parseStatement() {
-  save_loc();
+  if (check("}")) {
+    // End of statement list, return early
+    return std::nullopt;
+  }
+
+  auto current_loc = current;
   auto readStmt = parseRead();
   if (readStmt) {
     return readStmt;
@@ -139,11 +144,6 @@ std::optional<StmtNode> Parser::parseStatement() {
   auto printStmt = parsePrint();
   if (printStmt) {
     return printStmt;
-  }
-
-  auto assignStmt = parseAssign();
-  if (assignStmt) {
-    return assignStmt;
   }
 
   auto whileStmt = parseWhile();
@@ -156,12 +156,20 @@ std::optional<StmtNode> Parser::parseStatement() {
     return ifStmt;
   }
 
-  reset();
+  // We try the assign statement last, since it's the "most generic",
+  // accepting any symbol token. Any parse error is attributed here
+  auto assignStmt = parseAssign();
+
+  if (assignStmt) {
+    return assignStmt;
+  }
+
+  current = current_loc;
+  // Shouldn't reach here
   return std::nullopt;
 };
 
 Factor Parser::parseFactor() {
-  save_loc();
   auto Var = parseVariable();
   if (Var) {
     return Var;
@@ -190,8 +198,7 @@ Expr Parser::nud(Token* t) {
     expect(")");
     return expr;
   } else {
-    throw SimpleParseException(
-        "Expecting a number, variable or expression, got '" + t->Val + "'.");
+    throw SimpleParseException("Expected an expression, got '" + t->Val + "'.");
     // // TODO: Handle Error
     // std::cout << "nud called on invalid token" << t->Val << std::endl;
     // return std::make_shared<VariableNode>("FAIL");
@@ -199,15 +206,17 @@ Expr Parser::nud(Token* t) {
 }
 
 int Parser::lbp(Token* t) {
-  if (t->Val == ";" || t->Val == ")") {
+  std::unordered_set<std::string> valid_ops({">", ">=", "<", "<=", "==", "!="});
+  if (t->Val == ";" || t->Val == ")" ||
+      valid_ops.find(t->Val) != valid_ops.end()) {
+    // Any of these tokens signify end of expr
     return 0;
   } else if (t->Val == "+" || t->Val == "-") {
     return 10;
   } else if (t->Val == "*" || t->Val == "/" || t->Val == "%") {
     return 20;
   } else {
-    throw SimpleParseException("Expecting operator or semicolon, got '" +
-                               t->Val + "'.");
+    throw SimpleParseException("Unexpected token '" + t->Val + "'.");
   }
 }
 
@@ -252,25 +261,19 @@ Expr Parser::prattParse() { return prattParse(0); }
 Expr Parser::parseExpr() { return prattParse(); };
 
 std::shared_ptr<AssignNode> Parser::parseAssign() {
-  save_loc();
   auto Var = parseVariable();
 
   if (!Var) {
-    reset();
-    return nullptr;
+    throw SimpleParseException(
+        "Expected a variable name for assign statement, got '" + peek()->Val +
+        "'.");
   }
 
   if (!match("=")) {
-    reset();
-    return nullptr;
+    throw SimpleParseException("Expected '=', got '" + peek()->Val + "'.");
   }
 
   auto Expr = parseExpr();
-
-  // if (!Expr) {
-  //   reset();
-  //   return nullptr;
-  // }
 
   expect(";");
 
@@ -278,16 +281,16 @@ std::shared_ptr<AssignNode> Parser::parseAssign() {
 };
 
 std::shared_ptr<ReadNode> Parser::parseRead() {
-  save_loc();
+  auto current_loc = current;
   if (!match("read")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
   auto Var = parseVariable();
 
   if (!Var) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
@@ -297,15 +300,15 @@ std::shared_ptr<ReadNode> Parser::parseRead() {
 };
 
 std::shared_ptr<PrintNode> Parser::parsePrint() {
-  save_loc();
+  auto current_loc = current;
   if (!match("print")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
   auto Var = parseVariable();
   if (!Var) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
@@ -315,24 +318,7 @@ std::shared_ptr<PrintNode> Parser::parsePrint() {
 };
 
 RelFactor Parser::parseRelFactor() {
-  save_loc();
-  auto Var = parseVariable();
-  if (Var) {
-    return Var;
-  }
-
-  auto Number = parseNumber();
-
-  if (Number) {
-    return Number;
-  }
-
   auto Expr = parseExpr();
-
-  // if (!Expr) {
-  //   reset();
-  //   return nullptr;
-  // }
 
   return Expr;
 };
@@ -344,29 +330,17 @@ RelFactor Parser::parseRelFactor() {
 // | rel_factor == rel_factor
 // | rel_factor != rel_factor
 std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
-  save_loc();
   auto lhs = parseRelFactor();
 
-  // if (!lhs) {
-  //   reset();
-  //   return nullptr;
-  // }
   std::unordered_set<std::string> valid_ops({">", ">=", "<", "<=", "==", "!="});
   auto op = peek()->Val;
   if (valid_ops.find(op) == valid_ops.end()) {
-    std::cout << "Expected an op, got " << op << std::endl;
-    reset();
-    return nullptr;
+    throw SimpleParseException("Expected a comparator, got '" + op + "'.");
   }
 
   advance();
 
   auto rhs = parseRelFactor();
-
-  // if (!rhs) {
-  //   reset();
-  //   return nullptr;
-  // }
 
   return std::make_shared<RelExprNode>(lhs, op, rhs);
 }
@@ -377,52 +351,53 @@ std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
 // | ( cond_expr ) || ( cond_expr )
 
 std::shared_ptr<CondExprNode> Parser::parseCondExpr() {
-  save_loc();
-  auto relExpr = parseRelExpr();
-  if (relExpr) {
-    return std::make_shared<CondExprNode>(std::move(relExpr));
-  }
-
-  if (match("!")) {
+  if (match("!")) {  // !(condExpr)
     expect("(");
     auto condExpr = parseCondExpr();
     expect(")");
     return std::make_shared<CondExprNode>(std::move(condExpr));
+  } else if (check("(")) {  // () op ()
+    expect("(");
+    auto condLHS = parseCondExpr();
+    expect(")");
+
+    std::string op;
+
+    if (match("&&")) {
+      op = "&&";
+    } else if (match("||")) {
+      op = "||";
+    } else {
+      throw SimpleParseException("Expected '||' or '&&', got '" + peek()->Val +
+                                 "'.");
+    }
+
+    expect("(");
+    auto condRHS = parseCondExpr();
+    expect(")");
+
+    return std::make_shared<CondExprNode>(std::move(condLHS), op,
+                                          std::move(condRHS));
+  } else {  // relExpr
+    auto relExpr = parseRelExpr();
+
+    if (relExpr) {
+      return std::make_shared<CondExprNode>(std::move(relExpr));
+    }
   }
-
-  expect("(");
-  auto condLHS = parseCondExpr();
-  expect(")");
-
-  std::string op;
-
-  if (match("&&")) {
-    op = "&&";
-  } else if (match("||")) {
-    op = "||";
-  } else {
-    // TODO: HANDLE BETTER
-    std::cout << "EXPECTING AN OP";
-    reset();
-  }
-
-  expect("(");
-  auto condRHS = parseCondExpr();
-  expect(")");
-
-  return std::make_shared<CondExprNode>(std::move(condLHS), op,
-                                        std::move(condRHS));
+  // Shouldn't reach here
+  return nullptr;
 };
 
 std::shared_ptr<WhileNode> Parser::parseWhile() {
-  save_loc();
+  auto current_loc = current;
   if (!match("while")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
   if (!match("(")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
@@ -443,13 +418,20 @@ std::shared_ptr<WhileNode> Parser::parseWhile() {
 };
 
 std::shared_ptr<IfNode> Parser::parseIf() {
-  save_loc();
+  auto current_loc = current;
   if (!match("if")) {
-    reset();
+    current = current_loc;
     return nullptr;
   }
 
-  expect("(");
+  if (!match("(")) {
+    current = current_loc;
+    return nullptr;
+  }
+
+  // From this point on, it is safe to assume that the parser is trying to
+  // parse an if statement.
+
   auto condExpr = parseCondExpr();
   if (!condExpr) {
     // TODO: HANDLE ERROR BETTER

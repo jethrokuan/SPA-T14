@@ -1,0 +1,5 @@
+procedure main {
+  if (i == 0) then {
+    read x;
+  }
+}

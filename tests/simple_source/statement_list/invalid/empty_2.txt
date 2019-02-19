@@ -1,0 +1,4 @@
+procedure main {
+  if (i > 0) {
+  }
+}

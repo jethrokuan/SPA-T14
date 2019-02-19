@@ -1,0 +1,3 @@
+Procedure main {
+  read x;
+}

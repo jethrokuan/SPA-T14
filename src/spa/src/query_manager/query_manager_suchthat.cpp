@@ -56,6 +56,12 @@ bool QueryManager::isBooleanSuchThatTrue(SuchThat* such_that) {
     case Relation::ParentT:
       std::cout << "PARENT* BOOLEAN DETECTED";
       return pkb->isLineParentLineS(arg1, arg2);
+    case Relation::ModifiesS:
+      std::cout << "Modifies-Statement BOOLEAN DETECTED";
+      return pkb->isLineModifiesVar(arg1, arg2);
+    case Relation::UsesS:
+      std::cout << "Uses-Statement BOOLEAN DETECTED";
+      return pkb->isLineUsesVar(arg1, arg2);
     default:
       assert(false);
   }
@@ -85,6 +91,10 @@ std::string QueryManager::entRefToString(EntRef arg) {
                              [](Underscore& e __attribute__((unused))) {
                                return std::string("_");
                              },
-                             [](QuoteIdent& s) { return s.quote_ident; }},
+                             [](QuoteIdent& s) {
+                               // Remove quotes
+                               return s.quote_ident.substr(
+                                   1, s.quote_ident.size() - 2);
+                             }},
                     arg);
 }

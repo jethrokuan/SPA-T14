@@ -17,6 +17,7 @@
 #include <string>
 #include <vector>
 
+#include "simple_parser/pratt.h"
 #include "simple_parser/token.h"
 #include "structs/node.h"
 
@@ -62,6 +63,7 @@ class Parser {
  private:
   //! Current index in `tokens`
   int current = 0;
+  ExprParser exprParser;
 
   //! The vector of lexical tokens
   std::vector<Token*> tokens;
@@ -146,11 +148,6 @@ class Parser {
   /*!
     expr: term expr'
    */
-  Expr nud(Token* t);
-  int lbp(Token* t);
-  Expr led(Token* t, Expr left);
-  Expr prattParse();
-  Expr prattParse(int rbp);
   Expr parseExpr();
 
   //! Parses a rel_expr expression.

@@ -41,4 +41,13 @@ std::string getDesignEntityString(DesignEntity de) {
   return designEntityToStringMap.at(de);
 }
 
+std::string getDesignEntityVectorString(std::vector<DesignEntity> des) {
+  std::string res = "|";
+  for (auto de : des) {
+    res += getDesignEntityString(de);
+    res += "|";
+  }
+  return res;
+}
+
 }  // namespace QE

@@ -174,3 +174,42 @@ TEST_CASE ("Test such that with not-found synonym firstarg Validate") {
 
   REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
 }
+
+TEST_CASE ("Test such that with invalid type firstarg Validate") {
+  // Modifies can't take a variable as first argument
+  auto decl = new std::vector<Declaration>{
+      Declaration(DesignEntity::VARIABLE, Synonym::construct("a1").value())};
+  auto select =
+      new Declaration(DesignEntity::VARIABLE, Synonym::construct("a1").value());
+  StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a1").value());
+  StmtOrEntRef a2 = QE::EntRef(QE::Underscore());
+  auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
+  Query q = Query();
+  q.declarations = decl;
+  q.selected_declaration = select;
+  q.such_that = suchthat;
+
+  QueryValidator qv = QueryValidator();
+
+  REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
+}
+
+TEST_CASE ("Test such that with invalid type secondarg Validate") {
+  // Modifies can't take a variable as first argument
+  auto decl = new std::vector<Declaration>{
+      Declaration(DesignEntity::STMT, Synonym::construct("a1").value()),
+      Declaration(DesignEntity::STMT, Synonym::construct("a2").value())};
+  auto select =
+      new Declaration(DesignEntity::STMT, Synonym::construct("a1").value());
+  StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a1").value());
+  StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("a2").value());
+  auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
+  Query q = Query();
+  q.declarations = decl;
+  q.selected_declaration = select;
+  q.such_that = suchthat;
+
+  QueryValidator qv = QueryValidator();
+
+  REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
+}

@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <vector>
 
 #include "query_evaluator/pql/relation.h"
 #include "query_evaluator/pql/stmtentref.h"
@@ -28,6 +29,31 @@ std::map<Relation, std::pair<RefType, RefType>> relationToArgTypesMap({
     {Relation::FollowsT, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
 });
 
+//! Maps each relation to design entities for each of its allowed arguments if
+//! they are synonyms
+std::map<Relation,
+         std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>>
+    relationToArgSynonymTypesMap({
+        {Relation::ModifiesS,
+         // No PRINT design entity for Uses: print uses a variable, not
+         // modifies
+         // TODO: Add CALL in later iterations
+         std::make_pair(ALL_STMT_DESIGN_ENTITIES_NO_PRINT,
+                        std::vector<DesignEntity>{DesignEntity::VARIABLE})},
+        // No READ design entity for Uses: read modifies a variable - not uses
+        {Relation::UsesS,
+         std::make_pair(ALL_STMT_DESIGN_ENTITIES_NO_READ,
+                        std::vector<DesignEntity>{DesignEntity::VARIABLE})},
+        {Relation::Parent,
+         std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+        {Relation::ParentT,
+         std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+        {Relation::Follows,
+         std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+        {Relation::FollowsT,
+         std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+    });
+
 auto stringToRelationMap =
     swapPairs<Relation, std::string>(relationToStringMap);
 
@@ -43,6 +69,11 @@ const std::map<Relation, std::string>& getRelationToStringMap() {
 
 std::pair<RefType, RefType> getArgTypesFromRelation(Relation& r) {
   return relationToArgTypesMap.at(r);
+}
+
+std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>
+getArgSynonymTypesFromRelation(Relation& r) {
+  return relationToArgSynonymTypesMap.at(r);
 }
 
 }  // namespace QE

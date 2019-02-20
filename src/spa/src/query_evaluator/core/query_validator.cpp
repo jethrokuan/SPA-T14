@@ -6,9 +6,12 @@
 using namespace QE;
 
 void QueryValidator::validateQuery(const Query& query) {
+  // Do not change the order of these calls - there are dependencies to reduce
+  // double-checking of conditions
   validatePatternVariableAsAssign(query);
   validateModifyUsesNoFirstArgUnderscore(query);
   validateSuchThatSynonyms(query);
+  validateSynonymTypes(query);
 }
 
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
@@ -104,4 +107,72 @@ void QueryValidator::validateSuchThatSynonyms(const Query& query) {
         }
       },
       such_that_secondarg);
+}
+
+void QueryValidator::validateSynonymTypes(const Query& query) {
+  if (query.such_that == nullptr) {
+    return;
+  }
+  // Idea here is to check the synonym's design entity type
+  // against the list of allowed design entity types allowed for
+  // each argument of the relation in this query
+  auto relation = query.such_that->getRelation();
+  auto argSynonymTypes = getArgSynonymTypesFromRelation(relation);
+
+  // Check both arguments - must be correct type
+  auto first_arg_iter = std::visit(
+      [&](auto&& arg) {
+        if (std::holds_alternative<Synonym>(arg)) {
+          return std::find_if(query.declarations->begin(),
+                              query.declarations->end(), [&](auto decl) {
+                                return decl.getSynonym().synonym ==
+                                       std::get<Synonym>(arg).synonym;
+                              });
+        } else {
+          return query.declarations->end();
+        }
+      },
+      query.such_that->getFirstArg());
+  if (first_arg_iter != query.declarations->end()) {
+    auto found_declaration = *first_arg_iter;
+    if (std::find(argSynonymTypes.first.begin(), argSynonymTypes.first.end(),
+                  found_declaration.getDesignEntity()) ==
+        argSynonymTypes.first.end()) {
+      throw PQLValidationException(
+          "Cannot match given design entity type: " +
+          getDesignEntityString(found_declaration.getDesignEntity()) +
+          " with allowed list of design entities: " +
+          getDesignEntityVectorString(argSynonymTypes.first) +
+          " during parse of such_that relation: " +
+          getStringFromRelation(relation) + "'s first argument");
+    }
+  }
+
+  auto second_arg_iter = std::visit(
+      [&](auto&& arg) {
+        if (std::holds_alternative<Synonym>(arg)) {
+          return std::find_if(query.declarations->begin(),
+                              query.declarations->end(), [&](auto decl) {
+                                return decl.getSynonym().synonym ==
+                                       std::get<Synonym>(arg).synonym;
+                              });
+        } else {
+          return query.declarations->end();
+        }
+      },
+      query.such_that->getSecondArg());
+  if (second_arg_iter != query.declarations->end()) {
+    auto found_declaration = *second_arg_iter;
+    if (std::find(argSynonymTypes.second.begin(), argSynonymTypes.second.end(),
+                  found_declaration.getDesignEntity()) ==
+        argSynonymTypes.second.end()) {
+      throw PQLValidationException(
+          "Cannot match given design entity type: " +
+          getDesignEntityString(found_declaration.getDesignEntity()) +
+          " with allowed list of design entities: " +
+          getDesignEntityVectorString(argSynonymTypes.second) +
+          " during parse of such_that relation: " +
+          getStringFromRelation(relation) + "'s second argument");
+    }
+  }
 }

@@ -16,10 +16,12 @@ class QueryValidator {
   void validateModifyUsesNoFirstArgUnderscore(const Query&);
   //! Checks that all the synonyms in the such_that clause are declared
   void validateSuchThatSynonyms(const Query&);
+  //! Checks that all synonym arguments have the correct types
+  void validateSynonymTypes(const Query&);
 
  public:
-  //! \brief Checks the semantics in the Query, throws PQLValidationException if
-  //! an error is detected
+  //! \brief Checks the semantics in the Query, throws
+  //! PQLValidationException if an error is detected
   void validateQuery(const Query&);
 };
 

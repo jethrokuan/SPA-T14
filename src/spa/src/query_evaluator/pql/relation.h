@@ -3,6 +3,7 @@
 #include <regex>
 #include <string>
 
+#include "query_evaluator/pql/design_entity.h"
 #include "query_evaluator/pql/relation.h"
 
 namespace QE {
@@ -18,4 +19,6 @@ enum class Relation {
 Relation getRelation(std::string&);
 std::string getStringFromRelation(Relation);
 const std::map<Relation, std::string>& getRelationToStringMap();
+std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>
+getArgSynonymTypesFromRelation(Relation&);
 }  // namespace QE

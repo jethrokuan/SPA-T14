@@ -1,5 +1,6 @@
-#include "simple_parser/parser.h"
 #include "simple_parser/exceptions.h"
+#include "simple_parser/parser.h"
+#include "simple_parser/pratt.h"
 
 #include <unordered_set>
 
@@ -187,78 +188,7 @@ Factor Parser::parseFactor() {
   return Expr;
 };
 
-// TODO: Refactor
-Expr Parser::nud(Token* t) {
-  if (t->T == TokenType::NUMBER) {
-    return std::make_shared<NumberNode>(t->Val);
-  } else if (t->T == TokenType::SYMBOL) {
-    return std::make_shared<VariableNode>(t->Val);
-  } else if (t->Val == "(") {
-    Expr expr = prattParse();
-    expect(")");
-    return expr;
-  } else {
-    throw SimpleParseException("Expected an expression, got '" + t->Val + "'.");
-    // // TODO: Handle Error
-    // std::cout << "nud called on invalid token" << t->Val << std::endl;
-    // return std::make_shared<VariableNode>("FAIL");
-  }
-}
-
-int Parser::lbp(Token* t) {
-  std::unordered_set<std::string> valid_ops({">", ">=", "<", "<=", "==", "!="});
-  if (t->Val == ";" || t->Val == ")" ||
-      valid_ops.find(t->Val) != valid_ops.end()) {
-    // Any of these tokens signify end of expr
-    return 0;
-  } else if (t->Val == "+" || t->Val == "-") {
-    return 10;
-  } else if (t->Val == "*" || t->Val == "/" || t->Val == "%") {
-    return 20;
-  } else {
-    throw SimpleParseException("Unexpected token '" + t->Val + "'.");
-  }
-}
-
-// TODO: Refactor
-Expr Parser::led(Token* t, Expr left) {
-  if (t->Val.compare("+") == 0) {
-    Expr right = prattParse(10);
-    return std::make_shared<BinOpNode>(left, right, "+");
-  } else if (t->Val.compare("-") == 0) {
-    Expr right = prattParse(10);
-    return std::make_shared<BinOpNode>(left, right, "-");
-  } else if (t->Val.compare("*") == 0) {
-    Expr right = prattParse(20);
-    return std::make_shared<BinOpNode>(left, right, "*");
-  } else if (t->Val.compare("/") == 0) {
-    Expr right = prattParse(20);
-    return std::make_shared<BinOpNode>(left, right, "/");
-  } else if (t->Val.compare("%") == 0) {
-    Expr right = prattParse(20);
-    return std::make_shared<BinOpNode>(left, right, "%");
-  } else {
-    throw SimpleParseException("led called on invalid token " + t->Val);
-  }
-
-  // return left;
-}
-
-Expr Parser::prattParse(int rbp) {
-  Token* t = advance();
-  Expr left = nud(t);
-
-  while (rbp < lbp(peek())) {
-    t = advance();
-    left = led(t, left);
-  }
-
-  return left;
-}
-
-Expr Parser::prattParse() { return prattParse(0); }
-
-Expr Parser::parseExpr() { return prattParse(); };
+Expr Parser::parseExpr() { return exprParser.parse(0); };
 
 std::shared_ptr<AssignNode> Parser::parseAssign() {
   auto Var = parseVariable();
@@ -458,5 +388,10 @@ std::shared_ptr<IfNode> Parser::parseIf() {
                                   std::move(stmtListElse));
 };
 
-Parser::Parser(std::vector<Token*> t) : tokens(t){};
+Parser::Parser(std::vector<Token*> t)
+    : exprParser(Simple::ExprParser(
+          tokens, current,
+          std::unordered_set<std::string>(
+              {">", ">=", "<", "<=", "==", "!=", ";", ")"}))),
+      tokens(t){};
 std::shared_ptr<ProcedureNode> Parser::parse() { return parseProcedure(); }

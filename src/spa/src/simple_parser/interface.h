@@ -17,5 +17,6 @@ namespace Simple {
 class SimpleInterface {
  public:
   static std::shared_ptr<ProcedureNode> getAstFromFile(std::string filename);
+  static Expr parseExpression(std::string expression);
 };
 }  // namespace Simple

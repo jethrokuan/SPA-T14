@@ -9,6 +9,7 @@ set(srcs ${srcs}
   src/simple_source/parser/TestRead.cpp
   src/simple_source/parser/TestStatementList.cpp
   src/simple_source/parser/TestWhile.cpp
+  src/simple_source/parser/TestInterface.cpp
   src/simple_source/TestSimpleLexer.cpp
   )
 

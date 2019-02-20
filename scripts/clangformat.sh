@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 find src \
      \( -name '*.c' \
      -o -name '*.cc' \

@@ -189,13 +189,60 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
   }
 
   SECTION (
-      "Test select all statements but such_that does not constrain it - "
+      "Test select all statements but such_that does not constrain it (two "
+      "vars) - "
       "Follows*(s2, s3)") {
     auto querystr =
         std::string("stmt s1, s2, s3; Select s1 such that  Follows*(s2, s3)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(query) ==
             std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
+  SECTION (
+      "Test select all statements but such_that does not constrain it - true - "
+      "(one "
+      "var, left) - "
+      "Follows*(s2, 5)") {
+    auto querystr =
+        std::string("stmt s1, s2; Select s1 such that Follows*(s2, 5)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
+  SECTION (
+      "Test select all statements but such_that does not constrain it - true - "
+      "(one "
+      "var, right) - "
+      "Follows*(s2, 5)") {
+    auto querystr =
+        std::string("stmt s1, s2; Select s1 such that Follows*(4, s2)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
+  SECTION (
+      "Test select all statements but such_that constrains it - false - "
+      "(one "
+      "var, right) - "
+      "Follows*(5, s2)") {
+    auto querystr =
+        std::string("stmt s1, s2; Select s1 such that Follows*(5, s2)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+  }
+
+  SECTION (
+      "Test select all statements but such_that constrains it - false - "
+      "(one "
+      "var, left) - "
+      "Follows*(5, s2)") {
+    auto querystr =
+        std::string("stmt s1, s2; Select s1 such that Follows*(s2, 1)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
   }
 
   delete pkb;

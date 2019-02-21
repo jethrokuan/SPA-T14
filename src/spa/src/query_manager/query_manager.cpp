@@ -68,7 +68,7 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
           return final_result;
         }
       } else if (auto clause_is_true = std::get_if<bool>(&result)) {
-        if (clause_is_true) {
+        if (*clause_is_true) {
           // If clause only returns true - can just return all selected stuff
           // TODO: change for pattern
           return getSelect(query->selected_declaration->getDesignEntity());

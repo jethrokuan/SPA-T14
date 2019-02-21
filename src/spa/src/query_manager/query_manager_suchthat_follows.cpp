@@ -130,6 +130,14 @@ QueryManager::handleFollowsTSuchThat(Query* query,
       }
     }
     return false;
+  } else if (arg1AsSynonym && !arg1InSelect && arg2AsBasic) {
+    // Case 9: Selected variable is NOT in this such_that, left argument
+    // Follows(s1, 3)
+    return !(pkb->getBeforeLineS(*arg2AsBasic).empty());
+  } else if (arg2AsSynonym && !arg2InSelect && arg1AsBasic) {
+    // Case 10: Selected variable is NOT in this such_that, right argument
+    // Follows(3, s1)
+    return !(pkb->getFollowingLineS(*arg1AsBasic).empty());
   }
   std::cout << "No cases matched - this is a problem\n";
   return std::vector<std::string>();

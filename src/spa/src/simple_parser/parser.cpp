@@ -12,36 +12,24 @@ bool Parser::match(TokenType type) {
   if (check(type)) {
     advance();
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 
 bool Parser::match(std::string s) {
   if (check(s)) {
     advance();
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
-
-bool Parser::expect(TokenType type) {
-  if (match(type)) {
-    return true;
-  } else {
-    // TODO: Handle this better
-    return false;
-  }
-};
 
 bool Parser::expect(std::string s) {
   if (match(s)) {
     return true;
-  } else {
-    throw SimpleParseException("Expected '" + s + "', got '" + peek()->Val +
-                               "'.");
   }
+  throw SimpleParseException("Expected '" + s + "', got '" + peek()->Val +
+                             "'.");
 };
 
 bool Parser::check(TokenType type) {
@@ -333,15 +321,15 @@ std::shared_ptr<WhileNode> Parser::parseWhile() {
 
   auto condExpr = parseCondExpr();
   if (!condExpr) {
-    // TODO: HANDLE ERROR BETTER
-    std::cout << "Expected a cond expression";
+    throw SimpleParseException("Expected a conditional expression, got '" +
+                               peek()->Val + "'.");
   }
   expect(")");
   expect("{");
   auto stmtList = parseStmtList();
   if (!stmtList) {
-    // TODO: HANDLE ERROR BETTER
-    std::cout << "Expected a stmtlist";
+    throw SimpleParseException("Expected a statement list, got '" +
+                               peek()->Val + "'.");
   }
   expect("}");
   return std::make_shared<WhileNode>(std::move(condExpr), std::move(stmtList));
@@ -364,24 +352,24 @@ std::shared_ptr<IfNode> Parser::parseIf() {
 
   auto condExpr = parseCondExpr();
   if (!condExpr) {
-    // TODO: HANDLE ERROR BETTER
-    std::cout << "Expected a cond expression";
+    throw SimpleParseException("Expected a conditional expression, got '" +
+                               peek()->Val + "'.");
   }
   expect(")");
   expect("then");
   expect("{");
   auto stmtListThen = parseStmtList();
   if (!stmtListThen) {
-    // TODO: HANDLE ERROR BETTER
-    std::cout << "Expected a stmtlist";
+    throw SimpleParseException("Expected a statement list, got '" +
+                               peek()->Val + "'.");
   }
   expect("}");
   expect("else");
   expect("{");
   auto stmtListElse = parseStmtList();
   if (!stmtListElse) {
-    // TODO: HANDLE ERROR BETTER
-    std::cout << "Expected a stmtlist";
+    throw SimpleParseException("Expected a statement list, got '" +
+                               peek()->Val + "'.");
   }
   expect("}");
   return std::make_shared<IfNode>(std::move(condExpr), std::move(stmtListThen),
@@ -390,7 +378,7 @@ std::shared_ptr<IfNode> Parser::parseIf() {
 
 Parser::Parser(std::vector<Token*> t)
     : exprParser(Simple::ExprParser(
-          tokens, current,
+          tokens, &current,
           std::unordered_set<std::string>(
               {">", ">=", "<", "<=", "==", "!=", ";", ")"}))),
       tokens(t){};

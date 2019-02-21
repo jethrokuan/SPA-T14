@@ -77,14 +77,10 @@ class Parser {
   bool match(std::string s);
 
   //! Returns true if token at the current index is of TokenType t.
-  bool check(TokenType t);
+  bool check(TokenType type);
 
   //! Returns true if token at the current index has value string s.
   bool check(std::string s);
-
-  //! Asserts the token at current index to be of TokenType t.
-  //! If true, consumes the token. Else, throws an exception.
-  bool expect(TokenType t);
 
   //! Asserts the token at current index to be of stings s.
   //! If true, consumes the token. Else, throws an exception.
@@ -201,7 +197,7 @@ class Parser {
 
  public:
   // ! Initializes the parser with the lexical tokens.
-  Parser(std::vector<Token*> t);
+  explicit Parser(std::vector<Token*> t);
 
   // ! Parses the lexical tokens provided, returning the root node in the AST.
   std::shared_ptr<ProcedureNode> parse();

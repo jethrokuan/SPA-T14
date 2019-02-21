@@ -25,36 +25,45 @@ using namespace Simple;
 std::unordered_set<std::string> single_token_puncts({"{", "}", "(", ")", "+",
                                                      "-", "*", "/", "%", ";"});
 
+char Lexer::peek() { return stream->peek(); }
+
+char Lexer::advance() {
+  colno++;
+  return stream->get();
+}
+
 void Lexer::readSymbol() {
-  while (isalnum(peek())) {
+  while (isalnum(peek()) != 0) {
     str += advance();
   }
 }
 
 void Lexer::readNumber() {
-  while (isdigit(peek())) {
+  while (isdigit(peek()) != 0) {
     str += advance();
   }
 }
 
-Lexer::Lexer(std::istream& stream_) : stream(stream_){};
+Lexer::Lexer(std::istream* stream_) : stream(stream_){};
 
 void Lexer::parse() {
   char nextChar;
 
-  while (!stream.eof()) {
+  while (!stream->eof()) {
     nextChar = advance();
-    if (nextChar == EOF) break;
+    if (nextChar == EOF) {
+      break;
+    }
     str += nextChar;
     if (nextChar == '\n') {
       lineno++;
       colno = 1;
-    } else if (isspace(nextChar)) {  // Ignore whitespaces
+    } else if (isspace(nextChar) != 0) {  // Ignore whitespaces
       ;
-    } else if (isalpha(nextChar)) {  // Symbols
+    } else if (isalpha(nextChar) != 0) {  // Symbols
       readSymbol();
       tokens.push_back(new SymbolToken(str));
-    } else if (isdigit(nextChar)) {  // Numbers
+    } else if (isdigit(nextChar) != 0) {  // Numbers
       readNumber();
       tokens.push_back(new NumberToken(str));
     } else {  // Punctuations

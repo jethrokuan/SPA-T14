@@ -13,7 +13,7 @@ TEST_CASE ("Test Lex Tokens") {
   std::string filename = "tests/simple_source/tokens.txt";
   std::ifstream input(filename);
 
-  auto lexer = Lexer(input);
+  auto lexer = Lexer(&input);
   lexer.parse();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
@@ -40,7 +40,7 @@ TEST_CASE ("Test Lex Assign Statement") {
   std::string filename = "tests/simple_source/assign.txt";
   std::ifstream input(filename);
 
-  auto lexer = Lexer(input);
+  auto lexer = Lexer(&input);
   lexer.parse();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
@@ -61,7 +61,7 @@ TEST_CASE ("Test Lex While Statement") {
   std::string filename = "tests/simple_source/while.txt";
   std::ifstream input(filename);
 
-  auto lexer = Lexer(input);
+  auto lexer = Lexer(&input);
   lexer.parse();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
@@ -86,7 +86,7 @@ TEST_CASE ("Test Lex Errors") {
   SECTION ("Single & token") {
     std::string filename = "tests/simple_source/lexer/errors/single_amp.txt";
     std::ifstream input(filename);
-    auto lexer = Lexer(input);
+    auto lexer = Lexer(&input);
 
     REQUIRE_THROWS_AS(lexer.parse(), SimpleLexException);
   }
@@ -94,7 +94,7 @@ TEST_CASE ("Test Lex Errors") {
   SECTION ("Single | token") {
     std::string filename = "tests/simple_source/lexer/errors/single_bar.txt";
     std::ifstream input(filename);
-    auto lexer = Lexer(input);
+    auto lexer = Lexer(&input);
 
     REQUIRE_THROWS_AS(lexer.parse(), SimpleLexException);
   }

@@ -40,7 +40,7 @@ using StmtNode =
 //! Abstract base class for other AST nodes.
 class Node {
  public:
-  virtual ~Node(){};
+  virtual ~Node() = default;
   virtual bool operator==(const Node& other) const = 0;
   virtual bool operator!=(const Node& other) const {
     return !operator==(other);
@@ -52,45 +52,45 @@ class Node {
 class StmtListNode : public Node {
  public:
   std::vector<StmtNode> StmtList;
-  StmtListNode(std::vector<StmtNode> stmtList);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit StmtListNode(std::vector<StmtNode> stmtList);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a Number (const_value)
 class NumberNode : public Node {
  public:
   std::string Val;
-  NumberNode(const std::string val);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit NumberNode(const std::string val);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a Variable
 class VariableNode : public Node {
  public:
   std::string Name;
-  VariableNode(const std::string name);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit VariableNode(const std::string name);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a Read statement
 class ReadNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
-  ReadNode(std::shared_ptr<VariableNode> var);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit ReadNode(std::shared_ptr<VariableNode> var);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a Print statement
 class PrintNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
-  PrintNode(std::shared_ptr<VariableNode> var);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit PrintNode(std::shared_ptr<VariableNode> var);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a procedure
@@ -98,9 +98,10 @@ class ProcedureNode : public Node {
  public:
   std::string Name;
   std::shared_ptr<StmtListNode> StmtList;
-  ProcedureNode(const std::string name, std::shared_ptr<StmtListNode> stmtList);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit ProcedureNode(const std::string name,
+                         std::shared_ptr<StmtListNode> stmtList);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 class BinOpNode : public Node {
@@ -108,9 +109,9 @@ class BinOpNode : public Node {
   Expr Left;
   Expr Right;
   std::string Op;
-  BinOpNode(Expr left, Expr right, std::string op);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit BinOpNode(Expr left, Expr right, std::string op);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing an Assign statement
@@ -118,9 +119,9 @@ class AssignNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
   Expr Exp;
-  AssignNode(std::shared_ptr<VariableNode> var, Expr exp);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit AssignNode(std::shared_ptr<VariableNode> var, Expr exp);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a RelExpr
@@ -129,9 +130,9 @@ class RelExprNode : public Node {
   RelFactor LHS;
   std::string Op;
   RelFactor RHS;
-  RelExprNode(RelFactor lhs, std::string op, RelFactor rhs);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit RelExprNode(RelFactor lhs, std::string op, RelFactor rhs);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a CondExpr
@@ -143,14 +144,14 @@ class CondExprNode : public Node {
   std::shared_ptr<CondExprNode> CondRHS = nullptr;
 
   // rel_expr
-  CondExprNode(std::shared_ptr<RelExprNode> relExpr);
+  explicit CondExprNode(std::shared_ptr<RelExprNode> relExpr);
   // ! ( cond_expr )
-  CondExprNode(std::shared_ptr<CondExprNode> condLHS);
+  explicit CondExprNode(std::shared_ptr<CondExprNode> condLHS);
   // ( cond_expr ) && ( cond_expr )
-  CondExprNode(std::shared_ptr<CondExprNode> condLHS, std::string op,
-               std::shared_ptr<CondExprNode> condRHS);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit CondExprNode(std::shared_ptr<CondExprNode> condLHS, std::string op,
+                        std::shared_ptr<CondExprNode> condRHS);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a While statement
@@ -159,10 +160,10 @@ class WhileNode : public Node {
   std::shared_ptr<CondExprNode> CondExpr;
   std::shared_ptr<StmtListNode> StmtList;
 
-  WhileNode(std::shared_ptr<CondExprNode> condExpr,
-            std::shared_ptr<StmtListNode> stmtList);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit WhileNode(std::shared_ptr<CondExprNode> condExpr,
+                     std::shared_ptr<StmtListNode> stmtList);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a If statement
@@ -172,9 +173,9 @@ class IfNode : public Node {
   std::shared_ptr<StmtListNode> StmtListThen;
   std::shared_ptr<StmtListNode> StmtListElse;
 
-  IfNode(std::shared_ptr<CondExprNode> condExpr,
-         std::shared_ptr<StmtListNode> stmtListThen,
-         std::shared_ptr<StmtListNode> stmtListElse);
-  bool operator==(const Node& other) const;
-  std::string to_str();
+  explicit IfNode(std::shared_ptr<CondExprNode> condExpr,
+                  std::shared_ptr<StmtListNode> stmtListThen,
+                  std::shared_ptr<StmtListNode> stmtListElse);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };

@@ -20,15 +20,15 @@ class ExprParser {
  private:
   //! The current index in tokens. Takens in a reference, so
   //! the parser can be embedded in the recursive-descent parser
-  int& current;
+  int* current;
 
   //! The vector of lexical tokens. Takens in a reference, so
   //! the parser can be embedded in the recursive-descent parser
-  std::vector<Token*>& tokens;
+  const std::vector<Token*>& tokens;
 
   //! A list of delimiters that signify the end of the arithemtic expression.
   //! These tokens are not consumed by the parser.
-  std::unordered_set<std::string> delimiters;
+  const std::unordered_set<std::string> delimiters;
 
   // Helper functions
   Token* advance();
@@ -45,8 +45,8 @@ class ExprParser {
   Expr led(Token* t, Expr left);
 
  public:
-  ExprParser(std::vector<Token*>& _tokens, int& _current,
-             std::unordered_set<std::string> _delimiters);
+  ExprParser(const std::vector<Token*>& _tokens, int* _current,
+             const std::unordered_set<std::string> _delimiters);
   Expr parse(int rbp);
 };
 }  // namespace Simple

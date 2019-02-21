@@ -32,6 +32,22 @@ class QueryManager {
       std::optional<std::string> arg1AsBasic,
       std::optional<std::string> arg2AsBasic);
 
+  std::variant<bool, std::vector<std::string>> handleFollowsTSuchThatSelected(
+      QE::Query* query, std::optional<QE::Synonym> arg1AsSynonym,
+      std::optional<QE::Synonym> arg2AsSynonym, bool arg1InSelect,
+      bool arg2InSelect, bool arg1IsUnderscore, bool arg2IsUnderscore,
+      std::optional<std::string> arg1AsBasic,
+      std::optional<std::string> arg2AsBasic);
+
+  std::variant<bool, std::vector<std::string>>
+  handleFollowsTSuchThatNotSelected(QE::Query* query,
+                                    std::optional<QE::Synonym> arg1AsSynonym,
+                                    std::optional<QE::Synonym> arg2AsSynonym,
+                                    bool arg1IsUnderscore,
+                                    bool arg2IsUnderscore,
+                                    std::optional<std::string> arg1AsBasic,
+                                    std::optional<std::string> arg2AsBasic);
+
   //! Convert a StmtOrEntRef to a string to pass to PKB
   std::string suchThatArgToString(QE::StmtOrEntRef);
   std::string stmtRefToString(QE::StmtRef);

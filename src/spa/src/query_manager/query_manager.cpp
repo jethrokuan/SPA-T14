@@ -142,7 +142,6 @@ std::variant<bool, std::vector<std::string>>
 QueryManager::handleNonBooleanSuchThat(Query* query) {
   // Get all relevant variables so that further work with such_that can be
   // easily done
-  auto suchthat = query->such_that;
   auto arg1 = query->such_that->getFirstArg();
   auto arg2 = query->such_that->getSecondArg();
   auto arg1AsSynonym = getSuchThatArgAsSynonym(arg1);

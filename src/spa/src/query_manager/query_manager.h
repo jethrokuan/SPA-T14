@@ -21,8 +21,11 @@ class QueryManager {
   //! Evaluates the SuchThat clause as a boolean
   bool isBooleanSuchThatTrue(QE::SuchThat*);
   //! Evaluates SuchThat clauses that don't return a simple boolean
-  std::vector<std::string> handleNonBooleanSuchThat(QE::Query*);
-  std::vector<std::string> handleFollowsTSuchThat(
+  std::variant<bool, std::vector<std::string>> handleNonBooleanSuchThat(
+      QE::Query*);
+
+  //! Can return clause truth/falsity OR return vector to filter with
+  std::variant<bool, std::vector<std::string>> handleFollowsTSuchThat(
       QE::Query* query, std::optional<QE::Synonym> arg1AsSynonym,
       std::optional<QE::Synonym> arg2AsSynonym, bool arg1InSelect,
       bool arg2InSelect, bool arg1IsUnderscore, bool arg2IsUnderscore,

@@ -47,7 +47,36 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
       // If not, need to filter Select with the return result
       // E.g. Select v ---> {"i", "j", "k"}, such that returns {"i"}
       // if (result.) }
-      return result;
+      if (auto result_vec = std::get_if<std::vector<std::string>>(&result)) {
+        // Find set intersection between these two vectors
+        if (result_vec->empty()) {
+          // Clause returned no viable matches - return nothing
+          return std::vector<std::string>();
+        } else {
+          auto final_result = std::vector<std::string>();
+          auto select_statement_results =
+              getSelect(query->selected_declaration->getDesignEntity());
+          std::sort(select_statement_results.begin(),
+                    select_statement_results.end());
+          std::sort(result_vec->begin(), result_vec->end());
+          // Calcualate intersection between select and such that caluse
+          std::set_intersection(select_statement_results.begin(),
+                                select_statement_results.end(),
+                                result_vec->begin(), result_vec->end(),
+                                std::back_inserter(final_result));
+          // TODO: Have to change this for pattern
+          return final_result;
+        }
+      } else if (auto clause_is_true = std::get_if<bool>(&result)) {
+        if (clause_is_true) {
+          // If clause only returns true - can just return all selected stuff
+          // TODO: change for pattern
+          return getSelect(query->selected_declaration->getDesignEntity());
+        } else {
+          // Clause is false, immediate break and return nothig
+          return std::vector<std::string>();
+        }
+      }
     }
   }
   // TODO: HANDLE PATTERN
@@ -109,7 +138,8 @@ std::vector<std::string> QueryManager::getSelect(DesignEntity de) {
   return std::vector<std::string>();
 }
 
-std::vector<std::string> QueryManager::handleNonBooleanSuchThat(Query* query) {
+std::variant<bool, std::vector<std::string>>
+QueryManager::handleNonBooleanSuchThat(Query* query) {
   // Get all relevant variables so that further work with such_that can be
   // easily done
   auto suchthat = query->such_that;

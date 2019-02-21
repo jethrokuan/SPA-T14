@@ -182,6 +182,12 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
   }
 
+  SECTION ("Test constrained select all whiles with such_that Follows*(w, 5)") {
+    auto querystr = std::string("while w; Select w such that  Follows*(w, 5)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"2"});
+  }
+
   delete pkb;
   delete qm;
 }

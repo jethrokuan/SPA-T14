@@ -13,6 +13,19 @@ std::vector<std::string> QueryManager::handleFollowsSuchThat(
     bool arg1IsUnderscore, bool arg2IsUnderscore,
     std::optional<std::string> arg1AsBasic,
     std::optional<std::string> arg2AsBasic) {
-  // Case 1: Selected variable is in this such_that, left argument
+  if (arg1AsSynonym && arg1InSelect && arg2AsBasic) {
+    // Case 1: Selected variable is in this such_that, left argument
+    // Follows(s, 3)
+    return pkb->getBeforeLineS(*arg2AsBasic);
+  } else if (arg2AsSynonym && arg2InSelect && arg1AsBasic) {
+    // Case 2: Selected variable is in this such_that, left argument
+    // Follows(3, s)
+    return pkb->getFollowingLineS(*arg1AsBasic);
+  } else if (arg1AsSynonym && arg1InSelect && arg2IsUnderscore) {
+    // Case 3: Selected variable is in this such_that, left argument, right arg underscore
+    // Follows(s, _)
+
+  }
+  std::cout << "No cases matched - this is a problem\n";
   return std::vector<std::string>();
 }

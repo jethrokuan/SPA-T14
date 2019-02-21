@@ -39,6 +39,7 @@ std::vector<std::string> QueryManager::makeQuery(Query* query) {
       // If not, need to filter Select with the return result
       // E.g. Select v ---> {"i", "j", "k"}, such that returns {"i"}
       // if (result.) }
+      return result;
     }
   }
   // TODO: HANDLE PATTERN

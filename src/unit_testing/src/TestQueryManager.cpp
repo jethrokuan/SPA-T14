@@ -173,6 +173,15 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"5"});
   }
 
+  SECTION (
+      "Test select all stmts with such_that Follows*(s1, s1) (cannot follow "
+      "yourself)") {
+    auto querystr =
+        std::string("stmt s1; Select s1 such that Follows*(s1, s1)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+  }
+
   delete pkb;
   delete qm;
 }

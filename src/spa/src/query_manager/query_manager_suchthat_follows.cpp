@@ -49,6 +49,10 @@ std::vector<std::string> QueryManager::handleFollowsTSuchThat(
   } else if (arg1AsSynonym && arg2AsSynonym && arg1InSelect) {
     // Case 5: Selected variable is in this such_that, left argument, right arg
     // also is a variable, Follows(s, p)
+    if (arg1AsSynonym == arg2AsSynonym) {
+      // Cannot follow yourself
+      return std::vector<std::string>();
+    }
     auto all_selected_designentities =
         getSelect(query->selected_declaration->getDesignEntity());
     auto right_arg_de = Declaration::findDeclarationForSynonym(
@@ -70,6 +74,10 @@ std::vector<std::string> QueryManager::handleFollowsTSuchThat(
   } else if (arg1AsSynonym && arg2AsSynonym && arg2InSelect) {
     // Case 6: Selected variable is in this such_that, right argument, right arg
     // also is a variable, Follows(p, s)
+    if (arg1AsSynonym == arg2AsSynonym) {
+      // Cannot follow yourself
+      return std::vector<std::string>();
+    }
     auto all_selected_designentities =
         getSelect(query->selected_declaration->getDesignEntity());
     auto left_arg_de = Declaration::findDeclarationForSynonym(

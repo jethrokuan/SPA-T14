@@ -18,14 +18,27 @@ std::vector<std::string> QueryManager::makeQuery(Query* query) {
   // std::cout << "Such that or pattern exists\n";
   // If such-that + pattern is true/false answer, can immediately return the
   // select statement
-  if (query->such_that && isBooleanSuchThat(query->such_that)) {
-    // std::cout << "IS A BOOLEAN SUCH THAT!";
-    if (isBooleanSuchThatTrue(query->such_that)) {
-      // TODO: This shouldn't be a return - pattern still matters
-      return getSelect(query->selected_declaration->getDesignEntity());
+  // The nesting is horrible here, hope to improve it
+  if (query->such_that) {
+    // Handle such_thats that return a simple boolean value
+    if (isBooleanSuchThat(query->such_that)) {
+      if (isBooleanSuchThatTrue(query->such_that)) {
+        // TODO: This shouldn't be a return - pattern still matters
+        return getSelect(query->selected_declaration->getDesignEntity());
+      } else {
+        // Empty result if our such_that is false - at least one clause is
+        // false!
+        return std::vector<std::string>();
+      }
     } else {
-      // Empty result if our such_that is false - at least one clause is false!
-      return std::vector<std::string>();
+      // This is a more complex such-that query, pass to individual handlers
+      // We expect a vector of strings from each
+      auto result = handleNonBooleanSuchThat(query);
+
+      // If result is empty - entire clause is false - can return immediately
+      // If not, need to filter Select with the return result
+      // E.g. Select v ---> {"i", "j", "k"}, such that returns {"i"}
+      // if (result.) }
     }
   }
   // TODO: HANDLE PATTERN
@@ -86,4 +99,67 @@ std::vector<std::string> QueryManager::getSelect(DesignEntity de) {
 
   std::cout << std::endl;
   return std::vector<std::string>();
+}
+
+std::vector<std::string> QueryManager::handleNonBooleanSuchThat(Query* query) {
+  // Get all relevant variables so that further work with such_that can be
+  // easily done
+  auto suchthat = query->such_that;
+  auto arg1 = query->such_that->getFirstArg();
+  auto arg2 = query->such_that->getSecondArg();
+  auto arg1AsSynonym = getSuchThatArgAsSynonym(arg1);
+  auto arg2AsSynonym = getSuchThatArgAsSynonym(arg2);
+  bool arg1InSelect = false, arg2InSelect = false;
+  bool arg1IsUnderscore = isSuchThatArgUnderscore(arg1),
+       arg2IsUnderscore = isSuchThatArgUnderscore(arg2);
+  auto arg1AsBasic = getSuchThatArgAsBasic(arg1),
+       arg2AsBasic = getSuchThatArgAsBasic(arg2);
+
+  if (arg1AsSynonym) {
+    std::cout << "Arg 1: " << *arg1AsSynonym << "\n";
+    arg1InSelect = Declaration::findDeclarationForSynonym(query->declarations,
+                                                          *arg1AsSynonym)
+                       ? true
+                       : false;
+  }
+  if (arg2AsSynonym) {
+    std::cout << "Arg 2: " << *arg2AsSynonym << "\n";
+    arg2InSelect = Declaration::findDeclarationForSynonym(query->declarations,
+                                                          *arg2AsSynonym)
+                       ? true
+                       : false;
+  }
+
+  if (arg1InSelect) {
+    std::cout << "Arg 1 is selected\n";
+  }
+  if (arg2InSelect) {
+    std::cout << "Arg 2 is selected\n";
+  }
+
+  if (arg1IsUnderscore) {
+    std::cout << "Arg 1 is underscore\n";
+  }
+  if (arg2IsUnderscore) {
+    std::cout << "Arg 2 is underscore\n";
+  }
+
+  if (arg1AsBasic) {
+    std::cout << "Arg 1 is basic: " << *arg1AsBasic << "\n";
+  }
+  if (arg2AsBasic) {
+    std::cout << "Arg 2 is basic: " << *arg2AsBasic << "\n";
+  }
+
+  // Pass each type of relation to its own independent handler
+  switch (query->such_that->getRelation()) {
+    case Relation::Follows:
+    case Relation::FollowsT:
+      return handleFollowsSuchThat(query, arg1AsSynonym, arg2AsSynonym,
+                                   arg1InSelect, arg2InSelect, arg1IsUnderscore,
+                                   arg2IsUnderscore, arg1AsBasic, arg2AsBasic);
+      break;
+    default:
+      assert(false);
+  }
 }

@@ -94,3 +94,40 @@ std::string QueryManager::entRefToString(EntRef arg) {
                              }},
                     arg);
 }
+
+std::optional<Synonym> QueryManager::getSuchThatArgAsSynonym(StmtOrEntRef arg) {
+  auto add_pointer_synonym =
+      std::visit(overload{[](StmtRef& s) { return std::get_if<Synonym>(&s); },
+                          [](EntRef& e) { return std::get_if<Synonym>(&e); }},
+                 arg);
+  return add_pointer_synonym ? std::make_optional<Synonym>(*add_pointer_synonym)
+                             : std::nullopt;
+}
+
+bool QueryManager::isSuchThatArgUnderscore(StmtOrEntRef arg) {
+  return std::visit(
+      overload{[](StmtRef& s) { return std::holds_alternative<Underscore>(s); },
+               [](EntRef& e) { return std::holds_alternative<Underscore>(e); }},
+      arg);
+}
+
+//! Returns argument as a basic statementref or quoteident as string
+std::optional<std::string> QueryManager::getSuchThatArgAsBasic(
+    StmtOrEntRef arg) {
+  return std::visit(
+      overload{[](StmtRef& s) -> std::optional<std::string> {
+                 if (auto res = std::get_if<StatementNumber>(&s)) {
+                   return std::make_optional<std::string>(std::to_string(*res));
+                 } else {
+                   return std::nullopt;
+                 }
+               },
+               [](EntRef& e) -> std::optional<std::string> {
+                 if (auto res = std::get_if<QuoteIdent>(&e)) {
+                   return std::make_optional<std::string>(res->quote_ident);
+                 } else {
+                   return std::nullopt;
+                 }
+               }},
+      arg);
+}

@@ -1,5 +1,7 @@
 #pragma once
+#include <optional>
 #include <string>
+#include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_evaluator/pql/pql.h"
 
@@ -15,11 +17,22 @@ class QueryManager {
   bool isBooleanSuchThat(QE::SuchThat*);
   //! Evaluates the SuchThat clause as a boolean
   bool isBooleanSuchThatTrue(QE::SuchThat*);
+  //! Evaluates SuchThat clauses that don't return a simple boolean
+  std::vector<std::string> handleNonBooleanSuchThat(QE::Query*);
+  std::vector<std::string> handleFollowsSuchThat(
+      QE::Query* query, std::optional<QE::Synonym> arg1AsSynonym,
+      std::optional<QE::Synonym> arg2AsSynonym, bool arg1InSelect,
+      bool arg2InSelect, bool arg1IsUnderscore, bool arg2IsUnderscore,
+      std::optional<std::string> arg1AsBasic,
+      std::optional<std::string> arg2AsBasic);
 
   //! Convert a StmtOrEntRef to a string to pass to PKB
   std::string suchThatArgToString(QE::StmtOrEntRef);
   std::string stmtRefToString(QE::StmtRef);
   std::string entRefToString(QE::EntRef);
+  std::optional<QE::Synonym> getSuchThatArgAsSynonym(QE::StmtOrEntRef);
+  bool isSuchThatArgUnderscore(QE::StmtOrEntRef);
+  std::optional<std::string> getSuchThatArgAsBasic(QE::StmtOrEntRef);
 
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};

@@ -188,6 +188,16 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"2"});
   }
 
+  SECTION (
+      "Test select all statements but such_that does not constrain it - "
+      "Follows*(s2, s3)") {
+    auto querystr =
+        std::string("stmt s1, s2, s3; Select s1 such that  Follows*(s2, s3)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
   delete pkb;
   delete qm;
 }

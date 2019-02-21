@@ -21,5 +21,10 @@ This document lists some basic guidelines for contributing to this project.
 - Make sure that public interfaces are appropriately documented.
 
 ## Error Handling
-\<TBD\>
+- Refer to https://github.com/jethrokuan/SPA/issues/19
+- Return value-based error handling should be used when the error is handled immediately after the call
+- Exception-based error handling should be used when the error is handled further up the call chain 
 
+## noexcept and const annotations
+- Whereever possible, annotate functions that have no chance of causing an exception with `noexept`
+- Whereever possible, annotate parameters/variable/etc with `const` if they are not going to be modifies

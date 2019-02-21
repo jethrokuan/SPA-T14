@@ -125,15 +125,13 @@ std::vector<std::string> QueryManager::handleNonBooleanSuchThat(Query* query) {
 
   if (arg1AsSynonym) {
     std::cout << "Arg 1: " << *arg1AsSynonym << "\n";
-    arg1InSelect = Declaration::findDeclarationForSynonym(query->declarations,
-                                                          *arg1AsSynonym)
+    arg1InSelect = query->selected_declaration->getSynonym() == arg1AsSynonym
                        ? true
                        : false;
   }
   if (arg2AsSynonym) {
     std::cout << "Arg 2: " << *arg2AsSynonym << "\n";
-    arg2InSelect = Declaration::findDeclarationForSynonym(query->declarations,
-                                                          *arg2AsSynonym)
+    arg2InSelect = query->selected_declaration->getSynonym() == arg2AsSynonym
                        ? true
                        : false;
   }
@@ -161,11 +159,10 @@ std::vector<std::string> QueryManager::handleNonBooleanSuchThat(Query* query) {
 
   // Pass each type of relation to its own independent handler
   switch (query->such_that->getRelation()) {
-    case Relation::Follows:
     case Relation::FollowsT:
-      return handleFollowsSuchThat(query, arg1AsSynonym, arg2AsSynonym,
-                                   arg1InSelect, arg2InSelect, arg1IsUnderscore,
-                                   arg2IsUnderscore, arg1AsBasic, arg2AsBasic);
+      return handleFollowsTSuchThat(
+          query, arg1AsSynonym, arg2AsSynonym, arg1InSelect, arg2InSelect,
+          arg1IsUnderscore, arg2IsUnderscore, arg1AsBasic, arg2AsBasic);
       break;
     default:
       assert(false);

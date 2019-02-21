@@ -133,10 +133,44 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
-  SECTION ("Test select all variables with true such_that Follows(1,s)") {
-    auto querystr = std::string("stmt s; Select s such that Follows(1, s)");
+  SECTION ("Test select all stmts with true such_that Follows*(1,s)") {
+    auto querystr = std::string("stmt s; Select s such that Follows*(1, s)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"2", "4", "5"});
+  }
+
+  SECTION ("Test select all stmts with such_that Follows*(s,5)") {
+    auto querystr = std::string("stmt s; Select s such that Follows*(s, 5)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"1", "2", "4"});
+  }
+
+  SECTION ("Test select all stmts with such_that Follows*(s,_)") {
+    auto querystr = std::string("stmt s; Select s such that Follows*(s, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"1", "2", "4"});
+  }
+
+  SECTION ("Test select all stmts with such_that Follows*(_,s)") {
+    auto querystr = std::string("stmt s; Select s such that Follows*(_, s)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"2", "4", "5"});
+  }
+
+  SECTION (
+      "Test select all stmts (with print var) with such_that Follows*(s1, p)") {
+    auto querystr =
+        std::string("stmt s1; print p; Select s1 such that Follows*(s1, p)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"1", "2"});
+  }
+
+  SECTION (
+      "Test select all stmts (with print var) with such_that Follows*(p, s1)") {
+    auto querystr =
+        std::string("stmt s1; print p; Select s1 such that Follows*(p, s1)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"5"});
   }
 
   delete pkb;

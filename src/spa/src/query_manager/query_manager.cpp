@@ -154,37 +154,14 @@ QueryManager::handleNonBooleanSuchThat(Query* query) {
        arg2AsBasic = getSuchThatArgAsBasic(arg2);
 
   if (arg1AsSynonym) {
-    std::cout << "Arg 1: " << *arg1AsSynonym << "\n";
     arg1InSelect = query->selected_declaration->getSynonym() == arg1AsSynonym
                        ? true
                        : false;
   }
   if (arg2AsSynonym) {
-    std::cout << "Arg 2: " << *arg2AsSynonym << "\n";
     arg2InSelect = query->selected_declaration->getSynonym() == arg2AsSynonym
                        ? true
                        : false;
-  }
-
-  if (arg1InSelect) {
-    std::cout << "Arg 1 is selected\n";
-  }
-  if (arg2InSelect) {
-    std::cout << "Arg 2 is selected\n";
-  }
-
-  if (arg1IsUnderscore) {
-    std::cout << "Arg 1 is underscore\n";
-  }
-  if (arg2IsUnderscore) {
-    std::cout << "Arg 2 is underscore\n";
-  }
-
-  if (arg1AsBasic) {
-    std::cout << "Arg 1 is basic: " << *arg1AsBasic << "\n";
-  }
-  if (arg2AsBasic) {
-    std::cout << "Arg 2 is basic: " << *arg2AsBasic << "\n";
   }
 
   // Pass each type of relation to its own independent handler

@@ -62,8 +62,6 @@ QueryManager::handleFollowsTSuchThat(Query* query,
     auto right_arg_de = Declaration::findDeclarationForSynonym(
                             query->declarations, *arg2AsSynonym)
                             ->getDesignEntity();
-    std::cout << "Right arg DE: " << getDesignEntityString(right_arg_de)
-              << "\n";
     auto all_unselected_designentities = getSelect(right_arg_de);
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
@@ -87,8 +85,6 @@ QueryManager::handleFollowsTSuchThat(Query* query,
     auto left_arg_de = Declaration::findDeclarationForSynonym(
                            query->declarations, *arg1AsSynonym)
                            ->getDesignEntity();
-
-    std::cout << "Left arg DE: " << getDesignEntityString(left_arg_de) << "\n";
     auto all_unselected_designentities = getSelect(left_arg_de);
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
@@ -148,5 +144,5 @@ QueryManager::handleFollowsTSuchThat(Query* query,
     return !(pkb->getBeforeLineS(*arg2AsBasic).empty());
   }
   std::cout << "No cases matched - this is a problem\n";
-  return std::vector<std::string>();
+  assert(false);
 }

@@ -10,6 +10,9 @@ using namespace PKB;
 class QueryManager {
  private:
   PKBManager* pkb;
+
+  //! Makes the actual query - but returns the result unsorted
+  std::vector<std::string> makeQueryUnsorted(QE::Query* query);
   //! Gets the result of a select query (everything from a design entity)
   std::vector<std::string> getSelect(QE::DesignEntity);
 

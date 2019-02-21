@@ -5,7 +5,15 @@
 
 using namespace QE;
 
+//! \brief Sorts the vector of strings returned by the query system
+//! This decouples the return order of PKB with the result to screen
 std::vector<std::string> QueryManager::makeQuery(Query* query) {
+  auto result = makeQueryUnsorted(query);
+  std::sort(result.begin(), result.end());
+  return result;
+}
+
+std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
   if (query->such_that == nullptr && query->pattern == nullptr) {
     // std::cout << "Such that and pattern does not exist - returning "
@@ -43,7 +51,6 @@ std::vector<std::string> QueryManager::makeQuery(Query* query) {
     }
   }
   // TODO: HANDLE PATTERN
-
   return std::vector<std::string>();
 }
 

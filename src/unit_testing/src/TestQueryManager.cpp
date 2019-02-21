@@ -31,7 +31,7 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
   SECTION ("Test select all prints") {
     auto querystr = std::string("print p; Select p;");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"4", "3"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"3", "4"});
   }
 
   SECTION ("Test select all whiles") {
@@ -55,38 +55,38 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
   SECTION ("Test select all variables") {
     auto querystr = std::string("variable v; Select v;");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Follows") {
     auto querystr = std::string("variable v; Select v such that Follows(1,2)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Follows*") {
     auto querystr = std::string("variable v; Select v such that Follows*(1,2)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Parent") {
     auto querystr = std::string("variable v; Select v such that Parent(2,3)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Parent*") {
     auto querystr = std::string("variable v; Select v such that Parent*(2,3)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Modifies") {
     auto querystr =
         std::string("variable v; Select v such that Modifies(1,\"i\")");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION (
@@ -94,19 +94,19 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     auto querystr =
         std::string("variable v; Select v such that Modifies(5,\"i\")");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Uses while") {
     auto querystr = std::string("variable v; Select v such that Uses(2,\"i\")");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Uses print") {
     auto querystr = std::string("variable v; Select v such that Uses(3,\"j\")");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with false boolean such_that") {
@@ -121,7 +121,7 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     auto querystr =
         std::string("variable v1, v2; Select v1 such that Follows(1,2)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION (
@@ -130,7 +130,13 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     auto querystr =
         std::string("variable v1, v2; Select v2 such that Follows(1,2)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
+  }
+
+  SECTION ("Test select all variables with true such_that Follows(1,s)") {
+    auto querystr = std::string("stmt s; Select s such that Follows(1, s)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"2", "4", "5"});
   }
 
   delete pkb;

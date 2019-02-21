@@ -162,7 +162,7 @@ bool CondExprNode::operator==(const Node& other) const {
          (this->Op.compare(casted_other->Op) == 0);
 };
 std::string CondExprNode::to_str() {
-  // TODO: fix
+  // TODO(jethro): fix
   return "(CondExprNode)";
 }
 
@@ -175,7 +175,7 @@ bool WhileNode::operator==(const Node& other) const {
          *this->StmtList == *casted_other->StmtList;
 };
 std::string WhileNode::to_str() {
-  // TODO: fix
+  // TODO(jethro): fix
   std::string acc = "(WhileNode";
   acc += this->CondExpr->to_str();
   acc += this->StmtList->to_str();
@@ -197,7 +197,7 @@ bool IfNode::operator==(const Node& other) const {
 };
 
 std::string IfNode::to_str() {
-  // TODO: fix
+  // TODO(jethro): fix
   std::string acc = "(IfNode";
   acc += this->CondExpr->to_str();
   acc += this->StmtListThen->to_str();

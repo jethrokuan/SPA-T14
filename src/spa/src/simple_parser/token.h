@@ -31,7 +31,7 @@ class Token {
 */
 class SymbolToken : public Token {
  public:
-  SymbolToken(std::string val);
+  explicit SymbolToken(std::string val);
 };
 
 //! Represents a number in the SIMPLE language
@@ -41,7 +41,7 @@ class SymbolToken : public Token {
 */
 class NumberToken : public Token {
  public:
-  NumberToken(std::string val);
+  explicit NumberToken(std::string val);
 };
 
 //! Represents a punctuation in the SIMPLE language
@@ -51,7 +51,7 @@ class NumberToken : public Token {
 */
 class PunctToken : public Token {
  public:
-  PunctToken(std::string val);
+  explicit PunctToken(std::string val);
 };
 
 //! Represents the end of file in the SIMPLE language
@@ -61,6 +61,6 @@ class PunctToken : public Token {
 */
 class EndOfFileToken : public Token {
  public:
-  EndOfFileToken();
+  explicit EndOfFileToken();
 };
 }  // namespace Simple

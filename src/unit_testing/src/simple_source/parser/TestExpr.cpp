@@ -16,7 +16,7 @@ TEST_CASE ("Test Expr parse works") {
     std::string filename = "tests/simple_source/arithmetic/1.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -40,7 +40,7 @@ TEST_CASE ("Test Expr parse works") {
     std::string filename = "tests/simple_source/arithmetic/2.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -66,7 +66,7 @@ TEST_CASE ("Test Expr parse works") {
     std::string filename = "tests/simple_source/arithmetic/3.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -95,7 +95,7 @@ TEST_CASE ("Test Expr parse works") {
     std::string filename = "tests/simple_source/arithmetic/4.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -124,7 +124,7 @@ TEST_CASE ("Test Expr parse works") {
     std::string filename = "tests/simple_source/arithmetic/5.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -152,7 +152,7 @@ TEST_CASE ("Test Expr parse works") {
     std::string filename = "tests/simple_source/arithmetic/6.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -191,7 +191,7 @@ TEST_CASE ("Test Expr parse works") {
     std::string filename = "tests/simple_source/arithmetic/valid.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -205,7 +205,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
         "tests/simple_source/arithmetic/consecutive_operands.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -217,7 +217,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
         "tests/simple_source/arithmetic/double_operators.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -229,7 +229,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
         "tests/simple_source/arithmetic/empty_parentheses.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -241,7 +241,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
         "tests/simple_source/arithmetic/incomplete_parentheses.txt";
     std::ifstream input(filename);
 
-    Lexer lexer = Lexer(input);
+    Lexer lexer = Lexer(&input);
     lexer.parse();
 
     Parser parser = Parser(lexer.tokens);
@@ -255,7 +255,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
                              std::to_string(i) + ".txt";
       std::ifstream input(filename);
 
-      Lexer lexer = Lexer(input);
+      Lexer lexer = Lexer(&input);
       lexer.parse();
 
       Parser parser = Parser(lexer.tokens);

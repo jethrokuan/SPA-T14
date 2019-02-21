@@ -32,14 +32,11 @@ class Lexer {
  private:
   int lineno = 1;
   int colno = 0;
-  std::istream& stream;
+  std::istream* stream;
   std::string str;  // Represents the current string
 
-  char peek() { return stream.peek(); }
-  char advance() {
-    colno++;
-    return stream.get();
-  }
+  char peek();
+  char advance();
 
   // Reads the full symbol from the stream.
   void readSymbol();
@@ -52,7 +49,7 @@ class Lexer {
 
   // Initiializes the Lexer with an input stream
   // This could be anything from a string stream, to an input file stream
-  Lexer(std::istream& stream_);
+  explicit Lexer(std::istream* stream_);
 
   // Lexes the text in the stream, and stores them in tokens.
   void parse();

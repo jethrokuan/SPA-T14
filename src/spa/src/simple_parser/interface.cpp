@@ -14,7 +14,7 @@ std::shared_ptr<ProcedureNode> SimpleInterface::getAstFromFile(
     std::string filename) {
   std::ifstream input(filename);
 
-  Lexer lexer = Lexer(input);
+  Lexer lexer = Lexer(&input);
   lexer.parse();
 
   Parser parser = Parser(lexer.tokens);
@@ -24,13 +24,13 @@ std::shared_ptr<ProcedureNode> SimpleInterface::getAstFromFile(
 
 Expr SimpleInterface::parseExpression(std::string expression) {
   std::stringstream s(expression);
-  Lexer lexer = Lexer(s);
+  Lexer lexer = Lexer(&s);
   lexer.parse();
 
   int current = 0;
   std::unordered_set<std::string> delimiters;
 
-  ExprParser parser = ExprParser(lexer.tokens, current, delimiters);
+  ExprParser parser = ExprParser(lexer.tokens, &current, delimiters);
   Expr expr = parser.parse(0);
 
   return expr;

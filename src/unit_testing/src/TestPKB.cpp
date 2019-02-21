@@ -7,17 +7,12 @@
 
 #include <fstream>
 
+using Simple::SimpleInterface;
+
 TEST_CASE ("Test PKB for assign.txt") {
-  std::string filename = "tests/simple_source/assign.txt";
-  std::ifstream input(filename);
+  auto ast = SimpleInterface::getAstFromFile("tests/simple_source/assign.txt");
 
-  Simple::Lexer lexer = Simple::Lexer(input);
-  lexer.parse();
-
-  Simple::Parser parser = Simple::Parser(lexer.tokens);
-  auto proc = parser.parse();
-
-  PKB::PKBManager pkb = PKB::PKBManager(proc);
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
 
   // variable
   auto var_exist_test_1 = pkb.isVariableExists("i");
@@ -242,14 +237,8 @@ TEST_CASE ("Test PKB for simple_1.txt") {
 }
 
 TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
-  std::string filename = "tests/10_simple_source_deep_nesting.txt";
-  std::ifstream input(filename);
-
-  Simple::Lexer lexer = Simple::Lexer(input);
-  lexer.parse();
-
-  Simple::Parser parser = Simple::Parser(lexer.tokens);
-  auto proc = parser.parse();
+  auto proc = SimpleInterface::getAstFromFile(
+      "tests/10_simple_source_deep_nesting.txt");
 
   PKB::PKBManager pkb = PKB::PKBManager(proc);
 

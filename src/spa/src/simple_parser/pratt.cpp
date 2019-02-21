@@ -1,22 +1,23 @@
-#include "simple_parser/pratt.h"
 #include "simple_parser/exceptions.h"
+#include "simple_parser/pratt.h"
 #include "simple_parser/token.h"
 #include "structs/node.h"
 
 #include <unordered_set>
 
-using namespace Simple;
+using Simple::ExprParser;
+using Simple::Token;
 
 Token* ExprParser::advance() {
-  if (!isAtEnd()) current++;
+  if (!isAtEnd()) *current = *current + 1;
   return previous();
 };
 
 bool ExprParser::isAtEnd() { return peek()->T == TokenType::END_OF_FILE; };
 
-Token* ExprParser::peek() { return tokens[current]; };
+Token* ExprParser::peek() { return tokens[*current]; };
 
-Token* ExprParser::previous() { return tokens[current - 1]; };
+Token* ExprParser::previous() { return tokens[*current - 1]; };
 
 bool ExprParser::check(std::string s) {
   if (isAtEnd()) return false;
@@ -89,8 +90,8 @@ Expr ExprParser::led(Token* t, Expr left) {
   }
 }
 
-ExprParser::ExprParser(std::vector<Token*>& _tokens, int& _current,
-                       std::unordered_set<std::string> _delimiters)
+ExprParser::ExprParser(const std::vector<Token*>& _tokens, int* _current,
+                       const std::unordered_set<std::string> _delimiters)
     : current(_current), tokens(_tokens), delimiters(_delimiters){};
 
 Expr ExprParser::parse(int rbp) {

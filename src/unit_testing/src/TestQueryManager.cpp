@@ -245,6 +245,44 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
   }
 
+  SECTION (
+      "Test select all statements but such_that does not constrain it - true- "
+      "(const, underscore)"
+      "Follows*(4, _)") {
+    auto querystr = std::string("stmt s1; Select s1 such that Follows*(4, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
+  SECTION (
+      "Test select all statements but such_that does not constrain it - true- "
+      "(underscore, const)"
+      "Follows*(_, 4)") {
+    auto querystr = std::string("stmt s1; Select s1 such that Follows*(_, 4)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
+  SECTION (
+      "Test select all statements but such_that constrains it - false - "
+      "(const, underscore)"
+      "Follows*(4, _)") {
+    auto querystr = std::string("stmt s1; Select s1 such that Follows*(5, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+  }
+
+  SECTION (
+      "Test select all statements but such_that constrains it - false - "
+      "(underscore, const)"
+      "Follows*(4, _)") {
+    auto querystr = std::string("stmt s1; Select s1 such that Follows*(_, 1)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+  }
+
   delete pkb;
   delete qm;
 }

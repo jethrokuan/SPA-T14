@@ -138,6 +138,14 @@ QueryManager::handleFollowsTSuchThat(Query* query,
     // Case 10: Selected variable is NOT in this such_that, right argument
     // Follows(3, s1)
     return !(pkb->getFollowingLineS(*arg1AsBasic).empty());
+  } else if (arg1AsBasic && arg2IsUnderscore) {
+    // Case 11: Selected variable is NOT in this such_that, left basic, right
+    // underscore: Follows(3, _)
+    return !(pkb->getFollowingLineS(*arg1AsBasic).empty());
+  } else if (arg2AsBasic && arg1IsUnderscore) {
+    // Case 12: Selected variable is NOT in this such_that, right basic, left
+    // underscore: Follows(_, 3)
+    return !(pkb->getBeforeLineS(*arg2AsBasic).empty());
   }
   std::cout << "No cases matched - this is a problem\n";
   return std::vector<std::string>();

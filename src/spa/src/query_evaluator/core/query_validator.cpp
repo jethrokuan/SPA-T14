@@ -74,13 +74,8 @@ void QueryValidator::validateSuchThatSynonyms(const Query& query) {
   std::visit(
       [&](auto&& arg) {
         if (std::holds_alternative<Synonym>(arg)) {
-          auto found_declaration =
-              std::find_if(query.declarations->begin(),
-                           query.declarations->end(), [&](auto decl) {
-                             return decl.getSynonym().synonym ==
-                                    std::get<Synonym>(arg).synonym;
-                           });
-          if (found_declaration == query.declarations->end()) {
+          if (!Declaration::findDeclarationForSynonym(query.declarations,
+                                                      std::get<Synonym>(arg))) {
             throw PQLValidationException(
                 "Cannot find a matching declaration for synonym " +
                 std::get<Synonym>(arg).synonym + " in first argument of " +
@@ -92,13 +87,8 @@ void QueryValidator::validateSuchThatSynonyms(const Query& query) {
   std::visit(
       [&](auto&& arg) {
         if (std::holds_alternative<Synonym>(arg)) {
-          auto found_declaration =
-              std::find_if(query.declarations->begin(),
-                           query.declarations->end(), [&](auto decl) {
-                             return decl.getSynonym().synonym ==
-                                    std::get<Synonym>(arg).synonym;
-                           });
-          if (found_declaration == query.declarations->end()) {
+          if (!Declaration::findDeclarationForSynonym(query.declarations,
+                                                      std::get<Synonym>(arg))) {
             throw PQLValidationException(
                 "Cannot find a matching declaration for synonym " +
                 std::get<Synonym>(arg).synonym + " in second argument of " +
@@ -120,21 +110,18 @@ void QueryValidator::validateSynonymTypes(const Query& query) {
   auto argSynonymTypes = getArgSynonymTypesFromRelation(relation);
 
   // Check both arguments - must be correct type
-  auto first_arg_iter = std::visit(
-      [&](auto&& arg) {
+  auto first_arg_opt = std::visit(
+      [&](auto&& arg) -> std::optional<Declaration> {
         if (std::holds_alternative<Synonym>(arg)) {
-          return std::find_if(query.declarations->begin(),
-                              query.declarations->end(), [&](auto decl) {
-                                return decl.getSynonym().synonym ==
-                                       std::get<Synonym>(arg).synonym;
-                              });
+          return Declaration::findDeclarationForSynonym(query.declarations,
+                                                        std::get<Synonym>(arg));
         } else {
-          return query.declarations->end();
+          return std::nullopt;
         }
       },
       query.such_that->getFirstArg());
-  if (first_arg_iter != query.declarations->end()) {
-    auto found_declaration = *first_arg_iter;
+  if (first_arg_opt) {
+    auto found_declaration = *first_arg_opt;
     if (std::find(argSynonymTypes.first.begin(), argSynonymTypes.first.end(),
                   found_declaration.getDesignEntity()) ==
         argSynonymTypes.first.end()) {
@@ -148,21 +135,18 @@ void QueryValidator::validateSynonymTypes(const Query& query) {
     }
   }
 
-  auto second_arg_iter = std::visit(
-      [&](auto&& arg) {
+  auto second_arg_opt = std::visit(
+      [&](auto&& arg) -> std::optional<Declaration> {
         if (std::holds_alternative<Synonym>(arg)) {
-          return std::find_if(query.declarations->begin(),
-                              query.declarations->end(), [&](auto decl) {
-                                return decl.getSynonym().synonym ==
-                                       std::get<Synonym>(arg).synonym;
-                              });
+          return Declaration::findDeclarationForSynonym(query.declarations,
+                                                        std::get<Synonym>(arg));
         } else {
-          return query.declarations->end();
+          return std::nullopt;
         }
       },
       query.such_that->getSecondArg());
-  if (second_arg_iter != query.declarations->end()) {
-    auto found_declaration = *second_arg_iter;
+  if (second_arg_opt) {
+    auto found_declaration = *second_arg_opt;
     if (std::find(argSynonymTypes.second.begin(), argSynonymTypes.second.end(),
                   found_declaration.getDesignEntity()) ==
         argSynonymTypes.second.end()) {

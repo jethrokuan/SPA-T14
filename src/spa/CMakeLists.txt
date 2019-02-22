@@ -37,10 +37,14 @@ set(headers ${headers}
 # Query Manager files
 set(srcs ${srcs}
   src/query_manager/query_manager.cpp
-  src/query_manager/query_manager_suchthat.cpp
+  src/query_manager/query_manager_utils.cpp
+  src/query_manager/relations/SuchThatEvaluator.cpp
+  #1src/query_manager/relations/FollowsTEvaluator.cpp
   )
 set(headers ${headers}
   src/query_manager/query_manager.h
+  src/query_manager/relations/SuchThatEvaluator.h
+  src/query_manager/relations/FollowsTEvaluator.h
   )
 
 # PQL Query Evaluator files

@@ -299,6 +299,22 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
   }
 
+  SECTION ("Test select all statements, Follows*(_, s1)") {
+    auto querystr =
+        std::string("stmt s, s1; Select s such that Follows*(_, s1)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
+  SECTION ("Test select all statements, Follows*(s1, _)") {
+    auto querystr =
+        std::string("stmt s, s1; Select s such that Follows*(s1, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
   delete pkb;
   delete qm;
 }

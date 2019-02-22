@@ -22,29 +22,6 @@ class QueryManager {
   //! Evaluates SuchThat clauses that don't return a simple boolean
   BoolOrStrings handleNonBooleanSuchThat(QE::Query*);
 
-  //! Can return clause truth/falsity OR return vector to filter with
-  BoolOrStrings handleFollowsTSuchThat(QE::Query* query,
-                                       std::optional<QE::Synonym> arg1AsSynonym,
-                                       std::optional<QE::Synonym> arg2AsSynonym,
-                                       bool arg1InSelect, bool arg2InSelect,
-                                       bool arg1IsUnderscore,
-                                       bool arg2IsUnderscore,
-                                       std::optional<std::string> arg1AsBasic,
-                                       std::optional<std::string> arg2AsBasic);
-
-  BoolOrStrings handleFollowsTSuchThatSelected(
-      QE::Query* query, std::optional<QE::Synonym> arg1AsSynonym,
-      std::optional<QE::Synonym> arg2AsSynonym, bool arg1InSelect,
-      bool arg2InSelect, bool arg1IsUnderscore, bool arg2IsUnderscore,
-      std::optional<std::string> arg1AsBasic,
-      std::optional<std::string> arg2AsBasic);
-
-  BoolOrStrings handleFollowsTSuchThatNotSelected(
-      QE::Query* query, std::optional<QE::Synonym> arg1AsSynonym,
-      std::optional<QE::Synonym> arg2AsSynonym, bool arg1IsUnderscore,
-      bool arg2IsUnderscore, std::optional<std::string> arg1AsBasic,
-      std::optional<std::string> arg2AsBasic);
-
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};
   std::vector<std::string> makeQuery(QE::Query* query);

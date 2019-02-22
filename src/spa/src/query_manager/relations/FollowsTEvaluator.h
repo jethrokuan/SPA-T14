@@ -19,12 +19,15 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   // Handle cases with at least one variable selected
 
   BoolOrStrings handleLeftVarSelectedRightBasic() override {
+    // Follows*(s, 3)
     return pkb->getBeforeLineS(*arg2AsBasic);
   }
   BoolOrStrings handleRightVarSelectedLeftBasic() override {
+    // Follows*(3, s)
     return pkb->getFollowingLineS(*arg1AsBasic);
   }
   BoolOrStrings handleLeftVarSelectedRightUnderscore() override {
+    // Follows*(s, _)
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
@@ -36,6 +39,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     return results;
   }
   BoolOrStrings handleRightVarSelectedLeftUnderscore() override {
+    // Follows*(_, s)
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
@@ -47,6 +51,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     return results;
   }
   BoolOrStrings handleLeftVarSelectedRightVarUnselected() override {
+    // Follows*(s, s1)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot follow yourself
       return std::vector<std::string>();
@@ -70,6 +75,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     return results;
   }
   BoolOrStrings handleRightVarSelectedLeftVarUnselected() override {
+    // Follows*(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot follow yourself
       return std::vector<std::string>();
@@ -100,6 +106,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     assert(false);
   }
   BoolOrStrings handleBothVarsUnselected() override {
+    // Follows*(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot follow yourself
       return false;
@@ -125,15 +132,33 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     return false;
   }
   BoolOrStrings handleLeftVarUnselectedRightBasic() override {
+    // Follows*(s1, 3)
     return !(pkb->getBeforeLineS(*arg2AsBasic).empty());
   }
   BoolOrStrings handleRightVarUnselectedLeftBasic() override {
+    // Follows*(3, s1)
     return !(pkb->getFollowingLineS(*arg1AsBasic).empty());
+  }
+  BoolOrStrings handleLeftBasicRightUnderscore() override {
+    // Follows*(3, _)
+    return handleRightVarUnselectedLeftBasic();
+  }
+  BoolOrStrings handleRightBasicLeftUnderscore() override {
+    // Follows*(_, 3)
+    return handleLeftVarUnselectedRightBasic();
   }
   BoolOrStrings handleLeftVarUnselectedRightUnderscore() override {
-    return !(pkb->getFollowingLineS(*arg1AsBasic).empty());
+    // Follows*(s1, _) --> is there a statement that is followed by anything?
+    // Reuse the left-var selected results until an optimized PKB query can help
+    return !std::get<std::vector<std::string>>(
+                handleLeftVarSelectedRightUnderscore())
+                .empty();
   }
   BoolOrStrings handleRightVarUnselectedLeftUnderscore() override {
-    return !(pkb->getBeforeLineS(*arg2AsBasic).empty());
+    // Follows*(_, s1) --> is there a statement that follows anything?
+    // Reuse the left-var selected results until an optimized PKB query can help
+    return !std::get<std::vector<std::string>>(
+                handleRightVarSelectedLeftUnderscore())
+                .empty();
   }
 };

@@ -104,10 +104,18 @@ BoolOrStrings SuchThatEvaluator::dispatchSuchThatNotSelected() {
     return handleRightVarUnselectedLeftBasic();
   } else if (arg1AsBasic && arg2IsUnderscore) {
     // Case 11: Selected variable is NOT in this such_that, left basic,
-    // right underscore: Follows(s1, _)
-    return handleLeftVarUnselectedRightUnderscore();
+    // right underscore: Follows(3, _)
+    return handleLeftBasicRightUnderscore();
   } else if (arg2AsBasic && arg1IsUnderscore) {
     // Case 12: Selected variable is NOT in this such_that, right basic,
+    // left underscore: Follows(_, 3)
+    return handleRightBasicLeftUnderscore();
+  } else if (arg1AsSynonym && arg2IsUnderscore) {
+    // Case 13: Selected variable is NOT in this such_that, left basic,
+    // right underscore: Follows(s1, _)
+    return handleLeftVarUnselectedRightUnderscore();
+  } else if (arg2AsBasic && arg1AsSynonym) {
+    // Case 14: Selected variable is NOT in this such_that, right basic,
     // left underscore: Follows(_, s1)
     return handleRightVarUnselectedLeftUnderscore();
   } else {

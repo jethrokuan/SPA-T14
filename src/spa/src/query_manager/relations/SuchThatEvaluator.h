@@ -58,6 +58,8 @@ class SuchThatEvaluator {
   virtual BoolOrStrings handleBothVarsUnselected() = 0;
   virtual BoolOrStrings handleLeftVarUnselectedRightBasic() = 0;
   virtual BoolOrStrings handleRightVarUnselectedLeftBasic() = 0;
+  virtual BoolOrStrings handleLeftBasicRightUnderscore() = 0;
+  virtual BoolOrStrings handleRightBasicLeftUnderscore() = 0;
   virtual BoolOrStrings handleLeftVarUnselectedRightUnderscore() = 0;
   virtual BoolOrStrings handleRightVarUnselectedLeftUnderscore() = 0;
 };

@@ -2,6 +2,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include "query_manager/relations/FollowsTEvaluator.h"
 
 using namespace QE;
 
@@ -20,7 +21,7 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
     //             "unconditional Select\n";
 
     // std::cout << "Running getSelect\n";
-    return getSelect(query->selected_declaration->getDesignEntity());
+    return getSelect(pkb, query->selected_declaration->getDesignEntity());
   }
 
   // std::cout << "Such that or pattern exists\n";
@@ -32,7 +33,7 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
     if (isBooleanSuchThat(query->such_that)) {
       if (isBooleanSuchThatTrue(query->such_that)) {
         // TODO: This shouldn't be a return - pattern still matters
-        return getSelect(query->selected_declaration->getDesignEntity());
+        return getSelect(pkb, query->selected_declaration->getDesignEntity());
       } else {
         // Empty result if our such_that is false - at least one clause is
         // false!
@@ -55,7 +56,7 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
         } else {
           auto final_result = std::vector<std::string>();
           auto select_statement_results =
-              getSelect(query->selected_declaration->getDesignEntity());
+              getSelect(pkb, query->selected_declaration->getDesignEntity());
           std::sort(select_statement_results.begin(),
                     select_statement_results.end());
           std::sort(result_vec->begin(), result_vec->end());
@@ -71,7 +72,7 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
         if (*clause_is_true) {
           // If clause only returns true - can just return all selected stuff
           // TODO: change for pattern
-          return getSelect(query->selected_declaration->getDesignEntity());
+          return getSelect(pkb, query->selected_declaration->getDesignEntity());
         } else {
           // Clause is false, immediate break and return nothig
           return std::vector<std::string>();
@@ -83,7 +84,8 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
   return std::vector<std::string>();
 }
 
-std::vector<std::string> QueryManager::getSelect(DesignEntity de) {
+std::vector<std::string> QueryManager::getSelect(PKBManager* pkb,
+                                                 DesignEntity de) {
   // All possible return types from select all PKB calls are vector<string>
   // std::cout << "GetSelect: ";
   switch (de) {
@@ -138,38 +140,10 @@ std::vector<std::string> QueryManager::getSelect(DesignEntity de) {
   return std::vector<std::string>();
 }
 
-std::variant<bool, std::vector<std::string>>
-QueryManager::handleNonBooleanSuchThat(Query* query) {
-  // Get all relevant variables so that further work with such_that can be
-  // easily done
-  auto arg1 = query->such_that->getFirstArg();
-  auto arg2 = query->such_that->getSecondArg();
-  auto arg1AsSynonym = getSuchThatArgAsSynonym(arg1);
-  auto arg2AsSynonym = getSuchThatArgAsSynonym(arg2);
-  bool arg1InSelect = false, arg2InSelect = false;
-  bool arg1IsUnderscore = isSuchThatArgUnderscore(arg1),
-       arg2IsUnderscore = isSuchThatArgUnderscore(arg2);
-  auto arg1AsBasic = getSuchThatArgAsBasic(arg1),
-       arg2AsBasic = getSuchThatArgAsBasic(arg2);
-
-  if (arg1AsSynonym) {
-    arg1InSelect = query->selected_declaration->getSynonym() == arg1AsSynonym
-                       ? true
-                       : false;
-  }
-  if (arg2AsSynonym) {
-    arg2InSelect = query->selected_declaration->getSynonym() == arg2AsSynonym
-                       ? true
-                       : false;
-  }
-
-  // Pass each type of relation to its own independent handler
+BoolOrStrings QueryManager::handleNonBooleanSuchThat(Query* query) {
   switch (query->such_that->getRelation()) {
     case Relation::FollowsT:
-      return handleFollowsTSuchThat(
-          query, arg1AsSynonym, arg2AsSynonym, arg1InSelect, arg2InSelect,
-          arg1IsUnderscore, arg2IsUnderscore, arg1AsBasic, arg2AsBasic);
-      break;
+      return FollowsTEvaluator(query, pkb).evaluate();
     default:
       assert(false);
   }

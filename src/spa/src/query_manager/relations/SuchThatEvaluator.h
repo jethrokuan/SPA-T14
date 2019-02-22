@@ -4,10 +4,10 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_evaluator/pql/pql.h"
+#include "query_manager/query_manager.h"
 
 using namespace PKB;
 using namespace QE;
-using BoolOrStrings = std::variant<bool, std::vector<std::string>>;
 
 class SuchThatEvaluator {
  protected:
@@ -42,11 +42,22 @@ class SuchThatEvaluator {
   BoolOrStrings evaluate();
 
   // These are the individual handler methods for each case
+  // Read the .cpp file to see examples of each case
   // TODO: This really shouldn't be public
+
+  // At least one variable is selected
   virtual BoolOrStrings handleLeftVarSelectedRightBasic() = 0;
   virtual BoolOrStrings handleRightVarSelectedLeftBasic() = 0;
   virtual BoolOrStrings handleLeftVarSelectedRightUnderscore() = 0;
   virtual BoolOrStrings handleRightVarSelectedLeftUnderscore() = 0;
   virtual BoolOrStrings handleLeftVarSelectedRightVarUnselected() = 0;
   virtual BoolOrStrings handleRightVarSelectedLeftVarUnselected() = 0;
+
+  // No variable is selected
+  virtual BoolOrStrings handleDoubleUnderscore() = 0;
+  virtual BoolOrStrings handleBothVarsUnselected() = 0;
+  virtual BoolOrStrings handleLeftVarUnselectedRightBasic() = 0;
+  virtual BoolOrStrings handleRightVarUnselectedLeftBasic() = 0;
+  virtual BoolOrStrings handleLeftVarUnselectedRightUnderscore() = 0;
+  virtual BoolOrStrings handleRightVarUnselectedLeftUnderscore() = 0;
 };

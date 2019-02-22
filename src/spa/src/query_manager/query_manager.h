@@ -48,15 +48,15 @@ class QueryManager {
                                     std::optional<std::string> arg1AsBasic,
                                     std::optional<std::string> arg2AsBasic);
 
-  //! Convert a StmtOrEntRef to a string to pass to PKB
-  std::string suchThatArgToString(QE::StmtOrEntRef);
-  std::string stmtRefToString(QE::StmtRef);
-  std::string entRefToString(QE::EntRef);
-  std::optional<QE::Synonym> getSuchThatArgAsSynonym(QE::StmtOrEntRef);
-  bool isSuchThatArgUnderscore(QE::StmtOrEntRef);
-  std::optional<std::string> getSuchThatArgAsBasic(QE::StmtOrEntRef);
-
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};
   std::vector<std::string> makeQuery(QE::Query* query);
+
+  //! Convert a StmtOrEntRef to a string to pass to PKB
+  static std::string suchThatArgToString(QE::StmtOrEntRef);
+  static std::string stmtRefToString(QE::StmtRef);
+  static std::string entRefToString(QE::EntRef);
+  static std::optional<QE::Synonym> getSuchThatArgAsSynonym(QE::StmtOrEntRef);
+  static bool isSuchThatArgUnderscore(QE::StmtOrEntRef);
+  static std::optional<std::string> getSuchThatArgAsBasic(QE::StmtOrEntRef);
 };

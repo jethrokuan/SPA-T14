@@ -71,8 +71,8 @@ bool QueryManager::isBooleanSuchThatTrue(SuchThat* such_that) {
 }
 
 std::string QueryManager::suchThatArgToString(StmtOrEntRef arg) {
-  return std::visit(overload{[this](StmtRef& s) { return stmtRefToString(s); },
-                             [this](EntRef& e) { return entRefToString(e); }},
+  return std::visit(overload{[](StmtRef& s) { return stmtRefToString(s); },
+                             [](EntRef& e) { return entRefToString(e); }},
                     arg);
 }
 

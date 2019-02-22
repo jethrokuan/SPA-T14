@@ -114,7 +114,7 @@ BoolOrStrings SuchThatEvaluator::dispatchSuchThatNotSelected() {
     // Case 13: Selected variable is NOT in this such_that, left basic,
     // right underscore: Follows(s1, _)
     return handleLeftVarUnselectedRightUnderscore();
-  } else if (arg2AsBasic && arg1AsSynonym) {
+  } else if (arg1IsUnderscore && arg2AsSynonym) {
     // Case 14: Selected variable is NOT in this such_that, right basic,
     // left underscore: Follows(_, s1)
     return handleRightVarUnselectedLeftUnderscore();

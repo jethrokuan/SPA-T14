@@ -18,7 +18,7 @@ QueryManager::handleFollowsTSuchThat(Query* query,
                                      std::optional<std::string> arg1AsBasic,
                                      std::optional<std::string> arg2AsBasic) {
   if (arg1InSelect || arg2InSelect) {
-    // At least something in such_that is selected
+    // At least one synonym in such_that is selected
     return handleFollowsTSuchThatSelected(
         query, arg1AsSynonym, arg2AsSynonym, arg1InSelect, arg2InSelect,
         arg1IsUnderscore, arg2IsUnderscore, arg1AsBasic, arg2AsBasic);
@@ -33,6 +33,11 @@ QueryManager::handleFollowsTSuchThat(Query* query,
   assert(false);
 }
 
+//! Handle 6 different cases where something is selected in the such_that
+// e.g.
+// Follows(s, 3), Follows(3, s),
+// Follows(s, _), Follows(_, s)
+// Follows(s, p), Follows(p, s)
 std::variant<bool, std::vector<std::string>>
 QueryManager::handleFollowsTSuchThatSelected(
     Query* query, std::optional<Synonym> arg1AsSynonym,
@@ -45,7 +50,7 @@ QueryManager::handleFollowsTSuchThatSelected(
     // Follows*(s, 3)
     return pkb->getBeforeLineS(*arg2AsBasic);
   } else if (arg2AsSynonym && arg2InSelect && arg1AsBasic) {
-    // Case 2: Selected variable is in this such_that, left argument
+    // Case 2: Selected variable is in this such_that, right argument
     // Follows*(3, s)
     return pkb->getFollowingLineS(*arg1AsBasic);
   } else if (arg1AsSynonym && arg1InSelect && arg2IsUnderscore) {
@@ -97,7 +102,7 @@ QueryManager::handleFollowsTSuchThatSelected(
     }
     return results;
   } else if (arg1AsSynonym && arg2AsSynonym && arg2InSelect) {
-    // Case 6: Selected variable is in this such_that, right argument, right arg
+    // Case 6: Selected variable is in this such_that, right argument, left arg
     // also is a variable, Follows*(p, s)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot follow yourself
@@ -125,6 +130,11 @@ QueryManager::handleFollowsTSuchThatSelected(
   }
 }
 
+//! Handle 6 cases when nothing is selected in the such_that
+// e.g.
+// Follows(_, _), Follows(s5, s6)
+// Follows(s5, 3), Follows(3, s5)
+// Follows(s5, _), Follows(_, s5)
 std::variant<bool, std::vector<std::string>>
 QueryManager::handleFollowsTSuchThatNotSelected(
     Query* query, std::optional<Synonym> arg1AsSynonym,
@@ -171,11 +181,11 @@ QueryManager::handleFollowsTSuchThatNotSelected(
     return !(pkb->getFollowingLineS(*arg1AsBasic).empty());
   } else if (arg1AsBasic && arg2IsUnderscore) {
     // Case 11: Selected variable is NOT in this such_that, left basic, right
-    // underscore: Follows(3, _)
+    // underscore: Follows(s1, _)
     return !(pkb->getFollowingLineS(*arg1AsBasic).empty());
   } else if (arg2AsBasic && arg1IsUnderscore) {
     // Case 12: Selected variable is NOT in this such_that, right basic, left
-    // underscore: Follows(_, 3)
+    // underscore: Follows(_, s1)
     return !(pkb->getBeforeLineS(*arg2AsBasic).empty());
   } else {
     std::cout << "This case should not be triggered\n";

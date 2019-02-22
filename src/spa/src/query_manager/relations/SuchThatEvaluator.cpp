@@ -52,10 +52,12 @@ BoolOrStrings SuchThatEvaluator::dispatchSuchThatSelected() {
     // Case 1: Selected variable is in this such_that, left argument
     // Follows*(s, 3)
     // return pkb->getBeforeLineS(*arg2AsBasic);
+    return handleLeftVarSelectedRightBasic();
   } else if (arg2AsSynonym && arg2InSelect && arg1AsBasic) {
     // Case 2: Selected variable is in this such_that, right argument
     // Follows*(3, s)
     // return pkb->getFollowingLineS(*arg1AsBasic);
+    return handleRightVarSelectedLeftBasic();
   } else if (arg1AsSynonym && arg1InSelect && arg2IsUnderscore) {
     // Case 3: Selected variable is in this such_that, left argument, right arg
     // underscore Follows*(s, _)
@@ -71,6 +73,7 @@ BoolOrStrings SuchThatEvaluator::dispatchSuchThatSelected() {
     }
     return results;
     */
+    return handleLeftVarSelectedRightUnderscore();
   } else if (arg2AsSynonym && arg2InSelect && arg1IsUnderscore) {
     // Case 4: Selected variable is in this such_that, right argument, left arg
     // underscore Follows*(_, s)
@@ -85,6 +88,7 @@ BoolOrStrings SuchThatEvaluator::dispatchSuchThatSelected() {
     }
     return results;
     */
+    return handleRightVarSelectedLeftUnderscore();
   } else if (arg1AsSynonym && arg2AsSynonym && arg1InSelect) {
     // Case 5: Selected variable is in this such_that, left argument, right arg
     // also is a variable, Follows*(s, p)
@@ -110,6 +114,7 @@ BoolOrStrings SuchThatEvaluator::dispatchSuchThatSelected() {
     }
     return results;
     */
+    return handleLeftVarSelectedRightVarUnselected();
   } else if (arg1AsSynonym && arg2AsSynonym && arg2InSelect) {
     // Case 6: Selected variable is in this such_that, right argument, left arg
     // also is a variable, Follows*(p, s)
@@ -135,6 +140,7 @@ BoolOrStrings SuchThatEvaluator::dispatchSuchThatSelected() {
     }
     return results;
     */
+    return handleRightVarSelectedLeftVarUnselected();
   } else {
     std::cout << "This case should not be triggered\n";
     assert(false);

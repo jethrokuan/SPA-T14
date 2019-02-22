@@ -10,7 +10,7 @@ using namespace QE;
 using BoolOrStrings = std::variant<bool, std::vector<std::string>>;
 
 class SuchThatEvaluator {
- private:
+ protected:
   Query* query;
   PKBManager* pkb;
 
@@ -40,4 +40,13 @@ class SuchThatEvaluator {
         arg1(query->such_that->getFirstArg()),
         arg2(query->such_that->getSecondArg()){};
   BoolOrStrings evaluate();
+
+  // These are the individual handler methods for each case
+  // TODO: This really shouldn't be public
+  virtual BoolOrStrings handleLeftVarSelectedRightBasic() = 0;
+  virtual BoolOrStrings handleRightVarSelectedLeftBasic() = 0;
+  virtual BoolOrStrings handleLeftVarSelectedRightUnderscore() = 0;
+  virtual BoolOrStrings handleRightVarSelectedLeftUnderscore() = 0;
+  virtual BoolOrStrings handleLeftVarSelectedRightVarUnselected() = 0;
+  virtual BoolOrStrings handleRightVarSelectedLeftVarUnselected() = 0;
 };

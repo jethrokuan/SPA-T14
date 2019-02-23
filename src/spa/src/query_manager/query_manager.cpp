@@ -153,6 +153,13 @@ BoolOrStrings QueryManager::handleNonBooleanSuchThat(Query* query) {
       return ModifiesSEvaluator(query, pkb).evaluate();
     case Relation::UsesS:
       return UsesSEvaluator(query, pkb).evaluate();
+    case Relation::Follows:
+    case Relation::Parent:
+      std::cout
+          << "THIS RELATION IS NOT HANDLED YET - but not crashing to allow "
+             "autotester to run\n";
+      return false;
+      break;
     default:
       assert(false);
   }

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "query_manager/relations/FollowsTEvaluator.h"
+#include "query_manager/relations/ModifiesSEvaluator.h"
 #include "query_manager/relations/ParentTEvaluator.h"
 
 using namespace QE;
@@ -147,6 +148,8 @@ BoolOrStrings QueryManager::handleNonBooleanSuchThat(Query* query) {
       return FollowsTEvaluator(query, pkb).evaluate();
     case Relation::ParentT:
       return ParentTEvaluator(query, pkb).evaluate();
+    case Relation::ModifiesS:
+      return ModifiesSEvaluator(query, pkb).evaluate();
     default:
       assert(false);
   }

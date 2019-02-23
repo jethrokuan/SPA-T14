@@ -17,10 +17,10 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(make_shared<VariableNode>("i"),
@@ -33,7 +33,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("i = 2 + 5") {
@@ -41,10 +41,10 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(
@@ -59,7 +59,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("i = 2 + 5 * j") {
@@ -67,10 +67,10 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(
@@ -88,7 +88,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("i = 2 + (5 * j)") {
@@ -96,10 +96,10 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(
@@ -117,7 +117,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("i = (2 + 5) * j") {
@@ -125,10 +125,10 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(
@@ -145,7 +145,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("while (i > (2 + 5) * j)") {
@@ -153,10 +153,10 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
 
     std::vector<StmtNode> stmtList;
 
@@ -184,7 +184,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("valid assign statements") {
@@ -192,7 +192,7 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_NOTHROW(parser.parse());
@@ -206,7 +206,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(), "Unexpected token '9'.");
@@ -218,7 +218,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(), "Expected an expression, got '-'.");
@@ -230,7 +230,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(), "Expected an expression, got ')'.");
@@ -242,7 +242,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(), "Expected ')', got ';'.");
@@ -256,7 +256,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
       std::ifstream input(filename);
 
       Lexer lexer = Lexer(&input);
-      lexer.parse();
+      lexer.lex();
 
       Parser parser = Parser(lexer.tokens);
       REQUIRE_THROWS(parser.parse());

@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -82,12 +83,12 @@ class PKBManager {
   bool isLineUsesVar(const Line, const Variable);
 
   // get relationship mapping
-  LineAfter getFollowingLine(const LineBefore);
-  LineBefore getBeforeLine(const LineAfter);
+  std::optional<LineAfter> getFollowingLine(const LineBefore);
+  std::optional<LineBefore> getBeforeLine(const LineAfter);
   std::vector<LineAfter> getFollowingLineS(const LineBefore);
   std::vector<LineBefore> getBeforeLineS(const LineAfter);
 
-  ParentLine getParentLine(const ChildLine);
+  std::optional<ParentLine> getParentLine(const ChildLine);
   std::vector<ChildLine> getChildLine(const ParentLine);
   std::vector<ParentLine> getParentLineS(const ChildLine);
   std::vector<ChildLine> getChildLineS(const ParentLine);

@@ -103,7 +103,6 @@ bool PKBManager::isProcedureExists(const Procedure proc) {
 // get design entities
 
 std::vector<Line> PKBManager::getVariableList() {
-  // return getUniqueVector(pkb_storage->var_list);
   return getUniqueVector(pkb_storage->var_list);
 }
 
@@ -222,12 +221,22 @@ bool PKBManager::isLineModifiesVar(const Line line, const Variable var) {
 }
 
 // get relationship mapping
-LineAfter PKBManager::getFollowingLine(const LineBefore line_before) {
-  return pkb_storage->line_before_line_after_map[line_before];
+std::optional<LineAfter> PKBManager::getFollowingLine(
+    const LineBefore line_before) {
+  return (pkb_storage->line_before_line_after_map.find(line_before) ==
+          pkb_storage->line_before_line_after_map.end())
+             ? std::nullopt
+             : std::make_optional<LineAfter>(
+                   pkb_storage->line_before_line_after_map[line_before]);
 }
 
-LineBefore PKBManager::getBeforeLine(const LineAfter line_after) {
-  return pkb_storage->line_after_line_before_map[line_after];
+std::optional<LineBefore> PKBManager::getBeforeLine(
+    const LineAfter line_after) {
+  return (pkb_storage->line_after_line_before_map.find(line_after) ==
+          pkb_storage->line_after_line_before_map.end())
+             ? std::nullopt
+             : std::make_optional<LineBefore>(
+                   pkb_storage->line_after_line_before_map[line_after]);
 }
 
 std::vector<LineAfter> PKBManager::getFollowingLineS(
@@ -241,8 +250,13 @@ std::vector<LineBefore> PKBManager::getBeforeLineS(const LineAfter line_after) {
                                 line_after);
 }
 
-ParentLine PKBManager::getParentLine(const ChildLine child_line) {
-  return pkb_storage->child_line_parent_line_map[child_line];
+std::optional<ParentLine> PKBManager::getParentLine(
+    const ChildLine child_line) {
+  return (pkb_storage->child_line_parent_line_map.find(child_line) ==
+          pkb_storage->child_line_parent_line_map.end())
+             ? std::nullopt
+             : std::make_optional<ParentLine>(
+                   pkb_storage->child_line_parent_line_map[child_line]);
 }
 
 std::vector<ChildLine> PKBManager::getChildLine(const ParentLine parent_line) {

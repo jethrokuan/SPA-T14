@@ -17,7 +17,7 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
@@ -41,7 +41,7 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
@@ -67,7 +67,7 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
@@ -96,7 +96,7 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
@@ -125,7 +125,7 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
@@ -153,7 +153,7 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     auto proc = parser.parse();
@@ -192,7 +192,7 @@ TEST_CASE ("Test Expr parse works") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_NOTHROW(parser.parse());
@@ -206,7 +206,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(), "Unexpected token '9'.");
@@ -218,7 +218,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(), "Expected an expression, got '-'.");
@@ -230,7 +230,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(), "Expected an expression, got ')'.");
@@ -242,7 +242,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
     std::ifstream input(filename);
 
     Lexer lexer = Lexer(&input);
-    lexer.parse();
+    lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
     REQUIRE_THROWS_WITH(parser.parse(), "Expected ')', got ';'.");
@@ -256,7 +256,7 @@ TEST_CASE ("Test Expr parse throws when invalid") {
       std::ifstream input(filename);
 
       Lexer lexer = Lexer(&input);
-      lexer.parse();
+      lexer.lex();
 
       Parser parser = Parser(lexer.tokens);
       REQUIRE_THROWS(parser.parse());

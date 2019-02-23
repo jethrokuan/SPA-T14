@@ -46,7 +46,7 @@ void Lexer::readNumber() {
 
 Lexer::Lexer(std::istream* stream_) : stream(stream_){};
 
-void Lexer::parse() {
+void Lexer::lex() {
   char nextChar;
 
   while (!stream->eof()) {

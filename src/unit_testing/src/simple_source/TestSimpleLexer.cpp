@@ -14,7 +14,7 @@ TEST_CASE ("Test Lex Tokens") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(&input);
-  lexer.parse();
+  lexer.lex();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new NumberToken("5"),         new NumberToken("50"),
@@ -41,7 +41,7 @@ TEST_CASE ("Test Lex Assign Statement") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(&input);
-  lexer.parse();
+  lexer.lex();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new PunctToken("{"),          new SymbolToken("i"),
@@ -62,7 +62,7 @@ TEST_CASE ("Test Lex While Statement") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(&input);
-  lexer.parse();
+  lexer.lex();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new PunctToken("{"),          new SymbolToken("while"),
@@ -88,7 +88,7 @@ TEST_CASE ("Test Lex Errors") {
     std::ifstream input(filename);
     auto lexer = Lexer(&input);
 
-    REQUIRE_THROWS_AS(lexer.parse(), SimpleLexException);
+    REQUIRE_THROWS_AS(lexer.lex(), SimpleLexException);
   }
 
   SECTION ("Single | token") {
@@ -96,7 +96,7 @@ TEST_CASE ("Test Lex Errors") {
     std::ifstream input(filename);
     auto lexer = Lexer(&input);
 
-    REQUIRE_THROWS_AS(lexer.parse(), SimpleLexException);
+    REQUIRE_THROWS_AS(lexer.lex(), SimpleLexException);
   }
 
   // TODO: Test invalid tokens

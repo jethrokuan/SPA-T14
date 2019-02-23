@@ -13,7 +13,7 @@
 
   Simple::Lexer lexer = Simple::Lexer(input);
   try {
-    lexer.parse();
+    lexer.lex();
   } catch(const SimpleLexException& e) {
     std::cout << e.what() << std::endl;
   }
@@ -52,6 +52,6 @@ class Lexer {
   explicit Lexer(std::istream* stream_);
 
   // Lexes the text in the stream, and stores them in tokens.
-  void parse();
+  void lex();
 };
 }  // namespace Simple

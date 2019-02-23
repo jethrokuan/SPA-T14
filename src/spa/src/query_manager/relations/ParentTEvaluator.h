@@ -81,7 +81,7 @@ class ParentTEvaluator : public SuchThatEvaluator {
   BoolOrStrings handleRightVarSelectedLeftVarUnselected() override {
     // Parent*(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
+      // Cannot parent yourself
       return std::vector<std::string>();
     }
     auto all_selected_designentities = QueryManager::getSelect(

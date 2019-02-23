@@ -47,6 +47,7 @@ set(headers ${headers}
   src/query_manager/relations/FollowsTEvaluator.h
   src/query_manager/relations/ParentTEvaluator.h
   src/query_manager/relations/ModifiesSEvaluator.h
+  src/query_manager/relations/UsesSEvaluator.h
   )
 
 # PQL Query Evaluator files

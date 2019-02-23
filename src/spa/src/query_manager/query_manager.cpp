@@ -5,6 +5,7 @@
 #include "query_manager/relations/FollowsTEvaluator.h"
 #include "query_manager/relations/ModifiesSEvaluator.h"
 #include "query_manager/relations/ParentTEvaluator.h"
+#include "query_manager/relations/UsesSEvaluator.h"
 
 using namespace QE;
 
@@ -150,6 +151,8 @@ BoolOrStrings QueryManager::handleNonBooleanSuchThat(Query* query) {
       return ParentTEvaluator(query, pkb).evaluate();
     case Relation::ModifiesS:
       return ModifiesSEvaluator(query, pkb).evaluate();
+    case Relation::UsesS:
+      return UsesSEvaluator(query, pkb).evaluate();
     default:
       assert(false);
   }

@@ -1,0 +1,134 @@
+1 - Covers all Design Entities, 2 synonym, 1 clause (USES)
+assign a; variable v;
+Select a such that Uses(a, v) and pattern a(_,_)
+10,11,12,13,14,15,16,21,22
+5000
+
+2
+assign a; variable v;
+Select a such that Uses(a, v) and pattern a(v,_)
+10
+5000
+
+3 - Covers all Design Entities, 2 synonym, 1 clause (MODIFIES)
+assign a; variable v;
+Select a such that Modifies(a, v) and pattern a(_,_)
+10,11,12,13,14,15,16,21,22
+5000
+
+4
+assign a; variable v;
+Select a such that Modifies(a, v) and pattern a(v,_)
+10,11,12,13,14,15,16,21,22
+5000
+
+5 - Covers all Design Entities, 2 synonym, 1 clause (PARENT), no results, since a can't be a parent
+print p; assign a;
+Select p such that Parent(a, p) and pattern a(_,_)
+none
+5000
+
+6 - no results, since a can't be a parent
+print p; assign a;
+Select p such that Parent(a, p) and pattern a(_,_"v1+v2"_)
+none
+5000
+
+7 - no results, since c can't be a parent
+assign a; call c;
+Select a such that Parent(c, a) and pattern a(_,_"v1+v2"_)
+5000
+
+8
+while w; assign a;
+Select a such that Parent(w, a) and pattern a(_,_"v1-v2"_)
+13
+5000
+
+9
+if i; assign a;
+Select a such that Parent(i, a) and pattern a(_,_"v1+v1"_)
+21
+5000
+
+10 - Covers all Design Entities, 2 synonym, 1 clause (PARENT*) no results, since a can't be a parent*
+print p; assign a;
+Select p such that Parent*(a, p) and pattern a(_,_"v1+v2"_)
+none
+5000
+
+11 - no results, since c can't be a parent*
+assign a; call c;
+Select a such that Parent*(c, a) and pattern a(_,_"v1+v2"_)
+
+12
+while w; assign a;
+Select a such that Parent*(w, a) and pattern a(_,_"v1%v2"_)
+14
+5000
+
+13
+if i; assign a;
+Select a such that Parent*(i, a) and pattern a(_,_"v2+v2"_)
+22
+5000
+
+14 - Covers all Design Entities, 2 synonym, 1 clause (FOLLOWS)
+print p; assign a;
+Select p such that Follows(p,a) and pattern a(_,_"v1+v2"_)
+none
+5000
+
+15
+assign a; call c;
+Select a such that Follows(a,c) and pattern a(_,_"v1/v2"_)
+none
+5000
+
+16
+print p; assign a;
+Select a such that Follows(p,a) and pattern a(_,_"v1*v2"_)
+none
+5000
+
+17
+assign a; call c;
+Select c such that Follows(a,c) and pattern a(_,_"v1-v2"_)
+none
+5000
+
+18
+assign a; stmt s;
+Select s such that Follows(a,s) and pattern a(_,_"v1+v2"_)
+12
+5000
+
+19 - Covers all Design Entities, 2 synonym, 1 clause (FOLLOWS*)
+print p; assign a;
+Select p such that Follows*(p,a) and pattern a(_,_"v1+v2"_)
+none
+5000
+
+20
+assign a; call c;
+Select a such that Follows*(a,c) and pattern a(_,_"v1/v2"_)
+none
+5000
+
+21
+print p; assign a;
+Select a such that Follows*(p,a) and pattern a(_,_"v1*v2"_)
+none
+5000
+
+22
+assign a; call c;
+Select c such that Follows*(a,c) and pattern a(_,_"v1+%2"_)
+none
+5000
+
+23
+assign a; stmt s;
+Select s such that Follows*(a,s) and pattern a(_,_"v1+v2"_)
+12,13,14,15,16
+5000

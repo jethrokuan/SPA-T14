@@ -1,0 +1,71 @@
+procedure main{
+	read v; // 1
+	read v1; // 2
+	read v2; // 3
+	read v3; // 4
+	read v4; // 5
+	read v5; // 6
+
+	print v1; // 7
+	print v2; // 8
+	
+	while(v1 > 0){ // 9
+		v =  v+v; // 10
+		v2 = v1+v2; // 11
+		v3 = v1/v2; // 12
+		v4 = v1-v2; // 13
+		v5 = v1%v2; // 14
+		v5 = v1*v2; // 15
+
+		v1 = v1-1; // 16
+	}
+
+	if(v1 != 1) then { //  17
+		print v1; // 18
+	} else {
+		print 0; // 19
+	}
+
+	if (v1 == 1) then { // 20
+		v2 = v1+v1; // 21 
+	} else {  
+		v2 = v2+v2; // 22 
+	}
+ 
+	if( v1 > 0) then { // 23
+		print v1; // 24
+	} else {
+		print v2; // 25 
+	}
+
+	if(v1 < 0) then { // 26
+		print v; // 27 
+	} else {
+		print v5; // 28 
+	}
+ 
+	if(v1 <=100) then { // 29 
+		print 101; // 30 
+	} else {
+		print 100; // 31
+	}
+
+	if(v1 == 1 && v2 ==1) then { // 32
+		print 12; // 33
+	} else {
+		print 0; // 34
+	} 
+ 
+	if(v1 == 1 || v2 == 1) then { // 35 
+		print 12; // 36 
+	} else {
+		print 0; // 37 
+	} 
+
+	print v;  // 38
+	print v1; // 39
+	print v2; // 40
+	print v3; // 41
+	print v4; // 42
+	print v5; // 43
+}

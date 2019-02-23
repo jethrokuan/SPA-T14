@@ -28,6 +28,17 @@ class PKBManager {
 
   // API exposed to Query Manager
 
+  // is design entity set empty
+  bool isVariableSetEmpty();
+  bool isAssignSetEmpty();
+  bool isStatementSetEmpty();
+  bool isPrintSetEmpty();
+  bool isReadSetEmpty();
+  bool isWhileSetEmpty();
+  bool isIfSetEmpty();
+  bool isConstantSetEmpty();
+  bool isProcedureSetEmpty();
+
   // is design entity exists
   bool isVariableExists(const Variable);
   bool isAssignExists(const Line);
@@ -49,6 +60,16 @@ class PKBManager {
   std::vector<Line> getIfList();
   std::vector<Constant> getConstantList();
   std::vector<Procedure> getProcedureList();
+
+  // is relationship set empty
+  bool isLineFollowLineSetEmpty();
+  bool isLineFollowLineSSetEmpty();
+  bool isLineParentLineSetEmpty();
+  bool isLineParentLineSSetEmpty();
+  bool isLineUsesVarSetEmpty();
+  bool isLineModifiesVarSetEmpty();
+  bool isProcedureUsesVarSetEmpty();
+  bool isProcedureModifiesVarSetEmpty();
 
   // is relationship valid
   bool isLineFollowLine(const LineBefore, const LineAfter);

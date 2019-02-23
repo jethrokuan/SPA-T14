@@ -252,3 +252,14 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   auto var_exist_test_4 = pkb.isVariableExists("a");
   REQUIRE(var_exist_test_4 == false);
 }
+
+TEST_CASE ("Test detection of semantic errors in AST") {
+  SECTION ("procedure and variable with the same name") {
+    auto ast = SimpleInterface::getAstFromFile(
+        "tests/semantic_errors/proc_variable_same_name.txt");
+
+    REQUIRE_THROWS_WITH(
+        PKB::PKBManager(ast),
+        "Found procedure and variable with the same name: 'main'.");
+  }
+}

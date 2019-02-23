@@ -18,7 +18,7 @@ std::shared_ptr<ProcedureNode> SimpleInterface::getAstFromFile(
   lexer.lex();
 
   Parser parser = Parser(lexer.tokens);
-  auto ast = parser.parse();
+  AST ast = parser.parse();
   return ast;
 }
 

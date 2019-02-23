@@ -20,7 +20,7 @@ TEST_CASE ("Test Expr parse works") {
     lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(make_shared<VariableNode>("i"),
@@ -33,7 +33,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("i = 2 + 5") {
@@ -44,7 +44,7 @@ TEST_CASE ("Test Expr parse works") {
     lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(
@@ -59,7 +59,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("i = 2 + 5 * j") {
@@ -70,7 +70,7 @@ TEST_CASE ("Test Expr parse works") {
     lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(
@@ -88,7 +88,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("i = 2 + (5 * j)") {
@@ -99,7 +99,7 @@ TEST_CASE ("Test Expr parse works") {
     lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(
@@ -117,7 +117,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("i = (2 + 5) * j") {
@@ -128,7 +128,7 @@ TEST_CASE ("Test Expr parse works") {
     lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
     std::vector<StmtNode> stmtList;
 
     auto assign = std::make_shared<AssignNode>(
@@ -145,7 +145,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("while (i > (2 + 5) * j)") {
@@ -156,7 +156,7 @@ TEST_CASE ("Test Expr parse works") {
     lexer.lex();
 
     Parser parser = Parser(lexer.tokens);
-    auto proc = parser.parse();
+    AST ast = parser.parse();
 
     std::vector<StmtNode> stmtList;
 
@@ -184,7 +184,7 @@ TEST_CASE ("Test Expr parse works") {
     auto expected =
         std::make_shared<ProcedureNode>("main", std::move(StmtList));
 
-    REQUIRE(*proc == *expected);
+    REQUIRE(*ast == *expected);
   }
 
   SECTION ("valid assign statements") {

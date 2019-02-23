@@ -20,11 +20,13 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
 
   BoolOrStrings handleLeftVarSelectedRightBasic() override {
     // Modifies(s, "x")
-    return pkb->getLineModifiesVar(*arg2AsBasic);
+    return pkb->getLineModifiesVar(*arg2AsBasic)
+        .value_or(std::vector<std::string>());
   }
   BoolOrStrings handleRightVarSelectedLeftBasic() override {
     // Modifies(3, v)
-    return pkb->getVarModifiedByLine(*arg1AsBasic);
+    return pkb->getVarModifiedByLine(*arg1AsBasic)
+        .value_or(std::vector<std::string>());
   }
   BoolOrStrings handleLeftVarSelectedRightUnderscore() override {
     // Modifies(s, _)
@@ -33,7 +35,7 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (!pkb->getVarModifiedByLine(de).empty()) {
+      if (pkb->getVarModifiedByLine(de)) {
         results.push_back(de);
       }
     }
@@ -126,11 +128,11 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
   }
   BoolOrStrings handleLeftVarUnselectedRightBasic() override {
     // Modifies(s1, "x")
-    return !(pkb->getLineModifiesVar(*arg2AsBasic).empty());
+    return pkb->getLineModifiesVar(*arg2AsBasic).has_value();
   }
   BoolOrStrings handleRightVarUnselectedLeftBasic() override {
     // Modifies(3, v1)
-    return !(pkb->getVarModifiedByLine(*arg1AsBasic).empty());
+    return pkb->getVarModifiedByLine(*arg1AsBasic).has_value();
   }
 
   // Unlikely that these last 4 will need to be changed

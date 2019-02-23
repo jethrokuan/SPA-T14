@@ -20,11 +20,13 @@ class FollowsTEvaluator : public SuchThatEvaluator {
 
   BoolOrStrings handleLeftVarSelectedRightBasic() override {
     // Follows*(s, 3)
-    return pkb->getBeforeLineS(*arg2AsBasic);
+    return pkb->getBeforeLineS(*arg2AsBasic)
+        .value_or(std::vector<std::string>());
   }
   BoolOrStrings handleRightVarSelectedLeftBasic() override {
     // Follows*(3, s)
-    return pkb->getFollowingLineS(*arg1AsBasic);
+    return pkb->getFollowingLineS(*arg1AsBasic)
+        .value_or(std::vector<std::string>());
   }
   BoolOrStrings handleLeftVarSelectedRightUnderscore() override {
     // Follows*(s, _)
@@ -32,7 +34,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (!pkb->getFollowingLineS(de).empty()) {
+      if (pkb->getFollowingLineS(de)) {
         results.push_back(de);
       }
     }
@@ -44,7 +46,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (!pkb->getBeforeLineS(de).empty()) {
+      if (pkb->getBeforeLineS(de)) {
         results.push_back(de);
       }
     }
@@ -133,11 +135,11 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   }
   BoolOrStrings handleLeftVarUnselectedRightBasic() override {
     // Follows*(s1, 3)
-    return !(pkb->getBeforeLineS(*arg2AsBasic).empty());
+    return pkb->getBeforeLineS(*arg2AsBasic).has_value();
   }
   BoolOrStrings handleRightVarUnselectedLeftBasic() override {
     // Follows*(3, s1)
-    return !(pkb->getFollowingLineS(*arg1AsBasic).empty());
+    return pkb->getFollowingLineS(*arg1AsBasic).has_value();
   }
   BoolOrStrings handleLeftBasicRightUnderscore() override {
     // Follows*(3, _)

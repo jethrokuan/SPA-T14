@@ -232,11 +232,11 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   auto modifies_test_10 = pkb.isProcedureModifiesVar("test", "asd");
   REQUIRE(modifies_test_10 == false);
 
-  std::unordered_set<Variable> uses_test_9_set;
-  auto uses_test_9 = pkb.getVarUsedByProcedure("main");
-  if (uses_test_9) {
-    for (const auto &elem : (*uses_test_9)) {
-      uses_test_9_set.insert(elem);
+  std::unordered_set<Variable> uses_test_10_set;
+  auto uses_test_10 = pkb.getVarUsedByProcedure("main");
+  if (uses_test_10) {
+    for (const auto &elem : (*uses_test_10)) {
+      uses_test_10_set.insert(elem);
     }
   }
 

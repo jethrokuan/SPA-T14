@@ -20,11 +20,13 @@ class ParentTEvaluator : public SuchThatEvaluator {
 
   BoolOrStrings handleLeftVarSelectedRightBasic() override {
     // Parent*(s, 3)
-    return pkb->getParentLineS(*arg2AsBasic);
+    return pkb->getParentLineS(*arg2AsBasic)
+        .value_or(std::vector<std::string>());
   }
   BoolOrStrings handleRightVarSelectedLeftBasic() override {
     // Parent*(3, s)
-    return pkb->getChildLineS(*arg1AsBasic);
+    return pkb->getChildLineS(*arg1AsBasic)
+        .value_or(std::vector<std::string>());
   }
   BoolOrStrings handleLeftVarSelectedRightUnderscore() override {
     // Parent*(s, _)
@@ -33,7 +35,7 @@ class ParentTEvaluator : public SuchThatEvaluator {
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (!pkb->getChildLineS(de).empty()) {
+      if (pkb->getChildLineS(de)) {
         results.push_back(de);
       }
     }
@@ -45,7 +47,7 @@ class ParentTEvaluator : public SuchThatEvaluator {
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (!pkb->getParentLineS(de).empty()) {
+      if (pkb->getParentLineS(de)) {
         // PKB - can use this to debug Parent* issues
         // std::cout << "First parent of " << de << " is "
         //          << pkb->getParentLineS(de)[0] << "\n";
@@ -137,11 +139,11 @@ class ParentTEvaluator : public SuchThatEvaluator {
   }
   BoolOrStrings handleLeftVarUnselectedRightBasic() override {
     // Parent*(s1, 3)
-    return !(pkb->getParentLineS(*arg2AsBasic).empty());
+    return pkb->getParentLineS(*arg2AsBasic).has_value();
   }
   BoolOrStrings handleRightVarUnselectedLeftBasic() override {
     // Parent*(3, s1)
-    return !(pkb->getChildLineS(*arg1AsBasic).empty());
+    return pkb->getChildLineS(*arg1AsBasic).has_value();
   }
 
   BoolOrStrings handleLeftBasicRightUnderscore() override {

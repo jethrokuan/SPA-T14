@@ -59,6 +59,9 @@ namespace Simple {
  *     factor: var_name | const_value | '(' expr ')'
  *
  */
+
+using AST = std::shared_ptr<ProcedureNode>;
+
 class Parser {
  private:
   //! Current index in `tokens`
@@ -200,6 +203,6 @@ class Parser {
   explicit Parser(std::vector<Token*> t);
 
   // ! Parses the lexical tokens provided, returning the root node in the AST.
-  std::shared_ptr<ProcedureNode> parse();
+  AST parse();
 };
 }  // namespace Simple

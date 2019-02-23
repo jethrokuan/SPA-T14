@@ -36,6 +36,31 @@ std::vector<std::string> PKBManager::getUniqueVector(
   return unique_vec;
 }
 
+// is design entity set empty
+bool PKBManager::isVariableSetEmpty() { return pkb_storage->var_set.empty(); }
+
+bool PKBManager::isAssignSetEmpty() { return pkb_storage->assign_set.empty(); }
+
+bool PKBManager::isStatementSetEmpty() {
+  return pkb_storage->statement_set.empty();
+}
+
+bool PKBManager::isPrintSetEmpty() { return pkb_storage->print_set.empty(); }
+
+bool PKBManager::isReadSetEmpty() { return pkb_storage->read_set.empty(); }
+
+bool PKBManager::isWhileSetEmpty() { return pkb_storage->while_set.empty(); }
+
+bool PKBManager::isIfSetEmpty() { return pkb_storage->if_set.empty(); }
+
+bool PKBManager::isConstantSetEmpty() {
+  return pkb_storage->constant_set.empty();
+}
+
+bool PKBManager::isProcedureSetEmpty() {
+  return pkb_storage->procedure_set.empty();
+}
+
 // is design entity exists
 bool PKBManager::isVariableExists(const Variable var) {
   return pkb_storage->var_set.find(var) != pkb_storage->var_set.end();
@@ -112,6 +137,39 @@ std::vector<Procedure> PKBManager::getConstantList() {
 
 std::vector<Procedure> PKBManager::getProcedureList() {
   return getUniqueVector(pkb_storage->procedure_list);
+}
+
+// is relationship set empty
+bool PKBManager::isLineFollowLineSetEmpty() {
+  return pkb_storage->follows_set.empty();
+}
+
+bool PKBManager::isLineFollowLineSSetEmpty() {
+  return pkb_storage->follows_set_s.empty();
+}
+
+bool PKBManager::isLineParentLineSetEmpty() {
+  return pkb_storage->parent_set.empty();
+}
+
+bool PKBManager::isLineParentLineSSetEmpty() {
+  return pkb_storage->parent_set_s.empty();
+}
+
+bool PKBManager::isLineUsesVarSetEmpty() {
+  return pkb_storage->line_uses_var_set.empty();
+}
+
+bool PKBManager::isLineModifiesVarSetEmpty() {
+  return pkb_storage->line_modifies_var_set.empty();
+}
+
+bool PKBManager::isProcedureUsesVarSetEmpty() {
+  return pkb_storage->procedure_uses_var_set.empty();
+}
+
+bool PKBManager::isProcedureModifiesVarSetEmpty() {
+  return pkb_storage->procedure_modifies_var_set.empty();
 }
 
 // is relationship valid

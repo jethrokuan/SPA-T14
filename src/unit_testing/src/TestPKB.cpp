@@ -590,6 +590,120 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   REQUIRE(parent_test_24 == false);
   auto parent_test_25 = pkb.isLineParentLineS("1", "5");
   REQUIRE(parent_test_25 == false);
+
+  // test uses
+  auto uses_test_1 = pkb.isLineUsesVar("4", "x");
+  REQUIRE(uses_test_1 == true);
+  auto uses_test_2 = pkb.isLineUsesVar("5", "y");
+  REQUIRE(uses_test_2 == true);
+  auto uses_test_3 = pkb.isLineUsesVar("6", "z");
+  REQUIRE(uses_test_3 == true);
+  auto uses_test_4 = pkb.isLineUsesVar("7", "x");
+  REQUIRE(uses_test_4 == true);
+  auto uses_test_5 = pkb.isLineUsesVar("8", "y");
+  REQUIRE(uses_test_5 == true);
+  auto uses_test_6 = pkb.isLineUsesVar("9", "z");
+  REQUIRE(uses_test_6 == true);
+  auto uses_test_7 = pkb.isLineUsesVar("11", "x");
+  REQUIRE(uses_test_7 == true);
+  auto uses_test_8 = pkb.isLineUsesVar("12", "y");
+  REQUIRE(uses_test_8 == true);
+  auto uses_test_9 = pkb.isLineUsesVar("14", "z");
+  REQUIRE(uses_test_9 == true);
+  auto uses_test_10 = pkb.isLineUsesVar("16", "x");
+  REQUIRE(uses_test_10 == true);
+  auto uses_test_11 = pkb.isLineUsesVar("22", "x");
+  REQUIRE(uses_test_11 == true);
+  auto uses_test_12 = pkb.isLineUsesVar("23", "y");
+  REQUIRE(uses_test_12 == true);
+  auto uses_test_13 = pkb.isLineUsesVar("24", "z");
+  REQUIRE(uses_test_13 == true);
+  auto uses_test_14 = pkb.isLineUsesVar("1", "x");
+  REQUIRE(uses_test_14 == false);
+  auto uses_test_15 = pkb.isLineUsesVar("2", "y");
+  REQUIRE(uses_test_15 == false);
+  auto uses_test_16 = pkb.isLineUsesVar("2", "alpha");
+  REQUIRE(uses_test_16 == false);
+  auto uses_test_17 = pkb.isLineUsesVar("3", "z");
+  REQUIRE(uses_test_17 == false);
+  auto uses_test_18 = pkb.isLineUsesVar("4", "y");
+  REQUIRE(uses_test_18 == false);
+  auto uses_test_19 = pkb.isLineUsesVar("13", "beta");
+  REQUIRE(uses_test_19 == false);
+  auto uses_test_20 = pkb.isLineUsesVar("22", "y");
+  REQUIRE(uses_test_20 == false);
+
+  auto uses_test_21 = pkb.isProcedureUsesVar("main", "x");
+  REQUIRE(uses_test_21 == true);
+  auto uses_test_22 = pkb.isProcedureUsesVar("main", "y");
+  REQUIRE(uses_test_22 == true);
+  auto uses_test_23 = pkb.isProcedureUsesVar("main", "z");
+  REQUIRE(uses_test_23 == true);
+  auto uses_test_24 = pkb.isProcedureUsesVar("main", "alpha");
+  REQUIRE(uses_test_24 == false);
+  auto uses_test_25 = pkb.isProcedureUsesVar("test", "beta");
+  REQUIRE(uses_test_25 == false);
+
+  std::unordered_set<std::string> uses_test_26_check;
+  uses_test_26_check.insert("x");
+  uses_test_26_check.insert("y");
+  uses_test_26_check.insert("z");
+  auto uses_test_26_vector = pkb.getVarUsedByProcedure("main");
+  std::unordered_set<Variable> uses_test_26_set(uses_test_26_vector.begin(),
+                                               uses_test_26_vector.end());
+  REQUIRE(uses_test_26_set == uses_test_26_check);
+
+  // test modifies
+  auto modifies_test_1 = pkb.isLineModifiesVar("1", "x");
+  REQUIRE(modifies_test_1 == true);
+  auto modifies_test_2 = pkb.isLineModifiesVar("2", "y");
+  REQUIRE(modifies_test_2 == true);
+  auto modifies_test_3 = pkb.isLineModifiesVar("3", "z");
+  REQUIRE(modifies_test_3 == true);
+  auto modifies_test_4 = pkb.isLineModifiesVar("5", "y");
+  REQUIRE(modifies_test_4 == true);
+  auto modifies_test_5 = pkb.isLineModifiesVar("10", "z");
+  REQUIRE(modifies_test_5 == true);
+  auto modifies_test_6 = pkb.isLineModifiesVar("17", "y");
+  REQUIRE(modifies_test_6 == true);
+  auto modifies_test_7 = pkb.isLineModifiesVar("1", "alpha");
+  REQUIRE(modifies_test_7 == false);
+  auto modifies_test_8 = pkb.isLineModifiesVar("2", "beta");
+  REQUIRE(modifies_test_8 == false);
+  auto modifies_test_9 = pkb.isLineModifiesVar("5", "z");
+  REQUIRE(modifies_test_9 == false);
+  auto modifies_test_10 = pkb.isLineModifiesVar("6", "alpha");
+  REQUIRE(modifies_test_10 == false);
+  auto modifies_test_11 = pkb.isLineModifiesVar("22", "y");
+  REQUIRE(modifies_test_11 == false);
+  auto modifies_test_12 = pkb.isLineModifiesVar("23", "y");
+  REQUIRE(modifies_test_12 == false);
+
+  auto modifies_test_13 = pkb.isProcedureModifiesVar("main", "x");
+  REQUIRE(modifies_test_13 == true);
+  auto modifies_test_14 = pkb.isProcedureModifiesVar("main", "y");
+  REQUIRE(modifies_test_14 == true);
+  auto modifies_test_15 = pkb.isProcedureModifiesVar("main", "z");
+  REQUIRE(modifies_test_15 == true);
+  auto modifies_test_16 = pkb.isProcedureModifiesVar("main", "alpha");
+  REQUIRE(modifies_test_16 == false);
+  auto modifies_test_17 = pkb.isProcedureModifiesVar("main", "beta");
+  REQUIRE(modifies_test_17 == false);
+  auto modifies_test_18 = pkb.isProcedureModifiesVar("main", "g");
+  REQUIRE(modifies_test_18 == false);
+  auto modifies_test_19 = pkb.isProcedureModifiesVar("test", "asd");
+  REQUIRE(modifies_test_19 == false);
+  auto modifies_test_20 = pkb.isProcedureModifiesVar("test", "zxc");
+  REQUIRE(modifies_test_20 == false);
+
+  std::unordered_set<std::string> modifies_test_21_check;
+  modifies_test_21_check.insert("x");
+  modifies_test_21_check.insert("y");
+  modifies_test_21_check.insert("z");
+  auto modifies_test_21_vector = pkb.getVarModifiedByProcedure("main");
+  std::unordered_set<Variable> modifies_test_21_set(
+          modifies_test_21_vector.begin(), modifies_test_21_vector.end());
+  REQUIRE(modifies_test_21_set == modifies_test_21_check);
 }
 
 TEST_CASE ("Test detection of semantic errors in AST") {

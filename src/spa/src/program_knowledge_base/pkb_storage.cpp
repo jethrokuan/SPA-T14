@@ -1,5 +1,6 @@
-#include "program_knowledge_base/pkb_storage.h"
 #include <iostream>
+#include "program_knowledge_base/pkb_exceptions.h"
+#include "program_knowledge_base/pkb_storage.h"
 
 namespace PKB {
 
@@ -89,6 +90,12 @@ void PKBStorage::storeLineModifiesVarRelation(const Line line,
 }
 
 void PKBStorage::storeVariable(const Variable var) {
+  if (procedure_set.find(var) != procedure_set.end()) {
+    // Throw an error if there's a procedure with the same name as
+    // the variable
+    throw PkbAstSemanticException(
+        "Found procedure and variable with the same name: '" + var + "'.");
+  }
   var_set.insert(var);
   var_list.push_back(var);
 }
@@ -129,6 +136,12 @@ void PKBStorage::storeConstant(const Constant num) {
 }
 
 void PKBStorage::storeProcedure(const Procedure proc) {
+  if (var_set.find(proc) != var_set.end()) {
+    // Throw an error if there's a procedure with the same name as
+    // the variable
+    throw PkbAstSemanticException(
+        "Found procedure and variable with the same name: '" + proc + "'.");
+  }
   procedure_set.insert(proc);
   procedure_list.push_back(proc);
 }

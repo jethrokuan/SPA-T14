@@ -16,16 +16,13 @@ PKBManager::PKBManager(const std::shared_ptr<ProcedureNode> ast) {
 PKBManager::~PKBManager() {}
 
 // helper
-// returns empty vector if key does not exist
-std::vector<std::string> PKBManager::getUniqueVectorFromMap(
+std::optional<std::vector<std::string>> PKBManager::getUniqueVectorFromMap(
     const std::unordered_map<std::string, std::vector<std::string>> &umap,
     const std::string key) {
-  std::vector<std::string> v;
-  if (umap.find(key) != umap.end()) {
-    v = getUniqueVector(umap.at(key));
-  }
-
-  return v;
+  return (umap.find(key) == umap.end())
+             ? std::nullopt
+             : std::make_optional<std::vector<std::string>>(
+                   getUniqueVector(umap.at(key)));
 }
 
 std::vector<std::string> PKBManager::getUniqueVector(
@@ -239,13 +236,14 @@ std::optional<LineBefore> PKBManager::getBeforeLine(
                    pkb_storage->line_after_line_before_map[line_after]);
 }
 
-std::vector<LineAfter> PKBManager::getFollowingLineS(
+std::optional<std::vector<LineAfter>> PKBManager::getFollowingLineS(
     const LineBefore line_before) {
   return getUniqueVectorFromMap(pkb_storage->line_before_line_after_map_s,
                                 line_before);
 }
 
-std::vector<LineBefore> PKBManager::getBeforeLineS(const LineAfter line_after) {
+std::optional<std::vector<LineBefore>> PKBManager::getBeforeLineS(
+    const LineAfter line_after) {
   return getUniqueVectorFromMap(pkb_storage->line_after_line_before_map_s,
                                 line_after);
 }
@@ -259,52 +257,62 @@ std::optional<ParentLine> PKBManager::getParentLine(
                    pkb_storage->child_line_parent_line_map[child_line]);
 }
 
-std::vector<ChildLine> PKBManager::getChildLine(const ParentLine parent_line) {
+std::optional<std::vector<ChildLine>> PKBManager::getChildLine(
+    const ParentLine parent_line) {
   return getUniqueVectorFromMap(pkb_storage->parent_line_child_line_map,
                                 parent_line);
 }
 
-std::vector<ParentLine> PKBManager::getParentLineS(const ChildLine child_line) {
+std::optional<std::vector<ParentLine>> PKBManager::getParentLineS(
+    const ChildLine child_line) {
   return getUniqueVectorFromMap(pkb_storage->child_line_parent_line_map_s,
                                 child_line);
 }
 
-std::vector<ChildLine> PKBManager::getChildLineS(const ParentLine parent_line) {
+std::optional<std::vector<ChildLine>> PKBManager::getChildLineS(
+    const ParentLine parent_line) {
   return getUniqueVectorFromMap(pkb_storage->parent_line_child_line_map_s,
                                 parent_line);
 }
 
-std::vector<Procedure> PKBManager::getProcedureUsesVar(const Variable var) {
+std::optional<std::vector<Procedure>> PKBManager::getProcedureUsesVar(
+    const Variable var) {
   return getUniqueVectorFromMap(pkb_storage->procedure_uses_var_map, var);
 }
 
-std::vector<Line> PKBManager::getLineUsesVar(const Variable var) {
+std::optional<std::vector<Line>> PKBManager::getLineUsesVar(
+    const Variable var) {
   return getUniqueVectorFromMap(pkb_storage->line_uses_var_map, var);
 }
 
-std::vector<Variable> PKBManager::getVarUsedByProcedure(const Procedure proc) {
+std::optional<std::vector<Variable>> PKBManager::getVarUsedByProcedure(
+    const Procedure proc) {
   return getUniqueVectorFromMap(pkb_storage->var_used_by_procedure_map, proc);
 }
 
-std::vector<Variable> PKBManager::getVarUsedByLine(const Line line) {
+std::optional<std::vector<Variable>> PKBManager::getVarUsedByLine(
+    const Line line) {
   return getUniqueVectorFromMap(pkb_storage->var_used_by_line_map, line);
 }
 
-std::vector<Variable> PKBManager::getVarModifiedByProcedure(
+std::optional<std::vector<Variable>> PKBManager::getVarModifiedByProcedure(
     const Procedure proc) {
   return getUniqueVectorFromMap(pkb_storage->var_modified_by_procedure_map,
                                 proc);
 }
 
-std::vector<Variable> PKBManager::getVarModifiedByLine(const Line line) {
+std::optional<std::vector<Variable>> PKBManager::getVarModifiedByLine(
+    const Line line) {
   return getUniqueVectorFromMap(pkb_storage->var_modified_by_line_map, line);
 }
 
-std::vector<Procedure> PKBManager::getProcedureModifiesVar(const Variable var) {
+std::optional<std::vector<Procedure>> PKBManager::getProcedureModifiesVar(
+    const Variable var) {
   return getUniqueVectorFromMap(pkb_storage->procedure_modifies_var_map, var);
 }
 
-std::vector<Line> PKBManager::getLineModifiesVar(const Variable var) {
+std::optional<std::vector<Line>> PKBManager::getLineModifiesVar(
+    const Variable var) {
   return getUniqueVectorFromMap(pkb_storage->line_modifies_var_map, var);
 }
 

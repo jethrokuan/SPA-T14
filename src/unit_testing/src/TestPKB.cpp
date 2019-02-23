@@ -200,9 +200,13 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   std::unordered_set<std::string> uses_test_9_check;
   uses_test_9_check.insert("i");
   uses_test_9_check.insert("j");
-  auto uses_test_9_vector = pkb.getVarUsedByProcedure("main");
-  std::unordered_set<Variable> uses_test_9_set(uses_test_9_vector.begin(),
-                                               uses_test_9_vector.end());
+  std::unordered_set<Variable> uses_test_9_set;
+  auto uses_test_9 = pkb.getVarUsedByProcedure("main");
+  if (uses_test_9) {
+    for (const auto &elem : (*uses_test_9)) {
+      uses_test_9_set.insert(elem);
+    }
+  }
   REQUIRE(uses_test_9_set == uses_test_9_check);
 
   // test modifies
@@ -228,11 +232,23 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   auto modifies_test_10 = pkb.isProcedureModifiesVar("test", "asd");
   REQUIRE(modifies_test_10 == false);
 
+  std::unordered_set<Variable> uses_test_9_set;
+  auto uses_test_9 = pkb.getVarUsedByProcedure("main");
+  if (uses_test_9) {
+    for (const auto &elem : (*uses_test_9)) {
+      uses_test_9_set.insert(elem);
+    }
+  }
+
   std::unordered_set<std::string> modifies_test_11_check;
   modifies_test_11_check.insert("i");
-  auto modifies_test_11_vector = pkb.getVarModifiedByProcedure("main");
-  std::unordered_set<Variable> modifies_test_11_set(
-      modifies_test_11_vector.begin(), modifies_test_11_vector.end());
+  std::unordered_set<Variable> modifies_test_11_set;
+  auto modifies_test_11 = pkb.getVarModifiedByProcedure("main");
+  if (modifies_test_11) {
+    for (const auto &elem : (*modifies_test_11)) {
+      modifies_test_11_set.insert(elem);
+    }
+  }
   REQUIRE(modifies_test_11_set == modifies_test_11_check);
 }
 

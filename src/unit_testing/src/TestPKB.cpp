@@ -724,16 +724,16 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   REQUIRE(uses_test_14 == false);
   auto uses_test_15 = pkb.isLineUsesVar("2", "y");
   REQUIRE(uses_test_15 == false);
-  auto uses_test_16 = pkb.isLineUsesVar("2", "alpha");
-  REQUIRE(uses_test_16 == false);
-  auto uses_test_17 = pkb.isLineUsesVar("3", "z");
-  REQUIRE(uses_test_17 == false);
-  auto uses_test_18 = pkb.isLineUsesVar("4", "y");
-  REQUIRE(uses_test_18 == false);
-  auto uses_test_19 = pkb.isLineUsesVar("13", "beta");
-  REQUIRE(uses_test_19 == false);
-  auto uses_test_20 = pkb.isLineUsesVar("22", "y");
-  REQUIRE(uses_test_20 == false);
+  auto uses_test_16 = pkb.isLineUsesVar("4", "x");
+  REQUIRE(uses_test_16 == true);
+  auto uses_test_17 = pkb.isLineUsesVar("4", "y");
+  REQUIRE(uses_test_17 == true);
+  auto uses_test_18 = pkb.isLineUsesVar("4", "z");
+  REQUIRE(uses_test_18 == true);
+  auto uses_test_19 = pkb.isLineUsesVar("16", "y");
+  REQUIRE(uses_test_19 == true);
+  auto uses_test_20 = pkb.isLineUsesVar("16", "z");
+  REQUIRE(uses_test_20 == true);
 
   auto uses_test_21 = pkb.isProcedureUsesVar("main", "x");
   REQUIRE(uses_test_21 == true);

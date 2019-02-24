@@ -1,7 +1,7 @@
 1 - Covers all Design Entities, 1 synonym, 1 clause (USES)
 procedure p;
 Select p such that Uses(p, "v")
-10
+main
 5000
 2
 stmt s;
@@ -31,12 +31,12 @@ none
 7
 while w;
 Select w such that Uses(w, "v1")
-11,12,13,14,15,16
+9
 5000
 8
 if i;
 Select i such that Uses(i, "v1")
-18,21,24
+17,20,23
 5000
 9
 variable v;
@@ -67,6 +67,7 @@ Select r such that Modifies(r, "v")
 print p;
 Select p such that Modifies(p, "variable")
 none
+5000
 15
 assign a;
 Select a such that Modifies(a, "v")

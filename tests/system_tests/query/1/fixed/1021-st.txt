@@ -276,7 +276,7 @@ Select s such that Follows(s,r)
 56
 read r; print p;
 Select r such that Follows(r,p)
-none
+6
 5000
 57
 print p; assign a;
@@ -311,7 +311,7 @@ Select r such that Follows(s,r)
 63
 read r; print p;
 Select p such that Follows(r,p)
-none
+7
 5000
 64
 print p; assign a;
@@ -331,7 +331,7 @@ none
 67
 while w; if i;
 Select i such that Follows(w, i)
-23
+17
 5000
 68
 if i; stmt s;
@@ -341,7 +341,7 @@ Select s such that Follows(i, s)
 69
 read r; stmt s;
 Select s such that Follows(r,s)
-2,3,4,5,6
+7
 5000
 70
 print p; stmt s;
@@ -366,12 +366,12 @@ Select s such that Follows(w,s)
 74 - Covers all Design Entities, 2 synonym, 1 clause (FOLLOWS*)
 stmt s; read r;
 Select s such that Follows*(s,r)
-[INSERT RESULTS] 
+1,2,3,4,5
 5000
 75
 read r; print p;
 Select r such that Follows*(r,p)
-2,3,4,5,6,7,8,9,17,20,23,26,29,32,35,38,39,40,41,42,43
+1,2,3,4,5,6
 5000
 76
 print p; assign a;

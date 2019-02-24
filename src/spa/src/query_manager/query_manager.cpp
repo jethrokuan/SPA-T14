@@ -2,6 +2,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include "query_manager/relations/FollowsEvaluator.h"
 #include "query_manager/relations/FollowsTEvaluator.h"
 #include "query_manager/relations/ModifiesSEvaluator.h"
 #include "query_manager/relations/ParentTEvaluator.h"
@@ -154,6 +155,7 @@ BoolOrStrings QueryManager::handleNonBooleanSuchThat(Query* query) {
     case Relation::UsesS:
       return UsesSEvaluator(query, pkb).evaluate();
     case Relation::Follows:
+      return FollowsEvaluator(query, pkb).evaluate();
     case Relation::Parent:
       std::cout
           << "THIS RELATION IS NOT HANDLED YET - but not crashing to allow "

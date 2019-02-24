@@ -18,7 +18,7 @@ class PKBManager {
  private:
   std::shared_ptr<PKBStorage> pkb_storage = std::make_shared<PKBStorage>();
 
-  std::vector<std::string> getUniqueVectorFromMap(
+  std::optional<std::vector<std::string>> getUniqueVectorFromMap(
       const std::unordered_map<std::string, std::vector<std::string>> &,
       const std::string);
   std::vector<std::string> getUniqueVector(std::vector<std::string>);
@@ -85,23 +85,24 @@ class PKBManager {
   // get relationship mapping
   std::optional<LineAfter> getFollowingLine(const LineBefore);
   std::optional<LineBefore> getBeforeLine(const LineAfter);
-  std::vector<LineAfter> getFollowingLineS(const LineBefore);
-  std::vector<LineBefore> getBeforeLineS(const LineAfter);
+  std::optional<std::vector<LineAfter>> getFollowingLineS(const LineBefore);
+  std::optional<std::vector<LineBefore>> getBeforeLineS(const LineAfter);
 
   std::optional<ParentLine> getParentLine(const ChildLine);
-  std::vector<ChildLine> getChildLine(const ParentLine);
-  std::vector<ParentLine> getParentLineS(const ChildLine);
-  std::vector<ChildLine> getChildLineS(const ParentLine);
+  std::optional<std::vector<ChildLine>> getChildLine(const ParentLine);
+  std::optional<std::vector<ParentLine>> getParentLineS(const ChildLine);
+  std::optional<std::vector<ChildLine>> getChildLineS(const ParentLine);
 
-  std::vector<Variable> getVarModifiedByProcedure(const Procedure);
-  std::vector<Variable> getVarModifiedByLine(const Line);
-  std::vector<Procedure> getProcedureModifiesVar(const Variable);
-  std::vector<Line> getLineModifiesVar(const Variable);
+  std::optional<std::vector<Variable>> getVarModifiedByProcedure(
+      const Procedure);
+  std::optional<std::vector<Variable>> getVarModifiedByLine(const Line);
+  std::optional<std::vector<Procedure>> getProcedureModifiesVar(const Variable);
+  std::optional<std::vector<Line>> getLineModifiesVar(const Variable);
 
-  std::vector<Variable> getVarUsedByProcedure(const Procedure);
-  std::vector<Variable> getVarUsedByLine(const Line);
-  std::vector<Procedure> getProcedureUsesVar(const Variable);
-  std::vector<Line> getLineUsesVar(const Variable);
+  std::optional<std::vector<Variable>> getVarUsedByProcedure(const Procedure);
+  std::optional<std::vector<Variable>> getVarUsedByLine(const Line);
+  std::optional<std::vector<Procedure>> getProcedureUsesVar(const Variable);
+  std::optional<std::vector<Line>> getLineUsesVar(const Variable);
 };
 
 }  // namespace PKB

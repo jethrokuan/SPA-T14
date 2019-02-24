@@ -2,7 +2,12 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include "query_manager/relations/FollowsEvaluator.h"
 #include "query_manager/relations/FollowsTEvaluator.h"
+#include "query_manager/relations/ModifiesSEvaluator.h"
+#include "query_manager/relations/ParentEvaluator.h"
+#include "query_manager/relations/ParentTEvaluator.h"
+#include "query_manager/relations/UsesSEvaluator.h"
 
 using namespace QE;
 
@@ -144,6 +149,17 @@ BoolOrStrings QueryManager::handleNonBooleanSuchThat(Query* query) {
   switch (query->such_that->getRelation()) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb).evaluate();
+    case Relation::ParentT:
+      return ParentTEvaluator(query, pkb).evaluate();
+    case Relation::ModifiesS:
+      return ModifiesSEvaluator(query, pkb).evaluate();
+    case Relation::UsesS:
+      return UsesSEvaluator(query, pkb).evaluate();
+    case Relation::Follows:
+      return FollowsEvaluator(query, pkb).evaluate();
+    case Relation::Parent:
+      return ParentEvaluator(query, pkb).evaluate();
+      break;
     default:
       assert(false);
   }

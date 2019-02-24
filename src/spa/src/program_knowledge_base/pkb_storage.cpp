@@ -1,6 +1,6 @@
+#include "program_knowledge_base/pkb_storage.h"
 #include <iostream>
 #include "program_knowledge_base/pkb_exceptions.h"
-#include "program_knowledge_base/pkb_storage.h"
 
 namespace PKB {
 
@@ -156,10 +156,6 @@ Procedure PKBStorage::getProcedureFromLine(const Line line) {
 }
 
 // helper
-// TODO currently adds duplicates which is undesirable)
-// should be checking if it exists in the set before adding them?
-// can perhaps ask Sri if we should simply use set instead of vector
-// since ordering does not matter
 void PKBStorage::addToVectorMap(
     std::unordered_map<std::string, std::vector<std::string>> &umap,
     const std::string index, std::string data) {

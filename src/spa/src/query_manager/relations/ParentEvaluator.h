@@ -11,51 +11,58 @@
 using namespace PKB;
 using namespace QE;
 
-class FollowsTEvaluator : public SuchThatEvaluator {
+class ParentEvaluator : public SuchThatEvaluator {
  public:
-  FollowsTEvaluator(Query* query, PKBManager* pkb)
+  ParentEvaluator(Query* query, PKBManager* pkb)
       : SuchThatEvaluator(query, pkb){};
 
   // Handle cases with at least one variable selected
 
   BoolOrStrings handleLeftVarSelectedRightBasic() override {
-    // Follows*(s, 3)
-    return pkb->getBeforeLineS(*arg2AsBasic)
-        .value_or(std::vector<std::string>());
+    // Parent(s, 3)
+    if (auto parentLine = pkb->getParentLine(*arg2AsBasic)) {
+      return std::vector<std::string>{*parentLine};
+    } else {
+      return std::vector<std::string>();
+    }
   }
   BoolOrStrings handleRightVarSelectedLeftBasic() override {
-    // Follows*(3, s)
-    return pkb->getFollowingLineS(*arg1AsBasic)
-        .value_or(std::vector<std::string>());
+    // Parent(3, s)
+    if (auto childLines = pkb->getChildLine(*arg1AsBasic)) {
+      return *childLines;
+    } else {
+      return std::vector<std::string>();
+    }
   }
   BoolOrStrings handleLeftVarSelectedRightUnderscore() override {
-    // Follows*(s, _)
+    // Parent(s, _)
+    // Note that this should select all whiles and ifs
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (pkb->getFollowingLineS(de)) {
+      if (pkb->getChildLine(de)) {
         results.push_back(de);
       }
     }
     return results;
   }
   BoolOrStrings handleRightVarSelectedLeftUnderscore() override {
-    // Follows*(_, s)
+    // Parent(_, s)
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (pkb->getBeforeLineS(de)) {
+      if (pkb->getParentLine(de)) {
         results.push_back(de);
       }
     }
     return results;
   }
   BoolOrStrings handleLeftVarSelectedRightVarUnselected() override {
-    // Follows*(s, s1)
+    // Parent(s, s1)
     if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
+      // Cannot be a parent of yourself
       return std::vector<std::string>();
     }
     auto all_selected_designentities = QueryManager::getSelect(
@@ -68,7 +75,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineFollowLineS(de, unselect_de) &&
+        if (pkb->isLineParentLine(de, unselect_de) &&
             std::find(results.begin(), results.end(), de) == results.end()) {
           results.push_back(de);
         }
@@ -77,9 +84,9 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     return results;
   }
   BoolOrStrings handleRightVarSelectedLeftVarUnselected() override {
-    // Follows*(s1, s)
+    // Parent(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
+      // Cannot parent yourself
       return std::vector<std::string>();
     }
     auto all_selected_designentities = QueryManager::getSelect(
@@ -92,7 +99,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineFollowLineS(unselect_de, de) &&
+        if (pkb->isLineParentLine(unselect_de, de) &&
             std::find(results.begin(), results.end(), de) == results.end()) {
           results.push_back(de);
         }
@@ -104,12 +111,12 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   // Handle cases with no variables selected
 
   BoolOrStrings handleDoubleUnderscore() override {
-    return !pkb->isLineFollowLineSSetEmpty();
+    return !pkb->isLineParentLineSetEmpty();
   }
   BoolOrStrings handleBothVarsUnselected() override {
-    // Follows*(s1, s2)
+    // Parent(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
+      // Cannot parent yourself (hyuk)
       return false;
     }
     auto left_arg_de = Declaration::findDeclarationForSynonym(
@@ -125,7 +132,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     for (auto left_de : all_left_designentities) {
       for (auto right_de : all_right_designentities) {
         // Any satisfied relation would mean this clause is true overall
-        if (pkb->isLineFollowLineS(left_de, right_de)) {
+        if (pkb->isLineParentLine(left_de, right_de)) {
           return true;
         }
       }
@@ -133,30 +140,31 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     return false;
   }
   BoolOrStrings handleLeftVarUnselectedRightBasic() override {
-    // Follows*(s1, 3)
-    return pkb->getBeforeLineS(*arg2AsBasic).has_value();
+    // Parent(s1, 3)
+    return pkb->getParentLine(*arg2AsBasic).has_value();
   }
   BoolOrStrings handleRightVarUnselectedLeftBasic() override {
-    // Follows*(3, s1)
-    return pkb->getFollowingLineS(*arg1AsBasic).has_value();
+    // Parent(3, s1)
+    return pkb->getChildLine(*arg1AsBasic).has_value();
   }
+
   BoolOrStrings handleLeftBasicRightUnderscore() override {
-    // Follows*(3, _)
+    // Parent(3, _)
     return handleRightVarUnselectedLeftBasic();
   }
   BoolOrStrings handleRightBasicLeftUnderscore() override {
-    // Follows*(_, 3)
+    // Parent(_, 3)
     return handleLeftVarUnselectedRightBasic();
   }
   BoolOrStrings handleLeftVarUnselectedRightUnderscore() override {
-    // Follows*(s1, _) --> is there a statement that is followed by anything?
+    // Parent(s1, _) --> is there a statement that is a parent of anything?
     // Reuse the left-var selected results until an optimized PKB query can help
     return !std::get<std::vector<std::string>>(
                 handleLeftVarSelectedRightUnderscore())
                 .empty();
   }
   BoolOrStrings handleRightVarUnselectedLeftUnderscore() override {
-    // Follows*(_, s1) --> is there a statement that follows anything?
+    // Parent(_, s1) --> is there a statement that is a child of anything?
     // Reuse the left-var selected results until an optimized PKB query can help
     return !std::get<std::vector<std::string>>(
                 handleRightVarSelectedLeftUnderscore())

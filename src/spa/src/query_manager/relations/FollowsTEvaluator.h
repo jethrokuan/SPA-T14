@@ -104,8 +104,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   // Handle cases with no variables selected
 
   BoolOrStrings handleDoubleUnderscore() override {
-    // TODO: NOT YET IMPLEMENTED
-    assert(false);
+    return !pkb->isLineFollowLineSSetEmpty();
   }
   BoolOrStrings handleBothVarsUnselected() override {
     // Follows*(s1, s2)

@@ -13,7 +13,7 @@
 
 using namespace QE;
 
-TEST_CASE ("Test Query Manager functionality - simple_1") {
+TEST_CASE ("Test Query Manager FollowsT functionality - simple_1") {
   auto ast = Simple::SimpleInterface::getAstFromFile(
       "tests/simple_source/simple_1.txt");
 
@@ -310,6 +310,13 @@ TEST_CASE ("Test Query Manager functionality - simple_1") {
   SECTION ("Test select all statements, Follows*(s1, _)") {
     auto querystr =
         std::string("stmt s, s1; Select s such that Follows*(s1, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"1", "2", "3", "4", "5"});
+  }
+
+  SECTION ("Test Follows*(_,_) -> does anything follow anything?") {
+    auto querystr = std::string("stmt s; Select s such that Follows*(_, _)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(query) ==
             std::vector<std::string>{"1", "2", "3", "4", "5"});

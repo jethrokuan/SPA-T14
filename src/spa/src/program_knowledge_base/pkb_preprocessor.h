@@ -82,6 +82,14 @@ class PKBPreprocessor {
                              const std::shared_ptr<Node> parent_node);
   void setModifiesRelationsIterator(const std::vector<StmtNode> stmt_lst);
 
+  void setPattern(const std::shared_ptr<ProcedureNode> node);
+  void setPattern(const std::shared_ptr<AssignNode> node);
+  void setPattern(const std::shared_ptr<IfNode> node);
+  void setPattern(const std::shared_ptr<WhileNode> node);
+  void setPattern(const std::shared_ptr<ReadNode> node);
+  void setPattern(const std::shared_ptr<PrintNode> node);
+  void setPatternIterator(const std::vector<StmtNode> stmt_lst);
+
  public:
   PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
                   std::shared_ptr<PKBStorage> pkb_storage);

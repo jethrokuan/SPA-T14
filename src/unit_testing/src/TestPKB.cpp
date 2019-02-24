@@ -42,6 +42,14 @@ TEST_CASE ("Test PKB for assign.txt") {
   // test modifies
   auto modifies_test_1 = pkb.isLineModifiesVar("1", "i");
   REQUIRE(modifies_test_1 == true);
+
+  // test pattern
+  std::unordered_set<std::string> pattern_test_1_check;
+  pattern_test_1_check.insert("1");
+  auto pattern_test_1 = pkb.getCompleteMatchLines("i", "2+5");
+  std::unordered_set<Variable> pattern_test_1_set(pattern_test_1->begin(),
+                                                  pattern_test_1->end());
+  REQUIRE(pattern_test_1_set == pattern_test_1_check);
 }
 
 TEST_CASE ("Test PKB for simple_1.txt") {
@@ -250,6 +258,14 @@ TEST_CASE ("Test PKB for simple_1.txt") {
     }
   }
   REQUIRE(modifies_test_11_set == modifies_test_11_check);
+
+  // test pattern
+  std::unordered_set<std::string> pattern_test_1_check;
+  pattern_test_1_check.insert("1");
+  auto pattern_test_1 = pkb.getCompleteMatchLines("i", "5");
+  std::unordered_set<Variable> pattern_test_1_set(pattern_test_1->begin(),
+                                                  pattern_test_1->end());
+  REQUIRE(pattern_test_1_set == pattern_test_1_check);
 }
 
 TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
@@ -267,6 +283,33 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   REQUIRE(var_exist_test_3 == true);
   auto var_exist_test_4 = pkb.isVariableExists("a");
   REQUIRE(var_exist_test_4 == false);
+
+  // test pattern
+  std::unordered_set<std::string> pattern_test_1_check;
+  pattern_test_1_check.insert("5");
+  pattern_test_1_check.insert("8");
+  pattern_test_1_check.insert("12");
+  pattern_test_1_check.insert("17");
+  auto pattern_test_1 = pkb.getCompleteMatchLines("y", "y+1");
+  std::unordered_set<Variable> pattern_test_1_set(pattern_test_1->begin(),
+                                                  pattern_test_1->end());
+  REQUIRE(pattern_test_1_set == pattern_test_1_check);
+
+  std::unordered_set<std::string> pattern_test_2_check;
+  pattern_test_2_check.insert("10");
+  pattern_test_2_check.insert("14");
+  pattern_test_2_check.insert("19");
+  auto pattern_test_2 = pkb.getCompleteMatchLines("z", "z+2");
+  std::unordered_set<Variable> pattern_test_2_set(pattern_test_2->begin(),
+                                                  pattern_test_2->end());
+  REQUIRE(pattern_test_2_set == pattern_test_2_check);
+
+  std::unordered_set<std::string> pattern_test_3_check;
+  pattern_test_3_check.insert("21");
+  auto pattern_test_3 = pkb.getCompleteMatchLines("z", "z+4");
+  std::unordered_set<Variable> pattern_test_3_set(pattern_test_3->begin(),
+                                                  pattern_test_3->end());
+  REQUIRE(pattern_test_3_set == pattern_test_3_check);
 }
 
 TEST_CASE ("Test detection of semantic errors in AST") {

@@ -316,4 +316,41 @@ std::optional<std::vector<Line>> PKBManager::getLineModifiesVar(
   return getUniqueVectorFromMap(pkb_storage->line_modifies_var_map, var);
 }
 
+// TODO tidy this up
+std::optional<std::vector<Line>> PKBManager::getCompleteMatchLines(
+    const Variable var, const Pattern pattern) {
+  Expr expr = SimpleInterface::parseExpression(pattern);
+  ExprStr pattern_expr =
+      std::visit([](const auto &s) { return s->to_str(); }, expr);
+
+  // check if pattern exists first
+  if (pkb_storage->expr_str_set.find(pattern_expr) ==
+      pkb_storage->expr_str_set.end()) {
+    return std::nullopt;
+  }
+
+  // retrieve list of patterns for the variable
+  auto ys = pkb_storage->var_expr_str_map.at(var);
+  std::vector<Line> matching_lines;
+  for (const auto &elem : ys) {
+    // if match
+    auto line = elem.first;
+    auto elem_pattern_expr = elem.second;
+    if (pattern_expr.compare(elem_pattern_expr) == 0) {
+      matching_lines.push_back(line);
+    }
+  }
+
+  if (matching_lines.size() == 0) {
+    return std::nullopt;
+  } else {
+    return std::make_optional<std::vector<Line>>(matching_lines);
+  }
+}
+
+void PKBManager::getPartialMatchLines(const Variable var,
+                                      const Pattern pattern) {
+  ;
+}
+
 }  // namespace PKB

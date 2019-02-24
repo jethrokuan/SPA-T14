@@ -20,6 +20,7 @@ class UsesSEvaluator : public SuchThatEvaluator {
 
   BoolOrStrings handleLeftVarSelectedRightBasic() override {
     // Uses(s, "x")
+    std::cout << "This case is triggered\n";
     return pkb->getLineUsesVar(*arg2AsBasic)
         .value_or(std::vector<std::string>());
   }

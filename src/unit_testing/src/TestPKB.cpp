@@ -46,10 +46,73 @@ TEST_CASE ("Test PKB for assign.txt") {
   // test pattern
   std::unordered_set<std::string> pattern_test_1_check;
   pattern_test_1_check.insert("1");
-  auto pattern_test_1 = pkb.getCompleteMatchLines("i", "2+5");
+  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("i", "2+5");
   std::unordered_set<Variable> pattern_test_1_set(pattern_test_1->begin(),
                                                   pattern_test_1->end());
   REQUIRE(pattern_test_1_set == pattern_test_1_check);
+
+  std::unordered_set<std::string> pattern_test_2_check;
+  pattern_test_2_check.insert("1");
+  auto pattern_test_2 = pkb.getPartialMatchLinesWithVar("i", "2");
+  std::unordered_set<Variable> pattern_test_2_set;
+  if (pattern_test_2) {
+    for (const auto &elem : (*pattern_test_2)) {
+      pattern_test_2_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_2_set == pattern_test_2_check);
+
+  std::unordered_set<std::string> pattern_test_3_check;
+  pattern_test_3_check.insert("1");
+  auto pattern_test_3 = pkb.getPartialMatchLinesWithVar("i", "5");
+  std::unordered_set<Variable> pattern_test_3_set;
+  if (pattern_test_3) {
+    for (const auto &elem : (*pattern_test_3)) {
+      pattern_test_3_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_3_set == pattern_test_3_check);
+
+  std::unordered_set<std::string> pattern_test_4_check;
+  auto pattern_test_4 = pkb.getPartialMatchLinesWithVar("x", "x");
+  std::unordered_set<Variable> pattern_test_4_set;
+  if (pattern_test_4) {
+    for (const auto &elem : (*pattern_test_4)) {
+      pattern_test_4_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_4_set == pattern_test_4_check);
+
+  std::unordered_set<std::string> pattern_test_5_check;
+  auto pattern_test_5 = pkb.getPartialMatchLines("x");
+  std::unordered_set<Variable> pattern_test_5_set;
+  if (pattern_test_5) {
+    for (const auto &elem : (*pattern_test_5)) {
+      pattern_test_5_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_5_set == pattern_test_5_check);
+
+  std::unordered_set<std::string> pattern_test_6_check;
+  auto pattern_test_6 = pkb.getCompleteMatchLines("x");
+  std::unordered_set<Variable> pattern_test_6_set;
+  if (pattern_test_6) {
+    for (const auto &elem : (*pattern_test_6)) {
+      pattern_test_6_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_6_set == pattern_test_6_check);
+
+  std::unordered_set<std::string> pattern_test_7_check;
+  pattern_test_7_check.insert("1");
+  auto pattern_test_7 = pkb.getCompleteMatchLines("2+5");
+  std::unordered_set<Variable> pattern_test_7_set;
+  if (pattern_test_7) {
+    for (const auto &elem : (*pattern_test_7)) {
+      pattern_test_7_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_7_set == pattern_test_7_check);
 }
 
 TEST_CASE ("Test PKB for simple_1.txt") {
@@ -262,9 +325,13 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   // test pattern
   std::unordered_set<std::string> pattern_test_1_check;
   pattern_test_1_check.insert("1");
-  auto pattern_test_1 = pkb.getCompleteMatchLines("i", "5");
-  std::unordered_set<Variable> pattern_test_1_set(pattern_test_1->begin(),
-                                                  pattern_test_1->end());
+  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("i", "5");
+  std::unordered_set<Variable> pattern_test_1_set;
+  if (pattern_test_1) {
+    for (const auto &elem : (*pattern_test_1)) {
+      pattern_test_1_set.insert(elem);
+    }
+  }
   REQUIRE(pattern_test_1_set == pattern_test_1_check);
 }
 
@@ -290,26 +357,89 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_1_check.insert("8");
   pattern_test_1_check.insert("12");
   pattern_test_1_check.insert("17");
-  auto pattern_test_1 = pkb.getCompleteMatchLines("y", "y+1");
-  std::unordered_set<Variable> pattern_test_1_set(pattern_test_1->begin(),
-                                                  pattern_test_1->end());
+  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("y", "y+1");
+  std::unordered_set<Variable> pattern_test_1_set;
+  if (pattern_test_1) {
+    for (const auto &elem : (*pattern_test_1)) {
+      pattern_test_1_set.insert(elem);
+    }
+  }
   REQUIRE(pattern_test_1_set == pattern_test_1_check);
 
   std::unordered_set<std::string> pattern_test_2_check;
   pattern_test_2_check.insert("10");
   pattern_test_2_check.insert("14");
   pattern_test_2_check.insert("19");
-  auto pattern_test_2 = pkb.getCompleteMatchLines("z", "z+2");
-  std::unordered_set<Variable> pattern_test_2_set(pattern_test_2->begin(),
-                                                  pattern_test_2->end());
+  auto pattern_test_2 = pkb.getCompleteMatchLinesWithVar("z", "z+2");
+  std::unordered_set<Variable> pattern_test_2_set;
+  if (pattern_test_2) {
+    for (const auto &elem : (*pattern_test_2)) {
+      pattern_test_2_set.insert(elem);
+    }
+  }
   REQUIRE(pattern_test_2_set == pattern_test_2_check);
 
   std::unordered_set<std::string> pattern_test_3_check;
   pattern_test_3_check.insert("21");
-  auto pattern_test_3 = pkb.getCompleteMatchLines("z", "z+4");
-  std::unordered_set<Variable> pattern_test_3_set(pattern_test_3->begin(),
-                                                  pattern_test_3->end());
+  auto pattern_test_3 = pkb.getCompleteMatchLinesWithVar("z", "z+4");
+  std::unordered_set<Variable> pattern_test_3_set;
+  if (pattern_test_3) {
+    for (const auto &elem : (*pattern_test_3)) {
+      pattern_test_3_set.insert(elem);
+    }
+  }
   REQUIRE(pattern_test_3_set == pattern_test_3_check);
+
+  std::unordered_set<std::string> pattern_test_4_check;
+  pattern_test_4_check.insert("6");
+  pattern_test_4_check.insert("9");
+  pattern_test_4_check.insert("10");
+  pattern_test_4_check.insert("13");
+  pattern_test_4_check.insert("14");
+  pattern_test_4_check.insert("15");
+  pattern_test_4_check.insert("18");
+  pattern_test_4_check.insert("19");
+  pattern_test_4_check.insert("20");
+  pattern_test_4_check.insert("21");
+  auto pattern_test_4 = pkb.getPartialMatchLinesWithVar("z", "z");
+  std::unordered_set<Variable> pattern_test_4_set;
+  if (pattern_test_4) {
+    for (const auto &elem : (*pattern_test_4)) {
+      pattern_test_4_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_4_set == pattern_test_4_check);
+
+  std::unordered_set<std::string> pattern_test_5_check;
+  pattern_test_5_check.insert("21");
+  auto pattern_test_5 = pkb.getCompleteMatchLines("z+4");
+  std::unordered_set<Variable> pattern_test_5_set;
+  if (pattern_test_5) {
+    for (const auto &elem : (*pattern_test_5)) {
+      pattern_test_5_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_5_set == pattern_test_5_check);
+
+  std::unordered_set<std::string> pattern_test_6_check;
+  pattern_test_6_check.insert("6");
+  pattern_test_6_check.insert("9");
+  pattern_test_6_check.insert("10");
+  pattern_test_6_check.insert("13");
+  pattern_test_6_check.insert("14");
+  pattern_test_6_check.insert("15");
+  pattern_test_6_check.insert("18");
+  pattern_test_6_check.insert("19");
+  pattern_test_6_check.insert("20");
+  pattern_test_6_check.insert("21");
+  auto pattern_test_6 = pkb.getPartialMatchLines("z");
+  std::unordered_set<Variable> pattern_test_6_set;
+  if (pattern_test_6) {
+    for (const auto &elem : (*pattern_test_6)) {
+      pattern_test_6_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_6_set == pattern_test_6_check);
 }
 
 TEST_CASE ("Test detection of semantic errors in AST") {

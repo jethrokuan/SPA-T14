@@ -107,9 +107,12 @@ class PKBManager {
   std::optional<std::vector<Line>> getLineUsesVar(const Variable);
 
   // pattern
-  std::optional<std::vector<Line>> getCompleteMatchLines(const Variable,
-                                                         const Pattern);
-  void getPartialMatchLines(const Variable, const Pattern);
+  std::optional<std::vector<Line>> getCompleteMatchLinesWithVar(const Variable,
+                                                                const Pattern);
+  std::optional<std::vector<Line>> getPartialMatchLinesWithVar(const Variable,
+                                                               const Pattern);
+  std::optional<std::vector<Line>> getCompleteMatchLines(const Pattern);
+  std::optional<std::vector<Line>> getPartialMatchLines(const Pattern);
 };
 
 }  // namespace PKB

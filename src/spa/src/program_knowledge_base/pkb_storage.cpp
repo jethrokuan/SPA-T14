@@ -160,6 +160,7 @@ void PKBStorage::storePatternAssign(const Variable var, const ExprStr expr_str,
   // std::cout << var + " at line " + line + " maps to " + expr_str <<
   // std::endl;
   var_expr_str_set.insert(std::pair<Variable, ExprStr>(var, expr_str));
+  line_expr_str_set.insert(std::pair<Line, ExprStr>(line, expr_str));
   expr_str_set.insert(expr_str);
 }
 

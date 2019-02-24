@@ -100,6 +100,7 @@ class PKBStorage {
   std::unordered_map<Variable, std::vector<std::pair<Line, ExprStr>>>
       var_expr_str_map;
   std::unordered_set<std::pair<Variable, ExprStr>, pair_hash> var_expr_str_set;
+  std::unordered_set<std::pair<Line, ExprStr>, pair_hash> line_expr_str_set;
   std::unordered_set<ExprStr> expr_str_set;
 
   // setters

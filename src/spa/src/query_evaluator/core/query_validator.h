@@ -18,6 +18,8 @@ class QueryValidator {
   void validateSuchThatSynonyms(const Query&);
   //! Checks that all synonym arguments have the correct types
   void validateSynonymTypes(const Query&);
+  //! Checks that all synonym arguments have the correct types
+  void validateNoIdenticalSynonyms(const Query&);
 
  public:
   //! \brief Checks the semantics in the Query, throws

@@ -1,4 +1,5 @@
 #include "query_evaluator/core/query_validator.h"
+#include <unordered_set>
 #include <variant>
 #include "query_evaluator/core/exceptions.h"
 #include "query_evaluator/pql/declaration.h"
@@ -12,6 +13,7 @@ void QueryValidator::validateQuery(const Query& query) {
   validateModifyUsesNoFirstArgUnderscore(query);
   validateSuchThatSynonyms(query);
   validateSynonymTypes(query);
+  validateNoIdenticalSynonyms(query);
 }
 
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
@@ -157,6 +159,22 @@ void QueryValidator::validateSynonymTypes(const Query& query) {
           getDesignEntityVectorString(argSynonymTypes.second) +
           " during parse of such_that relation: " +
           getStringFromRelation(relation) + "'s second argument");
+    }
+  }
+}
+
+void QueryValidator::validateNoIdenticalSynonyms(const Query& query) {
+  // Look through all declarations for identical synonyms
+  std::unordered_set<std::string> unique_synonyms;
+
+  for (auto decl : *(query.declarations)) {
+    auto synonym = decl.getSynonym().synonym;
+    const bool is_in = unique_synonyms.find(synonym) != unique_synonyms.end();
+    if (is_in) {
+      throw PQLValidationException(
+          "Found at least 2 synonyms with the same name: " + synonym);
+    } else {
+      unique_synonyms.insert(synonym);
     }
   }
 }

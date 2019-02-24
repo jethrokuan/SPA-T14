@@ -216,7 +216,7 @@ void PKBPreprocessor::setParentRelations(
 
 void PKBPreprocessor::setParentRelationsH(
     const std::shared_ptr<ProcedureNode> node,
-    std::vector<ParentLine> parent_lines) {
+    const std::vector<ParentLine> parent_lines) {
   setParentRelationsIterator(node->StmtList->StmtList, parent_lines);
 }
 
@@ -412,9 +412,9 @@ void PKBPreprocessor::setPattern(const std::shared_ptr<WhileNode> node) {
   setPatternIterator(node->StmtList->StmtList);
 }
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<ReadNode> node) {}
+void PKBPreprocessor::setPattern(const std::shared_ptr<ReadNode>) {}
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<PrintNode> node) {}
+void PKBPreprocessor::setPattern(const std::shared_ptr<PrintNode>) {}
 
 void PKBPreprocessor::setPatternIterator(const std::vector<StmtNode> stmt_lst) {
   for (const auto &stmt : stmt_lst) {

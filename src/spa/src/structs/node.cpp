@@ -162,8 +162,18 @@ bool CondExprNode::operator==(const Node& other) const {
          (this->Op.compare(casted_other->Op) == 0);
 };
 std::string CondExprNode::to_str() {
-  // TODO(jethro): fix
-  return "(CondExprNode)";
+  std::string s;
+  // just RelExpr:
+  if (RelExpr != nullptr) {
+    s = "(cond " + RelExpr->to_str() + ")";
+  } else if (CondRHS == nullptr) {
+    // ! (CondExpr)
+    s = "(cond " + Op + " " + CondLHS->to_str() + ")";
+  } else {
+    // (CondExpr Op CondExpr)
+    s = "(cond " + Op + " " + CondLHS->to_str() + " " + CondRHS->to_str() + ")";
+  }
+  return s;
 }
 
 WhileNode::WhileNode(std::shared_ptr<CondExprNode> condExpr,
@@ -175,7 +185,6 @@ bool WhileNode::operator==(const Node& other) const {
          *this->StmtList == *casted_other->StmtList;
 };
 std::string WhileNode::to_str() {
-  // TODO(jethro): fix
   std::string acc = "(WhileNode";
   acc += this->CondExpr->to_str();
   acc += this->StmtList->to_str();
@@ -197,7 +206,6 @@ bool IfNode::operator==(const Node& other) const {
 };
 
 std::string IfNode::to_str() {
-  // TODO(jethro): fix
   std::string acc = "(IfNode";
   acc += this->CondExpr->to_str();
   acc += this->StmtListThen->to_str();

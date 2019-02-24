@@ -6,7 +6,7 @@ main
 2
 stmt s; variable v;
 Select s such that Uses(s, v)
-7,8,10,11,12,13,14,15,16,18,21,22,24,25,27,28,38,39,40,41,42,43
+7,8,10,11,12,13,14,15,16,18,21,22,24,25,27,28,38,39,40,41,42,43,17,19,20,23,26,29,30,31,32,33,34,35,36,37,9
 5000
 3 - invalid, because r is not used
 read r; variable v;
@@ -16,7 +16,7 @@ none
 4
 print p; variable v;
 Select p such that Uses(p, v)
-7,8,18,24,25,27,28,38,39,40,41,42,43
+7,8,18,24,25,27,28,38,39,40,41,42,43,19,30,31,33,34,36,37
 5000
 5
 assign a; variable v;
@@ -36,7 +36,7 @@ Select w such that Uses(w, v)
 8
 if i; variable v;
 Select i such that Uses(i, v)
-17,20,23,26
+17,20,23,26,29,32,35
 5000
 9 - Covers all Design Entities, 2 synonym, 1 clause (MODIFIES)
 procedure p; variable v;
@@ -71,12 +71,12 @@ none
 15
 while w; variable v;
 Select w such that Modifies(w, v)
-10,11,12,13,14,15,16
+9
 5000
 16
 if i; variable v;
 Select i such that Modifies(i, v)
-21,22
+20
 5000
 17 - Covers all Design Entities, 2 synonym, 1 clause (PARENT)  invalid, procedure is not stmt
 procedure p; stmt s;
@@ -266,6 +266,7 @@ none
 54 - invalid 
 variable v; constant c;
 Select v such that Parent*(c, v)
+none
 5000
 55 - Covers all Design Entities, 2 synonym, 1 clause (FOLLOWS)
 stmt s; read r;

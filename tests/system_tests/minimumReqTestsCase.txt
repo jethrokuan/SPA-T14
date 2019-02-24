@@ -1,0 +1,2 @@
+3 queries for each clause, i.e. follow, follow* parent, parent*, uses, modifies, patterns
+10 queries for 2 clause

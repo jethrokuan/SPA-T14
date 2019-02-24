@@ -46,7 +46,7 @@ v,v1,v2,v3,v4,v5
 10 - invalid?
 constant c;
 Select c
-1,0,101,100,12
+1,0,100
 5000
 11 - Covers all Design Entities, 1 synonym, 1 clause (MODIFIES)
 procedure p;
@@ -56,7 +56,7 @@ none
 12
 stmt s;
 Select s such that Modifies(s, "v")
-10
+1,10
 5000
 13
 read r;
@@ -80,12 +80,12 @@ none
 17
 while w;
 Select w such that Modifies(w, "v")
-10
+9
 5000
 18
 if i;
 Select i such that Modifies(i, "v2")
-21,22
+20
 5000
 19 - Covers all Design Entities, 1 synonym, 1 clause (FOLLOWS), invalid, follows takes in stmt
 procedure p;

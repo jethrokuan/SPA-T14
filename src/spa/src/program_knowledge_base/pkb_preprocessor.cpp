@@ -13,6 +13,7 @@ PKBPreprocessor::PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
   setParentRelations(ast);
   setUsesRelations(ast);
   setModifiesRelations(ast);
+  setPattern(ast);
 }
 
 PKBPreprocessor::~PKBPreprocessor() {}
@@ -386,6 +387,38 @@ void PKBPreprocessor::setModifiesRelationsIterator(
     const std::vector<StmtNode> stmt_lst) {
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setModifiesRelations(s); }, stmt);
+  }
+}
+
+void PKBPreprocessor::setPattern(const std::shared_ptr<ProcedureNode> node) {
+  setPatternIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setPattern(const std::shared_ptr<AssignNode> node) {
+  // get var name
+  Variable var_name = node->Var->Name;
+  Line line_num = storage->getLineFromNode(node);
+  ExprStr expr_str =
+      std::visit([](const auto &s) { return s->to_str(); }, node->Exp);
+  storage->storePatternAssign(var_name, expr_str, line_num);
+}
+
+void PKBPreprocessor::setPattern(const std::shared_ptr<IfNode> node) {
+  setPatternIterator(node->StmtListThen->StmtList);
+  setPatternIterator(node->StmtListElse->StmtList);
+}
+
+void PKBPreprocessor::setPattern(const std::shared_ptr<WhileNode> node) {
+  setPatternIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setPattern(const std::shared_ptr<ReadNode> node) {}
+
+void PKBPreprocessor::setPattern(const std::shared_ptr<PrintNode> node) {}
+
+void PKBPreprocessor::setPatternIterator(const std::vector<StmtNode> stmt_lst) {
+  for (const auto &stmt : stmt_lst) {
+    std::visit([this](const auto &s) { setPattern(s); }, stmt);
   }
 }
 

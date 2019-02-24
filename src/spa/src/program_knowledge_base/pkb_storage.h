@@ -19,6 +19,9 @@ class PKBStorage {
   void addToVectorMap(
       std::unordered_map<std::string, std::vector<std::string>> &umap,
       const std::string index, std::string data);
+  void addToVectorMap(
+      std::unordered_map<Variable, std::vector<std::pair<Line, ExprStr>>> &umap,
+      const Variable index, std::pair<Line, ExprStr> data);
 
  public:
   PKBStorage();
@@ -93,6 +96,13 @@ class PKBStorage {
   std::vector<Constant> constant_list;
   std::vector<Procedure> procedure_list;
 
+  // pattern
+  std::unordered_map<Variable, std::vector<std::pair<Line, ExprStr>>>
+      var_expr_str_map;
+  std::unordered_set<std::pair<Variable, ExprStr>, pair_hash> var_expr_str_set;
+  std::unordered_set<std::pair<Line, ExprStr>, pair_hash> line_expr_str_set;
+  std::unordered_set<ExprStr> expr_str_set;
+
   // setters
   void storeAST(const std::shared_ptr<ProcedureNode> proc);
   // TODO upon adding the hash function for line number mapping
@@ -117,6 +127,8 @@ class PKBStorage {
   void storeIf(const Line);
   void storeConstant(const Constant);
   void storeProcedure(const Procedure);
+
+  void storePatternAssign(const Variable, const ExprStr, const Line);
 
   // helper
   void storeLineProcedureRelation(const Line, const Procedure);

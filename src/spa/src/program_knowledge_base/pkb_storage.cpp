@@ -151,6 +151,19 @@ void PKBStorage::storeLineProcedureRelation(const Line line,
   line_procedure_map[line] = proc;
 }
 
+// pattern
+
+void PKBStorage::storePatternAssign(const Variable var, const ExprStr expr_str,
+                                    const Line line) {
+  addToVectorMap(var_expr_str_map, var,
+                 std::pair<Line, ExprStr>(line, expr_str));
+  // std::cout << var + " at line " + line + " maps to " + expr_str <<
+  // std::endl;
+  var_expr_str_set.insert(std::pair<Variable, ExprStr>(var, expr_str));
+  line_expr_str_set.insert(std::pair<Line, ExprStr>(line, expr_str));
+  expr_str_set.insert(expr_str);
+}
+
 Procedure PKBStorage::getProcedureFromLine(const Line line) {
   return line_procedure_map.at(line);
 }
@@ -162,6 +175,21 @@ void PKBStorage::addToVectorMap(
   if (umap.find(index) == umap.end()) {
     // create new vector
     std::vector<std::string> v;
+    v.push_back(data);
+    umap[index] = v;
+  } else {
+    // retrieve vector and add element
+    umap.at(index).push_back(data);
+  }
+}
+
+void PKBStorage::addToVectorMap(
+    std::unordered_map<std::string,
+                       std::vector<std::pair<std::string, std::string>>> &umap,
+    const std::string index, std::pair<std::string, std::string> data) {
+  if (umap.find(index) == umap.end()) {
+    // create new vector
+    std::vector<std::pair<std::string, std::string>> v;
     v.push_back(data);
     umap[index] = v;
   } else {

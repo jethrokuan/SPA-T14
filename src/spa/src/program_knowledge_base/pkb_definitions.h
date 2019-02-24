@@ -13,3 +13,5 @@ using LineAfter = std::string;   // Line
 using Variable = std::string;
 using Procedure = std::string;
 using Constant = std::string;
+using Pattern = std::string;
+using ExprStr = std::string;

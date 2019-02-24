@@ -7,10 +7,12 @@
 #include "program_knowledge_base/pkb_definitions.h"
 #include "program_knowledge_base/pkb_preprocessor.h"
 #include "program_knowledge_base/pkb_storage.h"
+#include "simple_parser/interface.h"
 #include "structs/node.h"
 #include "utils/utils.h"
 
 using namespace Utils;
+using namespace Simple;
 
 namespace PKB {
 
@@ -103,6 +105,14 @@ class PKBManager {
   std::optional<std::vector<Variable>> getVarUsedByLine(const Line);
   std::optional<std::vector<Procedure>> getProcedureUsesVar(const Variable);
   std::optional<std::vector<Line>> getLineUsesVar(const Variable);
+
+  // pattern
+  std::optional<std::vector<Line>> getCompleteMatchLinesWithVar(const Variable,
+                                                                const Pattern);
+  std::optional<std::vector<Line>> getPartialMatchLinesWithVar(const Variable,
+                                                               const Pattern);
+  std::optional<std::vector<Line>> getCompleteMatchLines(const Pattern);
+  std::optional<std::vector<Line>> getPartialMatchLines(const Pattern);
 };
 
 }  // namespace PKB

@@ -668,8 +668,8 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   uses_test_26_check.insert("y");
   uses_test_26_check.insert("z");
   auto uses_test_26_vector = pkb.getVarUsedByProcedure("main");
-  std::unordered_set<Variable> uses_test_26_set(uses_test_26_vector.begin(),
-                                                uses_test_26_vector.end());
+  std::unordered_set<Variable> uses_test_26_set(uses_test_26_vector->begin(),
+                                                uses_test_26_vector->end());
   REQUIRE(uses_test_26_set == uses_test_26_check);
 
   // test modifies
@@ -721,7 +721,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   modifies_test_21_check.insert("z");
   auto modifies_test_21_vector = pkb.getVarModifiedByProcedure("main");
   std::unordered_set<Variable> modifies_test_21_set(
-      modifies_test_21_vector.begin(), modifies_test_21_vector.end());
+      modifies_test_21_vector->begin(), modifies_test_21_vector->end());
   REQUIRE(modifies_test_21_set == modifies_test_21_check);
 }
 

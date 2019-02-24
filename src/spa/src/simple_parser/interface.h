@@ -7,6 +7,7 @@
  * \date   2019-02-15
  */
 
+#pragma once
 #include <memory>
 
 #include "simple_parser/lexer.h"

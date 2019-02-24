@@ -178,6 +178,17 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   auto parent_test_4 = pkb.isLineParentLine("4", "3");
   REQUIRE(parent_test_4 == false);
 
+  std::unordered_set<std::string> parent_test_5_check;
+  parent_test_5_check.insert("2");
+  std::unordered_set<Variable> parent_test_5_set;
+  auto parent_test_5 = pkb.getParentLineS("3");
+  if (parent_test_5) {
+    for (const auto &elem : (*parent_test_5)) {
+      parent_test_5_set.insert(elem);
+    }
+  }
+  REQUIRE(parent_test_5_set == parent_test_5_check);
+
   // test uses
   auto uses_test_1 = pkb.isLineUsesVar("2", "i");
   REQUIRE(uses_test_1 == true);
@@ -231,14 +242,6 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   REQUIRE(modifies_test_9 == false);
   auto modifies_test_10 = pkb.isProcedureModifiesVar("test", "asd");
   REQUIRE(modifies_test_10 == false);
-
-  std::unordered_set<Variable> uses_test_10_set;
-  auto uses_test_10 = pkb.getVarUsedByProcedure("main");
-  if (uses_test_10) {
-    for (const auto &elem : (*uses_test_10)) {
-      uses_test_10_set.insert(elem);
-    }
-  }
 
   std::unordered_set<std::string> modifies_test_11_check;
   modifies_test_11_check.insert("i");

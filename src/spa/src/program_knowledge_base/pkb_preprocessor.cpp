@@ -216,8 +216,6 @@ void PKBPreprocessor::setParentRelations(
 void PKBPreprocessor::setParentRelationsH(
     const std::shared_ptr<ProcedureNode> node,
     std::vector<ParentLine> parent_lines) {
-  Line cur_line_number = storage->getLineFromNode(node);
-  parent_lines.push_back(cur_line_number);
   setParentRelationsIterator(node->StmtList->StmtList, parent_lines);
 }
 
@@ -240,15 +238,17 @@ void PKBPreprocessor::setParentRelationsH(
 void PKBPreprocessor::setParentRelationsIterator(
     const std::vector<StmtNode> stmt_lst,
     const std::vector<ParentLine> parent_lines) {
-  Line direct_parent_line_number = parent_lines.back();
-  for (const auto &stmt : stmt_lst) {
-    Line cur_line_number = std::visit(
-        [this](const auto &s) { return storage->getLineFromNode(s); }, stmt);
-    // add direct relationship
-    storage->storeParentRelation(direct_parent_line_number, cur_line_number);
-    // add indirect relationship
-    for (const auto &cur_parent_line_number : parent_lines) {
-      storage->storeParentRelationS(cur_parent_line_number, cur_line_number);
+  if (parent_lines.size() > 0) {
+    Line direct_parent_line_number = parent_lines.back();
+    for (const auto &stmt : stmt_lst) {
+      Line cur_line_number = std::visit(
+          [this](const auto &s) { return storage->getLineFromNode(s); }, stmt);
+      // add direct relationship
+      storage->storeParentRelation(direct_parent_line_number, cur_line_number);
+      // add indirect relationship
+      for (const auto &cur_parent_line_number : parent_lines) {
+        storage->storeParentRelationS(cur_parent_line_number, cur_line_number);
+      }
     }
   }
 

@@ -213,3 +213,44 @@ TEST_CASE ("Test such that with invalid type secondarg Validate") {
 
   REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
 }
+
+TEST_CASE ("Test multiple declarations with the same name") {
+  // Modifies can't take a variable as first argument
+  auto decl = new std::vector<Declaration>{
+      Declaration(DesignEntity::STMT, Synonym::construct("a1").value()),
+      Declaration(DesignEntity::STMT, Synonym::construct("a1").value())};
+  auto select =
+      new Declaration(DesignEntity::STMT, Synonym::construct("a1").value());
+  StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a1").value());
+  StmtOrEntRef a2 = QE::EntRef(QE::Underscore());
+  auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
+  Query q = Query();
+  q.declarations = decl;
+  q.selected_declaration = select;
+  q.such_that = suchthat;
+
+  QueryValidator qv = QueryValidator();
+
+  REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
+}
+
+TEST_CASE (
+    "Test multiple declarations with the same name with different types") {
+  // Modifies can't take a variable as first argument
+  auto decl = new std::vector<Declaration>{
+      Declaration(DesignEntity::STMT, Synonym::construct("a1").value()),
+      Declaration(DesignEntity::ASSIGN, Synonym::construct("a1").value())};
+  auto select =
+      new Declaration(DesignEntity::STMT, Synonym::construct("a1").value());
+  StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a1").value());
+  StmtOrEntRef a2 = QE::EntRef(QE::Underscore());
+  auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
+  Query q = Query();
+  q.declarations = decl;
+  q.selected_declaration = select;
+  q.such_that = suchthat;
+
+  QueryValidator qv = QueryValidator();
+
+  REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
+}

@@ -28,7 +28,7 @@ class ParentEvaluator : public SuchThatEvaluator {
   }
   BoolOrStrings handleRightVarSelectedLeftBasic() override {
     // Parent(3, s)
-    if (auto childLines = pkb->getChildLine(*arg2AsBasic)) {
+    if (auto childLines = pkb->getChildLine(*arg1AsBasic)) {
       return *childLines;
     } else {
       return std::vector<std::string>();

@@ -39,3 +39,4 @@ add_subdirectory(src/integration_testing)
 
 enable_testing()
 add_test(NAME UnitTests COMMAND unit_testing WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+add_test(NAME IntegrationTests COMMAND integration_testing WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})

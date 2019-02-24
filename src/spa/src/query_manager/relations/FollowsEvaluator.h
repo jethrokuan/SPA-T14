@@ -28,7 +28,7 @@ class FollowsEvaluator : public SuchThatEvaluator {
   }
   BoolOrStrings handleRightVarSelectedLeftBasic() override {
     // Follows(3, s)
-    if (auto afterLine = pkb->getFollowingLine(*arg2AsBasic)) {
+    if (auto afterLine = pkb->getFollowingLine(*arg1AsBasic)) {
       return std::vector<std::string>{*afterLine};
     } else {
       return std::vector<std::string>();

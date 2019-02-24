@@ -385,27 +385,27 @@ none
 79
 while w; if i;
 Select w such that Follows*(w, i)
-[INSERTANS]
+9,25,64,88,107,126,17,38,47,72,96,142,162,80,117,150,177 
 5000
 80
 if i; stmt s;
 Select i such that Follows*(i, s)
-[INSERTANS]
+36,55,57,136,140,159,173,190,194,202
 5000
 81
 stmt s; read r;
 Select r such that Follows*(s,r)
-[INSERTANS]
+2,3,4,5,6
 5000
 82
 read r; print p;
 Select p such that Follows*(r,p)
-[INSERTANS]
+none
 5000
 83
 print p; assign a;
 Select a such that Follows*(p,a)
-[INSERTANS]
+none
 5000
 84
 assign a; call c;
@@ -418,42 +418,17 @@ Select w such that Follows*(c,w)
 none
 5000
 86
-while w; if i;
-Select i such that Follows*(w, i)
-[INSERTANS]
-5000
-87
-if i; stmt s;
-Select s such that Follows*(i, s)
-[INSERTANS]
-5000
-88
 read r; stmt s;
 Select s such that Follows*(r,s)
-[INSERTANS]
+2,3,4,5,6
 5000
-89
+87
 print p; stmt s;
 Select s such that Follows*(p,s)
-[INSERTANS]
+8,9,35,57,59,61,63,106,117,136,138,172,175,177,187,189,192,196,199,201,202,204,206,207,208,209,210
 5000
-90
-assign a; stmt s;
-Select s such that Follows*(a,s)
-[INSERTANS]
-5000
-91
+88
 call c; stmt s;
 Select s such that Follows*(c,s)
 none
-5000
-92
-while w; stmt s;
-Select s such that Follows*(w,s)
-[INSERTANS]
-5000
-93
-if i; stmt s;
-Select s such that Follows*(i,s)
-[INSERTANS]
 5000

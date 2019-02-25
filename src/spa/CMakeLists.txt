@@ -47,7 +47,7 @@ set(headers ${headers}
   src/query_manager/relations/SuchThatEvaluator.h
   src/query_manager/relations/FollowsTEvaluator.h
   src/query_manager/relations/ParentTEvaluator.h
-  #src/query_manager/relations/ModifiesSEvaluator.h
+  src/query_manager/relations/ModifiesSEvaluator.h
   #src/query_manager/relations/UsesSEvaluator.h
   src/query_manager/relations/FollowsEvaluator.h
   src/query_manager/relations/ParentEvaluator.h

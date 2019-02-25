@@ -4,7 +4,7 @@
 #include <vector>
 #include "query_manager/relations/FollowsEvaluator.h"
 #include "query_manager/relations/FollowsTEvaluator.h"
-//#include "query_manager/relations/ModifiesSEvaluator.h"
+#include "query_manager/relations/ModifiesSEvaluator.h"
 #include "query_manager/relations/ParentEvaluator.h"
 #include "query_manager/relations/ParentTEvaluator.h"
 //#include "query_manager/relations/UsesSEvaluator.h"
@@ -146,9 +146,9 @@ AllowedValuesPairOrBool QueryManager::handleNonBooleanSuchThat(Query* query) {
     case Relation::ParentT:
       return ParentTEvaluator(query, pkb).evaluate();
       break;
-      /*
     case Relation::ModifiesS:
       return ModifiesSEvaluator(query, pkb).evaluate();
+      /*
     case Relation::UsesS:
       return UsesSEvaluator(query, pkb).evaluate();
       */

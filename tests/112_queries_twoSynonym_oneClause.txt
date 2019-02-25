@@ -3,11 +3,6 @@ variable v; while w;
 Select v such that Uses(w, v)
 x, y, z
 5000
-4 - valid query
-constant c; assign a; 
-Select c such that Uses(a,c)
-1, 2, 3, 4
-5000
 5 - valid query (Modifies)
 assign a; variable v;
 Select v such that Modifies(a,v)

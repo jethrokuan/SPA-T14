@@ -339,7 +339,7 @@ void PKBPreprocessor::setUsesRelationsH(
   storage->storeProcedureUsesVarRelation(proc, node->Name);
   storage->storeLineUsesVarRelation(cur_line_number, node->Name);
 
-  if (storage->child_line_parent_line_map_s.find(cur_line_number) != 
+  if (storage->child_line_parent_line_map_s.find(cur_line_number) !=
       storage->child_line_parent_line_map_s.end()) {
     auto parents = storage->child_line_parent_line_map_s.at(cur_line_number);
     for (const auto &elem : parents) {
@@ -392,7 +392,7 @@ void PKBPreprocessor::setModifiesRelationsH(
 
   // TODO this bit of code is repeated in pkb_manager
   // perhaps shift it under storage helper function
-  if (storage->child_line_parent_line_map_s.find(cur_line_number) != 
+  if (storage->child_line_parent_line_map_s.find(cur_line_number) !=
       storage->child_line_parent_line_map_s.end()) {
     auto parents = storage->child_line_parent_line_map_s.at(cur_line_number);
     for (const auto &elem : parents) {

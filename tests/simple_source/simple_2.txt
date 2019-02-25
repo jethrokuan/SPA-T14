@@ -1,0 +1,16 @@
+procedure main {
+  i = 5;
+  if (i == 5) then {
+    while (i == 5) {
+      if (i == 5) then {
+        read x;
+        print y;
+      } else {
+        read a;
+        print b;
+      }
+    }
+  } else {
+    i = 5;
+  }
+}

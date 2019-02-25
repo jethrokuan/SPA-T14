@@ -22,68 +22,54 @@ std::vector<std::string> QueryManager::makeQuery(Query* query) {
 std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
   if (query->such_that == nullptr && query->pattern == nullptr) {
-    // std::cout << "Such that and pattern does not exist - returning "
-    //             "unconditional Select\n";
-
-    // std::cout << "Running getSelect\n";
     return getSelect(pkb, query->selected_declaration->getDesignEntity());
   }
 
-  // std::cout << "Such that or pattern exists\n";
-  // If such-that + pattern is true/false answer, can immediately return the
-  // select statement
-  // The nesting is horrible here, hope to improve it
+  // If either clause doesn't exist, don't constrain
+  AllowedValuesPairOrBool such_that_result = {true};
+  AllowedValuesPairOrBool pattern_result = {true};
+
   if (query->such_that) {
     // Handle such_thats that return a simple boolean value
     if (isBooleanSuchThat(query->such_that)) {
-      if (isBooleanSuchThatTrue(query->such_that)) {
-        // TODO: This shouldn't be a return - pattern still matters
-        return getSelect(pkb, query->selected_declaration->getDesignEntity());
-      } else {
-        // Empty result if our such_that is false - at least one clause is
-        // false!
-        return std::vector<std::string>();
-      }
+      such_that_result = isBooleanSuchThatTrue(query->such_that);
     } else {
       // This is a more complex such-that query, pass to individual handlers
-      // We expect a vector of strings from each
-      auto result = handleNonBooleanSuchThat(query);
-
-      // If result is empty - entire clause is false - can return immediately
-      // If not, need to filter Select with the return result
-      // E.g. Select v ---> {"i", "j", "k"}, such that returns {"i"}
-      // if (result.) }
-      if (auto result_vec = std::get_if<std::vector<std::string>>(&result)) {
-        // Find set intersection between these two vectors
-        if (result_vec->empty()) {
-          // Clause returned no viable matches - return nothing
-          return std::vector<std::string>();
-        } else {
-          auto final_result = std::vector<std::string>();
-          auto select_statement_results =
-              getSelect(pkb, query->selected_declaration->getDesignEntity());
-          std::sort(select_statement_results.begin(),
-                    select_statement_results.end());
-          std::sort(result_vec->begin(), result_vec->end());
-          // Calcualate intersection between select and such that caluse
-          std::set_intersection(select_statement_results.begin(),
-                                select_statement_results.end(),
-                                result_vec->begin(), result_vec->end(),
-                                std::back_inserter(final_result));
-          // TODO: Have to change this for pattern
-          return final_result;
-        }
-      } else if (auto clause_is_true = std::get_if<bool>(&result)) {
-        if (*clause_is_true) {
-          // If clause only returns true - can just return all selected stuff
-          // TODO: change for pattern
-          return getSelect(pkb, query->selected_declaration->getDesignEntity());
-        } else {
-          // Clause is false, immediate break and return nothig
-          return std::vector<std::string>();
-        }
-      }
+      such_that_result = handleNonBooleanSuchThat(query);
     }
+  }
+
+  // Check if an early return is necessary
+  if (auto bool_result = std::get_if<bool>(&such_that_result)) {
+    if (!*bool_result) {
+      return std::vector<std::string>();
+    } else {
+      // TODO: FOR PATTERN If true, do nothing til later
+      return getSelect(pkb, query->selected_declaration->getDesignEntity());
+    }
+  } else if (auto constrain_result =
+                 std::get_if<AllowedValuesPair>(&such_that_result)) {
+    // This only works now - check for empty allowed list and return immediately
+    // if so. Works because a constraint list indicates at least one variable
+    // was selected
+    if (constrain_result->second.empty()) {
+      return std::vector<std::string>();
+    }
+  }
+
+  // Evaluate pattern results if they exist
+
+  // Evaluate final results (TODO: pattern - now just use such that)
+  if (auto such_that_constraint =
+          std::get_if<AllowedValuesPair>(&such_that_result)) {
+    auto select_allowed =
+        getSelect(pkb, query->selected_declaration->getDesignEntity());
+    auto select_synonym = query->selected_declaration->getSynonym();
+    auto select_constraint =
+        ConstraintSolver::makeAllowedValues(select_synonym, select_allowed);
+    return ConstraintSolver::constrainAndSelect(
+        {select_constraint, *such_that_constraint},
+        query->selected_declaration->getSynonym().synonym);
   }
   // TODO: HANDLE PATTERN
   return std::vector<std::string>();
@@ -145,21 +131,21 @@ std::vector<std::string> QueryManager::getSelect(PKBManager* pkb,
   return std::vector<std::string>();
 }
 
-BoolOrStrings QueryManager::handleNonBooleanSuchThat(Query* query) {
+AllowedValuesPairOrBool QueryManager::handleNonBooleanSuchThat(Query* query) {
   switch (query->such_that->getRelation()) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb).evaluate();
-    case Relation::ParentT:
-      return ParentTEvaluator(query, pkb).evaluate();
-    case Relation::ModifiesS:
-      return ModifiesSEvaluator(query, pkb).evaluate();
-    case Relation::UsesS:
-      return UsesSEvaluator(query, pkb).evaluate();
     case Relation::Follows:
       return FollowsEvaluator(query, pkb).evaluate();
     case Relation::Parent:
       return ParentEvaluator(query, pkb).evaluate();
+    case Relation::ParentT:
+      return ParentTEvaluator(query, pkb).evaluate();
       break;
+    case Relation::ModifiesS:
+      return ModifiesSEvaluator(query, pkb).evaluate();
+    case Relation::UsesS:
+      return UsesSEvaluator(query, pkb).evaluate();
     default:
       assert(false);
   }

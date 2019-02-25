@@ -27,11 +27,11 @@ class SuchThatEvaluator {
   std::optional<std::string> arg2AsBasic;
 
   //! Dispatches such that query to individual methods to handle it
-  BoolOrStrings dispatch();
+  AllowedValuesPairOrBool dispatch();
 
-  BoolOrStrings dispatchSuchThatSelected();
+  AllowedValuesPairOrBool dispatchSuchThatSelected();
 
-  BoolOrStrings dispatchSuchThatNotSelected();
+  AllowedValuesPairOrBool dispatchSuchThatNotSelected();
 
  public:
   SuchThatEvaluator(Query* query, PKBManager* pkb)
@@ -39,27 +39,27 @@ class SuchThatEvaluator {
         pkb(pkb),
         arg1(query->such_that->getFirstArg()),
         arg2(query->such_that->getSecondArg()){};
-  BoolOrStrings evaluate();
+  AllowedValuesPairOrBool evaluate();
 
   // These are the individual handler methods for each case
   // Read the .cpp file to see examples of each case
   // TODO: This really shouldn't be public
 
   // At least one variable is selected
-  virtual BoolOrStrings handleLeftVarSelectedRightBasic() = 0;
-  virtual BoolOrStrings handleRightVarSelectedLeftBasic() = 0;
-  virtual BoolOrStrings handleLeftVarSelectedRightUnderscore() = 0;
-  virtual BoolOrStrings handleRightVarSelectedLeftUnderscore() = 0;
-  virtual BoolOrStrings handleLeftVarSelectedRightVarUnselected() = 0;
-  virtual BoolOrStrings handleRightVarSelectedLeftVarUnselected() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() = 0;
 
   // No variable is selected
-  virtual BoolOrStrings handleDoubleUnderscore() = 0;
-  virtual BoolOrStrings handleBothVarsUnselected() = 0;
-  virtual BoolOrStrings handleLeftVarUnselectedRightBasic() = 0;
-  virtual BoolOrStrings handleRightVarUnselectedLeftBasic() = 0;
-  virtual BoolOrStrings handleLeftBasicRightUnderscore() = 0;
-  virtual BoolOrStrings handleRightBasicLeftUnderscore() = 0;
-  virtual BoolOrStrings handleLeftVarUnselectedRightUnderscore() = 0;
-  virtual BoolOrStrings handleRightVarUnselectedLeftUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleDoubleUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleBothVarsUnselected() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() = 0;
+  virtual AllowedValuesPairOrBool handleLeftBasicRightUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleRightBasicLeftUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() = 0;
 };

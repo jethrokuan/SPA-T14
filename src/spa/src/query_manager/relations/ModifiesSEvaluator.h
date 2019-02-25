@@ -18,17 +18,19 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
 
   // Handle cases with at least one variable selected
 
-  BoolOrStrings handleLeftVarSelectedRightBasic() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() override {
     // Modifies(s, "x")
-    return pkb->getLineModifiesVar(*arg2AsBasic)
-        .value_or(std::vector<std::string>());
+    auto results = pkb->getLineModifiesVar(*arg2AsBasic)
+                       .value_or(std::vector<std::string>());
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
   }
-  BoolOrStrings handleRightVarSelectedLeftBasic() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() override {
     // Modifies(3, v)
-    return pkb->getVarModifiedByLine(*arg1AsBasic)
-        .value_or(std::vector<std::string>());
+    auto results = pkb->getVarModifiedByLine(*arg1AsBasic)
+                       .value_or(std::vector<std::string>());
+    return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
   }
-  BoolOrStrings handleLeftVarSelectedRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() override {
     // Modifies(s, _)
     // Note that this should select all whiles and ifs
     auto all_selected_designentities = QueryManager::getSelect(
@@ -39,13 +41,14 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
         results.push_back(de);
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
+    ;
   }
-  BoolOrStrings handleRightVarSelectedLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() override {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
     assert(false);
   }
-  BoolOrStrings handleLeftVarSelectedRightVarUnselected() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() override {
     // Modifies*(s, v)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: ModifiesS cannot have identical args\n";
@@ -58,18 +61,18 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
                             ->getDesignEntity();
     auto all_unselected_designentities =
         QueryManager::getSelect(pkb, right_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineModifiesVar(de, unselect_de) &&
-            std::find(results.begin(), results.end(), de) == results.end()) {
-          results.push_back(de);
+        if (pkb->isLineModifiesVar(de, unselect_de)) {
+          results.insert({de, unselect_de});
         }
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
   }
-  BoolOrStrings handleRightVarSelectedLeftVarUnselected() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() override {
     // Modifies(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: ModifiesS cannot have identical args\n";
@@ -82,24 +85,24 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
                            ->getDesignEntity();
     auto all_unselected_designentities =
         QueryManager::getSelect(pkb, left_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineModifiesVar(unselect_de, de) &&
-            std::find(results.begin(), results.end(), de) == results.end()) {
-          results.push_back(de);
+        if (pkb->isLineModifiesVar(unselect_de, de)) {
+          results.insert({unselect_de, de});
         }
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
   }
 
   // Handle cases with no variables selected
 
-  BoolOrStrings handleDoubleUnderscore() override {
+  AllowedValuesPairOrBool handleDoubleUnderscore() override {
     return !pkb->isLineModifiesVarSetEmpty();
   }
-  BoolOrStrings handleBothVarsUnselected() override {
+  AllowedValuesPairOrBool handleBothVarsUnselected() override {
     // Modifies(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: ModifiesS cannot have identical args\n";
@@ -114,47 +117,44 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
 
     auto all_left_designentities = QueryManager::getSelect(pkb, left_arg_de);
     auto all_right_designentities = QueryManager::getSelect(pkb, right_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto left_de : all_left_designentities) {
       for (auto right_de : all_right_designentities) {
         // Any satisfied relation would mean this clause is true overall
         if (pkb->isLineModifiesVar(left_de, right_de)) {
-          return true;
+          results.insert({left_de, right_de});
         }
       }
     }
-    return false;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
   }
-  BoolOrStrings handleLeftVarUnselectedRightBasic() override {
+  AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() override {
     // Modifies(s1, "x")
-    return pkb->getLineModifiesVar(*arg2AsBasic).has_value();
+    return handleLeftVarSelectedRightBasic();
   }
-  BoolOrStrings handleRightVarUnselectedLeftBasic() override {
+  AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() override {
     // Modifies(3, v1)
-    return pkb->getVarModifiedByLine(*arg1AsBasic).has_value();
+    return handleRightVarSelectedLeftBasic();
   }
 
   // Unlikely that these last 4 will need to be changed
-  BoolOrStrings handleLeftBasicRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftBasicRightUnderscore() override {
     // Modifies(3, _)
-    return handleRightVarUnselectedLeftBasic();
+    return pkb->getVarModifiedByLine(*arg1AsBasic).has_value();
   }
-  BoolOrStrings handleRightBasicLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightBasicLeftUnderscore() override {
     // Modifies(_, "x")
-    return handleLeftVarUnselectedRightBasic();
+    return pkb->getLineModifiesVar(*arg2AsBasic).has_value();
   }
-  BoolOrStrings handleLeftVarUnselectedRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() override {
     // Modifies*(s1, _) --> is there a statement that modifies anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return !std::get<std::vector<std::string>>(
-                handleLeftVarSelectedRightUnderscore())
-                .empty();
+    return handleLeftVarSelectedRightUnderscore();
   }
-  BoolOrStrings handleRightVarUnselectedLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() override {
     // Modifies*(_, v1) --> is there a variable that is modified?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return !std::get<std::vector<std::string>>(
-                handleRightVarSelectedLeftUnderscore())
-                .empty();
+    return handleRightVarSelectedLeftUnderscore();
   }
 };

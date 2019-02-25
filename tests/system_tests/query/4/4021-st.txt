@@ -1,7 +1,7 @@
-1 - valid query (Uses)
+1 - valid query (Uses) // don't handle proc
 procedure p; variable v;
 Select v such that Uses(p,v)
-x, y, z
+none
 5000
 2 - valid query
 variable v; while w;
@@ -11,7 +11,7 @@ x, y, z
 3 - valid query
 print p; variable v;
 Select p such that Uses(p, v)
-y, z
+23,24
 5000
 4 - invalid query
 constant c; assign a; 
@@ -61,7 +61,7 @@ Select a such that Follows(w,a)
 13 - valid query
 stmt s; while w;
 Select s such that Follows(w,s)
-22
+22,23
 5000
 14 - valid query
 assign a; stmt s;

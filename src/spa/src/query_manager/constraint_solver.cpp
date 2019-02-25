@@ -12,12 +12,23 @@ const std::string ConstraintSolver::DUMMY_SYNONYM = "@";
 
 AllowedValuesPair ConstraintSolver::makeAllowedValues(
     Synonym& syn, std::vector<std::string>& vals) {
-  SynonymPair syn_pair = std::make_pair(syn.synonym, DUMMY_SYNONYM);
+  return makeAllowedValues(syn.synonym, vals);
+}
+
+AllowedValuesPair ConstraintSolver::makeAllowedValues(
+    std::string& syn, std::vector<std::string>& vals) {
+  SynonymPair syn_pair = std::make_pair(syn, DUMMY_SYNONYM);
   AllowedValueSet allowed_values;
   for (auto val : vals) {
     allowed_values.insert(std::make_pair(val, DUMMY_SYNONYM));
   }
   return std::make_pair(syn_pair, allowed_values);
+}
+
+AllowedValuesPair ConstraintSolver::makeAllowedValues(Synonym& s1, Synonym& s2,
+                                                      AllowedValueSet& avs) {
+  SynonymPair syn_pair = std::make_pair(s1.synonym, s2.synonym);
+  return std::make_pair(syn_pair, avs);
 }
 
 std::string ConstraintSolver::getStringPairAsString(
@@ -34,12 +45,6 @@ void ConstraintSolver::printAllowedValuesPair(AllowedValuesPair& avp) {
   }
 
   std::cout << "\n";
-}
-
-AllowedValuesPair ConstraintSolver::makeAllowedValues(Synonym& s1, Synonym& s2,
-                                                      AllowedValueSet& avs) {
-  SynonymPair syn_pair = std::make_pair(s1.synonym, s2.synonym);
-  return std::make_pair(syn_pair, avs);
 }
 
 //! Actually constrain the set of values and select the synonym indicated

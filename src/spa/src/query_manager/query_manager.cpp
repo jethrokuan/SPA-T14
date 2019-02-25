@@ -28,6 +28,7 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
   // If either clause doesn't exist, don't constrain
   AllowedValuesPairOrBool such_that_result = {true};
   AllowedValuesPairOrBool pattern_result = {true};
+  AllowedValuesList allowed_values;
 
   if (query->such_that) {
     // Handle such_thats that return a simple boolean value
@@ -40,39 +41,38 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
   }
 
   // Check if an early return is necessary
-  if (auto bool_result = std::get_if<bool>(&such_that_result)) {
-    if (!*bool_result) {
+  if (auto such_that_bool_result = std::get_if<bool>(&such_that_result)) {
+    if (!*such_that_bool_result) {
       return std::vector<std::string>();
-    } else {
-      // TODO: FOR PATTERN If true, do nothing til later
-      return getSelect(pkb, query->selected_declaration->getDesignEntity());
-    }
-  } else if (auto constrain_result =
+    }  // Nothing to do if true - handle later
+  } else if (auto such_that_constrain_result =
                  std::get_if<AllowedValuesPair>(&such_that_result)) {
     // This only works now - check for empty allowed list and return immediately
     // if so. Works because a constraint list indicates at least one variable
-    // was selected
-    if (constrain_result->second.empty()) {
+    // was selected - else it would be a `false` value
+    if (such_that_constrain_result->second.empty()) {
       return std::vector<std::string>();
     }
+    // Add it to constraints
+    allowed_values.push_back(*such_that_constrain_result);
   }
 
   // Evaluate pattern results if they exist
-
-  // Evaluate final results (TODO: pattern - now just use such that)
-  if (auto such_that_constraint =
-          std::get_if<AllowedValuesPair>(&such_that_result)) {
-    auto select_allowed =
-        getSelect(pkb, query->selected_declaration->getDesignEntity());
-    auto select_synonym = query->selected_declaration->getSynonym();
-    auto select_constraint =
-        ConstraintSolver::makeAllowedValues(select_synonym, select_allowed);
-    return ConstraintSolver::constrainAndSelect(
-        {select_constraint, *such_that_constraint},
-        query->selected_declaration->getSynonym().synonym);
+  if (query->pattern) {
+    pattern_result = handlePattern(query);
+    allowed_values.push_back(std::get<AllowedValuesPair>(pattern_result));
   }
-  // TODO: HANDLE PATTERN
-  return std::vector<std::string>();
+
+  // Add select to the list of constraints
+  auto select_allowed =
+      getSelect(pkb, query->selected_declaration->getDesignEntity());
+  auto select_synonym = query->selected_declaration->getSynonym();
+  auto select_constraint =
+      ConstraintSolver::makeAllowedValues(select_synonym, select_allowed);
+  allowed_values.push_back(select_constraint);
+
+  return ConstraintSolver::constrainAndSelect(
+      allowed_values, query->selected_declaration->getSynonym().synonym);
 }
 
 std::vector<std::string> QueryManager::getSelect(PKBManager* pkb,
@@ -149,4 +149,54 @@ AllowedValuesPairOrBool QueryManager::handleNonBooleanSuchThat(Query* query) {
     default:
       assert(false);
   }
+}
+
+AllowedValuesPairOrBool QueryManager::handlePattern(Query* query) {
+  // TODO: This doesn't handle cases with LHS of pattern being a synonyn
+  // Need a PKB interface for it
+  auto pattern = query->pattern;
+  auto pattern_syn = pattern->getSynonym();
+  auto pattern_lhs = pattern->getFirstArg();
+  auto pattern_rhs = pattern->getSecondArg();
+  // pattern-cl : ‘pattern’ syn-assign ‘(‘ entRef ‘,’ expression-spec ’)’
+  // entRef : synonym | ‘_’ | ‘"’ IDENT ‘"’
+  // expression-spec : ‘"‘ expr’"’ | ‘_’ ‘"’ expr ‘"’ ‘_’ | ‘_’
+
+  // Clearly: 6 possible cases (cross product of entRef and expression-spec)
+  // Match on entRef
+  if (std::get_if<Underscore>(&pattern_lhs)) {
+    return handlePatternLHSUnderscore(query, pattern_syn, pattern_rhs);
+  } else if (std::get_if<QuoteIdent>(&pattern_lhs)) {
+    return handlePatternLHSQuoteIdent(query, pattern_syn, pattern_rhs);
+  } else if (std::get_if<Synonym>(&pattern_lhs)) {
+    assert(false);
+  } else {
+    assert(false);
+  }
+}
+
+AllowedValuesPairOrBool QueryManager::handlePatternLHSUnderscore(
+    Query* query, Synonym& syn, ExpressionSpec& pattern_rhs) {
+  // pattern a (_, <...>)
+  if (std::get_if<Underscore>(&pattern_rhs)) {
+    // pattern a (_, _) --> all assignments
+    auto all_assigns = getSelect(pkb, DesignEntity::ASSIGN);
+    return ConstraintSolver::makeAllowedValues(syn, all_assigns);
+  } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
+    // pattern a (_, _"x + y"_) --> partial match, no var constraint
+    std::ostringstream stream;
+    stream << *duf;
+    auto matching_assigns = pkb->getPartialMatchLines(stream.str())
+                                .value_or(std::vector<std::string>());
+
+    return ConstraintSolver::makeAllowedValues(syn, matching_assigns);
+  } else {
+    // nothing else allowed for now
+    assert(false);
+  }
+}
+
+AllowedValuesPairOrBool QueryManager::handlePatternLHSQuoteIdent(
+    Query* query, Synonym& syn, ExpressionSpec& pattern_rhs) {
+  return false;
 }

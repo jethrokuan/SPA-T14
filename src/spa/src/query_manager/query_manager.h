@@ -1,12 +1,13 @@
 #pragma once
 #include <optional>
+#include <set>
 #include <string>
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_evaluator/pql/pql.h"
+#include "query_manager/constraint_solver.h"
 
 using namespace PKB;
-using BoolOrStrings = std::variant<bool, std::vector<std::string>>;
 
 class QueryManager {
  private:
@@ -20,7 +21,7 @@ class QueryManager {
   //! Evaluates the SuchThat clause as a boolean
   bool isBooleanSuchThatTrue(QE::SuchThat*);
   //! Evaluates SuchThat clauses that don't return a simple boolean
-  BoolOrStrings handleNonBooleanSuchThat(QE::Query*);
+  AllowedValuesPair handleNonBooleanSuchThat(QE::Query*);
 
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};

@@ -18,17 +18,17 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
 
   // Handle cases with at least one variable selected
 
-  BoolOrStrings handleLeftVarSelectedRightBasic() override {
+  AllowedValuesPair handleLeftVarSelectedRightBasic() override {
     // Modifies(s, "x")
     return pkb->getLineModifiesVar(*arg2AsBasic)
         .value_or(std::vector<std::string>());
   }
-  BoolOrStrings handleRightVarSelectedLeftBasic() override {
+  AllowedValuesPair handleRightVarSelectedLeftBasic() override {
     // Modifies(3, v)
     return pkb->getVarModifiedByLine(*arg1AsBasic)
         .value_or(std::vector<std::string>());
   }
-  BoolOrStrings handleLeftVarSelectedRightUnderscore() override {
+  AllowedValuesPair handleLeftVarSelectedRightUnderscore() override {
     // Modifies(s, _)
     // Note that this should select all whiles and ifs
     auto all_selected_designentities = QueryManager::getSelect(
@@ -41,11 +41,11 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
     }
     return results;
   }
-  BoolOrStrings handleRightVarSelectedLeftUnderscore() override {
+  AllowedValuesPair handleRightVarSelectedLeftUnderscore() override {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
     assert(false);
   }
-  BoolOrStrings handleLeftVarSelectedRightVarUnselected() override {
+  AllowedValuesPair handleLeftVarSelectedRightVarUnselected() override {
     // Modifies*(s, v)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: ModifiesS cannot have identical args\n";
@@ -69,7 +69,7 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
     }
     return results;
   }
-  BoolOrStrings handleRightVarSelectedLeftVarUnselected() override {
+  AllowedValuesPair handleRightVarSelectedLeftVarUnselected() override {
     // Modifies(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: ModifiesS cannot have identical args\n";
@@ -96,10 +96,10 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
 
   // Handle cases with no variables selected
 
-  BoolOrStrings handleDoubleUnderscore() override {
+  AllowedValuesPair handleDoubleUnderscore() override {
     return !pkb->isLineModifiesVarSetEmpty();
   }
-  BoolOrStrings handleBothVarsUnselected() override {
+  AllowedValuesPair handleBothVarsUnselected() override {
     // Modifies(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: ModifiesS cannot have identical args\n";
@@ -125,32 +125,32 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
     }
     return false;
   }
-  BoolOrStrings handleLeftVarUnselectedRightBasic() override {
+  AllowedValuesPair handleLeftVarUnselectedRightBasic() override {
     // Modifies(s1, "x")
     return pkb->getLineModifiesVar(*arg2AsBasic).has_value();
   }
-  BoolOrStrings handleRightVarUnselectedLeftBasic() override {
+  AllowedValuesPair handleRightVarUnselectedLeftBasic() override {
     // Modifies(3, v1)
     return pkb->getVarModifiedByLine(*arg1AsBasic).has_value();
   }
 
   // Unlikely that these last 4 will need to be changed
-  BoolOrStrings handleLeftBasicRightUnderscore() override {
+  AllowedValuesPair handleLeftBasicRightUnderscore() override {
     // Modifies(3, _)
     return handleRightVarUnselectedLeftBasic();
   }
-  BoolOrStrings handleRightBasicLeftUnderscore() override {
+  AllowedValuesPair handleRightBasicLeftUnderscore() override {
     // Modifies(_, "x")
     return handleLeftVarUnselectedRightBasic();
   }
-  BoolOrStrings handleLeftVarUnselectedRightUnderscore() override {
+  AllowedValuesPair handleLeftVarUnselectedRightUnderscore() override {
     // Modifies*(s1, _) --> is there a statement that modifies anything?
     // Reuse the left-var selected results until an optimized PKB query can help
     return !std::get<std::vector<std::string>>(
                 handleLeftVarSelectedRightUnderscore())
                 .empty();
   }
-  BoolOrStrings handleRightVarUnselectedLeftUnderscore() override {
+  AllowedValuesPair handleRightVarUnselectedLeftUnderscore() override {
     // Modifies*(_, v1) --> is there a variable that is modified?
     // Reuse the left-var selected results until an optimized PKB query can help
     return !std::get<std::vector<std::string>>(

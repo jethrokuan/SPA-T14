@@ -18,23 +18,26 @@ class ParentEvaluator : public SuchThatEvaluator {
 
   // Handle cases with at least one variable selected
 
-  AllowedValuesPair handleLeftVarSelectedRightBasic() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() override {
     // Parent(s, 3)
-    if (auto parentLine = pkb->getParentLine(*arg2AsBasic)) {
-      return std::vector<std::string>{*parentLine};
+    if (auto beforeLine = pkb->getParentLine(*arg2AsBasic)) {
+      auto results = std::vector<std::string>{*beforeLine};
+      return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
     } else {
-      return std::vector<std::string>();
+      auto results = std::vector<std::string>{};
+      return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
     }
   }
-  AllowedValuesPair handleRightVarSelectedLeftBasic() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() override {
     // Parent(3, s)
-    if (auto childLines = pkb->getChildLine(*arg1AsBasic)) {
-      return *childLines;
+    if (auto afterLines = pkb->getChildLine(*arg1AsBasic)) {
+      return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, *afterLines);
     } else {
-      return std::vector<std::string>();
+      auto results = std::vector<std::string>{};
+      return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
     }
   }
-  AllowedValuesPair handleLeftVarSelectedRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() override {
     // Parent(s, _)
     // Note that this should select all whiles and ifs
     auto all_selected_designentities = QueryManager::getSelect(
@@ -45,9 +48,9 @@ class ParentEvaluator : public SuchThatEvaluator {
         results.push_back(de);
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
   }
-  AllowedValuesPair handleRightVarSelectedLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() override {
     // Parent(_, s)
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -57,13 +60,13 @@ class ParentEvaluator : public SuchThatEvaluator {
         results.push_back(de);
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
   }
-  AllowedValuesPair handleLeftVarSelectedRightVarUnselected() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() override {
     // Parent(s, s1)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot be a parent of yourself
-      return std::vector<std::string>();
+      return ConstraintSolver::makeEmptyAllowedValuesPair();
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -72,22 +75,22 @@ class ParentEvaluator : public SuchThatEvaluator {
                             ->getDesignEntity();
     auto all_unselected_designentities =
         QueryManager::getSelect(pkb, right_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineParentLine(de, unselect_de) &&
-            std::find(results.begin(), results.end(), de) == results.end()) {
-          results.push_back(de);
+        if (pkb->isLineParentLine(de, unselect_de)) {
+          results.insert({de, unselect_de});
         }
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
   }
-  AllowedValuesPair handleRightVarSelectedLeftVarUnselected() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() override {
     // Parent(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot parent yourself
-      return std::vector<std::string>();
+      return ConstraintSolver::makeEmptyAllowedValuesPair();
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -96,28 +99,28 @@ class ParentEvaluator : public SuchThatEvaluator {
                            ->getDesignEntity();
     auto all_unselected_designentities =
         QueryManager::getSelect(pkb, left_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineParentLine(unselect_de, de) &&
-            std::find(results.begin(), results.end(), de) == results.end()) {
-          results.push_back(de);
+        if (pkb->isLineParentLine(unselect_de, de)) {
+          results.insert({unselect_de, de});
         }
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
   }
 
   // Handle cases with no variables selected
 
-  AllowedValuesPair handleDoubleUnderscore() override {
+  AllowedValuesPairOrBool handleDoubleUnderscore() override {
     return !pkb->isLineParentLineSetEmpty();
   }
-  AllowedValuesPair handleBothVarsUnselected() override {
+  AllowedValuesPairOrBool handleBothVarsUnselected() override {
     // Parent(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot parent yourself (hyuk)
-      return false;
+      return ConstraintSolver::makeEmptyAllowedValuesPair();
     }
     auto left_arg_de = Declaration::findDeclarationForSynonym(
                            query->declarations, *arg1AsSynonym)
@@ -128,46 +131,44 @@ class ParentEvaluator : public SuchThatEvaluator {
 
     auto all_left_designentities = QueryManager::getSelect(pkb, left_arg_de);
     auto all_right_designentities = QueryManager::getSelect(pkb, right_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto left_de : all_left_designentities) {
       for (auto right_de : all_right_designentities) {
         // Any satisfied relation would mean this clause is true overall
         if (pkb->isLineParentLine(left_de, right_de)) {
-          return true;
+          results.insert({left_de, right_de});
         }
       }
     }
-    return false;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
   }
-  AllowedValuesPair handleLeftVarUnselectedRightBasic() override {
+  AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() override {
     // Parent(s1, 3)
-    return pkb->getParentLine(*arg2AsBasic).has_value();
+
+    return handleLeftVarSelectedRightBasic();
   }
-  AllowedValuesPair handleRightVarUnselectedLeftBasic() override {
+  AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() override {
     // Parent(3, s1)
-    return pkb->getChildLine(*arg1AsBasic).has_value();
+    return handleRightVarSelectedLeftBasic();
   }
 
-  AllowedValuesPair handleLeftBasicRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftBasicRightUnderscore() override {
     // Parent(3, _)
-    return handleRightVarUnselectedLeftBasic();
+    return pkb->getChildLine(*arg1AsBasic).has_value();
   }
-  AllowedValuesPair handleRightBasicLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightBasicLeftUnderscore() override {
     // Parent(_, 3)
-    return handleLeftVarUnselectedRightBasic();
+    return pkb->getParentLine(*arg2AsBasic).has_value();
   }
-  AllowedValuesPair handleLeftVarUnselectedRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() override {
     // Parent(s1, _) --> is there a statement that is a parent of anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return !std::get<std::vector<std::string>>(
-                handleLeftVarSelectedRightUnderscore())
-                .empty();
+    return handleLeftVarSelectedRightUnderscore();
   }
-  AllowedValuesPair handleRightVarUnselectedLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() override {
     // Parent(_, s1) --> is there a statement that is a child of anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return !std::get<std::vector<std::string>>(
-                handleRightVarSelectedLeftUnderscore())
-                .empty();
+    return handleRightVarSelectedLeftUnderscore();
   }
 };

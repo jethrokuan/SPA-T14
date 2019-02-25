@@ -48,6 +48,10 @@ class ConstraintSolver {
                           std::set<AllowedValue>());
   }
 
+  //! Version that does not require a Synonym object, just the string
+  static AllowedValuesPair makeAllowedValues(std::string& syn,
+                                             std::vector<std::string>& vals);
+
   //! Creates a list of allowed values for a single synonym
   static AllowedValuesPair makeAllowedValues(Synonym&,
                                              std::vector<std::string>&);

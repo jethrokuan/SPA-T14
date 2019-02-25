@@ -19,8 +19,12 @@ class QueryManager {
   bool isBooleanSuchThat(QE::SuchThat*);
   //! Evaluates the SuchThat clause as a boolean
   bool isBooleanSuchThatTrue(QE::SuchThat*);
+  //! Evaluates SuchThat clauses that definitely return a boolean
+  BoolOrStrings handleBooleanSuchThat(QE::Query*);
   //! Evaluates SuchThat clauses that don't return a simple boolean
   BoolOrStrings handleNonBooleanSuchThat(QE::Query*);
+  //! Evaluates Pattern clauses
+  BoolOrStrings handlePattern(QE::Query*);
 
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};

@@ -1,6 +1,9 @@
 #!/bin/bash
 # Run Autotester on System Tests
 
+
+# CREATE THE OUTPUT DIRECTORY
+mkdir -p tests/system_tests/output
 # RUN TESTS FOR SIMPLE SOURCE 1: BASIC SOURCE
 
 # Tests without patterns

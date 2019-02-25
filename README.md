@@ -22,6 +22,10 @@ This project is **incompatible** with GCC8
 ## Contributing Guidelines
 Please read [the Contribution Guidelines](./CONTRIBUTING.md) when formatting your pull request.
 
+## Running System Tests With Autotester
+`runtests.sh` is included in the root folder to run the various system tests through autotester. 
+The autotester output will be created in `\tests\system_tests\output`.
+
 ## Generating documentation
 1. Run `doxygen` in the root project folder. 
 2. Documentation should be generated in `doxygen-docs`.

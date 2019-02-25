@@ -1,0 +1,459 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>SPA</name><parsing_time_taken>14.344000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="Covers all Design Entities, 1 synonym, 1 clause (USES)">1</id><querystr><![CDATA[procedure p; Select p such that Uses(p, "v")]]></querystr>
+<stuans></stuans>
+<correct>main</correct>
+<time_taken>0.777000</time_taken>
+<failed>
+<missing>main</missing>
+<additional></additional>
+<summary>
+<expected>1</expected>
+<matched>0</matched>
+<missing>1</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" >2</id><querystr><![CDATA[stmt s; Select s such that Uses(s, "v1")]]></querystr>
+<stuans></stuans>
+<correct>87,124,157,184,24,45,54,79,103,149,169,16,32,71,95,114,133,37,141,160,82,119,152,179,19,40,49,74,98,144,164,11,27,66,90,109,128,83,120,153,180,20,41,50,75,99,145,165,12,28,67,91,110,129,84,121,154,181,21,42,51,76,100,146,166,13,29,68,92,111,130,85,122,155,182,22,43,52,77,101,147,167,14,30,69,93,112,131,86,123,156,183,23,44,53,78,102,148,168,15,31,70,94,113,132</correct>
+<time_taken>0.665000</time_taken>
+<failed>
+<missing>100,101,102,103,109,11,110,111,112,113,114,119,12,120,121,122,123,124,128,129,13,130,131,132,133,14,141,144,145,146,147,148,149,15,152,153,154,155,156,157,16,160,164,165,166,167,168,169,179,180,181,182,183,184,19,20,21,22,23,24,27,28,29,30,31,32,37,40,41,42,43,44,45,49,50,51,52,53,54,66,67,68,69,70,71,74,75,76,77,78,79,82,83,84,85,86,87,90,91,92,93,94,95,98,99</missing>
+<additional></additional>
+<summary>
+<expected>105</expected>
+<matched>0</matched>
+<missing>105</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid, because r is not used">3</id><querystr><![CDATA[read r; Select r such that Uses(r, "variable")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.685000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" >4</id><querystr><![CDATA[print p; Select p such that Uses(p, "v5")]]></querystr>
+<stuans></stuans>
+<correct>59,185,197,210</correct>
+<time_taken>0.611000</time_taken>
+<failed>
+<missing>185,197,210,59</missing>
+<additional></additional>
+<summary>
+<expected>4</expected>
+<matched>0</matched>
+<missing>4</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" >5</id><querystr><![CDATA[assign a; Select a such that Uses(a, "v1")]]></querystr>
+<stuans></stuans>
+<correct>87,124,157,184,24,45,54,79,103,149,169,16,32,71,95,114,133,37,141,160,82,119,152,179,19,40,49,74,98,144,164,11,27,66,90,109,128,83,120,153,180,20,41,50,75,99,145,165,12,28,67,91,110,129,84,121,154,181,21,42,51,76,100,146,166,13,29,68,92,111,130,85,122,155,182,22,43,52,77,101,147,167,14,30,69,93,112,131,86,123,156,183,23,44,53,78,102,148,168,15,31,70,94,113,132</correct>
+<time_taken>0.660000</time_taken>
+<failed>
+<missing>100,101,102,103,109,11,110,111,112,113,114,119,12,120,121,122,123,124,128,129,13,130,131,132,133,14,141,144,145,146,147,148,149,15,152,153,154,155,156,157,16,160,164,165,166,167,168,169,179,180,181,182,183,184,19,20,21,22,23,24,27,28,29,30,31,32,37,40,41,42,43,44,45,49,50,51,52,53,54,66,67,68,69,70,71,74,75,76,77,78,79,82,83,84,85,86,87,90,91,92,93,94,95,98,99</missing>
+<additional></additional>
+<summary>
+<expected>105</expected>
+<matched>0</matched>
+<missing>105</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" >6</id><querystr><![CDATA[while w; Select w such that Uses(w, "v1")]]></querystr>
+<stuans></stuans>
+<correct>80,117,150,177,17,38,47,72,96,142,162,9,25,64,88,107,126</correct>
+<time_taken>0.634000</time_taken>
+<failed>
+<missing>107,117,126,142,150,162,17,177,25,38,47,64,72,80,88,9,96</missing>
+<additional></additional>
+<summary>
+<expected>17</expected>
+<matched>0</matched>
+<missing>17</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" >7</id><querystr><![CDATA[if i; Select i such that Uses(i, "v1")]]></querystr>
+<stuans></stuans>
+<correct>36,140,159,55,173,190,104,136,170,194,202,33,115,134,57,175,192,61,187,199</correct>
+<time_taken>0.607000</time_taken>
+<failed>
+<missing>104,115,134,136,140,159,170,173,175,187,190,192,194,199,202,33,36,55,57,61</missing>
+<additional></additional>
+<summary>
+<expected>20</expected>
+<matched>0</matched>
+<missing>20</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" >8</id><querystr><![CDATA[variable v; Select v]]></querystr>
+<stuans>v,v1,v2,v3,v4,v5</stuans>
+<correct>v,v1,v2,v3,v4,v5</correct>
+<time_taken>0.700000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Covers all Design Entities, 1 synonym, 1 clause (MODIFIES)">9</id><querystr><![CDATA[procedure p; Select p such that Modifies(p, "v1")]]></querystr>
+<stuans></stuans>
+<correct>main</correct>
+<time_taken>0.608000</time_taken>
+<failed>
+<missing>main</missing>
+<additional></additional>
+<summary>
+<expected>1</expected>
+<matched>0</matched>
+<missing>1</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" >10</id><querystr><![CDATA[stmt s; Select s such that Modifies(s, "v1")]]></querystr>
+<stuans></stuans>
+<correct>87,124,157,184,24,45,54,79,103,149,169,16,32,71,95,114,133</correct>
+<time_taken>0.607000</time_taken>
+<failed>
+<missing>103,114,124,133,149,157,16,169,184,24,32,45,54,71,79,87,95</missing>
+<additional></additional>
+<summary>
+<expected>17</expected>
+<matched>0</matched>
+<missing>17</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" >11</id><querystr><![CDATA[read r; Select r such that Modifies(r, "v")]]></querystr>
+<stuans></stuans>
+<correct>1</correct>
+<time_taken>0.606000</time_taken>
+<failed>
+<missing>1</missing>
+<additional></additional>
+<summary>
+<expected>1</expected>
+<matched>0</matched>
+<missing>1</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid">12</id><querystr><![CDATA[print p; Select p such that Modifies(p, "variable")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.595000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" >13</id><querystr><![CDATA[assign a; Select a such that Modifies(a, "v1")]]></querystr>
+<stuans></stuans>
+<correct>87,124,157,184,24,45,54,79,103,149,169,16,32,71,95,114,133</correct>
+<time_taken>0.597000</time_taken>
+<failed>
+<missing>103,114,124,133,149,157,16,169,184,24,32,45,54,71,79,87,95</missing>
+<additional></additional>
+<summary>
+<expected>17</expected>
+<matched>0</matched>
+<missing>17</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" >14</id><querystr><![CDATA[while w; Select w such that Modifies(w, "v1")]]></querystr>
+<stuans></stuans>
+<correct>16,24,32,45,54,71,79,87,95,103,114,124,133,149,157,169,184</correct>
+<time_taken>0.621000</time_taken>
+<failed>
+<missing>103,114,124,133,149,157,16,169,184,24,32,45,54,71,79,87,95</missing>
+<additional></additional>
+<summary>
+<expected>17</expected>
+<matched>0</matched>
+<missing>17</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" >15</id><querystr><![CDATA[if i; Select i such that Modifies(i, "v1")]]></querystr>
+<stuans></stuans>
+<correct>45,54,124,149,157,169,184</correct>
+<time_taken>0.593000</time_taken>
+<failed>
+<missing>124,149,157,169,184,45,54</missing>
+<additional></additional>
+<summary>
+<expected>7</expected>
+<matched>0</matched>
+<missing>7</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="Covers all Design Entities, 1 synonym, 1 clause (FOLLOWS) invalid, follows takes in stmt">16</id><querystr><![CDATA[procedure p; Select p such that Follows(1,p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.612000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" >17</id><querystr><![CDATA[stmt s; Select s such that Follows(1,s)]]></querystr>
+<stuans>2</stuans>
+<correct>2</correct>
+<time_taken>0.963000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" >18</id><querystr><![CDATA[read r; Select r such that Follows(1,r)]]></querystr>
+<stuans>2</stuans>
+<correct>2</correct>
+<time_taken>0.726000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" >19</id><querystr><![CDATA[print p; Select p such that Follows(1,p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.778000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" >20</id><querystr><![CDATA[assign a; Select a such that Follows(1,a)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.886000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" >21</id><querystr><![CDATA[call c; Select c such that Follows(1,c)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.707000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" >22</id><querystr><![CDATA[while w; Select w such that Follows(1,w)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.727000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" >23</id><querystr><![CDATA[if i; Select i such that Follows(1,i)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.737000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid, follows takes in stmt">24</id><querystr><![CDATA[variable v; Select v such that Follows(1,v)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.714000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid, follows takes in stmt">25</id><querystr><![CDATA[constant c; Select c such that Follows(1,c)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.706000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Covers all Design Entities, 1 synonym, 1 clause (FOLLOWS*) invalid, follows takes in stmt">26</id><querystr><![CDATA[procedure p; Select p such that Follows*(1,p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.764000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" >27</id><querystr><![CDATA[stmt s; Select s such that Follows*(1,s)]]></querystr>
+<stuans>107,126,140,159,173,190,2,205,206,207,208,209,210,25,3,36,4,5,55,6,64,7,8,88,9</stuans>
+<correct>2,3,4,5,6,7,8,9,25,36,55,64,88,107,126,140,159,173,190,205,206,207,208,209,210</correct>
+<time_taken>1.210000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" >28</id><querystr><![CDATA[read r; Select r such that Follows*(1,r)]]></querystr>
+<stuans>2,3,4,5,6</stuans>
+<correct>2,3,4,5,6</correct>
+<time_taken>0.799000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" >29</id><querystr><![CDATA[print p; Select p such that Follows*(1,p)]]></querystr>
+<stuans>205,206,207,208,209,210,7,8</stuans>
+<correct>7,8,205,206,207,208,209,210</correct>
+<time_taken>0.865000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" >30</id><querystr><![CDATA[assign a; Select a such that Follows*(1,a)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.942000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" >31</id><querystr><![CDATA[call c; Select c such that Follows*(1,c)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.736000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" >32</id><querystr><![CDATA[while w; Select w such that Follows*(1,w)]]></querystr>
+<stuans>107,126,25,64,88,9</stuans>
+<correct>9,25,64,88,107,126</correct>
+<time_taken>0.819000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" >33</id><querystr><![CDATA[if i; Select i such that Follows*(1,i)]]></querystr>
+<stuans>140,159,173,190,36,55</stuans>
+<correct>36,55,140,159,173,190</correct>
+<time_taken>0.797000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="Covers all Design Entities, 1 synonym, 1 clause (PARENT)">34</id><querystr><![CDATA[stmt s; Select s such that Parent(9, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17</stuans>
+<correct>10,11,12,13,14,15,16,17</correct>
+<time_taken>1.099000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" >35</id><querystr><![CDATA[read r; Select r such that Parent(1, r)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.593000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" >36</id><querystr><![CDATA[print p; Select p such that Parent(33, p)]]></querystr>
+<stuans>34,35</stuans>
+<correct>34,35</correct>
+<time_taken>0.698000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" >37</id><querystr><![CDATA[assign a; Select a such that Parent(9, a)]]></querystr>
+<stuans>10,11,12,13,14,15,16</stuans>
+<correct>10,11,12,13,14,15,16</correct>
+<time_taken>0.784000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" >38</id><querystr><![CDATA[call c; Select c such that Parent(1, c)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.563000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" >39</id><querystr><![CDATA[while w; Select w such that Parent(64, w)]]></querystr>
+<stuans>72</stuans>
+<correct>72</correct>
+<time_taken>0.602000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" >40</id><querystr><![CDATA[if i; Select i such that Parent(25, i)]]></querystr>
+<stuans>33</stuans>
+<correct>33</correct>
+<time_taken>0.607000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid">41</id><querystr><![CDATA[variable v; Select v such that Parent(1, v)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.616000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="Covers all Design Entities, 1 synonym, 1 clause (PARENT*) invalid since Parent takes in two stmt">42</id><querystr><![CDATA[procedure p; Select p such that Parent*(1, p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.604000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" >43</id><querystr><![CDATA[stmt s; Select s such that Parent*(9, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</stuans>
+<correct>10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</correct>
+<time_taken>0.982000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" >44</id><querystr><![CDATA[read r; Select r such that Parent*(9, r)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.634000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" >45</id><querystr><![CDATA[print p; Select p such that Parent*(25, p)]]></querystr>
+<stuans>34,35</stuans>
+<correct>34,35</correct>
+<time_taken>0.678000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" >46</id><querystr><![CDATA[assign a; Select a such that Parent*(9, a)]]></querystr>
+<stuans>10,11,12,13,14,15,16,18,19,20,21,22,23,24</stuans>
+<correct>10,11,12,13,14,15,16,18,19,20,21,22,23,24</correct>
+<time_taken>0.819000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" >47</id><querystr><![CDATA[call c; Select c such that Parent*(1, c)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>0.621000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" >48</id><querystr><![CDATA[while w; Select w such that Parent*(64, w)]]></querystr>
+<stuans>72,80</stuans>
+<correct>72,80</correct>
+<time_taken>0.662000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" >49</id><querystr><![CDATA[if i; Select i such that Parent*(190, i)]]></querystr>
+<stuans>192,194,199,202</stuans>
+<correct>192,194,199,202</correct>
+<time_taken>0.664000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

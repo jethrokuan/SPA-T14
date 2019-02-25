@@ -1,0 +1,290 @@
+1 - Covers all Design Entities, 1 synonym, 1 clause (USES)
+procedure p;
+Select p such that Uses(p, "v")
+main
+5000
+2
+stmt s;
+Select s such that Uses(s, "v")
+10,38
+5000
+3 - invalid, because r is not used
+read r;
+Select r such that Uses(r, "v")
+none
+5000
+4
+print p;
+Select p such that Uses(p, "v")
+38
+5000
+5
+assign a;
+Select a such that Uses(a, "v")
+10
+5000
+6 - call is out of iteration 1 scope
+call c;
+Select c such that Uses(c, "variable")
+none
+5000
+7
+while w;
+Select w such that Uses(w, "v1")
+9
+5000
+8
+if i;
+Select i such that Uses(i, "v1")
+17,20,23
+5000
+9
+variable v;
+Select v
+v,v1,v2,v3,v4,v5
+5000
+10 - invalid?
+constant c;
+Select c
+1,0,100
+5000
+11 - Covers all Design Entities, 1 synonym, 1 clause (MODIFIES)
+procedure p;
+Select p such that Modifies(p, "variable")
+none
+5000
+12
+stmt s;
+Select s such that Modifies(s, "v")
+1,10
+5000
+13
+read r;
+Select r such that Modifies(r, "v")
+1
+5000
+14 - invalid, print does not modify
+print p;
+Select p such that Modifies(p, "variable")
+none
+5000
+15
+assign a;
+Select a such that Modifies(a, "v")
+10
+5000
+16 - no call statements
+call c;
+Select c such that Modifies(c, "variable")
+none
+5000
+17
+while w;
+Select w such that Modifies(w, "v")
+9
+5000
+18
+if i;
+Select i such that Modifies(i, "v2")
+20
+5000
+19 - Covers all Design Entities, 1 synonym, 1 clause (FOLLOWS), invalid, follows takes in stmt
+procedure p;
+Select p such that Follows(1,p)
+none
+5000
+20
+stmt s;
+Select s such that Follows(1,s)
+2
+5000
+21
+read r;
+Select r such that Follows(1,r)
+2
+5000
+22
+print p;
+Select p such that Follows(1,p)
+none
+5000
+23
+assign a;
+Select a such that Follows(1,a)
+none
+5000
+24
+call c;
+Select c such that Follows(1,c)
+none
+5000
+25
+while w;
+Select w such that Follows(1,w)
+none
+5000
+26
+if i;
+Select i such that Follows(1,i)
+none
+5000
+27 - invalid, follows takes in stmt
+variable v;
+Select v such that Follows(1,v)
+none
+5000
+28 - invalid, follows takes in stmt
+constant c;
+Select c such that Follows(1,c)
+none 
+5000
+29 - Covers all Design Entities, 1 synonym, 1 clause (FOLLOWS*), invalid, follows takes in stmt
+procedure p;
+Select p such that Follows*(1,p)
+none
+5000
+30
+stmt s;
+Select s such that Follows*(1,s)
+2,3,4,5,6,7,8,9,17,20,23,26,29,32,35,38,39,40,41,42,43
+5000
+31
+read r;
+Select r such that Follows*(1,r)
+2,3,4,5,6
+5000
+32
+print p;
+Select p such that Follows*(1,p)
+7,8,38,39,40,41,42,43
+5000
+33
+assign a;
+Select a such that Follows*(1,a)
+none
+5000
+34
+call c;
+Select c such that Follows*(1,c)
+none 
+5000
+35
+while w;
+Select w such that Follows*(1,w)
+9
+5000
+36
+if i;
+Select i such that Follows*(1,i)
+17,20,23,26,29,32,35
+5000
+37 - invalid, follows takes in stmt
+variable v;
+Select v such that Follows*(1,v)
+none 
+5000
+38 - invalid, follows takes in stmt
+constant c;
+Select c such that Follows*(1,c)
+none
+5000
+39 - Covers all Design Entities, 1 synonym, 1 clause (PARENT) invalid since Parent takes in two stmt
+procedure p;
+Select p such that Parent(1, p)
+none
+5000
+40
+stmt s;
+Select s such that Parent(1, s)
+none
+5000
+41
+read r;
+Select r such that Parent(1, r)
+none
+5000
+42
+print p;
+Select p such that Parent(1, p)
+none
+5000
+43
+assign a;
+Select a such that Parent(1, a)
+none
+5000
+44
+call c;
+Select c such that Parent(1, c)
+none
+5000
+45
+while w;
+Select w such that Parent(1, w)
+none
+5000
+46
+if i;
+Select i such that Parent(1, i)
+none
+5000
+47 - invalid since Parent takes in two stmt
+variable v;
+Select v such that Parent(1, v)
+none
+5000
+48 - invalid since Parent takes in two stmt
+constant c;
+Select c such that Parent(1, c)
+none
+5000
+49 - Covers all Design Entities, 1 synonym, 1 clause (PARENT*), invalid since Parent takes in two stmt
+procedure p;
+Select p such that Parent*(1, p)
+none
+5000
+50
+stmt s;
+Select s such that Parent*(9, s)
+10,11,12,13,14,15,16
+5000
+51
+read r;
+Select r such that Parent*(12, r)
+none
+5000
+52 - TO BE VERIFIED
+print p;
+Select p such that Parent*(17, p)
+18,19
+5000
+53
+assign a;
+Select a such that Parent*(9, a)
+10,11,12,13,14,15,16
+5000
+54
+call c;
+Select c such that Parent*(1, c)
+none
+5000
+55
+while w;
+Select w such that Parent*(1, w)
+none
+5000
+56
+if i;
+Select i such that Parent*(1, i)
+none
+5000
+57 - invalid since Parent takes in two stmt
+variable v;
+Select v such that Parent*(9, v)
+none
+5000
+58 - invalid since Parent takes in two stmt
+constant c;
+Select c such that Parent*(1, c)
+none 
+5000

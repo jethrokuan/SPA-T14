@@ -1,0 +1,330 @@
+1 - Covers all Design Entities, 1 synonym, 2 clause (pattern and USES)
+assign a;
+Select a such that pattern a(_, _) and such that Uses(a, "v1")
+11,12,13,14,15,16,21
+5000
+2 - invalid
+assign a;
+Select a such that pattern a(a, _) and such that Uses(a, "v1")
+none
+5000
+3
+assign a;
+Select a such that pattern a("v1", _) and such that Uses(a, "v1")
+16
+5000
+4
+assign a;
+Select a such that pattern a(_, "v1") and such that Uses(a, "v1")
+none
+5000
+5
+assign a;
+Select a such that pattern a(_, _"v1"_") and such that Uses(a, "v1")
+16
+5000
+6
+assign a;
+Select a such that pattern a(_, "v1+v2") and such that Uses(a, "v1")
+11
+5000
+7
+assign a;
+Select a such that pattern a(_, _"v1+v2"_) and such that Uses(a, "v1")
+11
+5000
+8
+assign a;
+Select a such that pattern a(_, _"v1*v2"_) and such that Uses(a, "v1")
+15
+5000
+9
+assign a;
+Select a such that pattern a(_, _"v1/v2"_) and such that Uses(a, "v1")
+12
+5000
+10
+assign a;
+Select a such that pattern a(_, _"v1-v2"_) and such that Uses(a, "v1")
+13
+5000
+11
+assign a;
+Select a such that pattern a(_, _"v1%v2"_) and such that Uses(a, "v1")
+14
+5000
+12 - Covers all Design Entities, 1 synonym, 2 clause (pattern and MODIFIES)
+assign a;
+Select a such that pattern a(_, _) and such that Modifies(a, "v1")
+16
+5000
+13 - invalid
+assign a;
+Select a such that pattern a(a, _) and such that Modifies(a, "v1")
+none
+5000
+14
+assign a;
+Select a such that pattern a("v1", _) and such that Modifies(a, "v1")
+16
+5000
+15
+assign a;
+Select a such that pattern a(_, "v1") and such that Modifies(a, "v1")
+none
+5000
+16
+assign a;
+Select a such that pattern a(_, _"v1"_") and such that Modifies(a, "v1")
+16
+5000
+17
+assign a;
+Select a such that pattern a(_, "v1+v2") and such that Modifies(a, "v2")
+11
+5000
+18
+assign a;
+Select a such that pattern a(_, _"v1+v2"_) and such that Modifies(a, "v1")
+none
+5000
+19
+assign a;
+Select a such that pattern a(_, _"v1*v2"_) and such that Modifies(a, "v1")
+none
+5000
+20
+assign a;
+Select a such that pattern a(_, _"v1/v2"_) and such that Modifies(a, "v3")
+12
+5000
+21
+assign a;
+Select a such that pattern a(_, _"v1-v2"_) and such that Modifies(a, "v1")
+none
+5000
+22
+assign a;
+Select a such that pattern a(_, _"v1%v2"_) and such that Modifies(a, "v1")
+none
+5000
+23 - Covers all Design Entities, 1 synonym, 2 clause (pattern and FOLLOWS)
+assign a;
+Select a such that pattern a(_, _) and such that Follows(10,a)
+11
+5000
+24
+assign a;
+Select a such that pattern a(a, _) and such that Follows(1,a)
+none
+5000
+25
+assign a;
+Select a such that pattern a("v1", _) and such that Follows(1,a)
+none
+5000
+26
+assign a;
+Select a such that pattern a(_, "v1") and such that Follows(1,a)
+none
+5000
+27
+assign a;
+Select a such that pattern a(_, _"v1"_") and such that Follows(12,a)
+13
+5000
+28
+assign a;
+Select a such that pattern a(_, "v1+v2") and such that Follows(10,a)
+11
+5000
+29
+assign a;
+Select a such that pattern a(_, _"v1+v2"_) and such that Follows(1,a)
+none
+5000
+30
+assign a;
+Select a such that pattern a(_, _"v1*v2"_) and such that Follows(1,a)
+none
+5000
+31
+assign a;
+Select a such that pattern a(_, _"v1/v2"_) and such that Follows(1,a)
+none
+5000
+32
+assign a;
+Select a such that pattern a(_, _"v1-v2"_) and such that Follows(1,a)
+none
+5000
+33
+assign a;
+Select a such that pattern a(_, _"v1%v2"_) and such that Follows(1,a)
+none
+5000
+34 - Covers all Design Entities, 1 synonym, 2 clause (pattern and FOLLOWS*)
+assign a;
+Select a such that pattern a(_, _) and such that Follows*(10,a)
+11,12,13,14,15,16
+5000
+35 - invalid
+assign a;
+Select a such that pattern a(a, _) and such that Follows*(1,a)
+none
+5000
+36
+assign a;
+Select a such that pattern a("v1", _) and such that Follows*(10,a)
+16
+5000
+37
+assign a;
+Select a such that pattern a(_, "v1") and such that Follows*(10,a)
+none
+5000
+38
+assign a;
+Select a such that pattern a(_, _"v1"_") and such that Follows*(10,a)
+11,12,13,14,15,16
+5000
+39
+assign a;
+Select a such that pattern a(_, "v1+v2") and such that Follows*(10,a)
+11
+5000
+40
+assign a;
+Select a such that pattern a(_, _"v1+v2"_) and such that Follows*(10,a)
+11
+5000
+41
+assign a;
+Select a such that pattern a(_, _"v1*v2"_) and such that Follows*(10,a)
+15
+5000
+42
+assign a;
+Select a such that pattern a(_, _"v1/v2"_) and such that Follows*(10,a)
+12
+5000
+43
+assign a;
+Select a such that pattern a(_, _"v1-v2"_) and such that Follows*(10,a)
+13
+5000
+44
+assign a;
+Select a such that pattern a(_, _"v1%v2"_) and such that Follows*(10,a)
+14
+5000
+45 - Covers all Design Entities, 1 synonym, 2 clause (pattern and Parent)
+assign a;
+Select a such that pattern a(_, _) and such that Parent(9,a)
+10,11,12,13,14,15,16
+5000
+46 - invalid
+assign a;
+Select a such that pattern a(a, _) and such that Parent(9,a)
+none
+5000
+47
+assign a;
+Select a such that pattern a("v1", _) and such that Parent(9,a)
+16
+5000
+48
+assign a;
+Select a such that pattern a(_, "v1") and such that Parent(9,a)
+none
+5000
+49
+assign a;
+Select a such that pattern a(_, _"v1"_") and such that Parent(9,a)
+11,12,13,14,15,16
+5000
+50
+assign a;
+Select a such that pattern a(_, "v1+v2") and such that Parent(9,a)
+11
+5000
+51
+assign a;
+Select a such that pattern a(_, _"v1+v2"_) and such that Parent(9,a)
+11
+5000
+52
+assign a;
+Select a such that pattern a(_, _"v1*v2"_) and such that Parent(9,a)
+15
+5000
+53
+assign a;
+Select a such that pattern a(_, _"v1/v2"_) and such that Parent(9,a)
+12
+5000
+54
+assign a;
+Select a such that pattern a(_, _"v1-v2"_) and such that Parent(9,a)
+13
+5000
+55
+assign a;
+Select a such that pattern a(_, _"v1%v2"_) and such that Parent(9,a)
+14
+5000
+56 - Covers all Design Entities, 1 synonym, 2 clause (pattern and Parent*)
+assign a;
+Select a such that pattern a(_, _) and such that Parent*(9,a)
+10,11,12,13,14,15,16
+5000
+57 - invalid
+assign a;
+Select a such that pattern a(a, _) and such that Parent*(9,a)
+none
+5000
+58
+assign a;
+Select a such that pattern a("v1", _) and such that Parent*(9,a)
+16
+5000
+59
+assign a;
+Select a such that pattern a(_, "v1") and such that Parent*(9,a)
+none
+5000
+60
+assign a;
+Select a such that pattern a(_, _"v1"_") and such that Parent*(9,a)
+11,12,13,14,15,16
+5000
+61
+assign a;
+Select a such that pattern a(_, "v1+v2") and such that Parent*(9,a)
+11
+5000
+62
+assign a;
+Select a such that pattern a(_, _"v1+v2"_) and such that Parent*(9,a)
+11
+5000
+63
+assign a;
+Select a such that pattern a(_, _"v1*v2"_) and such that Parent*(9,a)
+15
+5000
+64
+assign a;
+Select a such that pattern a(_, _"v1/v2"_) and such that Parent*(9,a)
+12
+5000
+65
+assign a;
+Select a such that pattern a(_, _"v1-v2"_) and such that Parent*(9,a)
+13
+5000
+66
+assign a;
+Select a such that pattern a(_, _"v1%v2"_) and such that Parent*(9,a)
+14
+5000

@@ -1,8 +1,6 @@
 #include "query_manager/constraint_solver.h"
 #include <algorithm>
-#include <boost/lexical_cast.hpp>
 #include <cassert>
-#include <functional>
 #include <iostream>
 #include <iterator>
 #include <list>
@@ -11,21 +9,6 @@
 #include <vector>
 
 const std::string ConstraintSolver::DUMMY_SYNONYM = "@";
-
-//! Powerful template to do functional-style map
-template <typename InType,
-          template <typename U, typename alloc = std::allocator<U>>
-          class InContainer,
-          template <typename V, typename alloc = std::allocator<V>>
-          class OutContainer = InContainer,
-          typename OutType = InType>
-OutContainer<OutType> mapf(const InContainer<InType>& input,
-                           std::function<OutType(const InType&)> func) {
-  OutContainer<OutType> output;
-  output.resize(input.size());
-  transform(input.begin(), input.end(), output.begin(), func);
-  return output;
-}
 
 AllowedValuesPair ConstraintSolver::makeAllowedValues(
     Synonym& syn, std::vector<std::string>& vals) {

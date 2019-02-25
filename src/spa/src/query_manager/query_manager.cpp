@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 //#include "query_manager/relations/FollowsEvaluator.h"
-//#include "query_manager/relations/FollowsTEvaluator.h"
+#include "query_manager/relations/FollowsTEvaluator.h"
 //#include "query_manager/relations/ModifiesSEvaluator.h"
 //#include "query_manager/relations/ParentEvaluator.h"
 //#include "query_manager/relations/ParentTEvaluator.h"
@@ -47,6 +47,13 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
       // This is a more complex such-that query, pass to individual handlers
       // We expect a vector of strings from each
       auto result = handleNonBooleanSuchThat(query);
+      if (auto bool_result = std::get_if<bool>(&result)) {
+        std::cout << "Such That Complex Boolean Result: " << std::boolalpha
+                  << *bool_result << "\n";
+      } else if (auto constrain_result =
+                     std::get_if<AllowedValuesPair>(&result)) {
+        ConstraintSolver::printAllowedValuesPair(*constrain_result);
+      }
     }
   }
   // TODO: HANDLE PATTERN
@@ -109,12 +116,11 @@ std::vector<std::string> QueryManager::getSelect(PKBManager* pkb,
   return std::vector<std::string>();
 }
 
-AllowedValuesPair QueryManager::handleNonBooleanSuchThat(Query* query) {
-  return ConstraintSolver::makeEmptyAllowedValuesPair();
-  /*
+AllowedValuesPairOrBool QueryManager::handleNonBooleanSuchThat(Query* query) {
   switch (query->such_that->getRelation()) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb).evaluate();
+      /*
     case Relation::ParentT:
       return ParentTEvaluator(query, pkb).evaluate();
     case Relation::ModifiesS:
@@ -126,8 +132,8 @@ AllowedValuesPair QueryManager::handleNonBooleanSuchThat(Query* query) {
     case Relation::Parent:
       return ParentEvaluator(query, pkb).evaluate();
       break;
+      */
     default:
       assert(false);
   }
-  */
 }

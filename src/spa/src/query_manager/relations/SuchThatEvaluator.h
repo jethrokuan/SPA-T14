@@ -27,11 +27,11 @@ class SuchThatEvaluator {
   std::optional<std::string> arg2AsBasic;
 
   //! Dispatches such that query to individual methods to handle it
-  AllowedValuesPair dispatch();
+  AllowedValuesPairOrBool dispatch();
 
-  AllowedValuesPair dispatchSuchThatSelected();
+  AllowedValuesPairOrBool dispatchSuchThatSelected();
 
-  AllowedValuesPair dispatchSuchThatNotSelected();
+  AllowedValuesPairOrBool dispatchSuchThatNotSelected();
 
  public:
   SuchThatEvaluator(Query* query, PKBManager* pkb)
@@ -39,27 +39,27 @@ class SuchThatEvaluator {
         pkb(pkb),
         arg1(query->such_that->getFirstArg()),
         arg2(query->such_that->getSecondArg()){};
-  AllowedValuesPair evaluate();
+  AllowedValuesPairOrBool evaluate();
 
   // These are the individual handler methods for each case
   // Read the .cpp file to see examples of each case
   // TODO: This really shouldn't be public
 
   // At least one variable is selected
-  virtual AllowedValuesPair handleLeftVarSelectedRightBasic() = 0;
-  virtual AllowedValuesPair handleRightVarSelectedLeftBasic() = 0;
-  virtual AllowedValuesPair handleLeftVarSelectedRightUnderscore() = 0;
-  virtual AllowedValuesPair handleRightVarSelectedLeftUnderscore() = 0;
-  virtual AllowedValuesPair handleLeftVarSelectedRightVarUnselected() = 0;
-  virtual AllowedValuesPair handleRightVarSelectedLeftVarUnselected() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() = 0;
 
   // No variable is selected
-  virtual AllowedValuesPair handleDoubleUnderscore() = 0;
-  virtual AllowedValuesPair handleBothVarsUnselected() = 0;
-  virtual AllowedValuesPair handleLeftVarUnselectedRightBasic() = 0;
-  virtual AllowedValuesPair handleRightVarUnselectedLeftBasic() = 0;
-  virtual AllowedValuesPair handleLeftBasicRightUnderscore() = 0;
-  virtual AllowedValuesPair handleRightBasicLeftUnderscore() = 0;
-  virtual AllowedValuesPair handleLeftVarUnselectedRightUnderscore() = 0;
-  virtual AllowedValuesPair handleRightVarUnselectedLeftUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleDoubleUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleBothVarsUnselected() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() = 0;
+  virtual AllowedValuesPairOrBool handleLeftBasicRightUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleRightBasicLeftUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() = 0;
+  virtual AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() = 0;
 };

@@ -9,6 +9,12 @@
 
 using namespace PKB;
 
+//! \brief Clauses can either return constraints or indicate no constraints
+//! bool == true ==> no constraints.
+//! bool == false or empty allowed pair ==> no valid results
+//! Otherwise, need to constrain other relevant values
+using AllowedValuesPairOrBool = std::variant<AllowedValuesPair, bool>;
+
 class QueryManager {
  private:
   PKBManager* pkb;
@@ -21,7 +27,7 @@ class QueryManager {
   //! Evaluates the SuchThat clause as a boolean
   bool isBooleanSuchThatTrue(QE::SuchThat*);
   //! Evaluates SuchThat clauses that don't return a simple boolean
-  AllowedValuesPair handleNonBooleanSuchThat(QE::Query*);
+  AllowedValuesPairOrBool handleNonBooleanSuchThat(QE::Query*);
 
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};

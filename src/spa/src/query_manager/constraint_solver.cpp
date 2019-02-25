@@ -31,3 +31,9 @@ void ConstraintSolver::printAllowedValuesPair(AllowedValuesPair& avp) {
 
   std::cout << "\n";
 }
+
+AllowedValuesPair ConstraintSolver::makeAllowedValues(Synonym& s1, Synonym& s2,
+                                                      AllowedValueSet& avs) {
+  SynonymPair syn_pair = std::make_pair(s1.synonym, s2.synonym);
+  return std::make_pair(syn_pair, avs);
+}

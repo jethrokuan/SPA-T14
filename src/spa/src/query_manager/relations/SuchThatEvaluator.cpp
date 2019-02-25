@@ -4,7 +4,7 @@
 #include <vector>
 #include "query_manager/query_manager.h"
 
-AllowedValuesPair SuchThatEvaluator::evaluate() {
+AllowedValuesPairOrBool SuchThatEvaluator::evaluate() {
   // Get all relevant variables so that further work with such_that can be
   // easily done
   // Get all relevant variables so that further work with such_that can be
@@ -33,7 +33,7 @@ AllowedValuesPair SuchThatEvaluator::evaluate() {
 }
 
 //! Calls the correct branch based on whether vars are selected or not
-AllowedValuesPair SuchThatEvaluator::dispatch() {
+AllowedValuesPairOrBool SuchThatEvaluator::dispatch() {
   if (arg1InSelect || arg2InSelect) {
     // At least one synonym in such_that is selected
     return dispatchSuchThatSelected();
@@ -48,7 +48,7 @@ AllowedValuesPair SuchThatEvaluator::dispatch() {
 // Follows(s, 3), Follows(3, s),
 // Follows(s, _), Follows(_, s)
 // Follows(s, p), Follows(p, s)
-AllowedValuesPair SuchThatEvaluator::dispatchSuchThatSelected() {
+AllowedValuesPairOrBool SuchThatEvaluator::dispatchSuchThatSelected() {
   if (arg1AsSynonym && arg1InSelect && arg2AsBasic) {
     // Case 1: Selected variable is in this such_that, left argument
     // Follows*(s, 3)
@@ -85,7 +85,7 @@ AllowedValuesPair SuchThatEvaluator::dispatchSuchThatSelected() {
 // Follows(_, _), Follows(s5, s6)
 // Follows(s5, 3), Follows(3, s5)
 // Follows(s5, _), Follows(_, s5)
-AllowedValuesPair SuchThatEvaluator::dispatchSuchThatNotSelected() {
+AllowedValuesPairOrBool SuchThatEvaluator::dispatchSuchThatNotSelected() {
   if (arg1IsUnderscore && arg2IsUnderscore) {
     // Case 7: Follows*(_, _)
     // TODO: Need to check PKB for existence of any follows relationships

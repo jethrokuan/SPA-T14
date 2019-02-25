@@ -29,9 +29,20 @@ class ConstraintSolver {
     return std::make_pair(std::make_pair(DUMMY_SYNONYM, DUMMY_SYNONYM),
                           std::set<AllowedValue>());
   }
+
+  //! Get an empty constraint set that's tied to a particular synonym
+  static AllowedValuesPair makeEmptyAllowedValuesPairForSynonym(Synonym& s) {
+    return std::make_pair(std::make_pair(s.synonym, DUMMY_SYNONYM),
+                          std::set<AllowedValue>());
+  }
+
   //! Creates a list of allowed values for a single synonym
   static AllowedValuesPair makeAllowedValues(Synonym&,
                                              std::vector<std::string>&);
+
+  static AllowedValuesPair makeAllowedValues(Synonym&, Synonym&,
+                                             AllowedValueSet&);
+
   static std::string getStringPairAsString(std::pair<std::string, std::string>);
   static void printAllowedValuesPair(AllowedValuesPair&);
 };

@@ -117,14 +117,14 @@ std::optional<std::string> QueryManager::getSuchThatArgAsBasic(
   return std::visit(
       overload{[](StmtRef& s) -> std::optional<std::string> {
                  if (auto res = std::get_if<StatementNumber>(&s)) {
-                   return std::make_optional<std::string>(std::to_string(*res));
+                   return std::make_optional<std::string>(stmtRefToString(s));
                  } else {
                    return std::nullopt;
                  }
                },
                [](EntRef& e) -> std::optional<std::string> {
                  if (auto res = std::get_if<QuoteIdent>(&e)) {
-                   return std::make_optional<std::string>(res->quote_ident);
+                   return std::make_optional<std::string>(entRefToString(e));
                  } else {
                    return std::nullopt;
                  }

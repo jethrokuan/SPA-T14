@@ -58,12 +58,12 @@ stmt s;
 Select s such that Follows(24,s)
 none
 5000
-13 - valid query (testing usage of underscore)
+13 - valid query (testing usage of "_")
 stmt s;
 Select s such that Follows(_,_)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
 5000
-14 - valid query (testing usage of underscore)
+14 - valid query (testing usage of "_")
 stmt s;
 Select s such that Follows*(_,_)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
@@ -101,10 +101,9 @@ Select s such that Parent(16,s)
 21 - valid query
 stmt s;
 Select s such that Parent(4,s)
-5, 6, 7, 22
-5000
+5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
 22 - valid query (look for parent)
-stmt s;
+stmt s:
 Select s such that Parent(s,5)
 4
 5000
@@ -134,9 +133,9 @@ Select v such that Uses(5,v)
 y
 5000
 28 - valid query 
-variable v;
-Select v such that Uses(6,v)
-z
+constant c;
+Select c such that Uses(5,c)
+1
 5000
 29 - valid query
 print p;
@@ -146,7 +145,7 @@ Select p such that Uses(p, "y")
 30 - valid query
 stmt s;
 Select s such that Uses(s, "y")
-4, 5, 7, 8, 11, 12, 16, 17, 23
+5, 8, 12, 17, 23
 5000
 31 - valid query
 while w;
@@ -156,5 +155,5 @@ Select w such that Uses(w, "x")
 32 - invalid query (START OF MODIFIES SELECT CLAUSE) / Semantic Error
 variable v;
 Select v such that Modifies(_,v)
-none
+invalid
 5000

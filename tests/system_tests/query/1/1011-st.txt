@@ -6,7 +6,7 @@ main
 2
 stmt s;
 Select s such that Uses(s, "v")
-10
+10,38
 5000
 3 - invalid, because r is not used
 read r;

@@ -341,7 +341,7 @@ Select s such that Follows(i, s)
 69
 read r; stmt s;
 Select s such that Follows(r,s)
-7
+2,3,4,5,6,7
 5000
 70
 print p; stmt s;

@@ -724,16 +724,16 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   REQUIRE(uses_test_14 == false);
   auto uses_test_15 = pkb.isLineUsesVar("2", "y");
   REQUIRE(uses_test_15 == false);
-  auto uses_test_16 = pkb.isLineUsesVar("2", "alpha");
-  REQUIRE(uses_test_16 == false);
-  auto uses_test_17 = pkb.isLineUsesVar("3", "z");
-  REQUIRE(uses_test_17 == false);
-  auto uses_test_18 = pkb.isLineUsesVar("4", "y");
-  REQUIRE(uses_test_18 == false);
-  auto uses_test_19 = pkb.isLineUsesVar("13", "beta");
-  REQUIRE(uses_test_19 == false);
-  auto uses_test_20 = pkb.isLineUsesVar("22", "y");
-  REQUIRE(uses_test_20 == false);
+  auto uses_test_16 = pkb.isLineUsesVar("4", "x");
+  REQUIRE(uses_test_16 == true);
+  auto uses_test_17 = pkb.isLineUsesVar("4", "y");
+  REQUIRE(uses_test_17 == true);
+  auto uses_test_18 = pkb.isLineUsesVar("4", "z");
+  REQUIRE(uses_test_18 == true);
+  auto uses_test_19 = pkb.isLineUsesVar("16", "y");
+  REQUIRE(uses_test_19 == true);
+  auto uses_test_20 = pkb.isLineUsesVar("16", "z");
+  REQUIRE(uses_test_20 == true);
 
   auto uses_test_21 = pkb.isProcedureUsesVar("main", "x");
   REQUIRE(uses_test_21 == true);
@@ -904,6 +904,227 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
     }
   }
   REQUIRE(pattern_test_6_set == pattern_test_6_check);
+}
+
+TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
+  auto ast =
+      SimpleInterface::getAstFromFile("tests/simple_source/simple_2.txt");
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
+
+  SECTION ("follows relations") {
+    auto follows_test_1 = pkb.isLineFollowLine("1", "2");
+    REQUIRE(follows_test_1 == true);
+    auto follows_test_2 = pkb.isLineFollowLine("5", "6");
+    REQUIRE(follows_test_2 == true);
+    auto follows_test_3 = pkb.isLineFollowLine("7", "8");
+    REQUIRE(follows_test_3 == true);
+    auto follows_test_4 = pkb.isLineFollowLine("1", "2");
+    REQUIRE(follows_test_4 == true);
+    auto follows_test_5 = pkb.isLineFollowLine("5", "6");
+    REQUIRE(follows_test_5 == true);
+    auto follows_test_6 = pkb.isLineFollowLine("7", "8");
+    REQUIRE(follows_test_6 == true);
+  }
+
+  SECTION ("parent relations") {
+    auto parent_test_1 = pkb.isLineParentLine("2", "3");
+    REQUIRE(parent_test_1 == true);
+    auto parent_test_2 = pkb.isLineParentLine("3", "4");
+    REQUIRE(parent_test_2 == true);
+    auto parent_test_3 = pkb.isLineParentLine("4", "5");
+    REQUIRE(parent_test_3 == true);
+    auto parent_test_4 = pkb.isLineParentLine("4", "6");
+    REQUIRE(parent_test_4 == true);
+    auto parent_test_5 = pkb.isLineParentLine("4", "7");
+    REQUIRE(parent_test_5 == true);
+    auto parent_test_6 = pkb.isLineParentLine("4", "8");
+    REQUIRE(parent_test_6 == true);
+    auto parent_test_7 = pkb.isLineParentLine("2", "9");
+    REQUIRE(parent_test_7 == true);
+    auto parent_test_8 = pkb.isLineParentLineS("2", "3");
+    REQUIRE(parent_test_8 == true);
+    auto parent_test_9 = pkb.isLineParentLineS("2", "4");
+    REQUIRE(parent_test_9 == true);
+    auto parent_test_10 = pkb.isLineParentLineS("2", "5");
+    REQUIRE(parent_test_10 == true);
+    auto parent_test_11 = pkb.isLineParentLineS("2", "6");
+    REQUIRE(parent_test_11 == true);
+    auto parent_test_12 = pkb.isLineParentLineS("2", "7");
+    REQUIRE(parent_test_12 == true);
+    auto parent_test_13 = pkb.isLineParentLineS("2", "8");
+    REQUIRE(parent_test_13 == true);
+    auto parent_test_14 = pkb.isLineParentLineS("2", "9");
+    REQUIRE(parent_test_14 == true);
+    auto parent_test_15 = pkb.isLineParentLineS("3", "5");
+    REQUIRE(parent_test_15 == true);
+    auto parent_test_16 = pkb.isLineParentLineS("3", "6");
+    REQUIRE(parent_test_16 == true);
+    auto parent_test_17 = pkb.isLineParentLineS("3", "7");
+    REQUIRE(parent_test_17 == true);
+    auto parent_test_18 = pkb.isLineParentLineS("3", "8");
+    REQUIRE(parent_test_18 == true);
+    auto parent_test_19 = pkb.isLineParentLineS("4", "5");
+    REQUIRE(parent_test_19 == true);
+    auto parent_test_20 = pkb.isLineParentLineS("4", "6");
+    REQUIRE(parent_test_20 == true);
+    auto parent_test_21 = pkb.isLineParentLineS("4", "7");
+    REQUIRE(parent_test_21 == true);
+    auto parent_test_22 = pkb.isLineParentLineS("4", "8");
+    REQUIRE(parent_test_22 == true);
+  }
+
+  SECTION ("uses relations") {
+    auto uses_test_1 = pkb.isLineUsesVar("2", "i");
+    REQUIRE(uses_test_1 == true);
+    auto uses_test_2 = pkb.isLineUsesVar("3", "i");
+    REQUIRE(uses_test_2 == true);
+    auto uses_test_3 = pkb.isLineUsesVar("4", "i");
+    REQUIRE(uses_test_3 == true);
+    auto uses_test_4 = pkb.isLineUsesVar("2", "y");
+    REQUIRE(uses_test_4 == true);
+    auto uses_test_5 = pkb.isLineUsesVar("3", "y");
+    REQUIRE(uses_test_5 == true);
+    auto uses_test_6 = pkb.isLineUsesVar("4", "y");
+    REQUIRE(uses_test_6 == true);
+    auto uses_test_7 = pkb.isLineUsesVar("2", "b");
+    REQUIRE(uses_test_7 == true);
+    auto uses_test_8 = pkb.isLineUsesVar("3", "b");
+    REQUIRE(uses_test_8 == true);
+    auto uses_test_9 = pkb.isLineUsesVar("4", "b");
+    REQUIRE(uses_test_9 == true);
+    auto uses_test_10 = pkb.isProcedureUsesVar("main", "i");
+    REQUIRE(uses_test_10 == true);
+    auto uses_test_11 = pkb.isProcedureUsesVar("main", "y");
+    REQUIRE(uses_test_11 == true);
+    auto uses_test_12 = pkb.isProcedureUsesVar("main", "b");
+    REQUIRE(uses_test_12 == true);
+
+    std::unordered_set<std::string> uses_test_13_check;
+    uses_test_13_check.insert("i");
+    uses_test_13_check.insert("y");
+    uses_test_13_check.insert("b");
+    auto uses_test_13 = pkb.getVarUsedByLine("2");
+    std::unordered_set<Variable> uses_test_13_set;
+    if (uses_test_13) {
+      for (const auto &elem : (*uses_test_13)) {
+        uses_test_13_set.insert(elem);
+      }
+    }
+    REQUIRE(uses_test_13_set == uses_test_13_check);
+
+    std::unordered_set<std::string> uses_test_14_check;
+    uses_test_14_check.insert("i");
+    uses_test_14_check.insert("y");
+    uses_test_14_check.insert("b");
+    auto uses_test_14 = pkb.getVarUsedByLine("3");
+    std::unordered_set<Variable> uses_test_14_set;
+    if (uses_test_14) {
+      for (const auto &elem : (*uses_test_14)) {
+        uses_test_14_set.insert(elem);
+      }
+    }
+    REQUIRE(uses_test_14_set == uses_test_14_check);
+
+    std::unordered_set<std::string> uses_test_15_check;
+    uses_test_15_check.insert("i");
+    uses_test_15_check.insert("y");
+    uses_test_15_check.insert("b");
+    auto uses_test_15 = pkb.getVarUsedByLine("4");
+    std::unordered_set<Variable> uses_test_15_set;
+    if (uses_test_15) {
+      for (const auto &elem : (*uses_test_15)) {
+        uses_test_15_set.insert(elem);
+      }
+    }
+    REQUIRE(uses_test_15_set == uses_test_15_check);
+
+    std::unordered_set<std::string> uses_test_16_check;
+    uses_test_16_check.insert("i");
+    uses_test_16_check.insert("y");
+    uses_test_16_check.insert("b");
+    auto uses_test_16 = pkb.getVarUsedByProcedure("main");
+    std::unordered_set<Variable> uses_test_16_set;
+    if (uses_test_16) {
+      for (const auto &elem : (*uses_test_16)) {
+        uses_test_16_set.insert(elem);
+      }
+    }
+    REQUIRE(uses_test_16_set == uses_test_16_check);
+  }
+
+  SECTION ("modifies relations") {
+    auto modifies_test_1 = pkb.isLineModifiesVar("1", "i");
+    REQUIRE(modifies_test_1 == true);
+    auto modifies_test_2 = pkb.isLineModifiesVar("4", "x");
+    REQUIRE(modifies_test_2 == true);
+    auto modifies_test_3 = pkb.isLineModifiesVar("4", "a");
+    REQUIRE(modifies_test_3 == true);
+    auto modifies_test_4 = pkb.isLineModifiesVar("9", "i");
+    REQUIRE(modifies_test_4 == true);
+    auto modifies_test_5 = pkb.isLineModifiesVar("2", "x");
+    REQUIRE(modifies_test_5 == true);
+    auto modifies_test_6 = pkb.isLineModifiesVar("2", "a");
+    REQUIRE(modifies_test_6 == true);
+    auto modifies_test_7 = pkb.isLineModifiesVar("3", "x");
+    REQUIRE(modifies_test_7 == true);
+    auto modifies_test_8 = pkb.isLineModifiesVar("3", "a");
+    REQUIRE(modifies_test_8 == true);
+    auto modifies_test_9 = pkb.isProcedureModifiesVar("main", "i");
+    REQUIRE(modifies_test_9 == true);
+    auto modifies_test_10 = pkb.isProcedureModifiesVar("main", "x");
+    REQUIRE(modifies_test_10 == true);
+    auto modifies_test_11 = pkb.isProcedureModifiesVar("main", "a");
+    REQUIRE(modifies_test_11 == true);
+
+    std::unordered_set<std::string> modifies_test_12_check;
+    modifies_test_12_check.insert("i");
+    auto modifies_test_12 = pkb.getVarModifiedByLine("1");
+    std::unordered_set<Variable> modifies_test_12_set;
+    if (modifies_test_12) {
+      for (const auto &elem : (*modifies_test_12)) {
+        modifies_test_12_set.insert(elem);
+      }
+    }
+    REQUIRE(modifies_test_12_set == modifies_test_12_check);
+
+    std::unordered_set<std::string> modifies_test_13_check;
+    modifies_test_13_check.insert("i");
+    modifies_test_13_check.insert("x");
+    modifies_test_13_check.insert("a");
+    auto modifies_test_13 = pkb.getVarModifiedByLine("2");
+    std::unordered_set<Variable> modifies_test_13_set;
+    if (modifies_test_13) {
+      for (const auto &elem : (*modifies_test_13)) {
+        modifies_test_13_set.insert(elem);
+      }
+    }
+    REQUIRE(modifies_test_13_set == modifies_test_13_check);
+
+    std::unordered_set<std::string> modifies_test_14_check;
+    modifies_test_14_check.insert("x");
+    modifies_test_14_check.insert("a");
+    auto modifies_test_14 = pkb.getVarModifiedByLine("3");
+    std::unordered_set<Variable> modifies_test_14_set;
+    if (modifies_test_14) {
+      for (const auto &elem : (*modifies_test_14)) {
+        modifies_test_14_set.insert(elem);
+      }
+    }
+    REQUIRE(modifies_test_14_set == modifies_test_14_check);
+
+    std::unordered_set<std::string> modifies_test_15_check;
+    modifies_test_15_check.insert("i");
+    modifies_test_15_check.insert("x");
+    modifies_test_15_check.insert("a");
+    auto modifies_test_15 = pkb.getVarModifiedByProcedure("main");
+    std::unordered_set<Variable> modifies_test_15_set;
+    if (modifies_test_15) {
+      for (const auto &elem : (*modifies_test_15)) {
+        modifies_test_15_set.insert(elem);
+      }
+    }
+    REQUIRE(modifies_test_15_set == modifies_test_15_check);
+  }
 }
 
 TEST_CASE ("Test detection of semantic errors in AST") {

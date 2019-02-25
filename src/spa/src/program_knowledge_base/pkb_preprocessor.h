@@ -28,14 +28,12 @@ class PKBPreprocessor {
   void setDesignEntities(const std::shared_ptr<ReadNode> node);
   void setDesignEntities(const std::shared_ptr<PrintNode> node);
   void setDesignEntities(const std::shared_ptr<AssignNode> node);
-
   void setDesignEntities(const Expr node);
   void setDesignEntities(const std::shared_ptr<BinOpNode> node);
   void setDesignEntities(const std::shared_ptr<CondExprNode> node);
   void setDesignEntities(const std::shared_ptr<RelExprNode> node);
   void setDesignEntities(const std::shared_ptr<NumberNode> node);
   void setDesignEntities(const std::shared_ptr<VariableNode> node);
-
   void setDesignEntitiesIterator(const std::vector<StmtNode> stmt_lst);
 
   void setFollowsRelations(const std::shared_ptr<ProcedureNode> node);
@@ -45,7 +43,7 @@ class PKBPreprocessor {
 
   void setParentRelations(const std::shared_ptr<ProcedureNode> node);
   void setParentRelationsH(const std::shared_ptr<ProcedureNode> node,
-                           std::vector<ParentLine> parent_lines);
+                           const std::vector<ParentLine> parent_lines);
   void setParentRelationsH(const std::shared_ptr<IfNode> node,
                            std::vector<ParentLine> parent_lines);
   void setParentRelationsH(const std::shared_ptr<WhileNode> node,
@@ -86,8 +84,8 @@ class PKBPreprocessor {
   void setPattern(const std::shared_ptr<AssignNode> node);
   void setPattern(const std::shared_ptr<IfNode> node);
   void setPattern(const std::shared_ptr<WhileNode> node);
-  void setPattern(const std::shared_ptr<ReadNode> node);
-  void setPattern(const std::shared_ptr<PrintNode> node);
+  void setPattern(const std::shared_ptr<ReadNode>);
+  void setPattern(const std::shared_ptr<PrintNode>);
   void setPatternIterator(const std::vector<StmtNode> stmt_lst);
 
  public:

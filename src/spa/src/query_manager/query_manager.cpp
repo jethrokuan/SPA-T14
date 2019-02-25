@@ -7,7 +7,7 @@
 #include "query_manager/relations/ModifiesSEvaluator.h"
 #include "query_manager/relations/ParentEvaluator.h"
 #include "query_manager/relations/ParentTEvaluator.h"
-//#include "query_manager/relations/UsesSEvaluator.h"
+#include "query_manager/relations/UsesSEvaluator.h"
 
 using namespace QE;
 
@@ -148,12 +148,9 @@ AllowedValuesPairOrBool QueryManager::handleNonBooleanSuchThat(Query* query) {
       break;
     case Relation::ModifiesS:
       return ModifiesSEvaluator(query, pkb).evaluate();
-      /*
     case Relation::UsesS:
       return UsesSEvaluator(query, pkb).evaluate();
-      */
     default:
-      // assert(false);
-      return false;
+      assert(false);
   }
 }

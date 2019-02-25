@@ -18,17 +18,19 @@ class UsesSEvaluator : public SuchThatEvaluator {
 
   // Handle cases with at least one variable selected
 
-  AllowedValuesPair handleLeftVarSelectedRightBasic() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() override {
     // Uses(s, "x")
-    return pkb->getLineUsesVar(*arg2AsBasic)
-        .value_or(std::vector<std::string>());
+    auto results =
+        pkb->getLineUsesVar(*arg2AsBasic).value_or(std::vector<std::string>());
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
   }
-  AllowedValuesPair handleRightVarSelectedLeftBasic() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() override {
     // Uses(3, v)
-    return pkb->getVarUsedByLine(*arg1AsBasic)
-        .value_or(std::vector<std::string>());
+    auto results = pkb->getVarUsedByLine(*arg1AsBasic)
+                       .value_or(std::vector<std::string>());
+    return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
   }
-  AllowedValuesPair handleLeftVarSelectedRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() override {
     // Uses(s, _)
     // Note that this should select all whiles and ifs
     auto all_selected_designentities = QueryManager::getSelect(
@@ -39,13 +41,14 @@ class UsesSEvaluator : public SuchThatEvaluator {
         results.push_back(de);
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
+    ;
   }
-  AllowedValuesPair handleRightVarSelectedLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() override {
     std::cout << "Should not happen: UsesS first arg cannot be _\n";
     assert(false);
   }
-  AllowedValuesPair handleLeftVarSelectedRightVarUnselected() override {
+  AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() override {
     // Uses*(s, v)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: UsesS cannot have identical args\n";
@@ -58,18 +61,18 @@ class UsesSEvaluator : public SuchThatEvaluator {
                             ->getDesignEntity();
     auto all_unselected_designentities =
         QueryManager::getSelect(pkb, right_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineUsesVar(de, unselect_de) &&
-            std::find(results.begin(), results.end(), de) == results.end()) {
-          results.push_back(de);
+        if (pkb->isLineUsesVar(de, unselect_de)) {
+          results.insert({de, unselect_de});
         }
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
   }
-  AllowedValuesPair handleRightVarSelectedLeftVarUnselected() override {
+  AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() override {
     // Uses(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: UsesS cannot have identical args\n";
@@ -82,24 +85,24 @@ class UsesSEvaluator : public SuchThatEvaluator {
                            ->getDesignEntity();
     auto all_unselected_designentities =
         QueryManager::getSelect(pkb, left_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineUsesVar(unselect_de, de) &&
-            std::find(results.begin(), results.end(), de) == results.end()) {
-          results.push_back(de);
+        if (pkb->isLineUsesVar(unselect_de, de)) {
+          results.insert({unselect_de, de});
         }
       }
     }
-    return results;
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
   }
 
   // Handle cases with no variables selected
 
-  AllowedValuesPair handleDoubleUnderscore() override {
+  AllowedValuesPairOrBool handleDoubleUnderscore() override {
     return !pkb->isLineUsesVarSetEmpty();
   }
-  AllowedValuesPair handleBothVarsUnselected() override {
+  AllowedValuesPairOrBool handleBothVarsUnselected() override {
     // Uses(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
       std::cout << "Should not happen: UsesS cannot have identical args\n";
@@ -114,47 +117,44 @@ class UsesSEvaluator : public SuchThatEvaluator {
 
     auto all_left_designentities = QueryManager::getSelect(pkb, left_arg_de);
     auto all_right_designentities = QueryManager::getSelect(pkb, right_arg_de);
-    std::vector<std::string> results;
+    AllowedValueSet results;
     for (auto left_de : all_left_designentities) {
       for (auto right_de : all_right_designentities) {
         // Any satisfied relation would mean this clause is true overall
         if (pkb->isLineUsesVar(left_de, right_de)) {
-          return true;
+          results.insert({left_de, right_de});
         }
       }
     }
-    return false;
-  }
-  AllowedValuesPair handleLeftVarUnselectedRightBasic() override {
+    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
+                                               results);
+    }
+  AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() override {
     // Uses(s1, "x")
-    return pkb->getLineUsesVar(*arg2AsBasic).has_value();
+    return handleLeftVarSelectedRightBasic();
   }
-  AllowedValuesPair handleRightVarUnselectedLeftBasic() override {
+  AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() override {
     // Uses(3, v1)
-    return pkb->getVarUsedByLine(*arg1AsBasic).has_value();
+    return handleRightVarSelectedLeftBasic();
   }
 
   // Unlikely that these last 4 will need to be changed
-  AllowedValuesPair handleLeftBasicRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftBasicRightUnderscore() override {
     // Uses(3, _)
-    return handleRightVarUnselectedLeftBasic();
+    return pkb->getVarUsedByLine(*arg1AsBasic).has_value();
   }
-  AllowedValuesPair handleRightBasicLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightBasicLeftUnderscore() override {
     // Uses(_, "x")
-    return handleLeftVarUnselectedRightBasic();
+    return pkb->getLineUsesVar(*arg2AsBasic).has_value();
   }
-  AllowedValuesPair handleLeftVarUnselectedRightUnderscore() override {
+  AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() override {
     // Uses*(s1, _) --> is there a statement that uses any variable?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return !std::get<std::vector<std::string>>(
-                handleLeftVarSelectedRightUnderscore())
-                .empty();
+    return handleLeftVarSelectedRightUnderscore();
   }
-  AllowedValuesPair handleRightVarUnselectedLeftUnderscore() override {
+  AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() override {
     // Uses*(_, v) --> is there a variable that is used?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return !std::get<std::vector<std::string>>(
-                handleRightVarSelectedLeftUnderscore())
-                .empty();
+    return handleRightVarSelectedLeftUnderscore();
   }
 };

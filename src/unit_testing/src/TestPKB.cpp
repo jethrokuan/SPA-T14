@@ -1,5 +1,3 @@
-// TODO remove print debug statements and iostream
-
 #include "program_knowledge_base/pkb_manager.h"
 #include "simple_parser/interface.h"
 
@@ -911,6 +909,182 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
       SimpleInterface::getAstFromFile("tests/simple_source/simple_2.txt");
   PKB::PKBManager pkb = PKB::PKBManager(ast);
 
+  SECTION ("design entity variable") {
+    // variable
+    auto var_exist_test_1 = pkb.isVariableExists("i");
+    REQUIRE(var_exist_test_1 == true);
+    auto var_exist_test_2 = pkb.isVariableExists("x");
+    REQUIRE(var_exist_test_2 == true);
+    auto var_exist_test_3 = pkb.isVariableExists("y");
+    REQUIRE(var_exist_test_3 == true);
+    auto var_exist_test_4 = pkb.isVariableExists("a");
+    REQUIRE(var_exist_test_4 == true);
+    auto var_exist_test_5 = pkb.isVariableExists("b");
+    REQUIRE(var_exist_test_5 == true);
+
+    std::unordered_set<std::string> var_get_test_1_check;
+    var_get_test_1_check.insert("i");
+    var_get_test_1_check.insert("x");
+    var_get_test_1_check.insert("y");
+    var_get_test_1_check.insert("a");
+    var_get_test_1_check.insert("b");
+    auto var_get_test_1_vector = pkb.getVariableList();
+    std::unordered_set<Variable> var_get_test_1_set(
+        var_get_test_1_vector.begin(), var_get_test_1_vector.end());
+    REQUIRE(var_get_test_1_set == var_get_test_1_check);
+  }
+
+  SECTION ("design entity assign") {
+    // assign
+    auto assign_exist_test_1 = pkb.isAssignExists("1");
+    REQUIRE(assign_exist_test_1 == true);
+    auto assign_exist_test_2 = pkb.isAssignExists("9");
+    REQUIRE(assign_exist_test_2 == true);
+
+    std::unordered_set<std::string> assign_get_test_1_check;
+    assign_get_test_1_check.insert("1");
+    assign_get_test_1_check.insert("9");
+    auto assign_get_test_1 = pkb.getAssignList();
+    std::unordered_set<Line> assign_get_test_1_set(assign_get_test_1.begin(),
+                                                   assign_get_test_1.end());
+    REQUIRE(assign_get_test_1_set == assign_get_test_1_check);
+  }
+
+  SECTION ("design entity statement") {
+    // statement
+    auto statement_exist_test_1 = pkb.isStatementExists("1");
+    REQUIRE(statement_exist_test_1 == true);
+    auto statement_exist_test_2 = pkb.isStatementExists("2");
+    REQUIRE(statement_exist_test_2 == true);
+    auto statement_exist_test_3 = pkb.isStatementExists("3");
+    REQUIRE(statement_exist_test_3 == true);
+    auto statement_exist_test_4 = pkb.isStatementExists("4");
+    REQUIRE(statement_exist_test_4 == true);
+    auto statement_exist_test_5 = pkb.isStatementExists("5");
+    REQUIRE(statement_exist_test_5 == true);
+    auto statement_exist_test_6 = pkb.isStatementExists("6");
+    REQUIRE(statement_exist_test_6 == true);
+    auto statement_exist_test_7 = pkb.isStatementExists("7");
+    REQUIRE(statement_exist_test_7 == true);
+    auto statement_exist_test_8 = pkb.isStatementExists("8");
+    REQUIRE(statement_exist_test_8 == true);
+    auto statement_exist_test_9 = pkb.isStatementExists("9");
+    REQUIRE(statement_exist_test_9 == true);
+    auto statement_exist_test_10 = pkb.isStatementExists("10");
+    REQUIRE(statement_exist_test_10 == false);
+    auto statement_exist_test_11 = pkb.isStatementExists("0");
+    REQUIRE(statement_exist_test_11 == false);
+    auto statement_exist_test_12 = pkb.isStatementExists("-2");
+    REQUIRE(statement_exist_test_12 == false);
+
+    std::unordered_set<std::string> statement_get_test_1_check;
+    statement_get_test_1_check.insert("1");
+    statement_get_test_1_check.insert("2");
+    statement_get_test_1_check.insert("3");
+    statement_get_test_1_check.insert("4");
+    statement_get_test_1_check.insert("5");
+    statement_get_test_1_check.insert("6");
+    statement_get_test_1_check.insert("7");
+    statement_get_test_1_check.insert("8");
+    statement_get_test_1_check.insert("9");
+    auto statement_get_test_1 = pkb.getStatementList();
+    std::unordered_set<Line> statement_get_test_1_set(
+        statement_get_test_1.begin(), statement_get_test_1.end());
+    REQUIRE(statement_get_test_1_set == statement_get_test_1_check);
+  }
+
+  SECTION ("design entity print") {
+    // print
+    auto print_exist_test_1 = pkb.isPrintExists("6");
+    REQUIRE(print_exist_test_1 == true);
+    auto print_exist_test_2 = pkb.isPrintExists("8");
+    REQUIRE(print_exist_test_2 == true);
+    auto print_exist_test_3 = pkb.isPrintExists("5");
+    REQUIRE(print_exist_test_3 == false);
+
+    std::unordered_set<std::string> print_get_test_1_check;
+    print_get_test_1_check.insert("6");
+    print_get_test_1_check.insert("8");
+    auto print_get_test_1 = pkb.getPrintList();
+    std::unordered_set<Line> print_get_test_1_set(print_get_test_1.begin(),
+                                                  print_get_test_1.end());
+    REQUIRE(print_get_test_1_set == print_get_test_1_check);
+  }
+
+  SECTION ("design entity read") {
+    auto read_exist_test_1 = pkb.isReadExists("5");
+    REQUIRE(read_exist_test_1 == true);
+    auto read_exist_test_2 = pkb.isReadExists("7");
+    REQUIRE(read_exist_test_2 == true);
+    auto read_exist_test_3 = pkb.isReadExists("2000");
+    REQUIRE(read_exist_test_3 == false);
+
+    std::unordered_set<std::string> read_get_test_1_check;
+    read_get_test_1_check.insert("5");
+    read_get_test_1_check.insert("7");
+    auto read_get_test_1 = pkb.getReadList();
+    std::unordered_set<Line> read_get_test_1_set(read_get_test_1.begin(),
+                                                 read_get_test_1.end());
+    REQUIRE(read_get_test_1_set == read_get_test_1_check);
+  }
+
+  SECTION ("design entity while") {
+    auto while_exist_test_1 = pkb.isWhileExists("3");
+    REQUIRE(while_exist_test_1 == true);
+    auto while_exist_test_2 = pkb.isWhileExists("4");
+    REQUIRE(while_exist_test_2 == false);
+
+    std::unordered_set<std::string> while_get_test_1_check;
+    while_get_test_1_check.insert("3");
+    auto while_get_test_1 = pkb.getWhileList();
+    std::unordered_set<Line> while_get_test_1_set(while_get_test_1.begin(),
+                                                  while_get_test_1.end());
+    REQUIRE(while_get_test_1_set == while_get_test_1_check);
+  }
+
+  SECTION ("design entity if") {
+    auto if_exist_test_1 = pkb.isIfExists("2");
+    REQUIRE(if_exist_test_1 == true);
+    auto if_exist_test_2 = pkb.isIfExists("4");
+    REQUIRE(if_exist_test_2 == true);
+
+    std::unordered_set<std::string> if_get_test_1_check;
+    if_get_test_1_check.insert("2");
+    if_get_test_1_check.insert("4");
+    auto if_get_test_1 = pkb.getIfList();
+    std::unordered_set<Line> if_get_test_1_set(if_get_test_1.begin(),
+                                               if_get_test_1.end());
+    REQUIRE(if_get_test_1_set == if_get_test_1_check);
+  }
+
+  SECTION ("design entity constant") {
+    auto constant_exist_test_1 = pkb.isConstantExists("5");
+    REQUIRE(constant_exist_test_1 == true);
+    auto constant_exist_test_2 = pkb.isConstantExists("222");
+    REQUIRE(constant_exist_test_2 == false);
+
+    std::unordered_set<std::string> constant_get_test_1_check;
+    constant_get_test_1_check.insert("5");
+    auto constant_get_test_1 = pkb.getConstantList();
+    std::unordered_set<Constant> constant_get_test_1_set(
+        constant_get_test_1.begin(), constant_get_test_1.end());
+    REQUIRE(constant_get_test_1_set == constant_get_test_1_check);
+  }
+
+  SECTION ("design entity procedure") {
+    auto proc_exist_test_1 = pkb.isProcedureExists("main");
+    REQUIRE(proc_exist_test_1 == true);
+    auto proc_exist_test_2 = pkb.isProcedureExists("blah");
+    REQUIRE(proc_exist_test_2 == false);
+
+    std::unordered_set<std::string> procedure_get_test_1_check;
+    procedure_get_test_1_check.insert("main");
+    auto procedure_get_test_1 = pkb.getProcedureList();
+    std::unordered_set<Procedure> procedure_get_test_1_set(
+        procedure_get_test_1.begin(), procedure_get_test_1.end());
+    REQUIRE(procedure_get_test_1_set == procedure_get_test_1_check);
+  }
+
   SECTION ("follows relations") {
     auto follows_test_1 = pkb.isLineFollowLine("1", "2");
     REQUIRE(follows_test_1 == true);
@@ -924,6 +1098,54 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     REQUIRE(follows_test_5 == true);
     auto follows_test_6 = pkb.isLineFollowLine("7", "8");
     REQUIRE(follows_test_6 == true);
+
+    std::string follows_test_7_check = "2";
+    auto follows_test_7 = pkb.getFollowingLine("1");
+    LineAfter follows_test_7_line = "";
+    if (follows_test_7) {
+      follows_test_7_line = (*follows_test_7);
+    }
+    REQUIRE(follows_test_7_line == follows_test_7_check);
+
+    std::unordered_set<std::string> follows_test_8_check;
+    follows_test_8_check.insert("2");
+    auto follows_test_8 = pkb.getFollowingLineS("1");
+    std::unordered_set<LineAfter> follows_test_8_set;
+    if (follows_test_8) {
+      for (const auto &elem : (*follows_test_8)) {
+        follows_test_8_set.insert(elem);
+      }
+    }
+    REQUIRE(follows_test_8_set == follows_test_8_check);
+
+    std::unordered_set<std::string> follows_test_9_check;
+    auto follows_test_9 = pkb.getFollowingLine("2");
+    std::unordered_set<LineAfter> follows_test_9_set;
+    LineAfter follows_test_9_line = "";
+    if (follows_test_9) {
+      follows_test_9_line = (*follows_test_9);
+    }
+    REQUIRE(follows_test_9_set == follows_test_9_check);
+
+    std::unordered_set<std::string> follows_test_10_check;
+    auto follows_test_10 = pkb.getFollowingLineS("2");
+    std::unordered_set<LineAfter> follows_test_10_set;
+    if (follows_test_10) {
+      for (const auto &elem : (*follows_test_10)) {
+        follows_test_10_set.insert(elem);
+      }
+    }
+    REQUIRE(follows_test_10_set == follows_test_10_check);
+
+    std::unordered_set<std::string> follows_test_11_check;
+    auto follows_test_11 = pkb.getFollowingLineS("9");
+    std::unordered_set<LineAfter> follows_test_11_set;
+    if (follows_test_11) {
+      for (const auto &elem : (*follows_test_11)) {
+        follows_test_11_set.insert(elem);
+      }
+    }
+    REQUIRE(follows_test_11_set == follows_test_11_check);
   }
 
   SECTION ("parent relations") {
@@ -971,6 +1193,40 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     REQUIRE(parent_test_21 == true);
     auto parent_test_22 = pkb.isLineParentLineS("4", "8");
     REQUIRE(parent_test_22 == true);
+
+    std::unordered_set<std::string> parent_test_23_check;
+    std::unordered_set<Variable> parent_test_23_set;
+    auto parent_test_23 = pkb.getParentLineS("1");
+    if (parent_test_23) {
+      for (const auto &elem : (*parent_test_23)) {
+        parent_test_23_set.insert(elem);
+      }
+    }
+    REQUIRE(parent_test_23_set == parent_test_23_check);
+
+    std::unordered_set<std::string> parent_test_24_check;
+    parent_test_24_check.insert("2");
+    std::unordered_set<Variable> parent_test_24_set;
+    auto parent_test_24 = pkb.getParentLineS("3");
+    if (parent_test_24) {
+      for (const auto &elem : (*parent_test_24)) {
+        parent_test_24_set.insert(elem);
+      }
+    }
+    REQUIRE(parent_test_24_set == parent_test_24_check);
+
+    std::unordered_set<std::string> parent_test_25_check;
+    parent_test_25_check.insert("2");
+    parent_test_25_check.insert("3");
+    parent_test_25_check.insert("4");
+    std::unordered_set<Variable> parent_test_25_set;
+    auto parent_test_25 = pkb.getParentLineS("6");
+    if (parent_test_25) {
+      for (const auto &elem : (*parent_test_25)) {
+        parent_test_25_set.insert(elem);
+      }
+    }
+    REQUIRE(parent_test_25_set == parent_test_25_check);
   }
 
   SECTION ("uses relations") {

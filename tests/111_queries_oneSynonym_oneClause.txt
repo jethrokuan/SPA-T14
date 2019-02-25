@@ -146,7 +146,7 @@ Select p such that Uses(p, "y")
 30 - valid query
 stmt s;
 Select s such that Uses(s, "y")
-5, 8, 12, 17, 23
+4, 5, 7, 8, 11, 12, 16, 17, 23
 5000
 31 - valid query
 while w;

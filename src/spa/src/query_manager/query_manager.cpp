@@ -43,7 +43,10 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
   if (auto bool_result = std::get_if<bool>(&such_that_result)) {
     if (!*bool_result) {
       return std::vector<std::string>();
-    }  // If true, do nothing til later
+    } else {
+      // TODO: FOR PATTERN If true, do nothing til later
+      return getSelect(pkb, query->selected_declaration->getDesignEntity());
+    }
   } else if (auto constrain_result =
                  std::get_if<AllowedValuesPair>(&such_that_result)) {
     // This only works now - check for empty allowed list and return immediately
@@ -69,7 +72,8 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
     std::cout << "All Such-That Constrained Values: \n";
     ConstraintSolver::printAllowedValuesPair(*such_that_constraint);
     return ConstraintSolver::constrainAndSelect(
-        {select_constraint, *such_that_constraint}, "y");
+        {select_constraint, *such_that_constraint},
+        query->selected_declaration->getSynonym().synonym);
   }
   // TODO: HANDLE PATTERN
   return std::vector<std::string>();

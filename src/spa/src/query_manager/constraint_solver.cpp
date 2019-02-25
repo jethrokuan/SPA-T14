@@ -74,6 +74,7 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
   auto set_to_return = synonym_constraints[toSelect];
   std::vector<std::string> result(set_to_return.begin(), set_to_return.end());
   return result;
+  // TODO: WE NEED TO RUN THIS UNTIL NO DIFFERENCES SPOTTED (IN FUTURE ITERS)
 }
 
 std::map<std::string, std::set<std::string>>
@@ -83,39 +84,30 @@ ConstraintSolver::intersectConstraints(
 
   for (auto avp : allowedValues) {
     auto syn1 = avp.first.first;
-    if (synonym_constraints.find(syn1) == synonym_constraints.end()) {
-      // Get all first elements from set
-      synonym_constraints[syn1] = getFirstsFromSet(avp.second);
-    } else {
-      std::cout << "Found syn1 again " << syn1 << '\n';
-      auto new_constraints = getFirstsFromSet(avp.second);
-      auto existing_constraints = synonym_constraints[syn1];
-      synonym_constraints[syn1].clear();
-      std::set_intersection(existing_constraints.begin(),
-                            existing_constraints.end(), new_constraints.begin(),
-                            new_constraints.end(),
-                            std::inserter(synonym_constraints[syn1],
-                                          synonym_constraints[syn1].begin()));
-    }
-
+    intersectTwoConstraints(synonym_constraints, syn1,
+                            getFirstsFromSet(avp.second));
     auto syn2 = avp.first.second;
-    if (synonym_constraints.find(syn2) == synonym_constraints.end()) {
-      // Get all first elements from set
-      synonym_constraints[syn2] = getSecondsFromSet(avp.second);
-    } else {
-      std::cout << "Found syn2 again " << syn2 << '\n';
-      auto new_constraints = getSecondsFromSet(avp.second);
-      auto existing_constraints = synonym_constraints[syn2];
-      synonym_constraints[syn2].clear();
-      std::set_intersection(existing_constraints.begin(),
-                            existing_constraints.end(), new_constraints.begin(),
-                            new_constraints.end(),
-                            std::inserter(synonym_constraints[syn2],
-                                          synonym_constraints[syn2].begin()));
-    }
+    intersectTwoConstraints(synonym_constraints, syn2,
+                            getSecondsFromSet(avp.second));
   }
 
   return synonym_constraints;
+}
+
+void ConstraintSolver::intersectTwoConstraints(
+    std::map<std::string, std::set<std::string>>& synonym_constraints,
+    std::string& syn, std::set<std::string> new_constraints) {
+  if (synonym_constraints.find(syn) == synonym_constraints.end()) {
+    synonym_constraints[syn] = new_constraints;
+  } else {
+    auto existing_constraints = synonym_constraints[syn];
+    synonym_constraints[syn].clear();
+    std::set_intersection(existing_constraints.begin(),
+                          existing_constraints.end(), new_constraints.begin(),
+                          new_constraints.end(),
+                          std::inserter(synonym_constraints[syn],
+                                        synonym_constraints[syn].begin()));
+  }
 }
 
 std::set<std::string> ConstraintSolver::getFirstsFromSet(AllowedValueSet& avs) {

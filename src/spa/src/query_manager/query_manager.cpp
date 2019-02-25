@@ -67,10 +67,6 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
     auto select_synonym = query->selected_declaration->getSynonym();
     auto select_constraint =
         ConstraintSolver::makeAllowedValues(select_synonym, select_allowed);
-    std::cout << "All Select Values: \n";
-    ConstraintSolver::printAllowedValuesPair(select_constraint);
-    std::cout << "All Such-That Constrained Values: \n";
-    ConstraintSolver::printAllowedValuesPair(*such_that_constraint);
     return ConstraintSolver::constrainAndSelect(
         {select_constraint, *such_that_constraint},
         query->selected_declaration->getSynonym().synonym);

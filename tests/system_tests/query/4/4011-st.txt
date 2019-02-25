@@ -146,7 +146,7 @@ Select p such that Uses(p, "y")
 30 - valid query
 stmt s;
 Select s such that Uses(s, "y")
-5, 8, 12, 17, 23
+5, 8, 12, 17, 23,11,16,4,7
 5000
 31 - valid query
 while w;
@@ -156,5 +156,5 @@ Select w such that Uses(w, "x")
 32 - invalid query (START OF MODIFIES SELECT CLAUSE) / Semantic Error
 variable v;
 Select v such that Modifies(_,v)
-invalid
+none
 5000

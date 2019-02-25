@@ -154,6 +154,7 @@ AllowedValuesPairOrBool QueryManager::handleNonBooleanSuchThat(Query* query) {
       break;
       */
     default:
-      assert(false);
+      // assert(false);
+      return false;
   }
 }

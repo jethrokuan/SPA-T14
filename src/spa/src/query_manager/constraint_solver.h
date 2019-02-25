@@ -26,6 +26,7 @@ class ConstraintSolver {
   //! Find the intersection between all stated constraints by synonyms
   static std::map<std::string, std::set<std::string>> intersectConstraints(
       std::vector<AllowedValuesPair>);
+  static void printConstraints(std::map<std::string, std::set<std::string>>);
 
  public:
   //! Placeholder for cases where a second synonym or value is not needed

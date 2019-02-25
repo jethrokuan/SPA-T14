@@ -47,14 +47,6 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
     std::vector<AllowedValuesPair> allowedValues, std::string toSelect) {
   auto synonym_constraints = intersectConstraints(allowedValues);
 
-  for (auto m : synonym_constraints) {
-    std::cout << "Intersected constraints for: " << m.first << std::endl;
-    for (auto s : m.second) {
-      std::cout << s << " ";
-    }
-    std::cout << "\n";
-  }
-
   // With the constraints, need to remove pairs that don't fit the constraints
   std::vector<AllowedValuesPair> constrained_values;
   for (AllowedValuesPair allowedValuePair : allowedValues) {
@@ -77,16 +69,6 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
 
   // Re-constrain this set
   synonym_constraints = intersectConstraints(constrained_values);
-
-  for (auto m : synonym_constraints) {
-    std::cout << "Re-Intersected constraints for: " << m.first << std::endl;
-    for (auto s : m.second) {
-      std::cout << s << " ";
-    }
-    std::cout << "\n";
-  }
-
-  // With
 
   // Select the one we want
   auto set_to_return = synonym_constraints[toSelect];
@@ -151,4 +133,15 @@ std::set<std::string> ConstraintSolver::getSecondsFromSet(
     result.insert(a.second);
   }
   return result;
+}
+
+void ConstraintSolver::printConstraints(
+    std::map<std::string, std::set<std::string>> constraints) {
+  for (auto m : constraints) {
+    std::cout << "Intersected constraints for: " << m.first << std::endl;
+    for (auto s : m.second) {
+      std::cout << s << " ";
+    }
+    std::cout << "\n";
+  }
 }

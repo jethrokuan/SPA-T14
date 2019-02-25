@@ -62,3 +62,6 @@ CTestTestfile.cmake
 doxygen-docs
 
 # End of https://www.gitignore.io/api/cmake,c++
+
+
+tests/system_tests/output/

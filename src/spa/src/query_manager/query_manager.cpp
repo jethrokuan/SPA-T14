@@ -25,36 +25,51 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
     return getSelect(pkb, query->selected_declaration->getDesignEntity());
   }
 
-  AllowedValuesPair such_that_result;
-  AllowedValuesPair pattern_result;
+  // If either clause doesn't exist, don't constrain
+  AllowedValuesPairOrBool such_that_result = {true};
+  AllowedValuesPairOrBool pattern_result = {true};
+
   if (query->such_that) {
     // Handle such_thats that return a simple boolean value
     if (isBooleanSuchThat(query->such_that)) {
-      if (isBooleanSuchThatTrue(query->such_that)) {
-        // TODO: This shouldn't be a return - pattern still matters
-        auto all_selected =
-            getSelect(pkb, query->selected_declaration->getDesignEntity());
-        auto selected_synonym = query->selected_declaration->getSynonym();
-        such_that_result =
-            ConstraintSolver::makeAllowedValues(selected_synonym, all_selected);
-        ConstraintSolver::printAllowedValuesPair(such_that_result);
-      } else {
-        // Empty result if our such_that is false - at least one clause is
-        // false!
-        return std::vector<std::string>();
-      }
+      such_that_result = isBooleanSuchThatTrue(query->such_that);
     } else {
       // This is a more complex such-that query, pass to individual handlers
-      // We expect a vector of strings from each
-      auto result = handleNonBooleanSuchThat(query);
-      if (auto bool_result = std::get_if<bool>(&result)) {
-        std::cout << "Such That Complex Boolean Result: " << std::boolalpha
-                  << *bool_result << "\n";
-      } else if (auto constrain_result =
-                     std::get_if<AllowedValuesPair>(&result)) {
-        ConstraintSolver::printAllowedValuesPair(*constrain_result);
-      }
+      such_that_result = handleNonBooleanSuchThat(query);
     }
+  }
+
+  // Check if an early return is necessary
+  if (auto bool_result = std::get_if<bool>(&such_that_result)) {
+    if (!*bool_result) {
+      return std::vector<std::string>();
+    }  // If true, do nothing til later
+  } else if (auto constrain_result =
+                 std::get_if<AllowedValuesPair>(&such_that_result)) {
+    // This only works now - check for empty allowed list and return immediately
+    // if so. Works because a constraint list indicates at least one variable
+    // was selected
+    if (constrain_result->second.empty()) {
+      return std::vector<std::string>();
+    }
+  }
+
+  // Evaluate pattern results if they exist
+
+  // Evaluate final results (TODO: pattern - now just use such that)
+  if (auto such_that_constraint =
+          std::get_if<AllowedValuesPair>(&such_that_result)) {
+    auto select_allowed =
+        getSelect(pkb, query->selected_declaration->getDesignEntity());
+    auto select_synonym = query->selected_declaration->getSynonym();
+    auto select_constraint =
+        ConstraintSolver::makeAllowedValues(select_synonym, select_allowed);
+    std::cout << "All Select Values: \n";
+    ConstraintSolver::printAllowedValuesPair(select_constraint);
+    std::cout << "All Such-That Constrained Values: \n";
+    ConstraintSolver::printAllowedValuesPair(*such_that_constraint);
+    return ConstraintSolver::constrainAndSelect(
+        {select_constraint, *such_that_constraint}, "y");
   }
   // TODO: HANDLE PATTERN
   return std::vector<std::string>();

@@ -20,6 +20,13 @@ using AllowedValuesPair = std::pair<SynonymPair, std::set<AllowedValue>>;
 using AllowedValuesList = std::vector<AllowedValuesPair>;
 
 class ConstraintSolver {
+ private:
+  static std::set<std::string> getFirstsFromSet(AllowedValueSet&);
+  static std::set<std::string> getSecondsFromSet(AllowedValueSet&);
+  //! Find the intersection between all stated constraints by synonyms
+  static std::map<std::string, std::set<std::string>> intersectConstraints(
+      std::vector<AllowedValuesPair>);
+
  public:
   //! Placeholder for cases where a second synonym or value is not needed
   static const std::string DUMMY_SYNONYM;
@@ -45,4 +52,8 @@ class ConstraintSolver {
 
   static std::string getStringPairAsString(std::pair<std::string, std::string>);
   static void printAllowedValuesPair(AllowedValuesPair&);
+
+  //! Actually constrain the set of values and select the synonym indicated
+  static std::vector<std::string> constrainAndSelect(
+      std::vector<AllowedValuesPair> allowedValues, std::string toSelect);
 };

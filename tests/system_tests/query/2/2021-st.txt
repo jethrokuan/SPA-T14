@@ -391,7 +391,7 @@ Select w such that Follows*(w, i)
 80
 if i; stmt s;
 Select i such that Follows*(i, s)
-36,55,57,136,140,159,173,190,194,202
+36,55,140,159,173,190
 5000
 81
 stmt s; read r;

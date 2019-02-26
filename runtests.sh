@@ -26,6 +26,17 @@ build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/
 # # 2 Synonym, 2 Clause (such that and patterns)
 # build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/1022-p.txt tests/system_tests/output/1022.xml
 
+# Temp tests with patterns
+# 1 Synonym, 1 Clause (patterns)
+
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1011-p.txt tests/system_tests/output/1011-p.xml
+# 2 Synonym, 1 Clause (patterns)
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1021-p.txt tests/system_tests/output/1021-p.xml
+# 1 Synonym, 2 Clause (such that and patterns)
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1012.txt tests/system_tests/output/1012.xml
+# 2 Synonym, 2 Clause (such that and patterns)
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1022.txt tests/system_tests/output/1022.xml
+
 
 # RUN TESTS FOR SIMPLE SOURCE 2: DEEP NESTING
 
@@ -48,6 +59,17 @@ build/src/autotester/autotester tests/system_tests/src/2.txt tests/system_tests/
 # build/src/autotester/autotester tests/system_tests/src/2.txt tests/system_tests/query/2/2012-p.txt tests/system_tests/output/2012.xml
 # # 2 Synonym, 2 Clause (such that and patterns)
 # build/src/autotester/autotester tests/system_tests/src/2.txt tests/system_tests/query/2/2022-p.txt tests/system_tests/output/2022.xml
+
+# TEMP Tests with patterns
+# 1 Synonym, 1 Clause (patterns)
+build/src/autotester/autotester tests/system_tests/src/2.txt tests/system_tests/query/2/patterns/2011-p.txt tests/system_tests/output/2011-p.xml
+# 2 Synonym, 1 Clause (patterns)
+build/src/autotester/autotester tests/system_tests/src/2.txt tests/system_tests/query/2/patterns/2021-p.txt tests/system_tests/output/2021-p.xml
+# 1 Synonym, 2 Clause (such that and patterns)
+build/src/autotester/autotester tests/system_tests/src/2.txt tests/system_tests/query/2/patterns/2012.txt tests/system_tests/output/2012.xml
+# 2 Synonym, 2 Clause (such that and patterns)
+build/src/autotester/autotester tests/system_tests/src/2.txt tests/system_tests/query/2/patterns/2022.txt tests/system_tests/output/2022.xml
+
 
 # RUN TESTS FOR SIMPLE SOURCE 3: COMPLEX PATTERNS
 

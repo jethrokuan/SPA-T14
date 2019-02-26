@@ -1,5 +1,6 @@
 #include "query_manager/query_manager.h"
 #include <cassert>
+#include <sstream>
 #include <string>
 #include <vector>
 #include "query_manager/relations/FollowsEvaluator.h"

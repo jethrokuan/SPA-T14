@@ -212,13 +212,13 @@ AllowedValuesPairOrBool QueryManager::handlePatternLHSQuoteIdent(
     auto all_assigns = getSelect(pkb, DesignEntity::ASSIGN);
     return ConstraintSolver::makeAllowedValues(syn, all_assigns);
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
-    // pattern a (_, _"x + y"_) --> partial match, no var constraint
+    // pattern a ("x", _"x + y"_) --> partial match, no var constraint
     std::ostringstream rhs_partial;
     rhs_partial << *duf;
     auto matching_assigns =
         pkb->getPartialMatchLinesWithVar(lhs, rhs_partial.str())
             .value_or(std::vector<std::string>());
-
+    std::cout << "Running this case\n";
     return ConstraintSolver::makeAllowedValues(syn, matching_assigns);
   } else {
     // nothing else allowed for now

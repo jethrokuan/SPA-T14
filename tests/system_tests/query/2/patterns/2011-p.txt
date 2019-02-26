@@ -11,7 +11,7 @@ none
 3
 assign a;
 Select a pattern a("v", _)
-[INSERT RESULTS]
+10,108,118,127,143,151,163,178,18,26,39,48,65,73,81,89,97
 5000
 4 - Covers all Design Entities, 1 synonym, pattern clause (3 different expression-spec, all operators)
 assign a;

@@ -29,6 +29,16 @@ class QueryManager {
   //! Evaluates SuchThat clauses that don't return a simple boolean
   AllowedValuesPairOrBool handleNonBooleanSuchThat(QE::Query*);
 
+  AllowedValuesPairOrBool handlePattern(QE::Query* query);
+  AllowedValuesPairOrBool handlePatternLHSUnderscore(
+      QE::Query* query, Synonym& syn, QE::ExpressionSpec& pattern_rhs);
+  AllowedValuesPairOrBool handlePatternLHSQuoteIdent(
+      QE::Query* query, Synonym& syn, std::string lhs,
+      QE::ExpressionSpec& pattern_rhs);
+  AllowedValuesPairOrBool handlePatternLHSSynonym(
+      QE::Query* query, Synonym& syn, Synonym& lhs,
+      QE::ExpressionSpec& pattern_rhs);
+
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};
   std::vector<std::string> makeQuery(QE::Query* query);

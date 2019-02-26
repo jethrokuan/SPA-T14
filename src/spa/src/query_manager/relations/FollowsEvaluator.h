@@ -66,7 +66,8 @@ class FollowsEvaluator : public SuchThatEvaluator {
     // Follows(s, s1)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPair();
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -90,7 +91,8 @@ class FollowsEvaluator : public SuchThatEvaluator {
     // Follows(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPair();
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -120,7 +122,8 @@ class FollowsEvaluator : public SuchThatEvaluator {
     // Follows(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPair();
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto left_arg_de = Declaration::findDeclarationForSynonym(
                            query->declarations, *arg1AsSynonym)

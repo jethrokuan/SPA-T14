@@ -254,3 +254,66 @@ TEST_CASE (
 
   REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
 }
+
+TEST_CASE ("Test pattern assignment first argument variable Validate") {
+  // assign p; Select p pattern p (_,_)
+  auto decl = new std::vector<Declaration>{
+      Declaration(DesignEntity::ASSIGN, Synonym::construct("a").value()),
+      Declaration(DesignEntity::VARIABLE, Synonym::construct("v").value())};
+  auto select =
+      new Declaration(DesignEntity::ASSIGN, Synonym::construct("a").value());
+  QE::Synonym syn = QE::Synonym::construct("a").value();
+  QE::EntRef entRef = QE::EntRef(QE::Synonym::construct("v").value());
+  QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
+  auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
+  Query q = Query();
+  q.declarations = decl;
+  q.selected_declaration = select;
+  q.pattern = pattern;
+
+  QueryValidator qv = QueryValidator();
+
+  REQUIRE_NOTHROW(qv.validateQuery(q));
+}
+
+TEST_CASE ("Test pattern assignment first argument not-var Validate") {
+  // assign p; Select p pattern p (_,_)
+  auto decl = new std::vector<Declaration>{
+      Declaration(DesignEntity::ASSIGN, Synonym::construct("a").value()),
+      Declaration(DesignEntity::STMT, Synonym::construct("v").value())};
+  auto select =
+      new Declaration(DesignEntity::ASSIGN, Synonym::construct("a").value());
+  QE::Synonym syn = QE::Synonym::construct("a").value();
+  QE::EntRef entRef = QE::EntRef(QE::Synonym::construct("v").value());
+  QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
+  auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
+  Query q = Query();
+  q.declarations = decl;
+  q.selected_declaration = select;
+  q.pattern = pattern;
+
+  QueryValidator qv = QueryValidator();
+
+  REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
+}
+
+TEST_CASE ("Test pattern assignment first argument not-present Validate") {
+  // assign p; Select p pattern p (_,_)
+  auto decl = new std::vector<Declaration>{
+      Declaration(DesignEntity::ASSIGN, Synonym::construct("a").value()),
+      Declaration(DesignEntity::STMT, Synonym::construct("v").value())};
+  auto select =
+      new Declaration(DesignEntity::ASSIGN, Synonym::construct("a").value());
+  QE::Synonym syn = QE::Synonym::construct("a").value();
+  QE::EntRef entRef = QE::EntRef(QE::Synonym::construct("v1").value());
+  QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
+  auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
+  Query q = Query();
+  q.declarations = decl;
+  q.selected_declaration = select;
+  q.pattern = pattern;
+
+  QueryValidator qv = QueryValidator();
+
+  REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
+}

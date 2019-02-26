@@ -15,7 +15,7 @@ using AllowedValue = std::pair<std::string, std::string>;
 //! Set of all allowed values for a synonym pair
 using AllowedValueSet = std::set<AllowedValue>;
 //! Describes a pair of synonyms and all of their allowed values
-using AllowedValuesPair = std::pair<SynonymPair, std::set<AllowedValue>>;
+using AllowedValuesPair = std::pair<SynonymPair, AllowedValueSet>;
 //! Describes all found pairs of synoynms and their allowed values
 using AllowedValuesList = std::vector<AllowedValuesPair>;
 
@@ -47,6 +47,17 @@ class ConstraintSolver {
     return std::make_pair(std::make_pair(s.synonym, DUMMY_SYNONYM),
                           std::set<AllowedValue>());
   }
+
+  //! Get an empty constraint set that's tied to a particular synonym
+  static AllowedValuesPair makeEmptyAllowedValuesPairForSynonyms(Synonym& s1,
+                                                                 Synonym& s2) {
+    return std::make_pair(std::make_pair(s1.synonym, s2.synonym),
+                          std::set<AllowedValue>());
+  }
+
+  //! Version that does not require a Synonym object, just the string
+  static AllowedValuesPair makeAllowedValues(std::string& syn,
+                                             std::vector<std::string>& vals);
 
   //! Creates a list of allowed values for a single synonym
   static AllowedValuesPair makeAllowedValues(Synonym&,

@@ -66,7 +66,8 @@ class ParentEvaluator : public SuchThatEvaluator {
     // Parent(s, s1)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot be a parent of yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPair();
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -90,7 +91,8 @@ class ParentEvaluator : public SuchThatEvaluator {
     // Parent(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot parent yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPair();
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -120,7 +122,8 @@ class ParentEvaluator : public SuchThatEvaluator {
     // Parent(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
       // Cannot parent yourself (hyuk)
-      return ConstraintSolver::makeEmptyAllowedValuesPair();
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto left_arg_de = Declaration::findDeclarationForSynonym(
                            query->declarations, *arg1AsSynonym)

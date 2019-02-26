@@ -28,7 +28,7 @@ Please read [the Contribution Guidelines](./CONTRIBUTING.md) when formatting you
 The autotester output will be created in `tests/system_tests/output`.
 You might need to use chmod to change access permission of `runtests.sh` 
 
-Paste `analysis.xsl` from tests into `tests/system_tests/output` and then open the individual test files in Firefox to view the test output graphically. Chrome won't allow you to do so. 
+Paste `analysis.xsl` from `tests/` into `tests/system_tests/output` and then open the individual test files in Firefox to view the test output graphically. Chrome won't allow you to do so. 
 
 Alternatively:
 `grep -B 14 -n -r /failed tests/system_tests/output/` will check for failed cases and output the 14 lines before each failed case to see the context surrounding it. 

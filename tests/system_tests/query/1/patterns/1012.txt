@@ -116,7 +116,7 @@ none
 24
 assign a;
 Select a such that Parent(9,a)  pattern a(_, _"v1"_)
-11,12,13,14,15,16
+10,11,12,13,14,15,16
 5000
 25 - 1 synonym, 2 clause (pattern and Parent*)
 assign a;
@@ -141,7 +141,7 @@ none
 29
 assign a;
 Select a such that Parent*(9,a)  pattern a(_, _"v1"_)
-11,12,13,14,15,16
+10,11,12,13,14,15,16
 5000
 30 - PATTERNS WITH CONSTANTS
 assign a;

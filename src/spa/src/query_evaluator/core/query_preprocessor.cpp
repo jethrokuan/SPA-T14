@@ -91,7 +91,7 @@ void QueryPreprocessor::parseSuchThat(
     return;
   } else if (such_that_tokens->size() <= 2) {
     throw PQLTokenizeException(
-        "Incorrect number of such that tokens found, expecting 2, saw " +
+        "Incorrect number of such that tokens found, expecting >2, saw " +
         std::to_string(such_that_tokens->size()));
   }
 

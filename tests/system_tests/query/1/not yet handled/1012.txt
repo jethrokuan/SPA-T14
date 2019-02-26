@@ -1,330 +1,204 @@
-1 - Covers all Design Entities, 1 synonym, 2 clause (pattern and USES)
+1 - 1 synonym, 2 clause (pattern and USES)
 assign a;
-Select a such that Uses(a, v1) pattern a(_, _)
+Select a such that Uses(a,"v1") pattern a(_, _)
 11,12,13,14,15,16,21
 5000
 2 - invalid
 assign a;
-Select a such that Uses(a, v1) pattern a(a, _)
+Select a such that Uses(a,"v1") pattern a(a, _)
 none
 5000
 3
 assign a;
-Select a such that Uses(a, v1) pattern a("v1", _)
+Select a such that Uses(a,"v1") pattern a("v1", _)
 16
 5000
 4
 assign a;
-Select a such that Uses(a, v1) pattern a(_, v1)
+Select a such that Uses(a,"v1") pattern a(_, "v1")
 none
 5000
-5
+5 
 assign a;
-Select a such that Uses(a, v1) pattern a(_, _"v1"_")
+Select a such that Uses(a,"v1") pattern a(_, _"v1"_)
+10,11,12,13,14,15,16,21
+6 - 1 synonym, 2 clause (pattern and MODIFIES)
+assign a;
+Select a such that Modifies(a,"v1") pattern a(_, _)
 16
 5000
-6
+7 - invalid
 assign a;
-Select a such that Uses(a, v1) pattern a(_, v1+v2)
-11
-5000
-7
-assign a;
-Select a such that Uses(a, v1) pattern a(_, _"v1+v2"_)
-11
+Select a such that Modifies(a,"v1") pattern a(a, _)
+none
 5000
 8
 assign a;
-Select a such that Uses(a, v1) pattern a(_, _"v1*v2"_)
-15
+Select a such that Modifies(a,"v1") pattern a("v1", _)
+16
 5000
 9
 assign a;
-Select a such that Uses(a, v1) pattern a(_, _"v1/v2"_)
-12
-5000
-10
-assign a;
-Select a such that Uses(a, v1) pattern a(_, _"v1-v2"_)
-13
-5000
-11
-assign a;
-Select a such that Uses(a, v1) pattern a(_, _"v1%v2"_)
-14
-5000
-12 - Covers all Design Entities, 1 synonym, 2 clause (pattern and MODIFIES)
-assign a;
-Select a such that Modifies(a, v1) pattern a(_, _)
-16
-5000
-13 - invalid
-assign a;
-Select a such that Modifies(a, v1) pattern a(a, _)
+Select a such that Modifies(a,"v1") pattern a(_,"v1")
 none
 5000
-14
-assign a;
-Select a such that Modifies(a, v1) pattern a("v1", _)
-16
-5000
-15
-assign a;
-Select a such that Modifies(a, v1) pattern a(_, v1)
-none
-5000
-16
-assign a;
-Select a such that Modifies(a, v1) pattern a(_, _"v1"_")
-16
-5000
-17
-assign a;
-Select a such that Modifies(a, v2) pattern a(_, v1+v2)
-11
-5000
-18
-assign a;
-Select a such that Modifies(a, v1) pattern a(_, _"v1+v2"_)
-none
-5000
-19
-assign a;
-Select a such that Modifies(a, v1) pattern a(_, _"v1*v2"_)
-none
-5000
-20
-assign a;
-Select a such that Modifies(a, v3) pattern a(_, _"v1/v2"_)
-12
-5000
-21
-assign a;
-Select a such that Modifies(a, v1) pattern a(_, _"v1-v2"_)
-none
-5000
-22
-assign a;
-Select a such that Modifies(a, v1) pattern a(_, _"v1%v2"_)
-none
-5000
-23 - Covers all Design Entities, 1 synonym, 2 clause (pattern and FOLLOWS)
+10 - 1 synonym, 2 clause (pattern and FOLLOWS)
 assign a;
 Select a such that Follows(10,a)  pattern a(_, _)
 11
 5000
-24
+11
 assign a;
 Select a such that Follows(1,a)  pattern a(a, _)
 none
 5000
-25
+12
 assign a;
 Select a such that Follows(1,a)  pattern a("v1", _)
 none
 5000
-26
+13
 assign a;
-Select a such that Follows(1,a)  pattern a(_, v1)
+Select a such that Follows(1,a)  pattern a(_, "v1")
 none
 5000
-27
+14
 assign a;
-Select a such that Follows(12,a)  pattern a(_, _"v1"_")
+Select a such that Follows(12,a)  pattern a(_, _"v1"_)
 13
 5000
-28
-assign a;
-Select a such that Follows(10,a)  pattern a(_, v1+v2)
-11
-5000
-29
-assign a;
-Select a such that Follows(1,a)  pattern a(_, _"v1+v2"_)
-none
-5000
-30
-assign a;
-Select a such that Follows(1,a)  pattern a(_, _"v1*v2"_)
-none
-5000
-31
-assign a;
-Select a such that Follows(1,a)  pattern a(_, _"v1/v2"_)
-none
-5000
-32
-assign a;
-Select a such that Follows(1,a)  pattern a(_, _"v1-v2"_)
-none
-5000
-33
-assign a;
-Select a such that Follows(1,a)  pattern a(_, _"v1%v2"_)
-none
-5000
-34 - Covers all Design Entities, 1 synonym, 2 clause (pattern and FOLLOWS*)
+15 - 1 synonym, 2 clause (pattern and FOLLOWS*)
 assign a;
 Select a such that Follows*(10,a)  pattern a(_, _)
 11,12,13,14,15,16
 5000
-35 - invalid
+16 - invalid
 assign a;
 Select a such that Follows*(1,a)  pattern a(a, _)
 none
 5000
-36
+17
 assign a;
 Select a such that Follows*(10,a)  pattern a("v1", _)
 16
 5000
-37
+18
 assign a;
-Select a such that Follows*(10,a)  pattern a(_, v1)
+Select a such that Follows*(10,a)  pattern a(_, "v1")
 none
 5000
-38
+19
 assign a;
-Select a such that Follows*(10,a)  pattern a(_, _"v1"_")
+Select a such that Follows*(10,a)  pattern a(_, _"v1"_)
 11,12,13,14,15,16
 5000
-39
-assign a;
-Select a such that Follows*(10,a)  pattern a(_, v1+v2)
-11
-5000
-40
-assign a;
-Select a such that Follows*(10,a)  pattern a(_, _"v1+v2"_)
-11
-5000
-41
-assign a;
-Select a such that Follows*(10,a)  pattern a(_, _"v1*v2"_)
-15
-5000
-42
-assign a;
-Select a such that Follows*(10,a)  pattern a(_, _"v1/v2"_)
-12
-5000
-43
-assign a;
-Select a such that Follows*(10,a)  pattern a(_, _"v1-v2"_)
-13
-5000
-44
-assign a;
-Select a such that Follows*(10,a)  pattern a(_, _"v1%v2"_)
-14
-5000
-45 - Covers all Design Entities, 1 synonym, 2 clause (pattern and Parent)
+20 - 1 synonym, 2 clause (pattern and Parent)
 assign a;
 Select a such that Parent(9,a)  pattern a(_, _)
 10,11,12,13,14,15,16
 5000
-46 - invalid
+21 - invalid
 assign a;
 Select a such that Parent(9,a)  pattern a(a, _)
 none
 5000
-47
+22
 assign a;
 Select a such that Parent(9,a)  pattern a("v1", _)
 16
 5000
-48
+23
 assign a;
-Select a such that Parent(9,a)  pattern a(_, v1)
+Select a such that Parent(9,a)  pattern a(_, "v1")
 none
 5000
-49
+24
 assign a;
-Select a such that Parent(9,a)  pattern a(_, _"v1"_")
+Select a such that Parent(9,a)  pattern a(_, _"v1"_)
 11,12,13,14,15,16
 5000
-50
-assign a;
-Select a such that Parent(9,a)  pattern a(_, v1+v2)
-11
-5000
-51
-assign a;
-Select a such that Parent(9,a)  pattern a(_, _"v1+v2"_)
-11
-5000
-52
-assign a;
-Select a such that Parent(9,a)  pattern a(_, _"v1*v2"_)
-15
-5000
-53
-assign a;
-Select a such that Parent(9,a)  pattern a(_, _"v1/v2"_)
-12
-5000
-54
-assign a;
-Select a such that Parent(9,a)  pattern a(_, _"v1-v2"_)
-13
-5000
-55
-assign a;
-Select a such that Parent(9,a)  pattern a(_, _"v1%v2"_)
-14
-5000
-56 - Covers all Design Entities, 1 synonym, 2 clause (pattern and Parent*)
+25 - 1 synonym, 2 clause (pattern and Parent*)
 assign a;
 Select a such that Parent*(9,a)  pattern a(_, _)
 10,11,12,13,14,15,16
 5000
-57 - invalid
+26 - invalid
 assign a;
 Select a such that Parent*(9,a)  pattern a(a, _)
 none
 5000
-58
+27
 assign a;
 Select a such that Parent*(9,a)  pattern a("v1", _)
 16
 5000
-59
+28
 assign a;
-Select a such that Parent*(9,a)  pattern a(_, v1)
+Select a such that Parent*(9,a)  pattern a(_, "v1")
 none
 5000
-60
+29
 assign a;
-Select a such that Parent*(9,a)  pattern a(_, _"v1"_")
+Select a such that Parent*(9,a)  pattern a(_, _"v1"_)
 11,12,13,14,15,16
 5000
-61
+30 - PATTERNS WITH CONSTANTS
 assign a;
-Select a such that Parent*(9,a)  pattern a(_, v1+v2)
-11
+Select a such that Uses(a,"v1") pattern a(_, _"1"_)
+16
 5000
-62
+31 - PATTERNS WITH CONSTANTS
 assign a;
-Select a such that Parent*(9,a)  pattern a(_, _"v1+v2"_)
-11
+Select a such that Uses(a,"v1") pattern a("v1", _"1"_)
+16
 5000
-63
+32 - PATTERNS WITH CONSTANTS
 assign a;
-Select a such that Parent*(9,a)  pattern a(_, _"v1*v2"_)
-15
+Select a such that Modifies(a,"v1") pattern a(_, "1")
+none
 5000
-64
+33 - PATTERNS WITH CONSTANTS
 assign a;
-Select a such that Parent*(9,a)  pattern a(_, _"v1/v2"_)
-12
+Select a such that Modifies(a,"v1") pattern a("v1", _"1"_)
+16
 5000
-65
+34 - PATTERNS WITH CONSTANTS
 assign a;
-Select a such that Parent*(9,a)  pattern a(_, _"v1-v2"_)
-13
+Select a such that Follows(10,a) pattern a(_, _"1"_)
+none
 5000
-66
+35 - PATTERNS WITH CONSTANTS
 assign a;
-Select a such that Parent*(9,a)  pattern a(_, _"v1%v2"_)
-14
+Select a such that Follows(15,a) pattern a("v1", _"1"_)
+16
+5000
+36 - PATTERNS WITH CONSTANTS
+assign a;
+Select a such that Follows*(10,a) pattern a(_, _"1"_)
+16
+5000
+37 - PATTERNS WITH CONSTANTS
+assign a;
+Select a such that Follows*(15,a) pattern a("v1", _"1"_)
+16
+5000
+38 - PATTERNS WITH CONSTANTS (Parent)
+assign a;
+Select a such that Parent(9,a)  pattern a(_, "1")
+none
+5000
+39 - PATTERNS WITH CONSTANTS (Parent)
+assign a;
+Select a such that Parent(9,a)  pattern a(_, _"1"_)
+16
+5000
+40 - PATTERNS WITH CONSTANTS (Parent*)
+assign a;
+Select a such that Parent*(9,a)  pattern a(_, "1")
+none
+5000
+41 - PATTERNS WITH CONSTANTS (Parent)
+assign a;
+Select a such that Parent*(9,a)  pattern a(_, _"1"_)
+16
 5000

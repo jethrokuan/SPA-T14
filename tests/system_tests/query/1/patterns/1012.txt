@@ -22,6 +22,7 @@ none
 assign a;
 Select a such that Uses(a,"v1") pattern a(_, _"v1"_)
 10,11,12,13,14,15,16,21
+5000
 6 - 1 synonym, 2 clause (pattern and MODIFIES)
 assign a;
 Select a such that Modifies(a,"v1") pattern a(_, _)

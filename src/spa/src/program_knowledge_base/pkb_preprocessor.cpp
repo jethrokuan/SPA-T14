@@ -100,7 +100,7 @@ void PKBPreprocessor::setDesignEntities(const std::shared_ptr<PrintNode> node) {
 void PKBPreprocessor::setDesignEntities(
     const std::shared_ptr<AssignNode> node) {
   storage->storeStatement(storage->getLineFromNode(node));
-  storage->storeAssign(storage->getLineFromNode(node));
+  storage->storeAssign(storage->getLineFromNode(node), node->Var->Name);
   setDesignEntities(node->Var);
   setDesignEntities(node->Exp);
 }

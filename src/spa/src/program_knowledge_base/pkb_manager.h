@@ -113,6 +113,15 @@ class PKBManager {
                                                                const Pattern);
   std::optional<std::vector<Line>> getCompleteMatchLines(const Pattern);
   std::optional<std::vector<Line>> getPartialMatchLines(const Pattern);
+  std::optional<std::vector<std::pair<Line, Variable>>>
+  getCompleteMatchLinesAndVars(const Pattern);
+  std::optional<std::vector<std::pair<Line, Variable>>>
+  getPartialMatchLinesAndVars(const Pattern);
+  std::vector<std::pair<Line, Variable>> getAllPatternLinesAndVars();
+  bool isPatternExists(const Pattern);
+
+  // misc helpers
+  std::optional<std::vector<Line>> getLineForAssignVar(const Variable);
 };
 
 }  // namespace PKB

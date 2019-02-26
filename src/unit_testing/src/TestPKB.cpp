@@ -895,13 +895,108 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_6_check.insert("20");
   pattern_test_6_check.insert("21");
   auto pattern_test_6 = pkb.getPartialMatchLines("z");
-  std::unordered_set<Variable> pattern_test_6_set;
+  std::unordered_set<Line> pattern_test_6_set;
   if (pattern_test_6) {
     for (const auto &elem : (*pattern_test_6)) {
       pattern_test_6_set.insert(elem);
     }
   }
   REQUIRE(pattern_test_6_set == pattern_test_6_check);
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
+      pattern_test_7_check;
+  pattern_test_7_check.insert(std::pair<Line, Variable>("6", "z"));
+  pattern_test_7_check.insert(std::pair<Line, Variable>("9", "z"));
+  pattern_test_7_check.insert(std::pair<Line, Variable>("13", "z"));
+  pattern_test_7_check.insert(std::pair<Line, Variable>("18", "z"));
+  auto pattern_test_7 = pkb.getCompleteMatchLinesAndVars("z + 1");
+  std::unordered_set<std::pair<Line, Variable>, pair_hash> pattern_test_7_set;
+  if (pattern_test_7) {
+    for (const auto &elem : (*pattern_test_7)) {
+      pattern_test_7_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_7_set == pattern_test_7_check);
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
+      pattern_test_8_check;
+  pattern_test_8_check.insert(std::pair<Line, Variable>("6", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("9", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("10", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("13", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("14", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("15", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("18", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("19", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("20", "z"));
+  pattern_test_8_check.insert(std::pair<Line, Variable>("21", "z"));
+  auto pattern_test_8 = pkb.getPartialMatchLinesAndVars("z");
+  // std::cout << "test" << std::endl;
+  std::unordered_set<std::pair<Line, Variable>, pair_hash> pattern_test_8_set;
+  if (pattern_test_8) {
+    for (const auto &elem : (*pattern_test_8)) {
+      pattern_test_8_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_8_set == pattern_test_8_check);
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
+      pattern_test_9_check;
+  pattern_test_9_check.insert(std::pair<Line, Variable>("1", "x"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("2", "y"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("3", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("5", "y"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("6", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("8", "y"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("9", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("10", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("12", "y"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("13", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("14", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("15", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("17", "y"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("18", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("19", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("20", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("21", "z"));
+  pattern_test_9_check.insert(std::pair<Line, Variable>("22", "x"));
+  auto pattern_test_9 = pkb.getAllPatternLinesAndVars();
+  // std::cout << "test" << std::endl;
+  std::unordered_set<std::pair<Line, Variable>, pair_hash> pattern_test_9_set(
+      pattern_test_9.begin(), pattern_test_9.end());
+  REQUIRE(pattern_test_9_set == pattern_test_9_check);
+
+  std::unordered_set<std::string> pattern_test_10_check;
+  pattern_test_10_check.insert("3");
+  pattern_test_10_check.insert("6");
+  pattern_test_10_check.insert("9");
+  pattern_test_10_check.insert("10");
+  pattern_test_10_check.insert("13");
+  pattern_test_10_check.insert("14");
+  pattern_test_10_check.insert("15");
+  pattern_test_10_check.insert("18");
+  pattern_test_10_check.insert("19");
+  pattern_test_10_check.insert("20");
+  pattern_test_10_check.insert("21");
+  auto pattern_test_10 = pkb.getLineForAssignVar("z");
+  std::unordered_set<Line> pattern_test_10_set;
+  if (pattern_test_10) {
+    for (const auto &elem : (*pattern_test_10)) {
+      pattern_test_10_set.insert(elem);
+    }
+  }
+  REQUIRE(pattern_test_10_set == pattern_test_10_check);
+
+  auto pattern_test_11 = pkb.isPatternExists("z+1");
+  REQUIRE(pattern_test_11 == true);
+  auto pattern_test_12 = pkb.isPatternExists("z + 2");
+  REQUIRE(pattern_test_12 == true);
+  auto pattern_test_13 = pkb.isPatternExists("x-1");
+  REQUIRE(pattern_test_13 == true);
+  auto pattern_test_14 = pkb.isPatternExists("x+1");
+  REQUIRE(pattern_test_14 == false);
+  auto pattern_test_15 = pkb.isPatternExists("z + 20 * 3");
+  REQUIRE(pattern_test_15 == false);
 }
 
 TEST_CASE ("Test deep nesting for parent*, uses, modifies") {

@@ -100,9 +100,11 @@ void PKBStorage::storeVariable(const Variable var) {
   var_list.push_back(var);
 }
 
-void PKBStorage::storeAssign(const Line line) {
+void PKBStorage::storeAssign(const Line line, const Variable var) {
   assign_set.insert(line);
   assign_list.push_back(line);
+  assign_line_var_set.insert(std::pair<Line, Variable>(line, var));
+  addToVectorMap(assign_var_line_map, var, line);
 }
 
 void PKBStorage::storeStatement(const Line line) {
@@ -155,8 +157,10 @@ void PKBStorage::storeLineProcedureRelation(const Line line,
 
 void PKBStorage::storePatternAssign(const Variable var, const ExprStr expr_str,
                                     const Line line) {
-  addToVectorMap(var_expr_str_map, var,
+  addToVectorMap(var_line_expr_str_map, var,
                  std::pair<Line, ExprStr>(line, expr_str));
+  addToVectorMap(expr_str_line_var_map, expr_str,
+                 std::pair<Line, Variable>(line, var));
   // std::cout << var + " at line " + line + " maps to " + expr_str <<
   // std::endl;
   var_expr_str_set.insert(std::pair<Variable, ExprStr>(var, expr_str));

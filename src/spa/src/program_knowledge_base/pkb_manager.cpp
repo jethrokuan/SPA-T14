@@ -336,7 +336,7 @@ std::optional<std::vector<Line>> PKBManager::getCompleteMatchLinesWithVar(
   }
 
   // retrieve list of patterns for the variable
-  auto ys = pkb_storage->var_expr_str_map.at(var);
+  auto ys = pkb_storage->var_line_expr_str_map.at(var);
   std::vector<Line> matching_lines;
   for (const auto &elem : ys) {
     auto line = elem.first;
@@ -365,7 +365,7 @@ std::optional<std::vector<Line>> PKBManager::getPartialMatchLinesWithVar(
   }
 
   // retrieve list of patterns for the variable
-  auto ys = pkb_storage->var_expr_str_map.at(var);
+  auto ys = pkb_storage->var_line_expr_str_map.at(var);
   std::vector<Line> matching_lines;
   for (const auto &elem : ys) {
     auto line = elem.first;
@@ -433,6 +433,72 @@ std::optional<std::vector<Line>> PKBManager::getPartialMatchLines(
   } else {
     return std::make_optional<std::vector<Line>>(matching_lines);
   }
+}
+
+std::optional<std::vector<std::pair<Line, Variable>>>
+PKBManager::getCompleteMatchLinesAndVars(const Pattern pattern) {
+  Expr expr = SimpleInterface::parseExpression(pattern);
+  ExprStr pattern_expr =
+      std::visit([](const auto &s) { return s->to_str(); }, expr);
+
+  return (pkb_storage->expr_str_line_var_map.find(pattern_expr) ==
+          pkb_storage->expr_str_line_var_map.end())
+             ? std::nullopt
+             : std::make_optional<std::vector<std::pair<Line, Variable>>>(
+                   pkb_storage->expr_str_line_var_map.at(pattern_expr));
+}
+
+// TODO check for possible errors
+// check if it always returns properly
+std::optional<std::vector<std::pair<Line, Variable>>>
+PKBManager::getPartialMatchLinesAndVars(const Pattern pattern) {
+  Expr expr = SimpleInterface::parseExpression(pattern);
+  ExprStr pattern_expr =
+      std::visit([](const auto &s) { return s->to_str(); }, expr);
+
+  std::vector<ExprStr> matching_expr_str;
+  for (const auto &elem : pkb_storage->expr_str_set) {
+    // find the expr_str that matches partially
+    if (elem.find(pattern_expr) != std::string::npos) {
+      matching_expr_str.push_back(elem);
+    }
+  }
+
+  std::vector<std::pair<Line, Variable>> matching_line_var;
+  for (const auto &elem : matching_expr_str) {
+    // pattern must be in the map already at this point
+    auto xs = pkb_storage->expr_str_line_var_map.at(elem);
+    for (const auto &x : (xs)) {
+      matching_line_var.push_back(x);
+    }
+  }
+
+  if (matching_expr_str.size() == 0) {
+    return std::nullopt;
+  } else {
+    return std::make_optional<std::vector<std::pair<Line, Variable>>>(
+        matching_line_var);
+  }
+}
+
+std::vector<std::pair<Line, Variable>> PKBManager::getAllPatternLinesAndVars() {
+  return std::vector<std::pair<Line, Variable>>(
+      pkb_storage->assign_line_var_set.begin(),
+      pkb_storage->assign_line_var_set.end());
+}
+
+// TODO use this in the other pattern methods
+bool PKBManager::isPatternExists(Pattern pattern) {
+  Expr expr = SimpleInterface::parseExpression(pattern);
+  ExprStr pattern_expr =
+      std::visit([](const auto &s) { return s->to_str(); }, expr);
+  return pkb_storage->expr_str_set.find(pattern_expr) !=
+         pkb_storage->expr_str_set.end();
+}
+
+std::optional<std::vector<Line>> PKBManager::getLineForAssignVar(
+    const Variable var) {
+  return getUniqueVectorFromMap(pkb_storage->assign_var_line_map, var);
 }
 
 }  // namespace PKB

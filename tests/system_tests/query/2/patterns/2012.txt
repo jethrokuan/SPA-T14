@@ -41,7 +41,7 @@ none
 20 - Covers all Design Entities, 1 synonym, 2 clause (pattern and FOLLOWS)
 assign a;
 Select a such that Follows(10,a)  pattern a(_, _)
-none
+11
 5000
 21
 assign a;
@@ -115,26 +115,26 @@ Select a such that Parent(17,a)  pattern a(_, _"v1"_)
 5000
 53-Covers all Design Entities, 1 synonym, 2 clause (pattern and Parent*)
 assign a;
-Select a such that Parent*(10,a)  pattern a(_, _)
-11,12,13,14,15,16,18,19,20,21,22,23,24
+Select a such that Parent*(9,a)  pattern a(_, _)
+10,11,12,13,14,15,16,18,19,20,21,22,23,24
 5000
 54
 assign a;
-Select a such that Parent*(10,a)  pattern a(a, _)
+Select a such that Parent*(9,a)  pattern a(a, _)
 none
 5000
 55
 assign a;
-Select a such that Parent*(10,a)  pattern a("v1", _)
+Select a such that Parent*(9,a)  pattern a("v1", _)
 16,24
 5000
 56
 assign a;
-Select a such that Parent*(10,a)  pattern a(_, "v1")
+Select a such that Parent*(9,a)  pattern a(_, "v1")
 none
 5000
 57
 assign a;
-Select a such that Parent*(10,a)  pattern a(_, _"v1"_)
+Select a such that Parent*(9,a)  pattern a(_, _"v1"_)
 11,12,13,14,15,16,19,20,21,22,23,24
 5000

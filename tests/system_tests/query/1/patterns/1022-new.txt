@@ -21,7 +21,7 @@ v,v1,v2,v3,v4,v5
 5 - FOLLOWS
 assign a; stmt s;
 Select s such that Follows(a,s) pattern a(_,_"v1"_)
-11,12,13,14,15,16,22
+11,12,13,14,15,16
 5000
 6 - FOLLOWS
 assign a; stmt s;
@@ -31,7 +31,7 @@ none
 7 - FOLLOWS
 assign a; stmt s;
 Select s such that Follows(a,s) pattern a(_,_"v1"_)
-11,12,13,14,15,16,22
+11,12,13,14,15,16
 5000
 8 - FOLLOWS
 assign a; print p;
@@ -46,7 +46,7 @@ none
 10 - FOLLOWS*
 assign a; stmt s;
 Select s such that Follows*(a,s) pattern a(_,_"v1"_)
-11,12,13,14,15,16,22
+11,12,13,14,15,16
 5000
 11 - FOLLOWS*
 assign a; stmt s;
@@ -56,7 +56,7 @@ none
 12 - FOLLOWS*
 assign a; stmt s;
 Select s such that Follows*(a,s) pattern a(_,_"v1"_)
-11,12,13,14,15,16,22
+11,12,13,14,15,16
 5000
 13 - FOLLOWS*
 assign a; print p;
@@ -101,7 +101,7 @@ Select i such that Parent(i,a) pattern a(_,_"v2"_)
 21 - PARENT
 assign a; if i;
 Select i such that Parent(i,a) pattern a("v1",_)
-20
+none
 5000
 22 - PARENT
 assign a; if i;

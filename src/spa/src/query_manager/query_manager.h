@@ -33,7 +33,11 @@ class QueryManager {
   AllowedValuesPairOrBool handlePatternLHSUnderscore(
       QE::Query* query, Synonym& syn, QE::ExpressionSpec& pattern_rhs);
   AllowedValuesPairOrBool handlePatternLHSQuoteIdent(
-      QE::Query* query, Synonym& syn, QE::ExpressionSpec& pattern_rhs);
+      QE::Query* query, Synonym& syn, std::string lhs,
+      QE::ExpressionSpec& pattern_rhs);
+  AllowedValuesPairOrBool handlePatternLHSSynonym(
+      QE::Query* query, Synonym& syn, Synonym& lhs,
+      QE::ExpressionSpec& pattern_rhs);
 
  public:
   QueryManager(PKBManager* pkb) : pkb(pkb){};

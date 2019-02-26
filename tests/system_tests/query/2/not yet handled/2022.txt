@@ -23,3 +23,28 @@ print p; assign a;
 Select p such that Parent(a, p) pattern a(_,_)
 none
 5000
+6 
+print p; assign a;
+Select p such that Parent*(a, p) pattern a(_,_)
+none
+5000
+7
+print p; assign a;
+Select p such that Follow(a, p) pattern a(_,"1000")
+none
+5000
+8
+print p; assign a;
+Select p such that Follow*(a, p) pattern a(_,"1000")
+none
+5000
+9
+assign a; stmt s;
+Select a such that Parent*(10,a)  pattern a(_, "v1")
+none
+5000
+10
+assign a; stmt s;
+Select a such that Parent*(10,a)  pattern a(_, _"v1"_)
+11,12,13,14,15,16,19,20,21,22,23,24
+5000

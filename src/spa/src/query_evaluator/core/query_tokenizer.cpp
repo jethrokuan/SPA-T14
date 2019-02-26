@@ -121,6 +121,18 @@ void QueryTokenizer::setClauses(std::string& select_clause,
     return;
   }
 
+  int such_count = std::count(initial_clause_tokens->begin(),
+                              initial_clause_tokens->end(), "such");
+  int that_count = std::count(initial_clause_tokens->begin(),
+                              initial_clause_tokens->end(), "that");
+  int pattern_count = std::count(initial_clause_tokens->begin(),
+                                 initial_clause_tokens->end(), "pattern");
+
+  if (such_count > 1 || that_count > 1 || pattern_count > 1) {
+    throw PQLTokenizeException(
+        "More such / that / pattern tokens than expected!");
+  }
+
   // Find such_that position if exists
   size_t such_that_pos = 0;
   for (size_t i = 2; i < initial_clause_tokens->size(); i++) {

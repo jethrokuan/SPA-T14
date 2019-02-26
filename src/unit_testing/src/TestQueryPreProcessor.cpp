@@ -794,13 +794,13 @@ TEST_CASE ("Test Preprocess Exceptions") {
     auto qp = QE::QueryPreprocessor();
     std::string input =
         "assign p;Select p such that Follows(p , q) such that Modifies(p , q)";
-    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLTokenizeException);
   }
 
   SECTION ("Test multiple pattern query Preprocess") {
     auto qp = QE::QueryPreprocessor();
     std::string input = "assign p;Select p pattern a (x, _) pattern b (y, _)";
-    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLTokenizeException);
   }
 }
 

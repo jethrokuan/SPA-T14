@@ -98,10 +98,17 @@ class PKBStorage {
 
   // pattern
   std::unordered_map<Variable, std::vector<std::pair<Line, ExprStr>>>
-      var_expr_str_map;
+      var_line_expr_str_map;
+  std::unordered_map<ExprStr, std::vector<std::pair<Line, Variable>>>
+      expr_str_line_var_map;
   std::unordered_set<std::pair<Variable, ExprStr>, pair_hash> var_expr_str_set;
   std::unordered_set<std::pair<Line, ExprStr>, pair_hash> line_expr_str_set;
   std::unordered_set<ExprStr> expr_str_set;
+
+  // misc helpers
+  // only assign, does not include read, so not all modifies fulfill this
+  std::unordered_set<std::pair<Line, Variable>, pair_hash> assign_line_var_set;
+  std::unordered_map<Variable, std::vector<Line>> assign_var_line_map;
 
   // setters
   void storeAST(const std::shared_ptr<ProcedureNode> proc);
@@ -119,7 +126,7 @@ class PKBStorage {
   void storeLineModifiesVarRelation(const Line, const Variable);
 
   void storeVariable(const Variable);
-  void storeAssign(const Line);
+  void storeAssign(const Line, const Variable);
   void storeStatement(const Line);
   void storePrint(const Line);
   void storeRead(const Line);

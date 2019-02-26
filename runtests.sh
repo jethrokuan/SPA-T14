@@ -36,7 +36,8 @@ build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/
 build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1012.txt tests/system_tests/output/1012.xml
 # 2 Synonym, 2 Clause (such that and patterns)
 build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1022.txt tests/system_tests/output/1022.xml
-
+# 2 Synonym, 2 Clause (such that and patterns), With increased complexity - test associative patterns 
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1022-new.txt tests/system_tests/output/1022-increasedComplexity.xml
 
 # RUN TESTS FOR SIMPLE SOURCE 2: DEEP NESTING
 
@@ -105,6 +106,9 @@ build/src/autotester/autotester tests/system_tests/src/4.txt tests/system_tests/
 build/src/autotester/autotester tests/system_tests/src/4.txt tests/system_tests/query/4/4011-st.txt tests/system_tests/output/4011-st.xml
 # 2 Synonym, 1 Clause (such that)
 build/src/autotester/autotester tests/system_tests/src/4.txt tests/system_tests/query/4/4021-st.txt tests/system_tests/output/4021-st.xml
+# 2 Synonym, 2 Clause (such that and patterns), With increased complexity - test associative patterns 
+build/src/autotester/autotester tests/system_tests/src/4.txt tests/system_tests/query/4/patterns/4022-new.txt tests/system_tests/output/4022-increasedComplexity.xml
+
 
 # RUN TESTS FOR SIMPLE SOURCE 5: MULTIPLE PROCEDURES // NOT REQUIRED FOR ITERATION 1
 

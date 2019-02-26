@@ -1,0 +1,150 @@
+1 - USES
+assign a; variable v;
+Select v such that Uses(a,v) pattern a(v,_)
+v,v1,v2,v3,v4,v5
+5000
+2 - USES
+assign a; stmt s;
+Select s such that Uses(s,_) pattern a(_,_)
+10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,7,8,9
+5000
+3 - MODIFIES
+assign a; variable v;
+Select v such that Modifies(a,v) pattern a(v,_)
+v,v1,v2,v3,v4,v5
+5000
+4 - MODIFIES
+assign a; variable v;
+Select v such that Modifies(a,v) pattern a(v,_"v1"_)
+v,v1,v2,v3,v4,v5
+5000
+5 - FOLLOWS
+assign a; stmt s;
+Select s such that Follows(a,s) pattern a(_,_"v1"_)
+11,12,13,14,15,16,22
+5000
+6 - FOLLOWS
+assign a; stmt s;
+Select s such that Follows(a,s) pattern a(_,_"1"_)
+none
+5000
+7 - FOLLOWS
+assign a; stmt s;
+Select s such that Follows(a,s) pattern a(_,_"v1"_)
+11,12,13,14,15,16,22
+5000
+8 - FOLLOWS
+assign a; print p;
+Select p such that Follows(a,p) pattern a(_,_"v2"_)
+none
+5000
+9 - FOLLOWS
+assign a; print p;
+Select p such that Follows(a,p) pattern a("v2",_"v2"_)
+none
+5000
+10 - FOLLOWS*
+assign a; stmt s;
+Select s such that Follows*(a,s) pattern a(_,_"v1"_)
+11,12,13,14,15,16,22
+5000
+11 - FOLLOWS*
+assign a; stmt s;
+Select s such that Follows*(a,s) pattern a(_,_"1"_)
+none
+5000
+12 - FOLLOWS*
+assign a; stmt s;
+Select s such that Follows*(a,s) pattern a(_,_"v1"_)
+11,12,13,14,15,16,22
+5000
+13 - FOLLOWS*
+assign a; print p;
+Select p such that Follows*(a,p) pattern a(_,_"v2"_)
+none
+5000
+14 - FOLLOWS*
+assign a; print p;
+Select p such that Follows*(a,p) pattern a("v2",_"v2"_)
+none
+5000
+15 - PARENT
+assign a; while w;
+Select w such that Parent(w,a) pattern a("v2",_"v2"_)
+9
+5000
+16 - PARENT
+assign a; while w;
+Select w such that Parent(w,a) pattern a(_,_"v2"_)
+9
+5000
+17 - PARENT
+assign a; while w;
+Select w such that Parent(w,a) pattern a("v1",_)
+9
+5000
+18 - PARENT
+assign a; while w;
+Select w such that Parent(w,a) pattern a(_,_"1"_)
+9
+5000
+19 - PARENT
+assign a; if i;
+Select i such that Parent(i,a) pattern a("v2",_"v2"_)
+20
+5000
+20 - PARENT
+assign a; if i;
+Select i such that Parent(i,a) pattern a(_,_"v2"_)
+20
+5000
+21 - PARENT
+assign a; if i;
+Select i such that Parent(i,a) pattern a("v1",_)
+20
+5000
+22 - PARENT
+assign a; if i;
+Select i such that Parent(i,a) pattern a(_,_"1"_)
+none
+5000
+23 - PARENT*
+assign a; while w;
+Select w such that Parent*(w,a) pattern a("v2",_"v2"_)
+9
+5000
+24 - PARENT*
+assign a; while w;
+Select w such that Parent*(w,a) pattern a(_,_"v2"_)
+9
+5000
+25 - PARENT*
+assign a; while w;
+Select w such that Parent*(w,a) pattern a("v1",_)
+9
+5000
+26 - PARENT*
+assign a; while w;
+Select w such that Parent*(w,a) pattern a(_,_"1"_)
+9
+5000
+27 - PARENT*
+assign a; if i;
+Select i such that Parent*(i,a) pattern a("v2",_"v2"_)
+20
+5000
+28 - PARENT*
+assign a; if i;
+Select i such that Parent*(i,a) pattern a(_,_"v2"_)
+20
+5000
+29 - PARENT*
+assign a; if i;
+Select i such that Parent*(i,a) pattern a("v1",_)
+none
+5000
+30 - PARENT*
+assign a; if i;
+Select i such that Parent*(i,a) pattern a(_,_"1"_)
+none
+5000

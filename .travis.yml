@@ -19,6 +19,9 @@ script:
   - cmake ..
   - make -j2
   - ctest -V
+  - cd ..
+  - ./runtests.sh
+  - ! grep -q -B 14 -n -r /failed tests/system_tests/output/
 
 notifications:
   email: false

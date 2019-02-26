@@ -205,13 +205,9 @@ AllowedValuesPairOrBool QueryManager::handlePatternLHSQuoteIdent(
   // pattern a ("x", <...>)
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a ("x", _) --> all assignments with LHS "x"
-    // auto matching_assigns = pkb->(lhs).value_or(std::vector<std::string>());
-    // return ConstraintSolver::makeAllowedValues(syn, matching_assigns);
-
-    // ***THIS IS WRONG - JUST HERE FOR AUTOTESTER***
-    // TODO
-    auto all_assigns = getSelect(pkb, DesignEntity::ASSIGN);
-    return ConstraintSolver::makeAllowedValues(syn, all_assigns);
+    auto allowed_lines =
+        pkb->getLineForAssignVar(lhs).value_or(std::vector<std::string>());
+    return ConstraintSolver::makeAllowedValues(syn, allowed_lines);
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
     // pattern a ("x", _"x + y"_) --> partial match, no var constraint
     std::ostringstream rhs_partial;
@@ -235,12 +231,9 @@ AllowedValuesPairOrBool QueryManager::handlePatternLHSSynonym(
 
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (v, _) --> all assignments
-    // TODO: no PKB call to get all variables on LHS of assign
-    // Unless I do a Uses call to simulate this
-    // ***THIS IS WRONG - JUST HERE FOR AUTOTESTER***
-    // TODO
-    auto all_assigns = getSelect(pkb, DesignEntity::ASSIGN);
-    return ConstraintSolver::makeAllowedValues(syn, all_assigns);
+    auto allowed_values = pkb->getAllPatternLinesAndVars();
+    AllowedValueSet avs(allowed_values.begin(), allowed_values.end());
+    return ConstraintSolver::makeAllowedValues(syn, lhs, avs);
     // assert(false);
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
     // pattern a (v, _"x + y"_) --> partial match, no var constraint
@@ -248,18 +241,10 @@ AllowedValuesPairOrBool QueryManager::handlePatternLHSSynonym(
     rhs_partial << *duf;
 
     // Constrain (a,v) together
-    AllowedValueSet avs;
-    for (auto var : all_vars) {
-      // Ties together this assignment statement and the variable in the pat
-      // (a,v) for all a,v
-      auto matching_assigns =
-          pkb->getPartialMatchLinesWithVar(var, rhs_partial.str())
-              .value_or(std::vector<std::string>());
-      // To create an AllowedValueSet - need to map this with `var` as second
-      for (auto assign : matching_assigns) {
-        avs.insert({assign, var});
-      }
-    }
+    auto allowed_values = pkb->getPartialMatchLinesAndVars(rhs_partial.str())
+                              .value_or(std::vector<SynonymPair>());
+
+    AllowedValueSet avs(allowed_values.begin(), allowed_values.end());
     return ConstraintSolver::makeAllowedValues(syn, lhs, avs);
   } else {
     // nothing else allowed for now

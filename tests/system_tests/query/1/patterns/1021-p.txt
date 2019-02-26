@@ -38,8 +38,3 @@ assign a; variable v;
 Select a pattern a("v", "1")
 none
 5000
-9
-assign a; variable v;
-Select a pattern a(v, "1")
-16
-5000

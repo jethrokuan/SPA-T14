@@ -66,6 +66,10 @@ class ConstraintSolver {
   static AllowedValuesPair makeAllowedValues(Synonym&, Synonym&,
                                              AllowedValueSet&);
 
+  static std::map<std::pair<std::string, std::string>,
+                  std::set<std::pair<std::string, std::string>>>
+      intersectTupledConstraints(std::vector<AllowedValuesPair>);
+
   static std::string getStringPairAsString(std::pair<std::string, std::string>);
   static void printAllowedValuesPair(AllowedValuesPair&);
 

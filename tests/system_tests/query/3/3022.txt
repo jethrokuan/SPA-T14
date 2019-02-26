@@ -51,6 +51,8 @@ none
 11 - no results, since c can't be a parent*
 assign a; call c;
 Select a such that Parent*(c, a) pattern a(_,_"v1+v2"_)
+none
+5000
 12
 while w; assign a;
 Select a such that Parent*(w, a) pattern a(_,_"v1%v2"_)

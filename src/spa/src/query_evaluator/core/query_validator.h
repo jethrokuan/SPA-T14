@@ -20,6 +20,8 @@ class QueryValidator {
   void validateSynonymTypes(const Query&);
   //! Checks that all synonym arguments have the correct types
   void validateNoIdenticalSynonyms(const Query&);
+  //! Check that if the first argument to pattern is a synonym, must be a var
+  void validatePatternFirstArgSynonymIsVariable(const Query&);
 
  public:
   //! \brief Checks the semantics in the Query, throws

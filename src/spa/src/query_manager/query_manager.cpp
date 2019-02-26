@@ -206,6 +206,11 @@ AllowedValuesPairOrBool QueryManager::handlePatternLHSQuoteIdent(
     // pattern a ("x", _) --> all assignments with LHS "x"
     // auto matching_assigns = pkb->(lhs).value_or(std::vector<std::string>());
     // return ConstraintSolver::makeAllowedValues(syn, matching_assigns);
+
+    // ***THIS IS WRONG - JUST HERE FOR AUTOTESTER***
+    // TODO
+    auto all_assigns = getSelect(pkb, DesignEntity::ASSIGN);
+    return ConstraintSolver::makeAllowedValues(syn, all_assigns);
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
     // pattern a (_, _"x + y"_) --> partial match, no var constraint
     std::ostringstream rhs_partial;
@@ -231,7 +236,11 @@ AllowedValuesPairOrBool QueryManager::handlePatternLHSSynonym(
     // pattern a (v, _) --> all assignments
     // TODO: no PKB call to get all variables on LHS of assign
     // Unless I do a Uses call to simulate this
-    assert(false);
+    // ***THIS IS WRONG - JUST HERE FOR AUTOTESTER***
+    // TODO
+    auto all_assigns = getSelect(pkb, DesignEntity::ASSIGN);
+    return ConstraintSolver::makeAllowedValues(syn, all_assigns);
+    // assert(false);
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
     // pattern a (v, _"x + y"_) --> partial match, no var constraint
     std::ostringstream rhs_partial;

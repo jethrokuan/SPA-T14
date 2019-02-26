@@ -20,6 +20,6 @@ none
 5000
 5
 assign a; variable v;
-Select a pattern a(v, _"v"_")
+Select a pattern a(v, _"v"_)
 10,18,26,39,48,65,73,81,89,97,108,118,127,143,151,163,178
 5000

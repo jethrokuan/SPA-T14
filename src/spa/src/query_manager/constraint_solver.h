@@ -48,6 +48,13 @@ class ConstraintSolver {
                           std::set<AllowedValue>());
   }
 
+  //! Get an empty constraint set that's tied to a particular synonym
+  static AllowedValuesPair makeEmptyAllowedValuesPairForSynonyms(Synonym& s1,
+                                                                 Synonym& s2) {
+    return std::make_pair(std::make_pair(s1.synonym, s2.synonym),
+                          std::set<AllowedValue>());
+  }
+
   //! Version that does not require a Synonym object, just the string
   static AllowedValuesPair makeAllowedValues(std::string& syn,
                                              std::vector<std::string>& vals);

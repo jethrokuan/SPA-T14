@@ -45,6 +45,6 @@ none
 5000
 10
 assign a; stmt s;
-Select a such that Parent*(10,a)  pattern a(_, _"v1"_)
+Select a such that Parent*(9,a)  pattern a(_, _"v1"_)
 11,12,13,14,15,16,19,20,21,22,23,24
 5000

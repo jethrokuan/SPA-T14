@@ -15,7 +15,7 @@ using AllowedValue = std::pair<std::string, std::string>;
 //! Set of all allowed values for a synonym pair
 using AllowedValueSet = std::set<AllowedValue>;
 //! Describes a pair of synonyms and all of their allowed values
-using AllowedValuesPair = std::pair<SynonymPair, std::set<AllowedValue>>;
+using AllowedValuesPair = std::pair<SynonymPair, AllowedValueSet>;
 //! Describes all found pairs of synoynms and their allowed values
 using AllowedValuesList = std::vector<AllowedValuesPair>;
 

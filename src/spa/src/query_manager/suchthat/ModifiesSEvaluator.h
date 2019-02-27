@@ -5,39 +5,39 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_evaluator/pql/pql.h"
-#include "query_manager/constraint_solver.h"
 #include "query_manager/query_manager.h"
-#include "query_manager/relations/SuchThatEvaluator.h"
+#include "query_manager/suchthat/SuchThatEvaluator.h"
 
 using namespace PKB;
 using namespace QE;
 
-class FollowsTEvaluator : public SuchThatEvaluator {
+class ModifiesSEvaluator : public SuchThatEvaluator {
  public:
-  FollowsTEvaluator(Query* query, PKBManager* pkb)
+  ModifiesSEvaluator(Query* query, PKBManager* pkb)
       : SuchThatEvaluator(query, pkb){};
 
   // Handle cases with at least one variable selected
 
   AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() override {
-    // Follows*(s, 3)
-    auto results =
-        pkb->getBeforeLineS(*arg2AsBasic).value_or(std::vector<std::string>());
+    // Modifies(s, "x")
+    auto results = pkb->getLineModifiesVar(*arg2AsBasic)
+                       .value_or(std::vector<std::string>());
     return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
   }
   AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() override {
-    // Follows*(3, s)
-    auto results = pkb->getFollowingLineS(*arg1AsBasic)
+    // Modifies(3, v)
+    auto results = pkb->getVarModifiedByLine(*arg1AsBasic)
                        .value_or(std::vector<std::string>());
     return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
   }
   AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() override {
-    // Follows*(s, _)
+    // Modifies(s, _)
+    // Note that this should select all whiles and ifs
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (pkb->getFollowingLineS(de)) {
+      if (pkb->getVarModifiedByLine(de)) {
         results.push_back(de);
       }
     }
@@ -45,23 +45,14 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     ;
   }
   AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() override {
-    // Follows*(_, s)
-    auto all_selected_designentities = QueryManager::getSelect(
-        pkb, query->selected_declaration->getDesignEntity());
-    std::vector<std::string> results;
-    for (auto de : all_selected_designentities) {
-      if (pkb->getBeforeLineS(de)) {
-        results.push_back(de);
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
+    std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
+    assert(false);
   }
   AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() override {
-    // Follows*(s, s1)
+    // Modifies*(s, v)
     if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
-          *arg1AsSynonym, *arg2AsSynonym);
+      std::cout << "Should not happen: ModifiesS cannot have identical args\n";
+      assert(false);
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -73,7 +64,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineFollowLineS(de, unselect_de)) {
+        if (pkb->isLineModifiesVar(de, unselect_de)) {
           results.insert({de, unselect_de});
         }
       }
@@ -82,11 +73,10 @@ class FollowsTEvaluator : public SuchThatEvaluator {
                                                results);
   }
   AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() override {
-    // Follows*(s1, s)
+    // Modifies(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
-          *arg1AsSynonym, *arg2AsSynonym);
+      std::cout << "Should not happen: ModifiesS cannot have identical args\n";
+      assert(false);
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -98,7 +88,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineFollowLineS(unselect_de, de)) {
+        if (pkb->isLineModifiesVar(unselect_de, de)) {
           results.insert({unselect_de, de});
         }
       }
@@ -110,14 +100,13 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   // Handle cases with no variables selected
 
   AllowedValuesPairOrBool handleDoubleUnderscore() override {
-    return !pkb->isLineFollowLineSSetEmpty();
+    return !pkb->isLineModifiesVarSetEmpty();
   }
   AllowedValuesPairOrBool handleBothVarsUnselected() override {
-    // Follows*(s1, s2)
+    // Modifies(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
-          *arg1AsSynonym, *arg2AsSynonym);
+      std::cout << "Should not happen: ModifiesS cannot have identical args\n";
+      assert(false);
     }
     auto left_arg_de = Declaration::findDeclarationForSynonym(
                            query->declarations, *arg1AsSynonym)
@@ -132,7 +121,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     for (auto left_de : all_left_designentities) {
       for (auto right_de : all_right_designentities) {
         // Any satisfied relation would mean this clause is true overall
-        if (pkb->isLineFollowLineS(left_de, right_de)) {
+        if (pkb->isLineModifiesVar(left_de, right_de)) {
           results.insert({left_de, right_de});
         }
       }
@@ -141,28 +130,30 @@ class FollowsTEvaluator : public SuchThatEvaluator {
                                                results);
   }
   AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() override {
-    // Follows*(s1, 3)
+    // Modifies(s1, "x")
     return handleLeftVarSelectedRightBasic();
   }
   AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() override {
-    // Follows*(3, s1)
+    // Modifies(3, v1)
     return handleRightVarSelectedLeftBasic();
   }
+
+  // Unlikely that these last 4 will need to be changed
   AllowedValuesPairOrBool handleLeftBasicRightUnderscore() override {
-    // Follows*(3, _)
-    return pkb->getFollowingLineS(*arg1AsBasic).has_value();
+    // Modifies(3, _)
+    return pkb->getVarModifiedByLine(*arg1AsBasic).has_value();
   }
   AllowedValuesPairOrBool handleRightBasicLeftUnderscore() override {
-    // Follows*(_, 3)
-    return pkb->getBeforeLineS(*arg2AsBasic).has_value();
+    // Modifies(_, "x")
+    return pkb->getLineModifiesVar(*arg2AsBasic).has_value();
   }
   AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() override {
-    // Follows*(s1, _) --> is there a statement that is followed by anything?
+    // Modifies*(s1, _) --> is there a statement that modifies anything?
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleLeftVarSelectedRightUnderscore();
   }
   AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() override {
-    // Follows*(_, s1) --> is there a statement that follows anything?
+    // Modifies*(_, v1) --> is there a variable that is modified?
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleRightVarSelectedLeftUnderscore();
   }

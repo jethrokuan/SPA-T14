@@ -6,38 +6,38 @@
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_evaluator/pql/pql.h"
 #include "query_manager/query_manager.h"
-#include "query_manager/relations/SuchThatEvaluator.h"
+#include "query_manager/suchthat/SuchThatEvaluator.h"
 
 using namespace PKB;
 using namespace QE;
 
-class UsesSEvaluator : public SuchThatEvaluator {
+class ParentTEvaluator : public SuchThatEvaluator {
  public:
-  UsesSEvaluator(Query* query, PKBManager* pkb)
+  ParentTEvaluator(Query* query, PKBManager* pkb)
       : SuchThatEvaluator(query, pkb){};
 
   // Handle cases with at least one variable selected
 
   AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() override {
-    // Uses(s, "x")
+    // Parent*(s, 3)
     auto results =
-        pkb->getLineUsesVar(*arg2AsBasic).value_or(std::vector<std::string>());
+        pkb->getParentLineS(*arg2AsBasic).value_or(std::vector<std::string>());
     return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
   }
   AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() override {
-    // Uses(3, v)
-    auto results = pkb->getVarUsedByLine(*arg1AsBasic)
-                       .value_or(std::vector<std::string>());
+    // Parent*(3, s)
+    auto results =
+        pkb->getChildLineS(*arg1AsBasic).value_or(std::vector<std::string>());
     return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
   }
   AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() override {
-    // Uses(s, _)
+    // Parent*(s, _)
     // Note that this should select all whiles and ifs
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
     std::vector<std::string> results;
     for (auto de : all_selected_designentities) {
-      if (pkb->getVarUsedByLine(de)) {
+      if (pkb->getChildLineS(de)) {
         results.push_back(de);
       }
     }
@@ -45,14 +45,23 @@ class UsesSEvaluator : public SuchThatEvaluator {
     ;
   }
   AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() override {
-    std::cout << "Should not happen: UsesS first arg cannot be _\n";
-    assert(false);
+    // Parent*(_, s)
+    auto all_selected_designentities = QueryManager::getSelect(
+        pkb, query->selected_declaration->getDesignEntity());
+    std::vector<std::string> results;
+    for (auto de : all_selected_designentities) {
+      if (pkb->getParentLineS(de)) {
+        results.push_back(de);
+      }
+    }
+    return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
   }
   AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() override {
-    // Uses*(s, v)
+    // Parent*(s, s1)
     if (arg1AsSynonym == arg2AsSynonym) {
-      std::cout << "Should not happen: UsesS cannot have identical args\n";
-      assert(false);
+      // Cannot follow yourself
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -64,7 +73,7 @@ class UsesSEvaluator : public SuchThatEvaluator {
     AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineUsesVar(de, unselect_de)) {
+        if (pkb->isLineParentLineS(de, unselect_de)) {
           results.insert({de, unselect_de});
         }
       }
@@ -73,10 +82,11 @@ class UsesSEvaluator : public SuchThatEvaluator {
                                                results);
   }
   AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() override {
-    // Uses(s1, s)
+    // Parent*(s1, s)
     if (arg1AsSynonym == arg2AsSynonym) {
-      std::cout << "Should not happen: UsesS cannot have identical args\n";
-      assert(false);
+      // Cannot follow yourself
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto all_selected_designentities = QueryManager::getSelect(
         pkb, query->selected_declaration->getDesignEntity());
@@ -88,7 +98,7 @@ class UsesSEvaluator : public SuchThatEvaluator {
     AllowedValueSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineUsesVar(unselect_de, de)) {
+        if (pkb->isLineParentLineS(unselect_de, de)) {
           results.insert({unselect_de, de});
         }
       }
@@ -100,13 +110,14 @@ class UsesSEvaluator : public SuchThatEvaluator {
   // Handle cases with no variables selected
 
   AllowedValuesPairOrBool handleDoubleUnderscore() override {
-    return !pkb->isLineUsesVarSetEmpty();
+    return !pkb->isLineParentLineSSetEmpty();
   }
   AllowedValuesPairOrBool handleBothVarsUnselected() override {
-    // Uses(s1, s2)
+    // Parent*(s1, s2)
     if (arg1AsSynonym == arg2AsSynonym) {
-      std::cout << "Should not happen: UsesS cannot have identical args\n";
-      assert(false);
+      // Cannot follow yourself
+      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
+          *arg1AsSynonym, *arg2AsSynonym);
     }
     auto left_arg_de = Declaration::findDeclarationForSynonym(
                            query->declarations, *arg1AsSynonym)
@@ -121,39 +132,38 @@ class UsesSEvaluator : public SuchThatEvaluator {
     for (auto left_de : all_left_designentities) {
       for (auto right_de : all_right_designentities) {
         // Any satisfied relation would mean this clause is true overall
-        if (pkb->isLineUsesVar(left_de, right_de)) {
+        if (pkb->isLineParentLineS(left_de, right_de)) {
           results.insert({left_de, right_de});
         }
       }
     }
     return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
                                                results);
-    }
+  }
   AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() override {
-    // Uses(s1, "x")
+    // Parent*(s1, 3)
     return handleLeftVarSelectedRightBasic();
   }
   AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() override {
-    // Uses(3, v1)
+    // Parent*(3, s1)
     return handleRightVarSelectedLeftBasic();
   }
 
-  // Unlikely that these last 4 will need to be changed
   AllowedValuesPairOrBool handleLeftBasicRightUnderscore() override {
-    // Uses(3, _)
-    return pkb->getVarUsedByLine(*arg1AsBasic).has_value();
+    // Parent*(3, _)
+    return pkb->getChildLineS(*arg1AsBasic).has_value();
   }
   AllowedValuesPairOrBool handleRightBasicLeftUnderscore() override {
-    // Uses(_, "x")
-    return pkb->getLineUsesVar(*arg2AsBasic).has_value();
+    // Parent*(_, 3)
+    return pkb->getParentLineS(*arg2AsBasic).has_value();
   }
   AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() override {
-    // Uses*(s1, _) --> is there a statement that uses any variable?
+    // Parent*(s1, _) --> is there a statement that is a parent of anything?
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleLeftVarSelectedRightUnderscore();
   }
   AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() override {
-    // Uses*(_, v) --> is there a variable that is used?
+    // Parent*(_, s1) --> is there a statement that is a child of anything?
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleRightVarSelectedLeftUnderscore();
   }

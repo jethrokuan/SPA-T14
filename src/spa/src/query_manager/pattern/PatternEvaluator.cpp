@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 #include "query_manager/query_manager.h"
-#include "query_manager/relations/FollowsEvaluator.h"
-#include "query_manager/relations/FollowsTEvaluator.h"
-#include "query_manager/relations/ModifiesSEvaluator.h"
-#include "query_manager/relations/ParentEvaluator.h"
-#include "query_manager/relations/ParentTEvaluator.h"
-#include "query_manager/relations/UsesSEvaluator.h"
+#include "query_manager/suchthat/FollowsEvaluator.h"
+#include "query_manager/suchthat/FollowsTEvaluator.h"
+#include "query_manager/suchthat/ModifiesSEvaluator.h"
+#include "query_manager/suchthat/ParentEvaluator.h"
+#include "query_manager/suchthat/ParentTEvaluator.h"
+#include "query_manager/suchthat/UsesSEvaluator.h"
 
 AllowedValuesPairOrBool PatternEvaluator::evaluate() {
   auto pattern = query->pattern;

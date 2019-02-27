@@ -1,4 +1,4 @@
-#include "query_manager/relations/SuchThatEvaluator.h"
+#include "query_manager/suchthat/SuchThatEvaluator.h"
 #include <cassert>
 #include <string>
 #include <vector>

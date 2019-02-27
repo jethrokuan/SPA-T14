@@ -703,6 +703,13 @@ TEST_CASE (
         "assign p;Select p such that Follows(a, b) pattern p (_\"y\"_, _)";
     REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
   }
+
+  SECTION ("Pattern test Pattern a(_, \"+a\")") {
+    auto qp = QE::QueryPreprocessor();
+    std::string input =
+        "assign p;Select p such that Follows(a, b) pattern a(_, \"+a\")";
+    REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLParseException);
+  }
 }
 
 // This should use REQUIRE_THROWS_MATCHES, but I cannot get the matcher to work

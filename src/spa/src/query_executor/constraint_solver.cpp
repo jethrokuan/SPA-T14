@@ -1,4 +1,4 @@
-#include "query_manager/constraint_solver.h"
+#include "query_executor/constraint_solver.h"
 #include <algorithm>
 #include <cassert>
 #include <iostream>

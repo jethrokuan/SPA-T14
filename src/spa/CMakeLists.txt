@@ -36,23 +36,23 @@ set(headers ${headers}
 
 # Query Manager files
 set(srcs ${srcs}
-  src/query_manager/query_manager.cpp
-  src/query_manager/query_manager_utils.cpp
-  src/query_manager/constraint_solver.cpp
-  src/query_manager/suchthat/SuchThatEvaluator.cpp
-  src/query_manager/pattern/PatternEvaluator.cpp
+  src/query_executor/query_executor.cpp
+  src/query_executor/query_executor_utils.cpp
+  src/query_executor/constraint_solver.cpp
+  src/query_executor/suchthat/SuchThatEvaluator.cpp
+  src/query_executor/pattern/PatternEvaluator.cpp
   )
 set(headers ${headers}
-  src/query_manager/query_manager.h
-  src/query_manager/constraint_solver.h
-  src/query_manager/suchthat/SuchThatEvaluator.h
-  src/query_manager/suchthat/FollowsTEvaluator.h
-  src/query_manager/suchthat/ParentTEvaluator.h
-  src/query_manager/suchthat/ModifiesSEvaluator.h
-  src/query_manager/suchthat/UsesSEvaluator.h
-  src/query_manager/suchthat/FollowsEvaluator.h
-  src/query_manager/suchthat/ParentEvaluator.h
-  src/query_manager/pattern/PatternEvaluator.h
+  src/query_executor/query_executor.h
+  src/query_executor/constraint_solver.h
+  src/query_executor/suchthat/SuchThatEvaluator.h
+  src/query_executor/suchthat/FollowsTEvaluator.h
+  src/query_executor/suchthat/ParentTEvaluator.h
+  src/query_executor/suchthat/ModifiesSEvaluator.h
+  src/query_executor/suchthat/UsesSEvaluator.h
+  src/query_executor/suchthat/FollowsEvaluator.h
+  src/query_executor/suchthat/ParentEvaluator.h
+  src/query_executor/pattern/PatternEvaluator.h
   )
 
 # PQL Query Builder files

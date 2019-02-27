@@ -1,15 +1,15 @@
-#include "query_manager/pattern/PatternEvaluator.h"
+#include "query_executor/pattern/PatternEvaluator.h"
 #include <cassert>
 #include <sstream>
 #include <string>
 #include <vector>
-#include "query_manager/query_manager.h"
-#include "query_manager/suchthat/FollowsEvaluator.h"
-#include "query_manager/suchthat/FollowsTEvaluator.h"
-#include "query_manager/suchthat/ModifiesSEvaluator.h"
-#include "query_manager/suchthat/ParentEvaluator.h"
-#include "query_manager/suchthat/ParentTEvaluator.h"
-#include "query_manager/suchthat/UsesSEvaluator.h"
+#include "query_executor/query_executor.h"
+#include "query_executor/suchthat/FollowsEvaluator.h"
+#include "query_executor/suchthat/FollowsTEvaluator.h"
+#include "query_executor/suchthat/ModifiesSEvaluator.h"
+#include "query_executor/suchthat/ParentEvaluator.h"
+#include "query_executor/suchthat/ParentTEvaluator.h"
+#include "query_executor/suchthat/UsesSEvaluator.h"
 
 AllowedValuesPairOrBool PatternEvaluator::evaluate() {
   auto pattern = query->pattern;
@@ -28,7 +28,7 @@ AllowedValuesPairOrBool PatternEvaluator::evaluate() {
     return handlePatternLHSUnderscore(pattern_syn, pattern_rhs);
   } else if (std::get_if<QuoteIdent>(&pattern_lhs)) {
     return handlePatternLHSQuoteIdent(
-        pattern_syn, QueryManager::entRefToString(pattern_lhs), pattern_rhs);
+        pattern_syn, QueryExecutor::entRefToString(pattern_lhs), pattern_rhs);
   } else if (auto lhs_syn = std::get_if<Synonym>(&pattern_lhs)) {
     return handlePatternLHSSynonym(pattern_syn, *lhs_syn, pattern_rhs);
   } else {
@@ -41,7 +41,7 @@ AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSUnderscore(
   // pattern a (_, <...>)
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (_, _) --> all assignments
-    auto all_assigns = QueryManager::getSelect(pkb, DesignEntity::ASSIGN);
+    auto all_assigns = QueryExecutor::getSelect(pkb, DesignEntity::ASSIGN);
     return ConstraintSolver::makeAllowedValues(syn, all_assigns);
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
     // pattern a (_, _"x + y"_) --> partial match, no var constraint

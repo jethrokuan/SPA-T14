@@ -1,13 +1,13 @@
 #include <cassert>
 #include <string>
 #include <vector>
-#include "query_manager/query_manager.h"
+#include "query_executor/query_executor.h"
 #include "utils/utils.h"
 
 using namespace QE;
 
 //! If all args are statement number / quoted ident - can return bool from PKB
-bool QueryManager::isBooleanSuchThat(SuchThat* such_that) {
+bool QueryExecutor::isBooleanSuchThat(SuchThat* such_that) {
   // Must be true from earlier query processing
   assert(such_that != nullptr);
 
@@ -35,7 +35,7 @@ bool QueryManager::isBooleanSuchThat(SuchThat* such_that) {
              such_that_secondarg);
 }
 
-bool QueryManager::isBooleanSuchThatTrue(SuchThat* such_that) {
+bool QueryExecutor::isBooleanSuchThatTrue(SuchThat* such_that) {
   // Must be true from earlier query processing
   assert(such_that != nullptr);
 
@@ -70,13 +70,13 @@ bool QueryManager::isBooleanSuchThatTrue(SuchThat* such_that) {
   assert(false);
 }
 
-std::string QueryManager::suchThatArgToString(StmtOrEntRef arg) {
+std::string QueryExecutor::suchThatArgToString(StmtOrEntRef arg) {
   return std::visit(overload{[](StmtRef& s) { return stmtRefToString(s); },
                              [](EntRef& e) { return entRefToString(e); }},
                     arg);
 }
 
-std::string QueryManager::stmtRefToString(StmtRef arg) {
+std::string QueryExecutor::stmtRefToString(StmtRef arg) {
   return std::visit(
       overload{[](Synonym& s) { return s.synonym; },
                [](Underscore&) { return std::string("_"); },
@@ -84,7 +84,7 @@ std::string QueryManager::stmtRefToString(StmtRef arg) {
       arg);
 }
 
-std::string QueryManager::entRefToString(EntRef arg) {
+std::string QueryExecutor::entRefToString(EntRef arg) {
   return std::visit(overload{[](Synonym& s) { return s.synonym; },
                              [](Underscore&) { return std::string("_"); },
                              [](QuoteIdent& s) {
@@ -95,7 +95,8 @@ std::string QueryManager::entRefToString(EntRef arg) {
                     arg);
 }
 
-std::optional<Synonym> QueryManager::getSuchThatArgAsSynonym(StmtOrEntRef arg) {
+std::optional<Synonym> QueryExecutor::getSuchThatArgAsSynonym(
+    StmtOrEntRef arg) {
   auto add_pointer_synonym =
       std::visit(overload{[](StmtRef& s) { return std::get_if<Synonym>(&s); },
                           [](EntRef& e) { return std::get_if<Synonym>(&e); }},
@@ -104,7 +105,7 @@ std::optional<Synonym> QueryManager::getSuchThatArgAsSynonym(StmtOrEntRef arg) {
                              : std::nullopt;
 }
 
-bool QueryManager::isSuchThatArgUnderscore(StmtOrEntRef arg) {
+bool QueryExecutor::isSuchThatArgUnderscore(StmtOrEntRef arg) {
   return std::visit(
       overload{[](StmtRef& s) { return std::holds_alternative<Underscore>(s); },
                [](EntRef& e) { return std::holds_alternative<Underscore>(e); }},
@@ -112,7 +113,7 @@ bool QueryManager::isSuchThatArgUnderscore(StmtOrEntRef arg) {
 }
 
 //! Returns argument as a basic statementref or quoteident as string
-std::optional<std::string> QueryManager::getSuchThatArgAsBasic(
+std::optional<std::string> QueryExecutor::getSuchThatArgAsBasic(
     StmtOrEntRef arg) {
   return std::visit(
       overload{[](StmtRef& s) -> std::optional<std::string> {

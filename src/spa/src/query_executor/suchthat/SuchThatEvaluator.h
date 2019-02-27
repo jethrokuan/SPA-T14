@@ -4,7 +4,7 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_manager/query_manager.h"
+#include "query_executor/query_executor.h"
 
 using namespace PKB;
 using namespace QE;

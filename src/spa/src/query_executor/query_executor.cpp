@@ -1,27 +1,27 @@
-#include "query_manager/query_manager.h"
 #include <cassert>
 #include <sstream>
 #include <string>
 #include <vector>
-#include "query_manager/pattern/PatternEvaluator.h"
-#include "query_manager/suchthat/FollowsEvaluator.h"
-#include "query_manager/suchthat/FollowsTEvaluator.h"
-#include "query_manager/suchthat/ModifiesSEvaluator.h"
-#include "query_manager/suchthat/ParentEvaluator.h"
-#include "query_manager/suchthat/ParentTEvaluator.h"
-#include "query_manager/suchthat/UsesSEvaluator.h"
+#include "query_executor/pattern/PatternEvaluator.h"
+#include "query_executor/query_executor.h"
+#include "query_executor/suchthat/FollowsEvaluator.h"
+#include "query_executor/suchthat/FollowsTEvaluator.h"
+#include "query_executor/suchthat/ModifiesSEvaluator.h"
+#include "query_executor/suchthat/ParentEvaluator.h"
+#include "query_executor/suchthat/ParentTEvaluator.h"
+#include "query_executor/suchthat/UsesSEvaluator.h"
 
 using namespace QE;
 
 //! \brief Sorts the vector of strings returned by the query system
 //! This decouples the return order of PKB with the result to screen
-std::vector<std::string> QueryManager::makeQuery(Query* query) {
+std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   auto result = makeQueryUnsorted(query);
   std::sort(result.begin(), result.end());
   return result;
 }
 
-std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
+std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
   if (query->such_that == nullptr && query->pattern == nullptr) {
     return getSelect(pkb, query->selected_declaration->getDesignEntity());
@@ -77,8 +77,8 @@ std::vector<std::string> QueryManager::makeQueryUnsorted(Query* query) {
       allowed_values, query->selected_declaration->getSynonym().synonym);
 }
 
-std::vector<std::string> QueryManager::getSelect(PKBManager* pkb,
-                                                 DesignEntity de) {
+std::vector<std::string> QueryExecutor::getSelect(PKBManager* pkb,
+                                                  DesignEntity de) {
   // All possible return types from select all PKB calls are vector<string>
   // std::cout << "GetSelect: ";
   switch (de) {
@@ -133,7 +133,7 @@ std::vector<std::string> QueryManager::getSelect(PKBManager* pkb,
   return std::vector<std::string>();
 }
 
-AllowedValuesPairOrBool QueryManager::handleNonBooleanSuchThat(Query* query) {
+AllowedValuesPairOrBool QueryExecutor::handleNonBooleanSuchThat(Query* query) {
   switch (query->such_that->getRelation()) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb).evaluate();
@@ -153,6 +153,6 @@ AllowedValuesPairOrBool QueryManager::handleNonBooleanSuchThat(Query* query) {
   }
 }
 
-AllowedValuesPairOrBool QueryManager::handlePattern(Query* query) {
+AllowedValuesPairOrBool QueryExecutor::handlePattern(Query* query) {
   return PatternEvaluator(query, pkb).evaluate();
 }

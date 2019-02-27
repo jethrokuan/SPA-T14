@@ -2,14 +2,14 @@
 #include <string>
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
-#include "query_manager/query_manager.h"
+#include "query_executor/query_executor.h"
 
 using namespace PKB;
 
 class SPAManager {
  private:
   PKBManager* pkb;
-  QueryManager* qm;
+  QueryExecutor* qm;
 
  public:
   void loadSimpleSource(std::string filename);

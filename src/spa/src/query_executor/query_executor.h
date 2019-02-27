@@ -5,7 +5,7 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_manager/constraint_solver.h"
+#include "query_executor/constraint_solver.h"
 
 using namespace PKB;
 
@@ -15,7 +15,7 @@ using namespace PKB;
 //! Otherwise, need to constrain other relevant values
 using AllowedValuesPairOrBool = std::variant<AllowedValuesPair, bool>;
 
-class QueryManager {
+class QueryExecutor {
  private:
   PKBManager* pkb;
 
@@ -32,7 +32,7 @@ class QueryManager {
   AllowedValuesPairOrBool handlePattern(QE::Query* query);
 
  public:
-  QueryManager(PKBManager* pkb) : pkb(pkb){};
+  QueryExecutor(PKBManager* pkb) : pkb(pkb){};
   std::vector<std::string> makeQuery(QE::Query* query);
 
   //! Convert a StmtOrEntRef to a string to pass to PKB

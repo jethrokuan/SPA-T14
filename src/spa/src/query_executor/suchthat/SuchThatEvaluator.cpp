@@ -1,22 +1,22 @@
-#include "query_manager/suchthat/SuchThatEvaluator.h"
+#include "query_executor/suchthat/SuchThatEvaluator.h"
 #include <cassert>
 #include <string>
 #include <vector>
-#include "query_manager/query_manager.h"
+#include "query_executor/query_executor.h"
 
 AllowedValuesPairOrBool SuchThatEvaluator::evaluate() {
   // Get all relevant variables so that further work with such_that can be
   // easily done
   // Get all relevant variables so that further work with such_that can be
   // easily done
-  arg1AsSynonym = QueryManager::getSuchThatArgAsSynonym(arg1);
-  arg2AsSynonym = QueryManager::getSuchThatArgAsSynonym(arg2);
+  arg1AsSynonym = QueryExecutor::getSuchThatArgAsSynonym(arg1);
+  arg2AsSynonym = QueryExecutor::getSuchThatArgAsSynonym(arg2);
   arg1InSelect = false;
   arg2InSelect = false;
-  arg1IsUnderscore = QueryManager::isSuchThatArgUnderscore(arg1),
-  arg2IsUnderscore = QueryManager::isSuchThatArgUnderscore(arg2);
-  arg1AsBasic = QueryManager::getSuchThatArgAsBasic(arg1);
-  arg2AsBasic = QueryManager::getSuchThatArgAsBasic(arg2);
+  arg1IsUnderscore = QueryExecutor::isSuchThatArgUnderscore(arg1),
+  arg2IsUnderscore = QueryExecutor::isSuchThatArgUnderscore(arg2);
+  arg1AsBasic = QueryExecutor::getSuchThatArgAsBasic(arg1);
+  arg2AsBasic = QueryExecutor::getSuchThatArgAsBasic(arg2);
 
   if (arg1AsSynonym) {
     arg1InSelect = query->selected_declaration->getSynonym() == arg1AsSynonym

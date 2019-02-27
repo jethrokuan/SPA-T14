@@ -2,10 +2,10 @@
 #include <iostream>
 #include <optional>
 
-#include "query_evaluator/pql/factor.h"
-#include "query_evaluator/pql/stmtentref.h"
-#include "query_evaluator/pql/synonym.h"
-#include "query_evaluator/pql/underscore.h"
+#include "query_builder/pql/factor.h"
+#include "query_builder/pql/stmtentref.h"
+#include "query_builder/pql/synonym.h"
+#include "query_builder/pql/underscore.h"
 #include "utils/utils.h"
 
 using namespace Utils;

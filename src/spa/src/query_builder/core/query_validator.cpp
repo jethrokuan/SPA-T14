@@ -1,8 +1,8 @@
-#include "query_evaluator/core/query_validator.h"
+#include "query_builder/core/query_validator.h"
 #include <unordered_set>
 #include <variant>
-#include "query_evaluator/core/exceptions.h"
-#include "query_evaluator/pql/declaration.h"
+#include "query_builder/core/exceptions.h"
+#include "query_builder/pql/declaration.h"
 
 using namespace QE;
 

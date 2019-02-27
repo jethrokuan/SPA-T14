@@ -55,38 +55,38 @@ set(headers ${headers}
   src/query_manager/pattern/PatternEvaluator.h
   )
 
-# PQL Query Evaluator files
+# PQL Query Builder files
 set(srcs ${srcs}
-  src/query_evaluator/query_evaluator.cpp
-  src/query_evaluator/core/query_preprocessor.cpp
-  src/query_evaluator/core/query_tokenizer.cpp
-  src/query_evaluator/core/query_validator.cpp
-  src/query_evaluator/pql/design_entity.cpp
-  src/query_evaluator/pql/factor.cpp
-  src/query_evaluator/pql/pattern.cpp
-  src/query_evaluator/pql/quoteident.cpp
-  src/query_evaluator/pql/query.cpp
-  src/query_evaluator/pql/relation.cpp
-  src/query_evaluator/pql/suchthat.cpp
-  src/query_evaluator/pql/synonym.cpp
+  src/query_builder/query_builder.cpp
+  src/query_builder/core/query_preprocessor.cpp
+  src/query_builder/core/query_tokenizer.cpp
+  src/query_builder/core/query_validator.cpp
+  src/query_builder/pql/design_entity.cpp
+  src/query_builder/pql/factor.cpp
+  src/query_builder/pql/pattern.cpp
+  src/query_builder/pql/quoteident.cpp
+  src/query_builder/pql/query.cpp
+  src/query_builder/pql/relation.cpp
+  src/query_builder/pql/suchthat.cpp
+  src/query_builder/pql/synonym.cpp
  )
 set(headers ${headers}
-  src/query_evaluator/query_evaluator.h
-  src/query_evaluator/core/query_preprocessor.h
-  src/query_evaluator/core/query_tokenizer.h
-  src/query_evaluator/core/query_validator.h
-  src/query_evaluator/pql/pql.h
-  src/query_evaluator/pql/declaration.h
-  src/query_evaluator/pql/design_entity.h
-  src/query_evaluator/pql/factor.h
-  src/query_evaluator/pql/pattern.h
-  src/query_evaluator/pql/query.h
-  src/query_evaluator/pql/quoteident.h
-  src/query_evaluator/pql/relation.h
-  src/query_evaluator/pql/stmtentref.h
-  src/query_evaluator/pql/suchthat.h
-  src/query_evaluator/pql/synonym.h
-  src/query_evaluator/pql/underscore.h
+  src/query_builder/query_builder.h
+  src/query_builder/core/query_preprocessor.h
+  src/query_builder/core/query_tokenizer.h
+  src/query_builder/core/query_validator.h
+  src/query_builder/pql/pql.h
+  src/query_builder/pql/declaration.h
+  src/query_builder/pql/design_entity.h
+  src/query_builder/pql/factor.h
+  src/query_builder/pql/pattern.h
+  src/query_builder/pql/query.h
+  src/query_builder/pql/quoteident.h
+  src/query_builder/pql/relation.h
+  src/query_builder/pql/stmtentref.h
+  src/query_builder/pql/suchthat.h
+  src/query_builder/pql/synonym.h
+  src/query_builder/pql/underscore.h
  )
   
 # SIMPLE parser files

@@ -1,11 +1,11 @@
-#include "query_evaluator/query_evaluator.h"
 #include <iostream>
-#include "query_evaluator/core/query_preprocessor.h"
-#include "query_evaluator/core/query_validator.h"
+#include "query_builder/core/query_preprocessor.h"
+#include "query_builder/core/query_validator.h"
+#include "query_builder/query_builder.h"
 
 using namespace QE;
 
-Query* QueryEvaluator::makePqlQuery(std::string& pql_query_string) {
+Query* QueryBuilder::makePqlQuery(std::string& pql_query_string) {
   // Debug printing of the query receives
   // std::cout << pql_query_string << std::endl;
 

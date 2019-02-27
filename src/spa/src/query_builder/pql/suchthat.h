@@ -2,8 +2,8 @@
 #include <iostream>
 #include <optional>
 
-#include "query_evaluator/pql/relation.h"
-#include "query_evaluator/pql/stmtentref.h"
+#include "query_builder/pql/relation.h"
+#include "query_builder/pql/stmtentref.h"
 #include "utils/utils.h"
 
 using namespace Utils;

@@ -1,4 +1,4 @@
-#include "query_evaluator/pql/synonym.h"
+#include "query_builder/pql/synonym.h"
 using namespace QE;
 
 const std::regex Synonym::synonym_regex = std::regex("[a-zA-Z](\\d|[a-zA-Z])*");

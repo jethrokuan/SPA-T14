@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "program_knowledge_base/pkb_manager.h"
-#include "query_evaluator/core/exceptions.h"
-#include "query_evaluator/pql/pql.h"
-#include "query_evaluator/query_evaluator.h"
+#include "query_builder/core/exceptions.h"
+#include "query_builder/pql/pql.h"
+#include "query_builder/query_builder.h"
 #include "query_manager/query_manager.h"
 #include "simple_parser/interface.h"
 
@@ -20,7 +20,7 @@ TEST_CASE ("Test Query Manager FollowsT functionality - simple_1") {
   // Store PKB variable in class for querying later
   auto pkb = new PKBManager(ast);
   auto qm = new QueryManager(pkb);
-  auto qe = QueryEvaluator();
+  auto qe = QueryBuilder();
 
   SECTION ("Test select all assignments") {
     auto querystr = std::string("assign a; Select a;");

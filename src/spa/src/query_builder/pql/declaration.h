@@ -3,9 +3,9 @@
 #include <regex>
 #include <string>
 
-#include "query_evaluator/pql/design_entity.h"
-#include "query_evaluator/pql/stmtentref.h"
-#include "query_evaluator/pql/synonym.h"
+#include "query_builder/pql/design_entity.h"
+#include "query_builder/pql/stmtentref.h"
+#include "query_builder/pql/synonym.h"
 
 namespace QE {
 //! Represents a single declaration in a PQL query (e.g. 'assign a')

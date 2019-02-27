@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "query_evaluator/pql/query.h"
+#include "query_builder/pql/query.h"
 
 namespace QE {
 

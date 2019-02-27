@@ -1,9 +1,9 @@
-#include "query_evaluator/core/query_tokenizer.h"
+#include "query_builder/core/query_tokenizer.h"
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
-#include "query_evaluator/core/exceptions.h"
+#include "query_builder/core/exceptions.h"
 #include "utils/utils.h"
 
 using namespace QE;

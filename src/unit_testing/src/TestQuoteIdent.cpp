@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "query_evaluator/pql/pql.h"
+#include "query_builder/pql/pql.h"
 
 TEST_CASE ("Empty QuoteIndent without Quotes") {
   auto d = QE::QuoteIdent::construct("");

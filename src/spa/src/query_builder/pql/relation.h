@@ -3,8 +3,8 @@
 #include <regex>
 #include <string>
 
-#include "query_evaluator/pql/design_entity.h"
-#include "query_evaluator/pql/relation.h"
+#include "query_builder/pql/design_entity.h"
+#include "query_builder/pql/relation.h"
 
 namespace QE {
 // WARNING: WHEN UPDATING THIS CLASS --> Update cpp file

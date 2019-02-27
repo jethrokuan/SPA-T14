@@ -1,4 +1,4 @@
-#include "query_evaluator/pql/query.h"
+#include "query_builder/pql/query.h"
 using namespace QE;
 
 Query::Query()

@@ -3,7 +3,7 @@
 #include <optional>
 #include <variant>
 
-#include "query_evaluator/pql/synonym.h"
+#include "query_builder/pql/synonym.h"
 #include "utils/utils.h"
 
 using namespace Utils;

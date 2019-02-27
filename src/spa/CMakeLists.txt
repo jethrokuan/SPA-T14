@@ -40,6 +40,7 @@ set(srcs ${srcs}
   src/query_manager/query_manager_utils.cpp
   src/query_manager/constraint_solver.cpp
   src/query_manager/relations/SuchThatEvaluator.cpp
+  src/query_manager/pattern/PatternEvaluator.cpp
   )
 set(headers ${headers}
   src/query_manager/query_manager.h
@@ -51,6 +52,7 @@ set(headers ${headers}
   src/query_manager/relations/UsesSEvaluator.h
   src/query_manager/relations/FollowsEvaluator.h
   src/query_manager/relations/ParentEvaluator.h
+  src/query_manager/pattern/PatternEvaluator.h
   )
 
 # PQL Query Evaluator files

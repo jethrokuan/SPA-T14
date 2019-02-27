@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "query_evaluator/core/query_tokenizer.h"
+#include "query_builder/core/query_tokenizer.h"
 
 TEST_CASE ("Test Empty Query Tokenize") {
   auto qt = QE::QueryTokenizer();

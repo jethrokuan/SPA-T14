@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
-#include "query_evaluator/core/exceptions.h"
-#include "query_evaluator/pql/pql.h"
-#include "query_evaluator/query_evaluator.h"
-#include "query_manager/query_manager.h"
+#include "query_builder/core/exceptions.h"
+#include "query_builder/pql/pql.h"
+#include "query_builder/query_builder.h"
+#include "query_executor/query_executor.h"
 #include "simple_parser/interface.h"
 
 using namespace PKB;
@@ -19,11 +19,11 @@ void SPAManager::loadSimpleSource(std::string filename) {
 
   // Store PKB variable in class for querying laster
   pkb = new PKBManager(ast);
-  qm = new QueryManager(pkb);
+  qm = new QueryExecutor(pkb);
 }
 
 std::vector<std::string> SPAManager::query(std::string& pql_query) {
-  auto qe = QueryEvaluator();
+  auto qe = QueryBuilder();
   auto query = qe.makePqlQuery(pql_query);
   auto query_results = qm->makeQuery(query);
   return query_results;

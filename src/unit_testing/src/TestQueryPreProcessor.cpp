@@ -2,9 +2,9 @@
 
 #include <iostream>
 #include <vector>
-#include "query_evaluator/core/exceptions.h"
-#include "query_evaluator/core/query_preprocessor.h"
-#include "query_evaluator/query_evaluator.h"
+#include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_preprocessor.h"
+#include "query_builder/query_builder.h"
 
 using namespace QE;
 TEST_CASE ("Test one entity one select query Preprocess") {

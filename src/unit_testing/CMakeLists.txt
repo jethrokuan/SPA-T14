@@ -16,7 +16,7 @@ set(srcs ${srcs}
 set(srcs ${srcs}
   src/main.cpp
   src/TestPKB.cpp
-  src/TestQueryEvaluator.cpp
+  src/TestQueryBuilder.cpp
   src/TestQueryPreProcessor.cpp
   src/TestQueryTokenizer.cpp
   src/TestQueryValidator.cpp

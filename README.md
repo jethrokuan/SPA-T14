@@ -37,6 +37,17 @@ This can be chained into more complex calls: to check for any tests that failed 
 
 `grep -B 14 -n -r /failed tests/system_tests/output/ | grep id | grep -v Pattern`
 
+## Profiling
+To get profiling output for SPA, you will need either (`valgrind` (necessary) + `kcachegrind` (optional)) or `gprof`. Currently, the `valgrind` option seems to be more useful - `gprof` is not reporting execution times correctly. 
+1. Run `cmake` with the additional flag `-DPROFILING=ON`, and build with `make` as per before
+2. (Option 1): 
+     - Run `valgrind --tool=callgrind build/src/profiling/profiling` to produce a profiling output file
+     - Use `kcachegrind <generated file name>` to visualize the output
+3. (Option 2):
+    - Run `gprof build/src/profiling/profiling > gprof.out` to get gprof output
+
+To change what's being profiled, change the code inside `src/profiling/src/main.cpp`
+
 
 ## Generating documentation
 1. Run `doxygen` in the root project folder. 

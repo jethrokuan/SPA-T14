@@ -11,6 +11,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS "-std=c++1z -Wall -Wextra -Wcast-qual -Wcast-align -Wstrict-aliasing -Wpointer-arith -Winit-self -Wshadow -Wswitch-enum -Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls -Wfloat-equal -Wundef -Wvla -Wdeclaration-after-statement -Wc++-compat")
 
+if (PROFILING)
+  message("******* Profiling active *********")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -pg")
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g -pg")
+  SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -g -pg")
+endif()
+
 if (WIN32)
   SET(CMAKE_FIND_LIBRARY_PREFIXES "")
   SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
@@ -36,6 +43,9 @@ if (BUILD_GUI)
 endif()
 add_subdirectory(src/unit_testing)
 add_subdirectory(src/integration_testing)
+if (PROFILING)
+  add_subdirectory(src/profiling)
+endif()
 
 enable_testing()
 add_test(NAME UnitTests COMMAND unit_testing WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})

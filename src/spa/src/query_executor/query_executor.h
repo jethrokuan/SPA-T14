@@ -5,7 +5,7 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_executor/constraint_solver.h"
+#include "query_executor/constraint_solver/constraint_solver.h"
 
 using namespace PKB;
 
@@ -13,7 +13,7 @@ using namespace PKB;
 //! bool == true ==> no constraints.
 //! bool == false or empty allowed pair ==> no valid results
 //! Otherwise, need to constrain other relevant values
-using AllowedValuesPairOrBool = std::variant<AllowedValuesPair, bool>;
+using AllowedValuesPairOrBool = std::variant<TupledConstraint, bool>;
 
 class QueryExecutor {
  private:

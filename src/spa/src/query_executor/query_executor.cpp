@@ -1,9 +1,9 @@
+#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
 #include <vector>
 #include "query_executor/pattern/PatternEvaluator.h"
-#include "query_executor/query_executor.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
@@ -48,7 +48,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
       return std::vector<std::string>();
     }  // Nothing to do if true - handle later
   } else if (auto such_that_constrain_result =
-                 std::get_if<AllowedValuesPair>(&such_that_result)) {
+                 std::get_if<TupledConstraint>(&such_that_result)) {
     // This only works now - check for empty allowed list and return immediately
     // if so. Works because a constraint list indicates at least one variable
     // was selected - else it would be a `false` value
@@ -62,7 +62,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // Evaluate pattern results if they exist
   if (query->pattern) {
     pattern_result = handlePattern(query);
-    allowed_values.push_back(std::get<AllowedValuesPair>(pattern_result));
+    allowed_values.push_back(std::get<TupledConstraint>(pattern_result));
   }
 
   // Add select to the list of constraints

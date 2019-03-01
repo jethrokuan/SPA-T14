@@ -4,7 +4,7 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_executor/constraint_solver.h"
+#include "query_executor/constraint_solver/constraint_solver.h"
 #include "query_executor/query_executor.h"
 
 using namespace PKB;

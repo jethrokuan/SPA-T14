@@ -87,7 +87,7 @@ AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSSynonym(
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (v, _) --> all assignments
     auto allowed_values = pkb->getAllPatternLinesAndVars();
-    AllowedValueSet avs(allowed_values.begin(), allowed_values.end());
+    AllowedValuePairSet avs(allowed_values.begin(), allowed_values.end());
     return ConstraintSolver::makeAllowedValues(syn, lhs, avs);
     // assert(false);
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
@@ -99,7 +99,7 @@ AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSSynonym(
     auto allowed_values = pkb->getPartialMatchLinesAndVars(rhs_partial.str())
                               .value_or(std::vector<SynonymPair>());
 
-    AllowedValueSet avs(allowed_values.begin(), allowed_values.end());
+    AllowedValuePairSet avs(allowed_values.begin(), allowed_values.end());
     return ConstraintSolver::makeAllowedValues(syn, lhs, avs);
   } else {
     // nothing else allowed for now

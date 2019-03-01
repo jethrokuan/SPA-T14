@@ -76,7 +76,7 @@ class ParentEvaluator : public SuchThatEvaluator {
                             ->getDesignEntity();
     auto all_unselected_designentities =
         QueryExecutor::getSelect(pkb, right_arg_de);
-    AllowedValueSet results;
+    AllowedValuePairSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
         if (pkb->isLineParentLine(de, unselect_de)) {
@@ -101,7 +101,7 @@ class ParentEvaluator : public SuchThatEvaluator {
                            ->getDesignEntity();
     auto all_unselected_designentities =
         QueryExecutor::getSelect(pkb, left_arg_de);
-    AllowedValueSet results;
+    AllowedValuePairSet results;
     for (auto de : all_selected_designentities) {
       for (auto unselect_de : all_unselected_designentities) {
         if (pkb->isLineParentLine(unselect_de, de)) {
@@ -134,7 +134,7 @@ class ParentEvaluator : public SuchThatEvaluator {
 
     auto all_left_designentities = QueryExecutor::getSelect(pkb, left_arg_de);
     auto all_right_designentities = QueryExecutor::getSelect(pkb, right_arg_de);
-    AllowedValueSet results;
+    AllowedValuePairSet results;
     for (auto left_de : all_left_designentities) {
       for (auto right_de : all_right_designentities) {
         // Any satisfied relation would mean this clause is true overall

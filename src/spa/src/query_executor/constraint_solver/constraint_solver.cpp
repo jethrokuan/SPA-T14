@@ -1,4 +1,4 @@
-#include "query_executor/constraint_solver.h"
+#include "query_executor/constraint_solver/constraint_solver.h"
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -9,52 +9,14 @@
 #include <vector>
 
 const std::string ConstraintSolver::DUMMY_SYNONYM = "@";
-
-AllowedValuesPair ConstraintSolver::makeAllowedValues(
-    Synonym& syn, std::vector<std::string>& vals) {
-  return makeAllowedValues(syn.synonym, vals);
-}
-
-AllowedValuesPair ConstraintSolver::makeAllowedValues(
-    std::string& syn, std::vector<std::string>& vals) {
-  SynonymPair syn_pair = std::make_pair(syn, DUMMY_SYNONYM);
-  AllowedValueSet allowed_values;
-  for (auto val : vals) {
-    allowed_values.insert(std::make_pair(val, DUMMY_SYNONYM));
-  }
-  return std::make_pair(syn_pair, allowed_values);
-}
-
-AllowedValuesPair ConstraintSolver::makeAllowedValues(Synonym& s1, Synonym& s2,
-                                                      AllowedValueSet& avs) {
-  SynonymPair syn_pair = std::make_pair(s1.synonym, s2.synonym);
-  return std::make_pair(syn_pair, avs);
-}
-
-std::string ConstraintSolver::getStringPairAsString(
-    std::pair<std::string, std::string> string_pair) {
-  return "(" + string_pair.first + ", " + string_pair.second + ")";
-}
-
-void ConstraintSolver::printAllowedValuesPair(AllowedValuesPair& avp) {
-  std::cout << "Constraining values " << getStringPairAsString(avp.first)
-            << "\n";
-
-  for (auto allowed_value : avp.second) {
-    std::cout << getStringPairAsString(allowed_value) << " ";
-  }
-
-  std::cout << "\n";
-}
-
 //! Actually constrain the set of values and select the synonym indicated
 std::vector<std::string> ConstraintSolver::constrainAndSelect(
-    std::vector<AllowedValuesPair> allowedValues, std::string toSelect) {
+    std::vector<TupledConstraint> allowedValues, std::string toSelect) {
   // Get individually allowed values from each of the tupled constraints
   auto synonym_constraints = intersectConstraints(allowedValues);
   auto tupled_constraints = intersectTupledConstraints(allowedValues);
 
-  std::vector<AllowedValuesPair> constrained_values = filterAllowedValues(
+  std::vector<TupledConstraint> constrained_values = filterAllowedValues(
       synonym_constraints, tupled_constraints, allowedValues);
 
   // Re-constrain this set
@@ -68,7 +30,7 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
 }
 
 SingleVariableConstraints ConstraintSolver::intersectConstraints(
-    std::vector<AllowedValuesPair> allowedValues) {
+    std::vector<TupledConstraint> allowedValues) {
   SingleVariableConstraints synonym_constraints;
 
   for (auto avp : allowedValues) {
@@ -100,7 +62,7 @@ void ConstraintSolver::intersectTwoConstraints(
 }
 
 TupledConstraints ConstraintSolver::intersectTupledConstraints(
-    std::vector<AllowedValuesPair> allowedValues) {
+    std::vector<TupledConstraint> allowedValues) {
   std::map<std::pair<std::string, std::string>,
            std::set<std::pair<std::string, std::string>>>
       tupled_constraints;
@@ -129,28 +91,27 @@ TupledConstraints ConstraintSolver::intersectTupledConstraints(
   return tupled_constraints;
 }
 
-std::vector<AllowedValuesPair> ConstraintSolver::filterAllowedValues(
+std::vector<TupledConstraint> ConstraintSolver::filterAllowedValues(
     SingleVariableConstraints& synonym_constraints,
     TupledConstraints& tupled_constraints,
-    std::vector<AllowedValuesPair>& allowedValues) {
-  std::vector<AllowedValuesPair> constrained_values;
-  for (AllowedValuesPair allowedValuePair : allowedValues) {
+    std::vector<TupledConstraint>& allowedValues) {
+  std::vector<TupledConstraint> constrained_values;
+  for (TupledConstraint allowedValuePair : allowedValues) {
     auto allowed_values_constrained = filterAllowedValuePair(
         synonym_constraints, tupled_constraints, allowedValuePair);
-    AllowedValuesPair new_avp = {allowedValuePair.first,
-                                 allowed_values_constrained};
+    TupledConstraint new_avp = {allowedValuePair.first,
+                                allowed_values_constrained};
     constrained_values.push_back(new_avp);
   }
   return constrained_values;
 }
 
-AllowedValueSet ConstraintSolver::filterAllowedValuePair(
+AllowedValuePairSet ConstraintSolver::filterAllowedValuePair(
     SingleVariableConstraints& synonym_constraints,
-    TupledConstraints& tupled_constraints,
-    AllowedValuesPair& allowedValuePair) {
+    TupledConstraints& tupled_constraints, TupledConstraint& allowedValuePair) {
   SynonymPair syn_pair = allowedValuePair.first;
-  auto allowed_values_constrained = std::set<AllowedValue>();
-  for (const AllowedValue& allowedValue : allowedValuePair.second) {
+  auto allowed_values_constrained = std::set<AllowedValuePair>();
+  for (const AllowedValuePair& allowedValue : allowedValuePair.second) {
     // Both allowed values must be present in the intersection list
     bool val1_present =
         synonym_constraints[syn_pair.first].find(allowedValue.first) !=
@@ -170,31 +131,4 @@ AllowedValueSet ConstraintSolver::filterAllowedValuePair(
     }
   }
   return allowed_values_constrained;
-}
-
-std::set<std::string> ConstraintSolver::getFirstsFromSet(AllowedValueSet& avs) {
-  std::set<std::string> result;
-  for (auto a : avs) {
-    result.insert(a.first);
-  }
-  return result;
-}
-
-std::set<std::string> ConstraintSolver::getSecondsFromSet(
-    AllowedValueSet& avs) {
-  std::set<std::string> result;
-  for (auto a : avs) {
-    result.insert(a.second);
-  }
-  return result;
-}
-
-void ConstraintSolver::printConstraints(SingleVariableConstraints constraints) {
-  for (auto m : constraints) {
-    std::cout << "Intersected constraints for: " << m.first << std::endl;
-    for (auto s : m.second) {
-      std::cout << s << " ";
-    }
-    std::cout << "\n";
-  }
 }

@@ -18,19 +18,33 @@ using AllowedValueSet = std::set<AllowedValue>;
 using AllowedValuesPair = std::pair<SynonymPair, AllowedValueSet>;
 //! Describes all found pairs of synoynms and their allowed values
 using AllowedValuesList = std::vector<AllowedValuesPair>;
+//! Map between variable name and constrained values it can take
+using SingleVariableConstraints = std::map<std::string, std::set<std::string>>;
+//! Map between variable name and constrained values it can take
+using TupledConstraints = std::map<SynonymPair, AllowedValueSet>;
 
 class ConstraintSolver {
  private:
   static std::set<std::string> getFirstsFromSet(AllowedValueSet&);
   static std::set<std::string> getSecondsFromSet(AllowedValueSet&);
   //! Find the intersection between all stated constraints by synonyms
-  static std::map<std::string, std::set<std::string>> intersectConstraints(
+  static SingleVariableConstraints intersectConstraints(
       std::vector<AllowedValuesPair>);
 
-  static void intersectTwoConstraints(
-      std::map<std::string, std::set<std::string>>&, std::string&,
-      std::set<std::string>);
-  static void printConstraints(std::map<std::string, std::set<std::string>>);
+  static void intersectTwoConstraints(SingleVariableConstraints&, std::string&,
+                                      std::set<std::string>);
+
+  static std::vector<AllowedValuesPair> filterAllowedValues(
+      SingleVariableConstraints& synonym_constraints,
+      TupledConstraints& tupled_constraints,
+      std::vector<AllowedValuesPair>& allowedValues);
+
+  static AllowedValueSet filterAllowedValuePair(
+      SingleVariableConstraints& synonym_constraints,
+      TupledConstraints& tupled_constraints,
+      AllowedValuesPair& allowedValuePair);
+
+  static void printConstraints(SingleVariableConstraints);
 
  public:
   //! Placeholder for cases where a second synonym or value is not needed
@@ -66,9 +80,8 @@ class ConstraintSolver {
   static AllowedValuesPair makeAllowedValues(Synonym&, Synonym&,
                                              AllowedValueSet&);
 
-  static std::map<std::pair<std::string, std::string>,
-                  std::set<std::pair<std::string, std::string>>>
-      intersectTupledConstraints(std::vector<AllowedValuesPair>);
+  static TupledConstraints intersectTupledConstraints(
+      std::vector<AllowedValuesPair>);
 
   static std::string getStringPairAsString(std::pair<std::string, std::string>);
   static void printAllowedValuesPair(AllowedValuesPair&);

@@ -4,6 +4,7 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
+#include "query_executor/constraint_solver/constraint_solver.h"
 #include "query_executor/query_executor.h"
 
 using namespace PKB;
@@ -13,6 +14,7 @@ class SuchThatEvaluator {
  protected:
   Query* query;
   PKBManager* pkb;
+  QueryConstraints& qc;
 
   // Calculated from the Query object
   QE::StmtOrEntRef arg1;
@@ -34,9 +36,10 @@ class SuchThatEvaluator {
   AllowedValuesPairOrBool dispatchSuchThatNotSelected();
 
  public:
-  SuchThatEvaluator(Query* query, PKBManager* pkb)
+  SuchThatEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : query(query),
         pkb(pkb),
+        qc(qc),
         arg1(query->such_that->getFirstArg()),
         arg2(query->such_that->getSecondArg()){};
   AllowedValuesPairOrBool evaluate();

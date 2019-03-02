@@ -13,8 +13,8 @@ using namespace QE;
 
 class ParentEvaluator : public SuchThatEvaluator {
  public:
-  ParentEvaluator(Query* query, PKBManager* pkb)
-      : SuchThatEvaluator(query, pkb){};
+  ParentEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
+      : SuchThatEvaluator(query, pkb, qc){};
 
   // Handle cases with at least one variable selected
 

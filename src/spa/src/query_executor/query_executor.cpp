@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
@@ -32,13 +33,15 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   AllowedValuesPairOrBool pattern_result = {true};
   AllowedValuesList allowed_values;
 
+  QueryConstraints query_constraints;
+
   if (query->such_that) {
     // Handle such_thats that return a simple boolean value
     if (isBooleanSuchThat(query->such_that)) {
       such_that_result = isBooleanSuchThatTrue(query->such_that);
     } else {
       // This is a more complex such-that query, pass to individual handlers
-      such_that_result = handleNonBooleanSuchThat(query);
+      such_that_result = handleNonBooleanSuchThat(query, query_constraints);
     }
   }
 
@@ -61,7 +64,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
 
   // Evaluate pattern results if they exist
   if (query->pattern) {
-    pattern_result = handlePattern(query);
+    pattern_result = handlePattern(query, query_constraints);
     allowed_values.push_back(std::get<TupledConstraint>(pattern_result));
   }
 
@@ -133,26 +136,28 @@ std::vector<std::string> QueryExecutor::getSelect(PKBManager* pkb,
   return std::vector<std::string>();
 }
 
-AllowedValuesPairOrBool QueryExecutor::handleNonBooleanSuchThat(Query* query) {
+AllowedValuesPairOrBool QueryExecutor::handleNonBooleanSuchThat(
+    Query* query, QueryConstraints& qc) {
   switch (query->such_that->getRelation()) {
     case Relation::FollowsT:
-      return FollowsTEvaluator(query, pkb).evaluate();
+      return FollowsTEvaluator(query, pkb, qc).evaluate();
     case Relation::Follows:
-      return FollowsEvaluator(query, pkb).evaluate();
+      return FollowsEvaluator(query, pkb, qc).evaluate();
     case Relation::Parent:
-      return ParentEvaluator(query, pkb).evaluate();
+      return ParentEvaluator(query, pkb, qc).evaluate();
     case Relation::ParentT:
-      return ParentTEvaluator(query, pkb).evaluate();
+      return ParentTEvaluator(query, pkb, qc).evaluate();
       break;
     case Relation::ModifiesS:
-      return ModifiesSEvaluator(query, pkb).evaluate();
+      return ModifiesSEvaluator(query, pkb, qc).evaluate();
     case Relation::UsesS:
-      return UsesSEvaluator(query, pkb).evaluate();
+      return UsesSEvaluator(query, pkb, qc).evaluate();
     default:
       assert(false);
   }
 }
 
-AllowedValuesPairOrBool QueryExecutor::handlePattern(Query* query) {
-  return PatternEvaluator(query, pkb).evaluate();
+AllowedValuesPairOrBool QueryExecutor::handlePattern(Query* query,
+                                                     QueryConstraints& qc) {
+  return PatternEvaluator(query, pkb, qc).evaluate();
 }

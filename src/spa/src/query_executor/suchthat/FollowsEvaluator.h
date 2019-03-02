@@ -13,8 +13,8 @@ using namespace QE;
 
 class FollowsEvaluator : public SuchThatEvaluator {
  public:
-  FollowsEvaluator(Query* query, PKBManager* pkb)
-      : SuchThatEvaluator(query, pkb){};
+  FollowsEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
+      : SuchThatEvaluator(query, pkb, qc){};
 
   // Handle cases with at least one variable selected
 

@@ -8,7 +8,7 @@
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
-//#include "query_executor/suchthat/ParentEvaluator.h"
+#include "query_executor/suchthat/ParentEvaluator.h"
 #include "query_executor/suchthat/ParentTEvaluator.h"
 #include "query_executor/suchthat/UsesSEvaluator.h"
 
@@ -137,13 +137,10 @@ bool QueryExecutor::handleNonBooleanSuchThat(Query* query,
       return ParentTEvaluator(query, pkb, qc).evaluate();
     case Relation::Follows:
       return FollowsEvaluator(query, pkb, qc).evaluate();
-    /*
-  case Relation::Parent:
-    return ParentEvaluator(query, pkb, qc).evaluate();
-    */
+    case Relation::Parent:
+      return ParentEvaluator(query, pkb, qc).evaluate();
     default:
-      return true;
-      // assert(false);
+      assert(false);
   }
 }
 

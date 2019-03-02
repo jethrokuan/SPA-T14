@@ -22,7 +22,7 @@ class FollowsEvaluator : public SuchThatEvaluator {
   std::vector<std::string> handleLeftVarSelectedRightBasic(
       std::string& basic_value) override {
     // Follows(s, 3)
-    if (auto beforeLine = pkb->getBeforeLine(*arg2AsBasic)) {
+    if (auto beforeLine = pkb->getBeforeLine(basic_value)) {
       return {*beforeLine};
     } else {
       return {};
@@ -31,7 +31,7 @@ class FollowsEvaluator : public SuchThatEvaluator {
   std::vector<std::string> handleRightVarSelectedLeftBasic(
       std::string& basic_value) override {
     // Follows(3, s)
-    if (auto afterLine = pkb->getFollowingLine(*arg1AsBasic)) {
+    if (auto afterLine = pkb->getFollowingLine(basic_value)) {
       return {*afterLine};
     } else {
       return {};

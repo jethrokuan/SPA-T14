@@ -18,143 +18,74 @@ class UsesSEvaluator : public SuchThatEvaluator {
 
   // Handle cases with at least one variable selected
 
-  AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() override {
+  // Handle cases with at least one variable selected
+  std::vector<std::string> handleLeftVarSelectedRightBasic(
+      std::string& basic_value) override {
     // Uses(s, "x")
-    auto results =
-        pkb->getLineUsesVar(*arg2AsBasic).value_or(std::vector<std::string>());
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
+    return pkb->getLineUsesVar(basic_value)
+        .value_or(std::vector<std::string>());
   }
-  AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() override {
+  std::vector<std::string> handleRightVarSelectedLeftBasic(
+      std::string& basic_value) override {
     // Uses(3, v)
-    auto results = pkb->getVarUsedByLine(*arg1AsBasic)
-                       .value_or(std::vector<std::string>());
-    return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
+    return pkb->getVarUsedByLine(basic_value)
+        .value_or(std::vector<std::string>());
   }
-  AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() override {
+  bool handleLeftVarSelectedRightUnderscore(std::string& arg_value) override {
     // Uses(s, _)
-    // Note that this should select all whiles and ifs
-    auto all_selected_designentities = QueryExecutor::getSelect(
-        pkb, query->selected_declaration->getDesignEntity());
-    std::vector<std::string> results;
-    for (auto de : all_selected_designentities) {
-      if (pkb->getVarUsedByLine(de)) {
-        results.push_back(de);
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
-    ;
+    return pkb->getVarUsedByLine(arg_value) ? true : false;
   }
-  AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() override {
-    std::cout << "Should not happen: UsesS first arg cannot be _\n";
+  bool handleRightVarSelectedLeftUnderscore(std::string& arg_value) override {
+    std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
     assert(false);
   }
-  AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() override {
-    // Uses*(s, v)
-    if (arg1AsSynonym == arg2AsSynonym) {
-      std::cout << "Should not happen: UsesS cannot have identical args\n";
-      assert(false);
-    }
-    auto all_selected_designentities = QueryExecutor::getSelect(
-        pkb, query->selected_declaration->getDesignEntity());
-    auto right_arg_de = Declaration::findDeclarationForSynonym(
-                            query->declarations, *arg2AsSynonym)
-                            ->getDesignEntity();
-    auto all_unselected_designentities =
-        QueryExecutor::getSelect(pkb, right_arg_de);
-    AllowedValuePairSet results;
-    for (auto de : all_selected_designentities) {
-      for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineUsesVar(de, unselect_de)) {
-          results.insert({de, unselect_de});
-        }
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
-                                               results);
+  bool handleLeftVarSelectedRightVarUnselected(
+      std::string& arg_select, std::string& arg_unselect) override {
+    // Uses(s, v)
+    return pkb->isLineUsesVar(arg_select, arg_unselect) ? true : false;
   }
-  AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() override {
+
+  bool handleRightVarSelectedLeftVarUnselected(
+      std::string& arg_unselect, std::string& arg_select) override {
     // Uses(s1, s)
-    if (arg1AsSynonym == arg2AsSynonym) {
-      std::cout << "Should not happen: UsesS cannot have identical args\n";
-      assert(false);
-    }
-    auto all_selected_designentities = QueryExecutor::getSelect(
-        pkb, query->selected_declaration->getDesignEntity());
-    auto left_arg_de = Declaration::findDeclarationForSynonym(
-                           query->declarations, *arg1AsSynonym)
-                           ->getDesignEntity();
-    auto all_unselected_designentities =
-        QueryExecutor::getSelect(pkb, left_arg_de);
-    AllowedValuePairSet results;
-    for (auto de : all_selected_designentities) {
-      for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineUsesVar(unselect_de, de)) {
-          results.insert({unselect_de, de});
-        }
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
-                                               results);
+    return pkb->isLineUsesVar(arg_unselect, arg_select) ? true : false;
   }
 
   // Handle cases with no variables selected
-
-  AllowedValuesPairOrBool handleDoubleUnderscore() override {
+  bool handleDoubleUnderscore() override {
     return !pkb->isLineUsesVarSetEmpty();
   }
-  AllowedValuesPairOrBool handleBothVarsUnselected() override {
+  bool handleBothVarsUnselected(std::string& left_arg,
+                                std::string& right_arg) override {
     // Uses(s1, s2)
-    if (arg1AsSynonym == arg2AsSynonym) {
-      std::cout << "Should not happen: UsesS cannot have identical args\n";
-      assert(false);
-    }
-    auto left_arg_de = Declaration::findDeclarationForSynonym(
-                           query->declarations, *arg1AsSynonym)
-                           ->getDesignEntity();
-    auto right_arg_de = Declaration::findDeclarationForSynonym(
-                            query->declarations, *arg1AsSynonym)
-                            ->getDesignEntity();
-
-    auto all_left_designentities = QueryExecutor::getSelect(pkb, left_arg_de);
-    auto all_right_designentities = QueryExecutor::getSelect(pkb, right_arg_de);
-    AllowedValuePairSet results;
-    for (auto left_de : all_left_designentities) {
-      for (auto right_de : all_right_designentities) {
-        // Any satisfied relation would mean this clause is true overall
-        if (pkb->isLineUsesVar(left_de, right_de)) {
-          results.insert({left_de, right_de});
-        }
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
-                                               results);
+    return pkb->isLineUsesVar(left_arg, right_arg) ? true : false;
   }
-  AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() override {
+  std::vector<std::string> handleLeftVarUnselectedRightBasic(
+      std::string& arg) override {
     // Uses(s1, "x")
-    return handleLeftVarSelectedRightBasic();
+    return handleLeftVarSelectedRightBasic(arg);
   }
-  AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() override {
+  std::vector<std::string> handleRightVarUnselectedLeftBasic(
+      std::string& arg) override {
     // Uses(3, v1)
-    return handleRightVarSelectedLeftBasic();
+    return handleRightVarSelectedLeftBasic(arg);
   }
-
-  // Unlikely that these last 4 will need to be changed
-  AllowedValuesPairOrBool handleLeftBasicRightUnderscore() override {
+  bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Uses(3, _)
-    return pkb->getVarUsedByLine(*arg1AsBasic).has_value();
+    return pkb->getVarUsedByLine(arg).has_value();
   }
-  AllowedValuesPairOrBool handleRightBasicLeftUnderscore() override {
+  bool handleRightBasicLeftUnderscore(std::string& arg) override {
     // Uses(_, "x")
-    return pkb->getLineUsesVar(*arg2AsBasic).has_value();
+    return pkb->getLineUsesVar(arg).has_value();
   }
-  AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() override {
-    // Uses*(s1, _) --> is there a statement that uses any variable?
+  bool handleLeftVarUnselectedRightUnderscore(std::string& arg) override {
+    // Uses(s1, _) --> is there a statement that modifies anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return handleLeftVarSelectedRightUnderscore();
+    return handleLeftVarSelectedRightUnderscore(arg);
   }
-  AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() override {
-    // Uses*(_, v) --> is there a variable that is used?
+  bool handleRightVarUnselectedLeftUnderscore(std::string& arg) override {
+    // Uses(_, v1) --> is there a variable that is modified?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return handleRightVarSelectedLeftUnderscore();
+    return handleRightVarSelectedLeftUnderscore(arg);
   }
 };

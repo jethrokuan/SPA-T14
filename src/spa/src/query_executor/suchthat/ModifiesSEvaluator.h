@@ -39,7 +39,7 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
   }
   bool handleLeftVarSelectedRightVarUnselected(
       std::string& arg_select, std::string& arg_unselect) override {
-    // Modifies*(s, v)
+    // Modifies(s, v)
     return pkb->isLineModifiesVar(arg_select, arg_unselect) ? true : false;
   }
 
@@ -77,12 +77,12 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
     return pkb->getLineModifiesVar(arg).has_value();
   }
   bool handleLeftVarUnselectedRightUnderscore(std::string& arg) override {
-    // Modifies*(s1, _) --> is there a statement that modifies anything?
+    // Modifies(s1, _) --> is there a statement that modifies anything?
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleLeftVarSelectedRightUnderscore(arg);
   }
   bool handleRightVarUnselectedLeftUnderscore(std::string& arg) override {
-    // Modifies*(_, v1) --> is there a variable that is modified?
+    // Modifies(_, v1) --> is there a variable that is modified?
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleRightVarSelectedLeftUnderscore(arg);
   }

@@ -71,12 +71,11 @@ void ConstraintSolver::intersectTwoConstraints(
     // This synonym has an existing constraint - intersect with the set we found
     auto existing_constraints = new_synonym_constraints[syn];
     new_synonym_constraints[syn].clear();
-    std::set_intersection(new_synonym_constraints[syn].begin(),
-                          new_synonym_constraints[syn].end(),
-                          incoming_constraint.second.begin(),
-                          incoming_constraint.second.end(),
-                          std::inserter(new_synonym_constraints[syn],
-                                        new_synonym_constraints[syn].begin()));
+    std::set_intersection(
+        existing_constraints.begin(), existing_constraints.end(),
+        incoming_constraint.second.begin(), incoming_constraint.second.end(),
+        std::inserter(new_synonym_constraints[syn],
+                      new_synonym_constraints[syn].begin()));
   }
 }
 
@@ -157,4 +156,15 @@ void ConstraintSolver::filterQueryConstraints(
   // Set these values back to the query constraints container
   qc.setSingleVariableConstraintListRef(svcl);
   qc.setPairedVariableConstraintListRef(pvcl);
+}
+
+void ConstraintSolver::printConstraints(
+    std::map<std::string, std::set<std::string>> constraints) {
+  for (auto m : constraints) {
+    std::cout << "Intersected constraints for: " << m.first << std::endl;
+    for (auto s : m.second) {
+      std::cout << s << " ";
+    }
+    std::cout << "\n";
+  }
 }

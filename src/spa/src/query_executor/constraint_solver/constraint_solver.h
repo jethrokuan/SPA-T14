@@ -62,6 +62,8 @@ class ConstraintSolver {
                std::set<std::pair<std::string, std::string>>>,
       QueryConstraints& qc);
 
+  static void printConstraints(std::map<std::string, std::set<std::string>>);
+
  public:
   //! Actually constrain the set of values and select the synonym indicated
   static std::vector<std::string> constrainAndSelect(QueryConstraints& qc,

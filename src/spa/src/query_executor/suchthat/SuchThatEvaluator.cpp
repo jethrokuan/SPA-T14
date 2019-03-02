@@ -217,10 +217,6 @@ bool SuchThatEvaluator::dispatchRightVarSelectedLeftVarUnselected() {
 
 // No variable is selected
 bool SuchThatEvaluator::dispatchDoubleUnderscore() {
-  if (arg1AsSynonym == arg2AsSynonym) {
-    // Cannot follow yourself
-    return false;
-  }
   return handleDoubleUnderscore();
 }
 

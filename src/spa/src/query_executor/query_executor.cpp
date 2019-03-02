@@ -38,7 +38,10 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
       }
     } else {
       // This is a more complex such-that query, pass to individual handlers
-      handleNonBooleanSuchThat(query, query_constraints);
+      if (!handleNonBooleanSuchThat(query, query_constraints)) {
+        std::cout << "\n\n\nRETURNED FALSE???\n";
+        return std::vector<std::string>();
+      }
     }
   }
 
@@ -140,7 +143,8 @@ bool QueryExecutor::handleNonBooleanSuchThat(Query* query,
       return UsesSEvaluator(query, pkb, qc).evaluate();
       */
     default:
-      assert(false);
+      return true;
+      // assert(false);
   }
 }
 

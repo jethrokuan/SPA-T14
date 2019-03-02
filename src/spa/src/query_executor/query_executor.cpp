@@ -5,7 +5,7 @@
 #include <vector>
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
-//#include "query_executor/suchthat/FollowsEvaluator.h"
+#include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
 //#include "query_executor/suchthat/ParentEvaluator.h"
@@ -135,12 +135,12 @@ bool QueryExecutor::handleNonBooleanSuchThat(Query* query,
       return UsesSEvaluator(query, pkb, qc).evaluate();
     case Relation::ParentT:
       return ParentTEvaluator(query, pkb, qc).evaluate();
-      /*
     case Relation::Follows:
       return FollowsEvaluator(query, pkb, qc).evaluate();
-    case Relation::Parent:
-      return ParentEvaluator(query, pkb, qc).evaluate();
-      */
+    /*
+  case Relation::Parent:
+    return ParentEvaluator(query, pkb, qc).evaluate();
+    */
     default:
       return true;
       // assert(false);

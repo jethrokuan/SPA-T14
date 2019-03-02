@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 #include "query_executor/constraint_solver/query_constraints.h"
-#include "query_executor/pattern/PatternEvaluator.h"
-#include "query_executor/suchthat/FollowsEvaluator.h"
+// #include "query_executor/pattern/PatternEvaluator.h"
+//#include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
-#include "query_executor/suchthat/ModifiesSEvaluator.h"
-#include "query_executor/suchthat/ParentEvaluator.h"
-#include "query_executor/suchthat/ParentTEvaluator.h"
-#include "query_executor/suchthat/UsesSEvaluator.h"
+//#include "query_executor/suchthat/ModifiesSEvaluator.h"
+//#include "query_executor/suchthat/ParentEvaluator.h"
+//#include "query_executor/suchthat/ParentTEvaluator.h"
+//#include "query_executor/suchthat/UsesSEvaluator.h"
 
 using namespace QE;
 
@@ -29,46 +29,56 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   }
 
   // If either clause doesn't exist, don't constrain
-  AllowedValuesPairOrBool such_that_result = {true};
-  AllowedValuesPairOrBool pattern_result = {true};
-  AllowedValuesList allowed_values;
+  // AllowedValuesPairOrBool such_that_result = {true};
+  // AllowedValuesPairOrBool pattern_result = {true};
+  // AllowedValuesList allowed_values;
 
   QueryConstraints query_constraints;
 
   if (query->such_that) {
     // Handle such_thats that return a simple boolean value
     if (isBooleanSuchThat(query->such_that)) {
-      such_that_result = isBooleanSuchThatTrue(query->such_that);
+      if (!isBooleanSuchThatTrue(query->such_that)) {
+        return std::vector<std::string>();
+      }
     } else {
       // This is a more complex such-that query, pass to individual handlers
-      such_that_result = handleNonBooleanSuchThat(query, query_constraints);
+      handleNonBooleanSuchThat(query, query_constraints);
     }
   }
 
-  // Check if an early return is necessary
-  if (auto such_that_bool_result = std::get_if<bool>(&such_that_result)) {
-    if (!*such_that_bool_result) {
-      return std::vector<std::string>();
-    }  // Nothing to do if true - handle later
-  } else if (auto such_that_constrain_result =
-                 std::get_if<TupledConstraint>(&such_that_result)) {
-    // This only works now - check for empty allowed list and return immediately
-    // if so. Works because a constraint list indicates at least one variable
-    // was selected - else it would be a `false` value
-    if (such_that_constrain_result->second.empty()) {
-      return std::vector<std::string>();
+  /*
+    // Check if an early return is necessary
+    if (auto such_that_bool_result = std::get_if<bool>(&such_that_result)) {
+      if (!*such_that_bool_result) {
+        return std::vector<std::string>();
+      }  // Nothing to do if true - handle later
+    } else if (auto such_that_constrain_result =
+                   std::get_if<TupledConstraint>(&such_that_result)) {
+      // This only works now - check for empty allowed list and return
+    immediately
+      // if so. Works because a constraint list indicates at least one variable
+      // was selected - else it would be a `false` value
+      if (such_that_constrain_result->second.empty()) {
+        return std::vector<std::string>();
+      }
+      // Add it to constraints
+      //allowed_values.push_back(*such_that_constrain_result);
     }
-    // Add it to constraints
-    allowed_values.push_back(*such_that_constrain_result);
-  }
+    */
 
   // Evaluate pattern results if they exist
   if (query->pattern) {
-    pattern_result = handlePattern(query, query_constraints);
-    allowed_values.push_back(std::get<TupledConstraint>(pattern_result));
+    // handlePattern(query, query_constraints);
+    // pattern_result = handlePattern(query, query_constraints);
+    // allowed_values.push_back(std::get<TupledConstraint>(pattern_result));
   }
 
+  std::cout << "Final Query Constraints: \n";
+  std::cout << query_constraints;
+
   // Add select to the list of constraints
+  /*
   auto select_allowed =
       getSelect(pkb, query->selected_declaration->getDesignEntity());
   auto select_synonym = query->selected_declaration->getSynonym();
@@ -78,6 +88,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
 
   return ConstraintSolver::constrainAndSelect(
       allowed_values, query->selected_declaration->getSynonym().synonym);
+      */
+  return std::vector<std::string>();
 }
 
 std::vector<std::string> QueryExecutor::getSelect(PKBManager* pkb,
@@ -136,11 +148,12 @@ std::vector<std::string> QueryExecutor::getSelect(PKBManager* pkb,
   return std::vector<std::string>();
 }
 
-AllowedValuesPairOrBool QueryExecutor::handleNonBooleanSuchThat(
-    Query* query, QueryConstraints& qc) {
+bool QueryExecutor::handleNonBooleanSuchThat(Query* query,
+                                             QueryConstraints& qc) {
   switch (query->such_that->getRelation()) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb, qc).evaluate();
+      /*
     case Relation::Follows:
       return FollowsEvaluator(query, pkb, qc).evaluate();
     case Relation::Parent:
@@ -152,12 +165,13 @@ AllowedValuesPairOrBool QueryExecutor::handleNonBooleanSuchThat(
       return ModifiesSEvaluator(query, pkb, qc).evaluate();
     case Relation::UsesS:
       return UsesSEvaluator(query, pkb, qc).evaluate();
+      */
     default:
       assert(false);
   }
 }
 
-AllowedValuesPairOrBool QueryExecutor::handlePattern(Query* query,
-                                                     QueryConstraints& qc) {
-  return PatternEvaluator(query, pkb, qc).evaluate();
+bool QueryExecutor::handlePattern(Query* query, QueryConstraints& qc) {
+  return true;
+  // return PatternEvaluator(query, pkb, qc).evaluate();
 }

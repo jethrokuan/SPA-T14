@@ -5,7 +5,7 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_executor/constraint_solver/constraint_solver.h"
+// #include "query_executor/constraint_solver/constraint_solver.h"
 #include "query_executor/constraint_solver/query_constraints.h"
 
 using namespace PKB;
@@ -14,7 +14,7 @@ using namespace PKB;
 //! bool == true ==> no constraints.
 //! bool == false or empty allowed pair ==> no valid results
 //! Otherwise, need to constrain other relevant values
-using AllowedValuesPairOrBool = std::variant<TupledConstraint, bool>;
+// using AllowedValuesPairOrBool = std::variant<TupledConstraint, bool>;
 
 class QueryExecutor {
  private:
@@ -28,10 +28,9 @@ class QueryExecutor {
   //! Evaluates the SuchThat clause as a boolean
   bool isBooleanSuchThatTrue(QE::SuchThat*);
   //! Evaluates SuchThat clauses that don't return a simple boolean
-  AllowedValuesPairOrBool handleNonBooleanSuchThat(QE::Query*,
-                                                   QueryConstraints&);
+  bool handleNonBooleanSuchThat(QE::Query*, QueryConstraints&);
 
-  AllowedValuesPairOrBool handlePattern(QE::Query*, QueryConstraints&);
+  bool handlePattern(QE::Query*, QueryConstraints&);
 
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};

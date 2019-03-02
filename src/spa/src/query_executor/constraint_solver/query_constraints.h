@@ -6,32 +6,32 @@
 #include <string>
 #include <vector>
 
+//! Part of a constraint set for a variable, e.g. ("x")
+using SingleConstraint = std::string;
+//! Part of a constraint set for a pair of variable, e.g.(1, "x")
+using PairedConstraint = std::pair<std::string, std::string>;
+//! Representing two variables tied together
+using PairedVariables = std::pair<std::string, std::string>;
+
+//! Set of possible values a variable can take
+using SingleConstraintSet = std::set<SingleConstraint>;
+//! Set of possible values a pair of variables can take
+using PairedConstraintSet = std::set<PairedConstraint>;
+
+//! A specific set of constraints tied to a variable name e.g. a->{1, 2}
+using SingleVariableConstraints = std::pair<std::string, SingleConstraintSet>;
+//! A specific set of constraints tied to a variable pair e.g. (a, b)->{(1,2)}
+using PairedVariableConstraints =
+    std::pair<PairedVariables, PairedConstraintSet>;
+
+// NOTE: These two lists are not necessarily in a "solved state".
+//! Aggregation of multiple constraints on single variables
+using SingleVariableConstraintList = std::vector<SingleVariableConstraints>;
+//! Aggregation of multiple constraints on paired variables
+using PairedVariableConstraintList = std::vector<PairedVariableConstraints>;
+
 //! Defines the allowed set of values for a given Query
 class QueryConstraints {
-  //! Part of a constraint set for a variable, e.g. ("x")
-  using SingleConstraint = std::string;
-  //! Part of a constraint set for a pair of variable, e.g.(1, "x")
-  using PairedConstraint = std::pair<std::string, std::string>;
-  //! Representing two variables tied together
-  using PairedVariables = std::pair<std::string, std::string>;
-
-  //! Set of possible values a variable can take
-  using SingleConstraintSet = std::set<SingleConstraint>;
-  //! Set of possible values a pair of variables can take
-  using PairedConstraintSet = std::set<PairedConstraint>;
-
-  //! A specific set of constraints tied to a variable name e.g. a->{1, 2}
-  using SingleVariableConstraints = std::pair<std::string, SingleConstraintSet>;
-  //! A specific set of constraints tied to a variable pair e.g. (a, b)->{(1,2)}
-  using PairedVariableConstraints =
-      std::pair<PairedVariables, PairedConstraintSet>;
-
-  // NOTE: These two lists are not necessarily in a "solved state".
-  //! Aggregation of multiple constraints on single variables
-  using SingleVariableConstraintList = std::vector<SingleVariableConstraints>;
-  //! Aggregation of multiple constraints on paired variables
-  using PairedVariableConstraintList = std::vector<PairedVariableConstraints>;
-
  private:
   SingleVariableConstraintList singleVariableConstraintList;
   PairedVariableConstraintList pairedVariableConstraintList;
@@ -58,7 +58,13 @@ class QueryConstraints {
   void addToPairedVariableConstraints(
       std::string var1_name, std::string var2_name,
       std::set<std::pair<std::string, std::string>> constraint_values);
-  // TODO: This must be internally sorted - otherwise can get (a,v)/(v,a)
+
+  void addToSingleVariableConstraints(
+      std::string var_name, std::vector<std::string> constraint_values) {
+    addToSingleVariableConstraints(
+        var_name, std::set<std::string>(constraint_values.begin(),
+                                        constraint_values.end()));
+  }
 
   friend std::ostream& operator<<(std::ostream& os,
                                   QueryConstraints const& qc) {

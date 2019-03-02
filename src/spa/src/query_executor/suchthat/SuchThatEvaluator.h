@@ -4,7 +4,7 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_executor/constraint_solver/constraint_solver.h"
+// #include "query_executor/constraint_solver/constraint_solver.h"
 #include "query_executor/query_executor.h"
 
 using namespace PKB;
@@ -29,11 +29,11 @@ class SuchThatEvaluator {
   std::optional<std::string> arg2AsBasic;
 
   //! Dispatches such that query to individual methods to handle it
-  AllowedValuesPairOrBool dispatch();
+  bool dispatch();
 
-  AllowedValuesPairOrBool dispatchSuchThatSelected();
+  bool dispatchSuchThatSelected();
 
-  AllowedValuesPairOrBool dispatchSuchThatNotSelected();
+  bool dispatchSuchThatNotSelected();
 
  public:
   SuchThatEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
@@ -42,27 +42,52 @@ class SuchThatEvaluator {
         qc(qc),
         arg1(query->such_that->getFirstArg()),
         arg2(query->such_that->getSecondArg()){};
-  AllowedValuesPairOrBool evaluate();
+  bool evaluate();
 
   // These are the individual handler methods for each case
   // Read the .cpp file to see examples of each case
   // TODO: This really shouldn't be public
 
   // At least one variable is selected
-  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() = 0;
-  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() = 0;
-  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() = 0;
-  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() = 0;
-  virtual AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() = 0;
-  virtual AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() = 0;
+  bool dispatchLeftVarSelectedRightBasic();
+  bool dispatchRightVarSelectedLeftBasic();
+  bool dispatchLeftVarSelectedRightUnderscore();
+  bool dispatchRightVarSelectedLeftUnderscore();
+  bool dispatchLeftVarSelectedRightVarUnselected();
+  bool dispatchRightVarSelectedLeftVarUnselected();
 
   // No variable is selected
-  virtual AllowedValuesPairOrBool handleDoubleUnderscore() = 0;
-  virtual AllowedValuesPairOrBool handleBothVarsUnselected() = 0;
-  virtual AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() = 0;
-  virtual AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() = 0;
-  virtual AllowedValuesPairOrBool handleLeftBasicRightUnderscore() = 0;
-  virtual AllowedValuesPairOrBool handleRightBasicLeftUnderscore() = 0;
-  virtual AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() = 0;
-  virtual AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() = 0;
+  bool dispatchDoubleUnderscore();
+  bool dispatchBothVarsUnselected();
+  bool dispatchLeftVarUnselectedRightBasic();
+  bool dispatchRightVarUnselectedLeftBasic();
+  bool dispatchLeftBasicRightUnderscore();
+  bool dispatchRightBasicLeftUnderscore();
+  bool dispatchLeftVarUnselectedRightUnderscore();
+  bool dispatchRightVarUnselectedLeftUnderscore();
+
+  // These are the PKB calls that need to be overloaded for each subclass
+  // At least one variable is selected
+  virtual std::vector<std::string> handleLeftVarSelectedRightBasic(
+      std::string&) = 0;
+  virtual std::vector<std::string> handleRightVarSelectedLeftBasic(
+      std::string&) = 0;
+  virtual bool handleLeftVarSelectedRightUnderscore(std::string&) = 0;
+  virtual bool handleRightVarSelectedLeftUnderscore(std::string&) = 0;
+  virtual bool handleLeftVarSelectedRightVarUnselected(std::string&,
+                                                       std::string&) = 0;
+  virtual bool handleRightVarSelectedLeftVarUnselected(std::string&,
+                                                       std::string&) = 0;
+
+  // No variable is selected
+  virtual bool handleDoubleUnderscore() = 0;
+  virtual bool handleBothVarsUnselected(std::string&, std::string&) = 0;
+  virtual std::vector<std::string> handleLeftVarUnselectedRightBasic(
+      std::string&) = 0;
+  virtual std::vector<std::string> handleRightVarUnselectedLeftBasic(
+      std::string&) = 0;
+  virtual bool handleLeftBasicRightUnderscore(std::string&) = 0;
+  virtual bool handleRightBasicLeftUnderscore(std::string&) = 0;
+  virtual bool handleLeftVarUnselectedRightUnderscore(std::string&) = 0;
+  virtual bool handleRightVarUnselectedLeftUnderscore(std::string&) = 0;
 };

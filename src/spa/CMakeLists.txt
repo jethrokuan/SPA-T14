@@ -39,7 +39,7 @@ set(srcs ${srcs}
   src/query_executor/query_executor.cpp
   src/query_executor/query_executor_utils.cpp
   src/query_executor/suchthat/SuchThatEvaluator.cpp
-  src/query_executor/pattern/PatternEvaluator.cpp
+  #src/query_executor/pattern/PatternEvaluator.cpp
   src/query_executor/constraint_solver/constraint_solver.cpp
   src/query_executor/constraint_solver/constraint_solver_utils.cpp
   src/query_executor/constraint_solver/query_constraints.cpp
@@ -55,7 +55,7 @@ set(headers ${headers}
   src/query_executor/suchthat/UsesSEvaluator.h
   src/query_executor/suchthat/FollowsEvaluator.h
   src/query_executor/suchthat/ParentEvaluator.h
-  src/query_executor/pattern/PatternEvaluator.h
+  #src/query_executor/pattern/PatternEvaluator.h
   )
 
 # PQL Query Builder files

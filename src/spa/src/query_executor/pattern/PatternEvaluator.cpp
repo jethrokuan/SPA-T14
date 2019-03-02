@@ -4,14 +4,8 @@
 #include <string>
 #include <vector>
 #include "query_executor/query_executor.h"
-#include "query_executor/suchthat/FollowsEvaluator.h"
-#include "query_executor/suchthat/FollowsTEvaluator.h"
-#include "query_executor/suchthat/ModifiesSEvaluator.h"
-#include "query_executor/suchthat/ParentEvaluator.h"
-#include "query_executor/suchthat/ParentTEvaluator.h"
-#include "query_executor/suchthat/UsesSEvaluator.h"
 
-AllowedValuesPairOrBool PatternEvaluator::evaluate() {
+bool PatternEvaluator::evaluate() {
   auto pattern = query->pattern;
   auto pattern_syn = pattern->getSynonym();
   auto pattern_lhs = pattern->getFirstArg();
@@ -36,13 +30,14 @@ AllowedValuesPairOrBool PatternEvaluator::evaluate() {
   }
 }
 
-AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSUnderscore(
-    Synonym& syn, ExpressionSpec& pattern_rhs) {
+bool PatternEvaluator::handlePatternLHSUnderscore(Synonym& syn,
+                                                  ExpressionSpec& pattern_rhs) {
   // pattern a (_, <...>)
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (_, _) --> all assignments
     auto all_assigns = QueryExecutor::getSelect(pkb, DesignEntity::ASSIGN);
-    return ConstraintSolver::makeAllowedValues(syn, all_assigns);
+    qc.addToSingleVariableConstraints(syn.synonym, all_assigns);
+    return true;
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
     // pattern a (_, _"x + y"_) --> partial match, no var constraint
     std::ostringstream stream;
@@ -50,21 +45,23 @@ AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSUnderscore(
     auto matching_assigns = pkb->getPartialMatchLines(stream.str())
                                 .value_or(std::vector<std::string>());
 
-    return ConstraintSolver::makeAllowedValues(syn, matching_assigns);
+    qc.addToSingleVariableConstraints(syn.synonym, matching_assigns);
+    return true;
   } else {
     // nothing else allowed for now
     assert(false);
   }
 }
 
-AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSQuoteIdent(
-    Synonym& syn, std::string lhs, ExpressionSpec& pattern_rhs) {
+bool PatternEvaluator::handlePatternLHSQuoteIdent(Synonym& syn, std::string lhs,
+                                                  ExpressionSpec& pattern_rhs) {
   // pattern a ("x", <...>)
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a ("x", _) --> all assignments with LHS "x"
     auto allowed_lines =
         pkb->getLineForAssignVar(lhs).value_or(std::vector<std::string>());
-    return ConstraintSolver::makeAllowedValues(syn, allowed_lines);
+    qc.addToSingleVariableConstraints(syn.synonym, allowed_lines);
+    return true;
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
     // pattern a ("x", _"x + y"_) --> partial match, no var constraint
     std::ostringstream rhs_partial;
@@ -72,23 +69,24 @@ AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSQuoteIdent(
     auto matching_assigns =
         pkb->getPartialMatchLinesWithVar(lhs, rhs_partial.str())
             .value_or(std::vector<std::string>());
-    std::cout << "Running this case\n";
-    return ConstraintSolver::makeAllowedValues(syn, matching_assigns);
+    qc.addToSingleVariableConstraints(syn.synonym, matching_assigns);
+    return true;
   } else {
     // nothing else allowed for now
     assert(false);
   }
 }
 
-AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSSynonym(
-    Synonym& syn, Synonym& lhs, ExpressionSpec& pattern_rhs) {
+bool PatternEvaluator::handlePatternLHSSynonym(Synonym& syn, Synonym& lhs,
+                                               ExpressionSpec& pattern_rhs) {
   // pattern a (v, <...>)
   // Get all variables so that we can make this query
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (v, _) --> all assignments
     auto allowed_values = pkb->getAllPatternLinesAndVars();
-    AllowedValuePairSet avs(allowed_values.begin(), allowed_values.end());
-    return ConstraintSolver::makeAllowedValues(syn, lhs, avs);
+    PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
+    qc.addToPairedVariableConstraints(syn.synonym, lhs.synonym, avs);
+    return true;
     // assert(false);
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
     // pattern a (v, _"x + y"_) --> partial match, no var constraint
@@ -97,10 +95,11 @@ AllowedValuesPairOrBool PatternEvaluator::handlePatternLHSSynonym(
 
     // Constrain (a,v) together
     auto allowed_values = pkb->getPartialMatchLinesAndVars(rhs_partial.str())
-                              .value_or(std::vector<SynonymPair>());
+                              .value_or(std::vector<PairedConstraint>());
 
-    AllowedValuePairSet avs(allowed_values.begin(), allowed_values.end());
-    return ConstraintSolver::makeAllowedValues(syn, lhs, avs);
+    PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
+    qc.addToPairedVariableConstraints(syn.synonym, lhs.synonym, avs);
+    return true;
   } else {
     // nothing else allowed for now
     assert(false);

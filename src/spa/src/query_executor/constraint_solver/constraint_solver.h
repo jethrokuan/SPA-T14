@@ -8,23 +8,6 @@
 #include "query_executor/constraint_solver/query_constraints.h"
 
 using namespace QE;
-
-//! Describes two synoynms (or one synonym and a dummy) that are constrained
-using SynonymPair = std::pair<std::string, std::string>;
-//! One allowed pair of values
-using AllowedValuePair = std::pair<std::string, std::string>;
-//! Set of all allowed values for a synonym pair
-using AllowedValuePairSet = std::set<AllowedValuePair>;
-//! Describes a pair of synonyms and all of their allowed values
-using TupledConstraint = std::pair<SynonymPair, AllowedValuePairSet>;
-//! Describes all found pairs of synoynms and their allowed values
-using AllowedValuesList = std::vector<TupledConstraint>;
-//! Map between variable name and constrained values it can take
-// using SingleVariableConstraints = std::map<std::string,
-// std::set<std::string>>;
-//! Map between variable name and constrained values it can take
-using TupledConstraints = std::map<SynonymPair, AllowedValuePairSet>;
-
 class ConstraintSolver {
  private:
   template <class T>
@@ -53,8 +36,9 @@ class ConstraintSolver {
       std::map<std::string, std::set<std::string>>& new_synonym_constraints,
       SingleVariableConstraints& incoming_constraint);
 
-  static TupledConstraints intersectTupledConstraints(
-      PairedVariableConstraintList& pvcl);
+  static std::map<std::pair<std::string, std::string>,
+                  std::set<std::pair<std::string, std::string>>>
+  intersectTupledConstraints(PairedVariableConstraintList& pvcl);
 
   static void filterQueryConstraints(
       std::map<std::string, std::set<std::string>> one_synonym_constraints,

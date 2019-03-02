@@ -39,7 +39,6 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
     } else {
       // This is a more complex such-that query, pass to individual handlers
       if (!handleNonBooleanSuchThat(query, query_constraints)) {
-        std::cout << "\n\n\nRETURNED FALSE???\n";
         return std::vector<std::string>();
       }
     }
@@ -56,14 +55,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
       getSelect(pkb, query->selected_declaration->getDesignEntity());
   query_constraints.addToSingleVariableConstraints(select_var, select_values);
 
-  std::cout << "\n\nInitial Query Constraints: \n";
-  std::cout << query_constraints;
-
   auto result = ConstraintSolver::constrainAndSelect(
       query_constraints, query->selected_declaration->getSynonym().synonym);
-
-  std::cout << "Final Query Constraints: \n";
-  std::cout << query_constraints;
 
   return result;
 }

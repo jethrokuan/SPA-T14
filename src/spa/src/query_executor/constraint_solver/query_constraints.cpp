@@ -1,4 +1,5 @@
 #include "query_executor/constraint_solver/query_constraints.h"
+#include <iostream>
 #include <optional>
 #include <set>
 #include <string>
@@ -16,9 +17,8 @@ void QueryConstraints::addToPairedVariableConstraints(
   // Need to insert in alphabetical order to have some consistency
   // Do it stably: only swap if var1_name > var2_name
   if (var1_name > var2_name) {
-    swapElementsInSet(constraint_values);
     pairedVariableConstraintList.push_back(
-        {{var2_name, var1_name}, constraint_values});
+        {{var2_name, var1_name}, swapElementsInSet(constraint_values)});
   } else {
     pairedVariableConstraintList.push_back(
         {{var1_name, var2_name}, constraint_values});

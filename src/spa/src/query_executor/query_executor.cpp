@@ -47,11 +47,22 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
     handlePattern(query, query_constraints);
   }
 
+  // Add the SeleAct clause - seems to be required (TODO: CHECK THIS)
+  auto select_var = query->selected_declaration->getSynonym().synonym;
+  auto select_values =
+      getSelect(pkb, query->selected_declaration->getDesignEntity());
+  query_constraints.addToSingleVariableConstraints(select_var, select_values);
+
+  std::cout << "\n\nInitial Query Constraints: \n";
+  std::cout << query_constraints;
+
+  auto result = ConstraintSolver::constrainAndSelect(
+      query_constraints, query->selected_declaration->getSynonym().synonym);
+
   std::cout << "Final Query Constraints: \n";
   std::cout << query_constraints;
 
-
-  return std::vector<std::string>();
+  return result;
 }
 
 std::vector<std::string> QueryExecutor::getSelect(PKBManager* pkb,

@@ -66,6 +66,22 @@ class QueryConstraints {
                                         constraint_values.end()));
   }
 
+  SingleVariableConstraintList& getSingleVariableConstraintListRef() {
+    return singleVariableConstraintList;
+  }
+
+  PairedVariableConstraintList& getPairedVariableConstraintListRef() {
+    return pairedVariableConstraintList;
+  }
+
+  void setSingleVariableConstraintListRef(SingleVariableConstraintList svcl) {
+    singleVariableConstraintList = svcl;
+  }
+
+  void setPairedVariableConstraintListRef(PairedVariableConstraintList pvcl) {
+    pairedVariableConstraintList = pvcl;
+  }
+
   friend std::ostream& operator<<(std::ostream& os,
                                   QueryConstraints const& qc) {
     os << std::string("Printing QueryConstraints:\n");

@@ -7,128 +7,154 @@
 #include <set>
 #include <string>
 #include <vector>
+#include "query_executor/constraint_solver/query_constraints.h"
 
-const std::string ConstraintSolver::DUMMY_SYNONYM = "@";
 //! Actually constrain the set of values and select the synonym indicated
 std::vector<std::string> ConstraintSolver::constrainAndSelect(
-    std::vector<TupledConstraint> allowedValues, std::string toSelect) {
+    QueryConstraints& qc, std::string toSelect) {
   // Get individually allowed values from each of the tupled constraints
-  auto synonym_constraints = intersectConstraints(allowedValues);
-  auto tupled_constraints = intersectTupledConstraints(allowedValues);
+  std::map<std::string, std::set<std::string>> one_synonym_constraints =
+      intersectConstraints(qc.getSingleVariableConstraintListRef(),
+                           qc.getPairedVariableConstraintListRef());
 
-  std::vector<TupledConstraint> constrained_values = filterAllowedValues(
-      synonym_constraints, tupled_constraints, allowedValues);
+  // Get all the pairs of values that are allowed
+  std::map<std::pair<std::string, std::string>,
+           std::set<std::pair<std::string, std::string>>>
+      tupled_constraints =
+          intersectTupledConstraints(qc.getPairedVariableConstraintListRef());
+
+  filterQueryConstraints(one_synonym_constraints, tupled_constraints, qc);
 
   // Re-constrain this set
-  synonym_constraints = intersectConstraints(constrained_values);
+  one_synonym_constraints =
+      intersectConstraints(qc.getSingleVariableConstraintListRef(),
+                           qc.getPairedVariableConstraintListRef());
 
-  // Select the one we want
-  auto set_to_return = synonym_constraints[toSelect];
+  // Return intended variable
+  auto set_to_return = one_synonym_constraints[toSelect];
   std::vector<std::string> result(set_to_return.begin(), set_to_return.end());
   return result;
-  // TODO: WE NEED TO RUN THIS UNTIL NO DIFFERENCES SPOTTED (IN FUTURE ITERS)
 }
 
-SingleVariableConstraints ConstraintSolver::intersectConstraints(
-    std::vector<TupledConstraint> allowedValues) {
-  SingleVariableConstraints synonym_constraints;
+std::map<std::string, std::set<std::string>>
+ConstraintSolver::intersectConstraints(SingleVariableConstraintList& svcl,
+                                       PairedVariableConstraintList& pvcl) {
+  std::map<std::string, std::set<std::string>> new_synonym_constraints;
 
-  for (auto avp : allowedValues) {
-    auto syn1 = avp.first.first;
-    auto syn2 = avp.first.second;
-    intersectTwoConstraints(synonym_constraints, syn1,
-                            getFirstsFromSet(avp.second));
-    intersectTwoConstraints(synonym_constraints, syn2,
-                            getSecondsFromSet(avp.second));
+  // Iterate through all variables that are constrained
+  // Use these to construct an intersected set of constraints
+  for (auto single_var_constraints : svcl) {
+    intersectTwoConstraints(new_synonym_constraints, single_var_constraints);
+  }
+  // Convert paired constraints into single constraints for single-intersection
+  for (auto paired_var_constraints : pvcl) {
+    auto [var1, var2] = paired_var_constraints.first;
+    auto var1_set = getFirstsFromSet(paired_var_constraints.second);
+    auto var2_set = getSecondsFromSet(paired_var_constraints.second);
+    SingleVariableConstraints var1_svcl = {var1, var1_set};
+    SingleVariableConstraints var2_svcl = {var2, var2_set};
+    intersectTwoConstraints(new_synonym_constraints, var1_svcl);
+    intersectTwoConstraints(new_synonym_constraints, var2_svcl);
   }
 
-  return synonym_constraints;
+  return new_synonym_constraints;
 }
 
 void ConstraintSolver::intersectTwoConstraints(
-    SingleVariableConstraints& synonym_constraints, std::string& syn,
-    std::set<std::string> new_constraints) {
-  if (synonym_constraints.find(syn) == synonym_constraints.end()) {
-    synonym_constraints[syn] = new_constraints;
+    std::map<std::string, std::set<std::string>>& new_synonym_constraints,
+    SingleVariableConstraints& incoming_constraint) {
+  std::string syn = incoming_constraint.first;
+  if (new_synonym_constraints.find(syn) == new_synonym_constraints.end()) {
+    // This synonym has no existing constraints - add the set we found
+    new_synonym_constraints[syn] = incoming_constraint.second;
   } else {
-    auto existing_constraints = synonym_constraints[syn];
-    synonym_constraints[syn].clear();
-    std::set_intersection(existing_constraints.begin(),
-                          existing_constraints.end(), new_constraints.begin(),
-                          new_constraints.end(),
-                          std::inserter(synonym_constraints[syn],
-                                        synonym_constraints[syn].begin()));
+    // This synonym has an existing constraint - intersect with the set we found
+    auto existing_constraints = new_synonym_constraints[syn];
+    new_synonym_constraints[syn].clear();
+    std::set_intersection(new_synonym_constraints[syn].begin(),
+                          new_synonym_constraints[syn].end(),
+                          incoming_constraint.second.begin(),
+                          incoming_constraint.second.end(),
+                          std::inserter(new_synonym_constraints[syn],
+                                        new_synonym_constraints[syn].begin()));
   }
 }
 
-TupledConstraints ConstraintSolver::intersectTupledConstraints(
-    std::vector<TupledConstraint> allowedValues) {
+std::map<std::pair<std::string, std::string>,
+         std::set<std::pair<std::string, std::string>>>
+ConstraintSolver::intersectTupledConstraints(
+    PairedVariableConstraintList& pvcl) {
   std::map<std::pair<std::string, std::string>,
            std::set<std::pair<std::string, std::string>>>
       tupled_constraints;
 
-  for (auto avp : allowedValues) {
-    auto syn1 = avp.first.first;
-    auto syn2 = avp.first.second;
-    // Don't bother calculating intersections for one-synonym constraints
-    if (syn1 == DUMMY_SYNONYM || syn2 == DUMMY_SYNONYM) {
-      continue;
-    }
+  for (auto paired_var_constraints : pvcl) {
+    auto [var1, var2] = paired_var_constraints.first;
 
-    if (tupled_constraints.find({syn1, syn2}) == tupled_constraints.end()) {
-      tupled_constraints[{syn1, syn2}] = avp.second;
+    if (tupled_constraints.find({var1, var2}) == tupled_constraints.end()) {
+      tupled_constraints[{var1, var2}] = paired_var_constraints.second;
     } else {
-      auto existing_constraints = tupled_constraints[{syn1, syn2}];
-      tupled_constraints[{syn1, syn2}].clear();
+      auto existing_constraints = tupled_constraints[{var1, var2}];
+      tupled_constraints[{var1, var2}].clear();
       std::set_intersection(
           existing_constraints.begin(), existing_constraints.end(),
-          avp.second.begin(), avp.second.end(),
-          std::inserter(tupled_constraints[{syn1, syn2}],
-                        tupled_constraints[{syn1, syn2}].begin()));
+          paired_var_constraints.second.begin(),
+          paired_var_constraints.second.end(),
+          std::inserter(tupled_constraints[{var1, var2}],
+                        tupled_constraints[{var1, var2}].begin()));
     }
   }
 
   return tupled_constraints;
 }
 
-std::vector<TupledConstraint> ConstraintSolver::filterAllowedValues(
-    SingleVariableConstraints& synonym_constraints,
-    TupledConstraints& tupled_constraints,
-    std::vector<TupledConstraint>& allowedValues) {
-  std::vector<TupledConstraint> constrained_values;
-  for (TupledConstraint allowedValuePair : allowedValues) {
-    auto allowed_values_constrained = filterAllowedValuePair(
-        synonym_constraints, tupled_constraints, allowedValuePair);
-    TupledConstraint new_avp = {allowedValuePair.first,
-                                allowed_values_constrained};
-    constrained_values.push_back(new_avp);
+void ConstraintSolver::filterQueryConstraints(
+    std::map<std::string, std::set<std::string>> one_synonym_constraints,
+    std::map<std::pair<std::string, std::string>,
+             std::set<std::pair<std::string, std::string>>>
+        tupled_constraints,
+    QueryConstraints& qc) {
+  // Go through each QueryConstraint and remove values that aren't allowed
+  // Filter single values first
+  SingleVariableConstraintList svcl;
+  for (auto single_var_constraints : qc.getSingleVariableConstraintListRef()) {
+    SingleConstraintSet constraint_set;
+    std::string var_name = single_var_constraints.first;
+    for (auto single_constraint : single_var_constraints.second) {
+      bool isPresent =
+          one_synonym_constraints[var_name].find(single_constraint) !=
+          one_synonym_constraints[var_name].end();
+      if (isPresent) {
+        constraint_set.insert(single_constraint);
+      }
+    }
+    svcl.push_back({var_name, constraint_set});
   }
-  return constrained_values;
-}
 
-AllowedValuePairSet ConstraintSolver::filterAllowedValuePair(
-    SingleVariableConstraints& synonym_constraints,
-    TupledConstraints& tupled_constraints, TupledConstraint& allowedValuePair) {
-  SynonymPair syn_pair = allowedValuePair.first;
-  auto allowed_values_constrained = std::set<AllowedValuePair>();
-  for (const AllowedValuePair& allowedValue : allowedValuePair.second) {
-    // Both allowed values must be present in the intersection list
-    bool val1_present =
-        synonym_constraints[syn_pair.first].find(allowedValue.first) !=
-        synonym_constraints[syn_pair.first].end();
-    bool val2_present =
-        synonym_constraints[syn_pair.second].find(allowedValue.second) !=
-        synonym_constraints[syn_pair.second].end();
-    bool val1_and_val2_present = true;
-    if (syn_pair.first != DUMMY_SYNONYM && syn_pair.second != DUMMY_SYNONYM) {
-      val1_and_val2_present =
-          tupled_constraints[{syn_pair.first, syn_pair.second}].find(
-              allowedValue) !=
-          tupled_constraints[{syn_pair.first, syn_pair.second}].end();
+  // Make sure every tupled constraint is present in individual and tupled sets
+  PairedVariableConstraintList pvcl;
+  for (auto paired_var_constraints : qc.getPairedVariableConstraintListRef()) {
+    PairedConstraintSet constraint_set;
+    auto [var1, var2] = paired_var_constraints.first;
+    for (auto paired_constraint : paired_var_constraints.second) {
+      bool var1_present =
+          one_synonym_constraints[var1].find(paired_constraint.first) !=
+          one_synonym_constraints[var1].end();
+      bool var2_present =
+          one_synonym_constraints[var2].find(paired_constraint.second) !=
+          one_synonym_constraints[var2].end();
+      bool pair_present =
+          tupled_constraints[paired_var_constraints.first].find(
+              paired_constraint) !=
+          tupled_constraints[paired_var_constraints.first].end();
+
+      if (var1_present && var2_present && pair_present) {
+        constraint_set.insert(paired_constraint);
+      }
     }
-    if (val1_present && val2_present && val1_and_val2_present) {
-      allowed_values_constrained.insert(allowedValue);
-    }
+    pvcl.push_back({paired_var_constraints.first, constraint_set});
   }
-  return allowed_values_constrained;
+  // Set these values back to the query constraints container
+  qc.setSingleVariableConstraintListRef(svcl);
+  qc.setPairedVariableConstraintListRef(pvcl);
 }

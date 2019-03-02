@@ -41,7 +41,6 @@ set(srcs ${srcs}
   src/query_executor/suchthat/SuchThatEvaluator.cpp
   src/query_executor/pattern/PatternEvaluator.cpp
   src/query_executor/constraint_solver/constraint_solver.cpp
-  src/query_executor/constraint_solver/constraint_solver_utils.cpp
   src/query_executor/constraint_solver/query_constraints.cpp
   )
 set(headers ${headers}

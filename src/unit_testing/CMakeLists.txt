@@ -15,6 +15,7 @@ set(srcs ${srcs}
 
 set(srcs ${srcs}
   src/main.cpp
+  src/TestConstraintSolver.cpp
   src/TestPKB.cpp
   src/TestQueryBuilder.cpp
   src/TestQueryConstraints.cpp

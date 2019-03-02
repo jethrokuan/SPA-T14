@@ -9,7 +9,7 @@
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
 //#include "query_executor/suchthat/ParentEvaluator.h"
-//#include "query_executor/suchthat/ParentTEvaluator.h"
+#include "query_executor/suchthat/ParentTEvaluator.h"
 #include "query_executor/suchthat/UsesSEvaluator.h"
 
 using namespace QE;
@@ -133,14 +133,13 @@ bool QueryExecutor::handleNonBooleanSuchThat(Query* query,
       return ModifiesSEvaluator(query, pkb, qc).evaluate();
     case Relation::UsesS:
       return UsesSEvaluator(query, pkb, qc).evaluate();
+    case Relation::ParentT:
+      return ParentTEvaluator(query, pkb, qc).evaluate();
       /*
     case Relation::Follows:
       return FollowsEvaluator(query, pkb, qc).evaluate();
     case Relation::Parent:
       return ParentEvaluator(query, pkb, qc).evaluate();
-    case Relation::ParentT:
-      return ParentTEvaluator(query, pkb, qc).evaluate();
-      break;
       */
     default:
       return true;

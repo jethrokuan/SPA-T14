@@ -35,7 +35,7 @@ class UsesSEvaluator : public SuchThatEvaluator {
     // Uses(s, _)
     return pkb->getVarUsedByLine(arg_value) ? true : false;
   }
-  bool handleRightVarSelectedLeftUnderscore(std::string& arg_value) override {
+  bool handleRightVarSelectedLeftUnderscore(std::string&) override {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
     assert(false);
   }

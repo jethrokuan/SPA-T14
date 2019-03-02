@@ -12,26 +12,31 @@
 //! Actually constrain the set of values and select the synonym indicated
 std::vector<std::string> ConstraintSolver::constrainAndSelect(
     QueryConstraints& qc, std::string toSelect) {
-  // Get individually allowed values from each of the tupled constraints
-  std::map<std::string, std::set<std::string>> one_synonym_constraints =
-      intersectConstraints(qc.getSingleVariableConstraintListRef(),
-                           qc.getPairedVariableConstraintListRef());
+  std::map<std::string, std::set<std::string>> start_one_synonym_constraints,
+      end_one_synonym_constraints;
+  do {
+    // Get individually allowed values from each of the tupled constraints
+    start_one_synonym_constraints =
+        intersectConstraints(qc.getSingleVariableConstraintListRef(),
+                             qc.getPairedVariableConstraintListRef());
 
-  // Get all the pairs of values that are allowed
-  std::map<std::pair<std::string, std::string>,
-           std::set<std::pair<std::string, std::string>>>
-      tupled_constraints =
-          intersectTupledConstraints(qc.getPairedVariableConstraintListRef());
+    // Get all the pairs of values that are allowed
+    std::map<std::pair<std::string, std::string>,
+             std::set<std::pair<std::string, std::string>>>
+        tupled_constraints =
+            intersectTupledConstraints(qc.getPairedVariableConstraintListRef());
 
-  filterQueryConstraints(one_synonym_constraints, tupled_constraints, qc);
+    filterQueryConstraints(start_one_synonym_constraints, tupled_constraints,
+                           qc);
 
-  // Re-constrain this set
-  one_synonym_constraints =
-      intersectConstraints(qc.getSingleVariableConstraintListRef(),
-                           qc.getPairedVariableConstraintListRef());
+    // Re-constrain this set
+    end_one_synonym_constraints =
+        intersectConstraints(qc.getSingleVariableConstraintListRef(),
+                             qc.getPairedVariableConstraintListRef());
+  } while (start_one_synonym_constraints != end_one_synonym_constraints);
 
   // Return intended variable
-  auto set_to_return = one_synonym_constraints[toSelect];
+  auto set_to_return = start_one_synonym_constraints[toSelect];
   std::vector<std::string> result(set_to_return.begin(), set_to_return.end());
   return result;
 }

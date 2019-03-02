@@ -28,18 +28,21 @@ class ConstraintSolver {
     return result;
   };
 
-  //! Find the intersection between all stated constraints by synonyms
+  //! Get a map of constraints from single variables to allowed values
   static std::map<std::string, std::set<std::string>> intersectConstraints(
       SingleVariableConstraintList& svcl, PairedVariableConstraintList& pvcl);
 
+  //! Intersects the current list of single constraints with a new constraint
   static void intersectTwoConstraints(
       std::map<std::string, std::set<std::string>>& new_synonym_constraints,
       SingleVariableConstraints& incoming_constraint);
 
+  //! Get a map of all constraints from paired variables to their allowed values
   static std::map<std::pair<std::string, std::string>,
                   std::set<std::pair<std::string, std::string>>>
   intersectTupledConstraints(PairedVariableConstraintList& pvcl);
 
+  //! Filters a QueryConstraints object based on calculated constraints
   static void filterQueryConstraints(
       std::map<std::string, std::set<std::string>> one_synonym_constraints,
       std::map<std::pair<std::string, std::string>,

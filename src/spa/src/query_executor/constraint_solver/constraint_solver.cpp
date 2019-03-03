@@ -36,7 +36,7 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
   } while (start_one_synonym_constraints != end_one_synonym_constraints);
 
   // Return intended variable
-  auto set_to_return = start_one_synonym_constraints[toSelect];
+  auto set_to_return = end_one_synonym_constraints[toSelect];
   std::vector<std::string> result(set_to_return.begin(), set_to_return.end());
   return result;
 }

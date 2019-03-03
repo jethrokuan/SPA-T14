@@ -25,10 +25,14 @@ TEST_CASE (
   auto qc = QueryConstraints();
   qc.addToSingleVariableConstraints("x", std::set<std::string>{"1", "2", "3"});
   qc.addToSingleVariableConstraints("y", std::set<std::string>{"1", "2", "3"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
-          std::vector<std::string>{"1", "2", "3"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "y") ==
-          std::vector<std::string>{"1", "2", "3"});
+  SECTION ("Select x") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
+            std::vector<std::string>{"1", "2", "3"});
+  }
+  SECTION ("Select y") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "y") ==
+            std::vector<std::string>{"1", "2", "3"});
+  }
 }
 
 TEST_CASE (
@@ -49,12 +53,18 @@ TEST_CASE (
   qc.addToPairedVariableConstraints(
       "y", "z",
       std::set<std::pair<std::string, std::string>>{{"1", "2"}, {"3", "4"}});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
-          std::vector<std::string>{"1", "2", "3"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "y") ==
-          std::vector<std::string>{"1", "3"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
-          std::vector<std::string>{"2", "4"});
+  SECTION ("Select x") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
+            std::vector<std::string>{"1", "2", "3"});
+  }
+  SECTION ("Select y") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "y") ==
+            std::vector<std::string>{"1", "3"});
+  }
+  SECTION ("Select z") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
+            std::vector<std::string>{"2", "4"});
+  }
 }
 
 TEST_CASE (
@@ -65,10 +75,14 @@ TEST_CASE (
   qc.addToPairedVariableConstraints(
       "x", "z",
       std::set<std::pair<std::string, std::string>>{{"1", "2"}, {"3", "4"}});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
-          std::vector<std::string>{"1", "3"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
-          std::vector<std::string>{"2", "4"});
+  SECTION ("Select x") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
+            std::vector<std::string>{"1", "3"});
+  }
+  SECTION ("Select z") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
+            std::vector<std::string>{"2", "4"});
+  }
 }
 
 TEST_CASE (
@@ -81,14 +95,22 @@ TEST_CASE (
   qc.addToPairedVariableConstraints(
       "a", "b",
       std::set<std::pair<std::string, std::string>>{{"1", "2"}, {"3", "4"}});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
-          std::vector<std::string>{"1", "3"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
-          std::vector<std::string>{"2", "4"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
-          std::vector<std::string>{"1", "3"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "b") ==
-          std::vector<std::string>{"2", "4"});
+  SECTION ("Select x") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
+            std::vector<std::string>{"1", "3"});
+  }
+  SECTION ("Select z") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
+            std::vector<std::string>{"2", "4"});
+  }
+  SECTION ("Select a") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
+            std::vector<std::string>{"1", "3"});
+  }
+  SECTION ("Select b") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "b") ==
+            std::vector<std::string>{"2", "4"});
+  }
 }
 
 TEST_CASE (
@@ -101,10 +123,15 @@ TEST_CASE (
   qc.addToPairedVariableConstraints(
       "x", "z",
       std::set<std::pair<std::string, std::string>>{{"1", "2"}, {"1", "3"}});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
-          std::vector<std::string>{"1"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
-          std::vector<std::string>{"2"});
+
+  SECTION ("Select x") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
+            std::vector<std::string>{"1"});
+  }
+  SECTION ("Select z") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
+            std::vector<std::string>{"2"});
+  }
 }
 
 TEST_CASE (
@@ -120,12 +147,18 @@ TEST_CASE (
   qc.addToPairedVariableConstraints(
       "x", "a",
       std::set<std::pair<std::string, std::string>>{{"1", "2"}, {"2", "4"}});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
-          std::vector<std::string>{"1"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
-          std::vector<std::string>{"2"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
-          std::vector<std::string>{"2"});
+  SECTION ("Select x") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
+            std::vector<std::string>{"1"});
+  }
+  SECTION ("Select z") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "z") ==
+            std::vector<std::string>{"2"});
+  }
+  SECTION ("Select a") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
+            std::vector<std::string>{"2"});
+  };
 }
 
 TEST_CASE (
@@ -142,10 +175,14 @@ TEST_CASE (
           {"2", "v2"}, {"4", "v1"}, {"5", "v2"}});
   qc.addToSingleVariableConstraints("a",
                                     std::set<std::string>{{"2", "4", "5"}});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
-          std::vector<std::string>{"4", "5"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "v") ==
-          std::vector<std::string>{"v1", "v2"});
+  SECTION ("Select a") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
+            std::vector<std::string>{"4", "5"});
+  }
+  SECTION ("Select v") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "v") ==
+            std::vector<std::string>{"v1", "v2"});
+  };
 }
 
 TEST_CASE (
@@ -161,10 +198,14 @@ TEST_CASE (
       std::set<std::pair<std::string, std::string>>{
           {"2", "v2"}, {"4", "v1"}, {"5", "v2"}});
   qc.addToSingleVariableConstraints("a", std::set<std::string>{"2", "5"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
-          std::vector<std::string>{"5"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "v") ==
-          std::vector<std::string>{"v2"});
+  SECTION ("Select a") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
+            std::vector<std::string>{"5"});
+  }
+  SECTION ("Select v") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "v") ==
+            std::vector<std::string>{"v2"});
+  };
 }
 
 TEST_CASE (
@@ -181,10 +222,14 @@ TEST_CASE (
           {"v2", "a"}, {"v1", "4"}, {"v2", "5"}});
   qc.addToSingleVariableConstraints("a",
                                     std::set<std::string>{{"2", "4", "5"}});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
-          std::vector<std::string>{"4", "5"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "v") ==
-          std::vector<std::string>{"v1", "v2"});
+  SECTION ("Select a") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
+            std::vector<std::string>{"4", "5"});
+  }
+  SECTION ("Select v") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "v") ==
+            std::vector<std::string>{"v1", "v2"});
+  };
 }
 
 TEST_CASE ("Test Issue #174 - can we handle iterative constraints?") {
@@ -202,10 +247,53 @@ TEST_CASE ("Test Issue #174 - can we handle iterative constraints?") {
       "s3", "s1",
       std::set<std::pair<std::string, std::string>>{
           {"1", "100"}, {"2", "101"}, {"3", "102"}});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s1") ==
-          std::vector<std::string>{"100"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s2") ==
-          std::vector<std::string>{"200"});
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s3") ==
-          std::vector<std::string>{"1"});
+  SECTION ("Select s1") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s1") ==
+            std::vector<std::string>{"100"});
+  }
+  SECTION ("Select s2") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s2") ==
+            std::vector<std::string>{"200"});
+  };
+  SECTION ("Select s3") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s3") ==
+            std::vector<std::string>{"1"});
+  };
+}
+
+TEST_CASE ("Test Issue #174 - can we handle complex iterative constraints?") {
+  // Why does this pass? We need a more convoluted case.
+  auto qc = QueryConstraints();
+  // (101, 201) (102, 201) depends on 201 existing
+  // (201, 2) and (201, 3) depend on 3 existing
+  // (2, 101) and (3, 103) depend on 101 and 103 existing. 103 does not
+
+  // So (3, 103) cannot exist --> 3 does not exist
+  // 3 does not exist --> (201, 3) does not exist
+  //
+  qc.addToPairedVariableConstraints(
+      "s1", "s2",
+      std::set<std::pair<std::string, std::string>>{
+          {"100", "200"}, {"101", "201"}, {"102", "201"}});
+  qc.addToPairedVariableConstraints(
+      "s2", "s3",
+      std::set<std::pair<std::string, std::string>>{{"200", "1"},
+                                                    {"201", "3"}});
+  qc.addToPairedVariableConstraints(
+      "s3", "s1",
+      std::set<std::pair<std::string, std::string>>{
+          {"1", "100"}, {"2", "101"}, {"3", "103"}});
+
+  SECTION ("Select s1") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s1") ==
+            std::vector<std::string>{"100"});
+  }
+  SECTION ("Select s2") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s2") ==
+            std::vector<std::string>{"200"});
+  };
+  SECTION ("Select s3") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(qc, "s3") ==
+            std::vector<std::string>{"1"});
+  };
 }

@@ -88,4 +88,8 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleRightVarSelectedLeftUnderscore(arg);
   }
+  bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
+    // Follows*(2, 3)?
+    return pkb->isLineFollowLineS(arg1, arg2);
+  }
 };

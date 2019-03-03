@@ -93,4 +93,8 @@ class ParentEvaluator : public SuchThatEvaluator {
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleRightVarSelectedLeftUnderscore(arg);
   }
+  bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
+    // Parent(2, 3)?
+    return pkb->isLineParentLine(arg1, arg2);
+  }
 };

@@ -112,6 +112,10 @@ bool SuchThatEvaluator::dispatchSuchThatNotSelected() {
     // Case 14: Selected variable is NOT in this such_that, right basic,
     // left underscore: Follows(_, s1)
     return dispatchRightVarUnselectedLeftUnderscore();
+  } else if (arg1AsBasic && arg2AsBasic) {
+    // Case 15: Both variables basic - boolean query
+    // No dispatch necesary - simple case
+    return handleBothVarsUnselected(*arg1AsBasic, *arg2AsBasic);
   } else {
     std::cout << "This case should not be triggered\n";
     assert(false);

@@ -22,13 +22,8 @@ class QueryExecutor {
 
   //! Makes the actual query - but returns the result unsorted
   std::vector<std::string> makeQueryUnsorted(QE::Query* query);
-
-  //! Returns true if this SuchThat has no variables to fill
-  bool isBooleanSuchThat(QE::SuchThat*);
-  //! Evaluates the SuchThat clause as a boolean
-  bool isBooleanSuchThatTrue(QE::SuchThat*);
-  //! Evaluates SuchThat clauses that don't return a simple boolean
-  bool handleNonBooleanSuchThat(QE::Query*, QueryConstraints&);
+  //! Evaluates any SuchThat clause
+  bool handleSuchThat(QE::Query*, QueryConstraints&);
   //! Evaluates any Pattern clause
   bool handlePattern(QE::Query*, QueryConstraints&);
 

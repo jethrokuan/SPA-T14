@@ -31,23 +31,24 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   QueryConstraints query_constraints;
 
   if (query->such_that) {
-    // Handle such_thats that return a simple boolean value
-    if (isBooleanSuchThat(query->such_that)) {
-      if (!isBooleanSuchThatTrue(query->such_that)) {
-        return std::vector<std::string>();
-      }
-    } else {
-      // This is a more complex such-that query, pass to individual handlers
-      if (!handleNonBooleanSuchThat(query, query_constraints)) {
-        return std::vector<std::string>();
-      }
+    // This is a more complex such-that query, pass to individual handlers
+    // This call also modifies the query_constraints
+    // So only need to check for no results
+    if (!handleSuchThat(query, query_constraints)) {
+      return std::vector<std::string>();
     }
   }
 
   // Evaluate pattern results if they exist
   if (query->pattern) {
-    handlePattern(query, query_constraints);
+    // Same reasoning as such-that
+    if (!handlePattern(query, query_constraints)) {
+      return std::vector<std::string>();
+    }
   }
+
+  // All clauses returned true and potentially added constraints
+  // Have to evaluate constraints now
 
   // Add the Select clause - this is in case no queries touch the variable
   // Then - the unconstrained set must be returned
@@ -118,8 +119,7 @@ std::vector<std::string> QueryExecutor::getSelect(PKBManager* pkb,
   return std::vector<std::string>();
 }
 
-bool QueryExecutor::handleNonBooleanSuchThat(Query* query,
-                                             QueryConstraints& qc) {
+bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
   switch (query->such_that->getRelation()) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb, qc).evaluate();

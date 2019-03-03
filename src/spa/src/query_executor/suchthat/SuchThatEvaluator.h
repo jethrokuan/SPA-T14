@@ -31,8 +31,10 @@ class SuchThatEvaluator {
   //! Dispatches such that query to individual methods to handle it
   bool dispatch();
 
+  //! Dispatcher for cases with one variable in Select
   bool dispatchSuchThatSelected();
 
+  //! Dispatcher for cases with no variables being Select-ed
   bool dispatchSuchThatNotSelected();
 
   // These are the individual handler methods for each case
@@ -80,6 +82,9 @@ class SuchThatEvaluator {
   virtual bool handleRightBasicLeftUnderscore(std::string&) = 0;
   virtual bool handleLeftVarUnselectedRightUnderscore(std::string&) = 0;
   virtual bool handleRightVarUnselectedLeftUnderscore(std::string&) = 0;
+
+  //! Handle case with basic values in both arguments
+  virtual bool handleDoubleBasic(std::string&, std::string&) = 0;
 
  public:
   SuchThatEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)

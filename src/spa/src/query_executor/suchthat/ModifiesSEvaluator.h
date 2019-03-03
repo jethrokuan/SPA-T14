@@ -86,4 +86,8 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
     // Reuse the left-var selected results until an optimized PKB query can help
     return handleRightVarSelectedLeftUnderscore(arg);
   }
+  bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
+    // Modifies(2, "v")?
+    return pkb->isLineModifiesVar(arg1, arg2);
+  }
 };

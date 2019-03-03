@@ -13,18 +13,30 @@ set(srcs ${srcs}
   src/simple_source/TestSimpleLexer.cpp
   )
 
+# Query Executor
+set(srcs ${srcs}
+  src/query_executor/TestConstraintSolver.cpp
+  src/query_executor/TestQueryConstraints.cpp
+  )
+
+# Query Builder
+set(srcs ${srcs}
+  src/query_builder/TestQueryBuilder.cpp
+  src/query_builder/TestQueryPreProcessor.cpp
+  src/query_builder/TestQueryTokenizer.cpp
+  src/query_builder/TestQueryValidator.cpp
+  src/query_builder/TestQuoteIdent.cpp
+  src/query_builder/TestSuchThat.cpp
+  src/query_builder/TestSynonym.cpp
+  )
+
+# PKB
+set(srcs ${srcs}
+  src/pkb/TestPKB.cpp
+  )
+
 set(srcs ${srcs}
   src/main.cpp
-  src/TestConstraintSolver.cpp
-  src/TestPKB.cpp
-  src/TestQueryBuilder.cpp
-  src/TestQueryConstraints.cpp
-  src/TestQueryPreProcessor.cpp
-  src/TestQueryTokenizer.cpp
-  src/TestQueryValidator.cpp
-  src/TestQuoteIdent.cpp
-  src/TestSuchThat.cpp
-  src/TestSynonym.cpp
   )
 
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")

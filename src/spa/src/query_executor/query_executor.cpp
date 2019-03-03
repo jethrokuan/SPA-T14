@@ -49,7 +49,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
     handlePattern(query, query_constraints);
   }
 
-  // Add the SeleAct clause - seems to be required (TODO: CHECK THIS)
+  // Add the Select clause - this is in case no queries touch the variable
+  // Then - the unconstrained set must be returned
   auto select_var = query->selected_declaration->getSynonym().synonym;
   auto select_values =
       getSelect(pkb, query->selected_declaration->getDesignEntity());

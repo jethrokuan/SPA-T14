@@ -45,10 +45,7 @@ bool SuchThatEvaluator::dispatch() {
 }
 
 //! Handle 6 different cases where something is selected in the such_that
-// e.g.
-// Follows(s, 3), Follows(3, s),
-// Follows(s, _), Follows(_, s)
-// Follows(s, p), Follows(p, s)
+// View examples here
 bool SuchThatEvaluator::dispatchSuchThatSelected() {
   if (arg1AsSynonym && arg1InSelect && arg2AsBasic) {
     // Case 1: Selected variable is in this such_that, left argument
@@ -81,15 +78,11 @@ bool SuchThatEvaluator::dispatchSuchThatSelected() {
   }
 }
 
-//! Handle 6 cases when nothing is selected in the such_that
-// e.g.
-// Follows(_, _), Follows(s5, s6)
-// Follows(s5, 3), Follows(3, s5)
-// Follows(s5, _), Follows(_, s5)
+//! Handle 8 cases when nothing is selected in the such_that
+// View examples here
 bool SuchThatEvaluator::dispatchSuchThatNotSelected() {
   if (arg1IsUnderscore && arg2IsUnderscore) {
     // Case 7: Follows*(_, _)
-    // TODO: Need to check PKB for existence of any follows relationships
     return dispatchDoubleUnderscore();
   } else if (arg1AsSynonym && arg2AsSynonym) {
     // Case 8: Selected variable is NOT in this such_that, need to check for

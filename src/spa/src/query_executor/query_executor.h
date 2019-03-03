@@ -29,12 +29,17 @@ class QueryExecutor {
   bool isBooleanSuchThatTrue(QE::SuchThat*);
   //! Evaluates SuchThat clauses that don't return a simple boolean
   bool handleNonBooleanSuchThat(QE::Query*, QueryConstraints&);
-
+  //! Evaluates any Pattern clause
   bool handlePattern(QE::Query*, QueryConstraints&);
 
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};
+
+  //! Actual external interface called to make the PQL query
   std::vector<std::string> makeQuery(QE::Query* query);
+
+  //! Gets the result of an unconditional select query (Select <designentity>)
+  static std::vector<std::string> getSelect(PKBManager* pkb, QE::DesignEntity);
 
   //! Convert a StmtOrEntRef to a string to pass to PKB
   static std::string suchThatArgToString(QE::StmtOrEntRef);
@@ -43,6 +48,4 @@ class QueryExecutor {
   static std::optional<QE::Synonym> getSuchThatArgAsSynonym(QE::StmtOrEntRef);
   static bool isSuchThatArgUnderscore(QE::StmtOrEntRef);
   static std::optional<std::string> getSuchThatArgAsBasic(QE::StmtOrEntRef);
-  //! Gets the result of a select query (everything from a design entity)
-  static std::vector<std::string> getSelect(PKBManager* pkb, QE::DesignEntity);
 };

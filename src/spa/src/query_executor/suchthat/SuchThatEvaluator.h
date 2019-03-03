@@ -35,18 +35,8 @@ class SuchThatEvaluator {
 
   bool dispatchSuchThatNotSelected();
 
- public:
-  SuchThatEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
-      : query(query),
-        pkb(pkb),
-        qc(qc),
-        arg1(query->such_that->getFirstArg()),
-        arg2(query->such_that->getSecondArg()){};
-  bool evaluate();
-
   // These are the individual handler methods for each case
   // Read the .cpp file to see examples of each case
-  // TODO: This really shouldn't be public
 
   // At least one variable is selected
   bool dispatchLeftVarSelectedRightBasic();
@@ -90,4 +80,15 @@ class SuchThatEvaluator {
   virtual bool handleRightBasicLeftUnderscore(std::string&) = 0;
   virtual bool handleLeftVarUnselectedRightUnderscore(std::string&) = 0;
   virtual bool handleRightVarUnselectedLeftUnderscore(std::string&) = 0;
+
+ public:
+  SuchThatEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
+      : query(query),
+        pkb(pkb),
+        qc(qc),
+        arg1(query->such_that->getFirstArg()),
+        arg2(query->such_that->getSecondArg()){};
+
+  //! External API to run the such-that query on the given PKB instance
+  bool evaluate();
 };

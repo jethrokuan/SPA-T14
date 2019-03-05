@@ -53,6 +53,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
 
   // Since the Select variable's values will either be returned or constrained
   // add all possible values for it to take in at the start
+  // Case: Select v such that Follows(1, 2) [Follows(1, 2) == true]
   auto select_var = query->selected_declaration->getSynonym().synonym;
   auto select_values =
       getSelect(pkb, query->selected_declaration->getDesignEntity());
@@ -146,6 +147,15 @@ bool QueryExecutor::handlePattern(Query* query, QueryConstraints& qc) {
 void QueryExecutor::addAllValuesForVariableToConstraints(
     std::vector<Declaration>* declarations, PKBManager* pkb,
     std::string& var_name, QueryConstraints& qc) {
+  // For optimizations's sake: if we spot the variable already in the constraint
+  // list - do not re-execute getSelect and re-constrain.
+  // If the variable is already in the list, we can assume that this function
+  // was already run.
+  // Because for a variable to be in the constraint list, it must have been
+  // either in a such-that clause or pattern clause (ignoring select).
+  // If it was in either of those clauses, this function would have run.
+  if (qc.isVarInSingleConstraintList(var_name)) return;
+
   auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
                     ->getDesignEntity();
   auto all_de = QueryExecutor::getSelect(pkb, var_de);

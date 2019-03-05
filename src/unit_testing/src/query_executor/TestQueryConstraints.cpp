@@ -22,3 +22,26 @@ TEST_CASE ("Test Query Constraints swapping functionality") {
   REQUIRE(qc.getPairedVariableConstraintListRef()[0] == s2);
   REQUIRE(qc.getPairedVariableConstraintListRef()[1] == s3);
 }
+
+TEST_CASE ("Test Query Constraints isVarInSingleConstraintList functionality") {
+  auto qc = QueryConstraints();
+  REQUIRE(qc.isVarInSingleConstraintList("x") == false);
+  REQUIRE(qc.isVarInSingleConstraintList("y") == false);
+  qc.addToSingleVariableConstraints("x", std::set<std::string>{"1", "2", "3"});
+  REQUIRE(qc.isVarInSingleConstraintList("x") == true);
+  REQUIRE(qc.isVarInSingleConstraintList("y") == false);
+
+  qc.addToSingleVariableConstraints("y", std::set<std::string>{"4", "5", "6"});
+  REQUIRE(qc.isVarInSingleConstraintList("y") == true);
+}
+
+TEST_CASE (
+    "Test Query Constraints isVarInSingleConstraintList functionality for "
+    "paired constraints - no change expected") {
+  auto qc = QueryConstraints();
+  REQUIRE(qc.isVarInSingleConstraintList("x") == false);
+  REQUIRE(qc.isVarInSingleConstraintList("y") == false);
+  qc.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"3", "4"}});
+  REQUIRE(qc.isVarInSingleConstraintList("x") == false);
+  REQUIRE(qc.isVarInSingleConstraintList("y") == false);
+}

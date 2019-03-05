@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <map>
 #include <optional>
 #include <set>
@@ -80,6 +81,21 @@ class QueryConstraints {
 
   void setPairedVariableConstraintListRef(PairedVariableConstraintList pvcl) {
     pairedVariableConstraintList = pvcl;
+  }
+
+  //! Checks if a particular variable is already inside the SVCL
+  bool isVarInSingleConstraintList(const std::string& var_name) {
+    // This function is necessary because we don't want to re-add an entire set
+    // of possible values a variable can take if we have already done so before
+    return std::find_if(singleVariableConstraintList.begin(),
+                        singleVariableConstraintList.end(), [&](auto svc) {
+                          return svc.first == var_name;
+                        }) != singleVariableConstraintList.end();
+  }
+
+  //! Checks if a particular variable is already inside the SVCL
+  bool isVarInSingleConstraintList(const char* var_name) {
+    return isVarInSingleConstraintList(std::string(var_name));
   }
 
   friend std::ostream& operator<<(std::ostream& os,

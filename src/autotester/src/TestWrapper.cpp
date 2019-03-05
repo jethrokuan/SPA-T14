@@ -22,13 +22,8 @@ TestWrapper::TestWrapper() {
 void TestWrapper::parse(std::string filename) {
   // call your parser to do the parsing
   // ...rest of your code...
-  try {
-    spa_manager->loadSimpleSource(filename);
-    std::cout << "parsed " << filename << std::endl;
-  } catch (const std::runtime_error e) {
-    std::cout << e.what() << std::endl;
-    std::cout << "Failed to parse " << filename << std::endl;
-  }
+  spa_manager->loadSimpleSource(filename);
+  std::cout << "parsed " << filename << std::endl;
 }
 
 // method to evaluating a query

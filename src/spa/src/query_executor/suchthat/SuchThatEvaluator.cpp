@@ -150,6 +150,7 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightUnderscore() {
       results.push_back(de);
     }
   }
+  if (results.empty()) return false;
   qc.addToSingleVariableConstraints(arg1AsSynonym->synonym, results);
   return true;
 }
@@ -163,6 +164,7 @@ bool SuchThatEvaluator::dispatchRightVarSelectedLeftUnderscore() {
       results.push_back(de);
     }
   }
+  if (results.empty()) return false;
   qc.addToSingleVariableConstraints(arg2AsSynonym->synonym, results);
   return true;
 }
@@ -189,6 +191,7 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightVarUnselected() {
       }
     }
   }
+  if (results.empty()) return false;
   qc.addToPairedVariableConstraints(arg1AsSynonym->synonym,
                                     arg2AsSynonym->synonym, results);
   return true;
@@ -213,6 +216,7 @@ bool SuchThatEvaluator::dispatchRightVarSelectedLeftVarUnselected() {
       }
     }
   }
+  if (results.empty()) return false;
   qc.addToPairedVariableConstraints(arg1AsSynonym->synonym,
                                     arg2AsSynonym->synonym, results);
   return true;
@@ -246,6 +250,7 @@ bool SuchThatEvaluator::dispatchBothVarsUnselected() {
       }
     }
   }
+  if (results.empty()) return false;
   qc.addToPairedVariableConstraints(arg1AsSynonym->synonym,
                                     arg2AsSynonym->synonym, results);
   return true;

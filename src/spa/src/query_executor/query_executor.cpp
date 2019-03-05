@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "query_builder/core/query_preprocessor.h"
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
@@ -50,8 +51,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // All clauses returned true and potentially added constraints
   // Have to evaluate constraints now
 
-  // Add the Select clause - this is in case no queries touch the variable
-  // Then - the unconstrained set must be returned
+  // Since the Select variable's values will either be returned or constrained
+  // add all possible values for it to take in at the start
   auto select_var = query->selected_declaration->getSynonym().synonym;
   auto select_values =
       getSelect(pkb, query->selected_declaration->getDesignEntity());
@@ -140,4 +141,13 @@ bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
 
 bool QueryExecutor::handlePattern(Query* query, QueryConstraints& qc) {
   return PatternEvaluator(query, pkb, qc).evaluate();
+}
+
+void QueryExecutor::addAllValuesForVariableToConstraints(
+    std::vector<Declaration>* declarations, PKBManager* pkb,
+    std::string& var_name, QueryConstraints& qc) {
+  auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
+                    ->getDesignEntity();
+  auto all_de = QueryExecutor::getSelect(pkb, var_de);
+  qc.addToSingleVariableConstraints(var_name, all_de);
 }

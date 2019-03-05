@@ -2,7 +2,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
-// #include "query_executor/constraint_solver/constraint_solver.h"
+#include "query_builder/core/query_preprocessor.h"
 #include "query_executor/query_executor.h"
 
 bool SuchThatEvaluator::evaluate() {
@@ -23,11 +23,17 @@ bool SuchThatEvaluator::evaluate() {
     arg1InSelect = query->selected_declaration->getSynonym() == arg1AsSynonym
                        ? true
                        : false;
+    // Add entire set of values for variable into the overall constraints
+    QueryExecutor::addAllValuesForVariableToConstraints(
+        query->declarations, pkb, arg1AsSynonym->synonym, qc);
   }
   if (arg2AsSynonym) {
     arg2InSelect = query->selected_declaration->getSynonym() == arg2AsSynonym
                        ? true
                        : false;
+    // Add entire set of values for variable into the overall constraints
+    QueryExecutor::addAllValuesForVariableToConstraints(
+        query->declarations, pkb, arg2AsSynonym->synonym, qc);
   }
 
   return dispatch();

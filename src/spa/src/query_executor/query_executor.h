@@ -36,6 +36,11 @@ class QueryExecutor {
   //! Gets the result of an unconditional select query (Select <designentity>)
   static std::vector<std::string> getSelect(PKBManager* pkb, QE::DesignEntity);
 
+  //! Utility method to call getSelect for a single variable
+  static void addAllValuesForVariableToConstraints(
+      std::vector<QE::Declaration>*, PKBManager* pkb, std::string&,
+      QueryConstraints&);
+
   //! Convert a StmtOrEntRef to a string to pass to PKB
   static std::string suchThatArgToString(QE::StmtOrEntRef);
   static std::string stmtRefToString(QE::StmtRef);

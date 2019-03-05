@@ -5,7 +5,8 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_executor/constraint_solver.h"
+#include "query_executor/constraint_solver/constraint_solver.h"
+#include "query_executor/constraint_solver/query_constraints.h"
 
 using namespace PKB;
 
@@ -13,7 +14,7 @@ using namespace PKB;
 //! bool == true ==> no constraints.
 //! bool == false or empty allowed pair ==> no valid results
 //! Otherwise, need to constrain other relevant values
-using AllowedValuesPairOrBool = std::variant<AllowedValuesPair, bool>;
+// using AllowedValuesPairOrBool = std::variant<TupledConstraint, bool>;
 
 class QueryExecutor {
  private:
@@ -21,19 +22,19 @@ class QueryExecutor {
 
   //! Makes the actual query - but returns the result unsorted
   std::vector<std::string> makeQueryUnsorted(QE::Query* query);
-
-  //! Returns true if this SuchThat has no variables to fill
-  bool isBooleanSuchThat(QE::SuchThat*);
-  //! Evaluates the SuchThat clause as a boolean
-  bool isBooleanSuchThatTrue(QE::SuchThat*);
-  //! Evaluates SuchThat clauses that don't return a simple boolean
-  AllowedValuesPairOrBool handleNonBooleanSuchThat(QE::Query*);
-
-  AllowedValuesPairOrBool handlePattern(QE::Query* query);
+  //! Evaluates any SuchThat clause
+  bool handleSuchThat(QE::Query*, QueryConstraints&);
+  //! Evaluates any Pattern clause
+  bool handlePattern(QE::Query*, QueryConstraints&);
 
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};
+
+  //! Actual external interface called to make the PQL query
   std::vector<std::string> makeQuery(QE::Query* query);
+
+  //! Gets the result of an unconditional select query (Select <designentity>)
+  static std::vector<std::string> getSelect(PKBManager* pkb, QE::DesignEntity);
 
   //! Convert a StmtOrEntRef to a string to pass to PKB
   static std::string suchThatArgToString(QE::StmtOrEntRef);
@@ -42,6 +43,4 @@ class QueryExecutor {
   static std::optional<QE::Synonym> getSuchThatArgAsSynonym(QE::StmtOrEntRef);
   static bool isSuchThatArgUnderscore(QE::StmtOrEntRef);
   static std::optional<std::string> getSuchThatArgAsBasic(QE::StmtOrEntRef);
-  //! Gets the result of a select query (everything from a design entity)
-  static std::vector<std::string> getSelect(PKBManager* pkb, QE::DesignEntity);
 };

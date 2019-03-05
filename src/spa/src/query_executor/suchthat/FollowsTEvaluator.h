@@ -5,7 +5,7 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_executor/constraint_solver.h"
+// #include "query_executor/constraint_solver/constraint_solver.h"
 #include "query_executor/query_executor.h"
 #include "query_executor/suchthat/SuchThatEvaluator.h"
 
@@ -14,156 +14,82 @@ using namespace QE;
 
 class FollowsTEvaluator : public SuchThatEvaluator {
  public:
-  FollowsTEvaluator(Query* query, PKBManager* pkb)
-      : SuchThatEvaluator(query, pkb){};
+  FollowsTEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
+      : SuchThatEvaluator(query, pkb, qc){};
 
   // Handle cases with at least one variable selected
 
-  AllowedValuesPairOrBool handleLeftVarSelectedRightBasic() override {
+  std::vector<std::string> handleLeftVarSelectedRightBasic(
+      std::string& basic_value) override {
     // Follows*(s, 3)
-    auto results =
-        pkb->getBeforeLineS(*arg2AsBasic).value_or(std::vector<std::string>());
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
+    return pkb->getBeforeLineS(basic_value)
+        .value_or(std::vector<std::string>());
   }
-  AllowedValuesPairOrBool handleRightVarSelectedLeftBasic() override {
+  std::vector<std::string> handleRightVarSelectedLeftBasic(
+      std::string& basic_value) override {
     // Follows*(3, s)
-    auto results = pkb->getFollowingLineS(*arg1AsBasic)
-                       .value_or(std::vector<std::string>());
-    return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
+    return pkb->getFollowingLineS(basic_value)
+        .value_or(std::vector<std::string>());
   }
-  AllowedValuesPairOrBool handleLeftVarSelectedRightUnderscore() override {
-    // Follows*(s, _)
-    auto all_selected_designentities = QueryExecutor::getSelect(
-        pkb, query->selected_declaration->getDesignEntity());
-    std::vector<std::string> results;
-    for (auto de : all_selected_designentities) {
-      if (pkb->getFollowingLineS(de)) {
-        results.push_back(de);
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, results);
-    ;
+  bool handleLeftVarSelectedRightUnderscore(std::string& arg_value) override {
+    // Follows*(s, _) (for each s)
+    return pkb->getFollowingLineS(arg_value) ? true : false;
   }
-  AllowedValuesPairOrBool handleRightVarSelectedLeftUnderscore() override {
-    // Follows*(_, s)
-    auto all_selected_designentities = QueryExecutor::getSelect(
-        pkb, query->selected_declaration->getDesignEntity());
-    std::vector<std::string> results;
-    for (auto de : all_selected_designentities) {
-      if (pkb->getBeforeLineS(de)) {
-        results.push_back(de);
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg2AsSynonym, results);
+  bool handleRightVarSelectedLeftUnderscore(std::string& arg_value) override {
+    // Follows*(_, s) (for each s)
+    return pkb->getBeforeLineS(arg_value) ? true : false;
   }
-  AllowedValuesPairOrBool handleLeftVarSelectedRightVarUnselected() override {
+  bool handleLeftVarSelectedRightVarUnselected(
+      std::string& arg_select, std::string& arg_unselect) override {
     // Follows*(s, s1)
-    if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
-          *arg1AsSynonym, *arg2AsSynonym);
-    }
-    auto all_selected_designentities = QueryExecutor::getSelect(
-        pkb, query->selected_declaration->getDesignEntity());
-    auto right_arg_de = Declaration::findDeclarationForSynonym(
-                            query->declarations, *arg2AsSynonym)
-                            ->getDesignEntity();
-    auto all_unselected_designentities =
-        QueryExecutor::getSelect(pkb, right_arg_de);
-    AllowedValueSet results;
-    for (auto de : all_selected_designentities) {
-      for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineFollowLineS(de, unselect_de)) {
-          results.insert({de, unselect_de});
-        }
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
-                                               results);
+    return pkb->isLineFollowLineS(arg_select, arg_unselect) ? true : false;
   }
-  AllowedValuesPairOrBool handleRightVarSelectedLeftVarUnselected() override {
+
+  bool handleRightVarSelectedLeftVarUnselected(
+      std::string& arg_unselect, std::string& arg_select) override {
     // Follows*(s1, s)
-    if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
-          *arg1AsSynonym, *arg2AsSynonym);
-    }
-    auto all_selected_designentities = QueryExecutor::getSelect(
-        pkb, query->selected_declaration->getDesignEntity());
-    auto left_arg_de = Declaration::findDeclarationForSynonym(
-                           query->declarations, *arg1AsSynonym)
-                           ->getDesignEntity();
-    auto all_unselected_designentities =
-        QueryExecutor::getSelect(pkb, left_arg_de);
-    AllowedValueSet results;
-    for (auto de : all_selected_designentities) {
-      for (auto unselect_de : all_unselected_designentities) {
-        if (pkb->isLineFollowLineS(unselect_de, de)) {
-          results.insert({unselect_de, de});
-        }
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
-                                               results);
+    return pkb->isLineFollowLineS(arg_unselect, arg_select) ? true : false;
   }
 
   // Handle cases with no variables selected
-
-  AllowedValuesPairOrBool handleDoubleUnderscore() override {
+  bool handleDoubleUnderscore() override {
     return !pkb->isLineFollowLineSSetEmpty();
   }
-  AllowedValuesPairOrBool handleBothVarsUnselected() override {
+  bool handleBothVarsUnselected(std::string& left_arg,
+                                std::string& right_arg) override {
     // Follows*(s1, s2)
-    if (arg1AsSynonym == arg2AsSynonym) {
-      // Cannot follow yourself
-      return ConstraintSolver::makeEmptyAllowedValuesPairForSynonyms(
-          *arg1AsSynonym, *arg2AsSynonym);
-    }
-    auto left_arg_de = Declaration::findDeclarationForSynonym(
-                           query->declarations, *arg1AsSynonym)
-                           ->getDesignEntity();
-    auto right_arg_de = Declaration::findDeclarationForSynonym(
-                            query->declarations, *arg1AsSynonym)
-                            ->getDesignEntity();
-
-    auto all_left_designentities = QueryExecutor::getSelect(pkb, left_arg_de);
-    auto all_right_designentities = QueryExecutor::getSelect(pkb, right_arg_de);
-    AllowedValueSet results;
-    for (auto left_de : all_left_designentities) {
-      for (auto right_de : all_right_designentities) {
-        // Any satisfied relation would mean this clause is true overall
-        if (pkb->isLineFollowLineS(left_de, right_de)) {
-          results.insert({left_de, right_de});
-        }
-      }
-    }
-    return ConstraintSolver::makeAllowedValues(*arg1AsSynonym, *arg2AsSynonym,
-                                               results);
+    return pkb->isLineFollowLineS(left_arg, right_arg) ? true : false;
   }
-  AllowedValuesPairOrBool handleLeftVarUnselectedRightBasic() override {
+  std::vector<std::string> handleLeftVarUnselectedRightBasic(
+      std::string& arg) override {
     // Follows*(s1, 3)
-    return handleLeftVarSelectedRightBasic();
+    return handleLeftVarSelectedRightBasic(arg);
   }
-  AllowedValuesPairOrBool handleRightVarUnselectedLeftBasic() override {
+  std::vector<std::string> handleRightVarUnselectedLeftBasic(
+      std::string& arg) override {
     // Follows*(3, s1)
-    return handleRightVarSelectedLeftBasic();
+    return handleRightVarSelectedLeftBasic(arg);
   }
-  AllowedValuesPairOrBool handleLeftBasicRightUnderscore() override {
+  bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Follows*(3, _)
-    return pkb->getFollowingLineS(*arg1AsBasic).has_value();
+    return pkb->getFollowingLineS(arg).has_value();
   }
-  AllowedValuesPairOrBool handleRightBasicLeftUnderscore() override {
+  bool handleRightBasicLeftUnderscore(std::string& arg) override {
     // Follows*(_, 3)
-    return pkb->getBeforeLineS(*arg2AsBasic).has_value();
+    return pkb->getBeforeLineS(arg).has_value();
   }
-  AllowedValuesPairOrBool handleLeftVarUnselectedRightUnderscore() override {
+  bool handleLeftVarUnselectedRightUnderscore(std::string& arg) override {
     // Follows*(s1, _) --> is there a statement that is followed by anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return handleLeftVarSelectedRightUnderscore();
+    return handleLeftVarSelectedRightUnderscore(arg);
   }
-  AllowedValuesPairOrBool handleRightVarUnselectedLeftUnderscore() override {
+  bool handleRightVarUnselectedLeftUnderscore(std::string& arg) override {
     // Follows*(_, s1) --> is there a statement that follows anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return handleRightVarSelectedLeftUnderscore();
+    return handleRightVarSelectedLeftUnderscore(arg);
+  }
+  bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
+    // Follows*(2, 3)?
+    return pkb->isLineFollowLineS(arg1, arg2);
   }
 };

@@ -34,7 +34,7 @@ using PairedVariableConstraintList = std::vector<PairedVariableConstraints>;
 //! Defines the allowed set of values for a given Query
 class QueryConstraints {
  private:
-  SingleVariableConstraintList allPossibleValuesList;
+  std::map<std::string, SingleConstraintSet> allPossibleValues;
   SingleVariableConstraintList singleVariableConstraintList;
   PairedVariableConstraintList pairedVariableConstraintList;
 
@@ -54,8 +54,8 @@ class QueryConstraints {
 
  public:
   //! Add to the list of all possible values this variable can take
-  void addToAllPossibleValuesList(std::string var_name,
-                                  std::set<std::string> constraint_values);
+  void addToAllPossibleValues(std::string var_name,
+                              std::set<std::string> constraint_values);
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
   void addToSingleVariableConstraints(std::string var_name,
                                       std::set<std::string> constraint_values);
@@ -71,11 +71,11 @@ class QueryConstraints {
                                         constraint_values.end()));
   }
 
-  void addToAllPossibleValuesList(std::string var_name,
-                                  std::vector<std::string> constraint_values) {
-    addToAllPossibleValuesList(var_name,
-                               std::set<std::string>(constraint_values.begin(),
-                                                     constraint_values.end()));
+  void addToAllPossibleValues(std::string var_name,
+                              std::vector<std::string> constraint_values) {
+    addToAllPossibleValues(var_name,
+                           std::set<std::string>(constraint_values.begin(),
+                                                 constraint_values.end()));
   }
 
   SingleVariableConstraintList& getSingleVariableConstraintListRef() {
@@ -95,19 +95,21 @@ class QueryConstraints {
   }
 
   //! Checks if a particular variable is already inside the SVCL
-  bool isVarInAllPossibleValuesList(const std::string& var_name) {
+  bool isVarInallPossibleValues(const std::string& var_name) {
     // This function is necessary because we don't want to re-add an entire set
     // of possible values a variable can take if we have already done so before
-    return std::find_if(allPossibleValuesList.begin(),
-                        allPossibleValuesList.end(), [&](auto svc) {
-                          return svc.first == var_name;
-                        }) != allPossibleValuesList.end();
+    return allPossibleValues.find(var_name) != allPossibleValues.end();
   }
 
   //! Checks if a particular variable is already inside the SVCL
-  bool isVarInAllPossibleValuesList(const char* var_name) {
-    return isVarInAllPossibleValuesList(std::string(var_name));
+  bool isVarInallPossibleValues(const char* var_name) {
+    return isVarInallPossibleValues(std::string(var_name));
   }
+
+  //! \brief Checks if a vector of constraint values has at least one result in
+  //! the domain of all possible values that this variable can take
+  bool containsNoAllowedResults(std::vector<std::string> constraint_values,
+                                std::string var_name);
 
   friend std::ostream& operator<<(std::ostream& os,
                                   QueryConstraints const& qc) {

@@ -129,14 +129,20 @@ bool SuchThatEvaluator::dispatchSuchThatNotSelected() {
 }
 bool SuchThatEvaluator::dispatchLeftVarSelectedRightBasic() {
   auto results = handleLeftVarSelectedRightBasic(*arg2AsBasic);
-  if (results.empty()) return false;
+  if (results.empty() ||
+      qc.containsNoAllowedResults(results, arg1AsSynonym->synonym)) {
+    return false;
+  }
   qc.addToSingleVariableConstraints(arg1AsSynonym->synonym, results);
   return true;
 }
 
 bool SuchThatEvaluator::dispatchRightVarSelectedLeftBasic() {
   auto results = handleRightVarSelectedLeftBasic(*arg1AsBasic);
-  if (results.empty()) return false;
+  if (results.empty() ||
+      qc.containsNoAllowedResults(results, arg2AsSynonym->synonym)) {
+    return false;
+  }
   qc.addToSingleVariableConstraints(arg2AsSynonym->synonym, results);
   return true;
 }

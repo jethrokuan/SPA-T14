@@ -55,9 +55,9 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // add all possible values for it to take in at the start
   // Case: Select v such that Follows(1, 2) [Follows(1, 2) == true]
   auto select_var = query->selected_declaration->getSynonym().synonym;
-  auto select_values =
-      getSelect(pkb, query->selected_declaration->getDesignEntity());
-  query_constraints.addToSingleVariableConstraints(select_var, select_values);
+  // Add entire set of values for variable into the overall constraints
+  addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
+                                       query_constraints);
 
   auto result = ConstraintSolver::constrainAndSelect(
       query_constraints, query->selected_declaration->getSynonym().synonym);
@@ -154,10 +154,10 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
   // Because for a variable to be in the constraint list, it must have been
   // either in a such-that clause or pattern clause (ignoring select).
   // If it was in either of those clauses, this function would have run.
-  if (qc.isVarInAllPossibleValuesList(var_name)) return;
+  if (qc.isVarInallPossibleValues(var_name)) return;
 
   auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
                     ->getDesignEntity();
   auto all_de = QueryExecutor::getSelect(pkb, var_de);
-  qc.addToAllPossibleValuesList(var_name, all_de);
+  qc.addToAllPossibleValues(var_name, all_de);
 }

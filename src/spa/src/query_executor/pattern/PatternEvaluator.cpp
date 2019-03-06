@@ -12,7 +12,7 @@ bool PatternEvaluator::evaluate() {
   auto pattern_lhs = pattern->getFirstArg();
   auto pattern_rhs = pattern->getSecondArg();
 
-  // Add entire set of values for variable into the overall constraints
+  // Add entire set of values for the pattern synoynm
   QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,
                                                       pattern_syn.synonym, qc);
 
@@ -32,10 +32,6 @@ bool PatternEvaluator::evaluate() {
 
 bool PatternEvaluator::handlePatternLHSUnderscore(Synonym& syn,
                                                   ExpressionSpec& pattern_rhs) {
-  // Add entire set of values for variable into the overall constraints
-  QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,
-                                                      syn.synonym, qc);
-
   // pattern a (_, <...>)
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (_, _) --> all assignments
@@ -64,13 +60,6 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(Synonym& syn, std::string lhs,
     // pattern a ("x", _) --> all assignments with LHS "x"
     auto allowed_lines =
         pkb->getLineForAssignVar(lhs).value_or(std::vector<std::string>());
-
-    // Return false immediately if pattern returns no valid results
-    if (allowed_lines.empty() ||
-        qc.containsNoAllowedResults(allowed_lines, syn.synonym)) {
-      return false;
-    }
-
     qc.addToSingleVariableConstraints(syn.synonym, allowed_lines);
     return true;
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
@@ -80,13 +69,6 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(Synonym& syn, std::string lhs,
     auto matching_assigns =
         pkb->getPartialMatchLinesWithVar(lhs, rhs_partial.str())
             .value_or(std::vector<std::string>());
-
-    // Return false immediately if pattern returns no valid results
-    if (matching_assigns.empty() ||
-        qc.containsNoAllowedResults(matching_assigns, syn.synonym)) {
-      return false;
-    }
-
     qc.addToSingleVariableConstraints(syn.synonym, matching_assigns);
     return true;
   } else {
@@ -97,6 +79,9 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(Synonym& syn, std::string lhs,
 
 bool PatternEvaluator::handlePatternLHSSynonym(Synonym& syn, Synonym& lhs,
                                                ExpressionSpec& pattern_rhs) {
+  // Add entire set of values for lhs pattern variable
+  QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,
+                                                      lhs.synonym, qc);
   // pattern a (v, <...>)
   // Get all variables so that we can make this query
   if (std::get_if<Underscore>(&pattern_rhs)) {

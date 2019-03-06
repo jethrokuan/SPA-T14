@@ -23,25 +23,25 @@ TEST_CASE ("Test Query Constraints swapping functionality") {
   REQUIRE(qc.getPairedVariableConstraintListRef()[1] == s3);
 }
 
-TEST_CASE ("Test Query Constraints isVarInallPossibleValues functionality") {
+TEST_CASE ("Test Query Constraints isVarInAllPossibleValues functionality") {
   auto qc = QueryConstraints();
-  REQUIRE(qc.isVarInallPossibleValues("x") == false);
-  REQUIRE(qc.isVarInallPossibleValues("y") == false);
+  REQUIRE(qc.isVarInAllPossibleValues("x") == false);
+  REQUIRE(qc.isVarInAllPossibleValues("y") == false);
   qc.addToAllPossibleValues("x", std::set<std::string>{"1", "2", "3"});
-  REQUIRE(qc.isVarInallPossibleValues("x") == true);
-  REQUIRE(qc.isVarInallPossibleValues("y") == false);
+  REQUIRE(qc.isVarInAllPossibleValues("x") == true);
+  REQUIRE(qc.isVarInAllPossibleValues("y") == false);
 
   qc.addToAllPossibleValues("y", std::set<std::string>{"4", "5", "6"});
-  REQUIRE(qc.isVarInallPossibleValues("y") == true);
+  REQUIRE(qc.isVarInAllPossibleValues("y") == true);
 }
 
 TEST_CASE (
-    "Test Query Constraints isVarInallPossibleValues functionality for "
+    "Test Query Constraints isVarInAllPossibleValues functionality for "
     "paired constraints - no change expected") {
   auto qc = QueryConstraints();
-  REQUIRE(qc.isVarInallPossibleValues("x") == false);
-  REQUIRE(qc.isVarInallPossibleValues("y") == false);
+  REQUIRE(qc.isVarInAllPossibleValues("x") == false);
+  REQUIRE(qc.isVarInAllPossibleValues("y") == false);
   qc.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"3", "4"}});
-  REQUIRE(qc.isVarInallPossibleValues("x") == false);
-  REQUIRE(qc.isVarInallPossibleValues("y") == false);
+  REQUIRE(qc.isVarInAllPossibleValues("x") == false);
+  REQUIRE(qc.isVarInAllPossibleValues("y") == false);
 }

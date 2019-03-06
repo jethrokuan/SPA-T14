@@ -95,15 +95,15 @@ class QueryConstraints {
   }
 
   //! Checks if a particular variable is already inside the SVCL
-  bool isVarInallPossibleValues(const std::string& var_name) {
+  bool isVarInAllPossibleValues(const std::string& var_name) {
     // This function is necessary because we don't want to re-add an entire set
     // of possible values a variable can take if we have already done so before
     return allPossibleValues.find(var_name) != allPossibleValues.end();
   }
 
   //! Checks if a particular variable is already inside the SVCL
-  bool isVarInallPossibleValues(const char* var_name) {
-    return isVarInallPossibleValues(std::string(var_name));
+  bool isVarInAllPossibleValues(const char* var_name) {
+    return isVarInAllPossibleValues(std::string(var_name));
   }
 
   //! \brief Checks if a vector of constraint values has at least one result in
@@ -114,6 +114,15 @@ class QueryConstraints {
   friend std::ostream& operator<<(std::ostream& os,
                                   QueryConstraints const& qc) {
     os << std::string("Printing QueryConstraints:\n");
+    os << std::string("Printing allPossibleValues:\n");
+    for (const auto& el : qc.allPossibleValues) {
+      os << el.first << std::string(": {");
+      for (const auto& el2 : el.second) {
+        os << el2 << std::string(",");
+      }
+      os << "}\n";
+    }
+    os << std::string("Printing singleVariableConstraints:\n");
     for (const SingleVariableConstraints& el :
          qc.singleVariableConstraintList) {
       os << el.first << std::string(": {");
@@ -122,6 +131,7 @@ class QueryConstraints {
       }
       os << "}\n";
     }
+    os << std::string("Printing pairedVariableConstraints:\n");
     for (const PairedVariableConstraints& el :
          qc.pairedVariableConstraintList) {
       os << std::string("(") << el.first.first << std::string(",")

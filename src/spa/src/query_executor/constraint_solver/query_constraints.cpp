@@ -24,3 +24,9 @@ void QueryConstraints::addToPairedVariableConstraints(
         {{var1_name, var2_name}, constraint_values});
   }
 }
+
+void QueryConstraints::addToAllPossibleValuesList(
+    std::string var_name, std::set<std::string> constraint_values) {
+  allPossibleValuesList.push_back({var_name, constraint_values});
+  addToSingleVariableConstraints(var_name, constraint_values);
+}

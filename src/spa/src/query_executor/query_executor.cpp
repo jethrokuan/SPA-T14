@@ -154,10 +154,10 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
   // Because for a variable to be in the constraint list, it must have been
   // either in a such-that clause or pattern clause (ignoring select).
   // If it was in either of those clauses, this function would have run.
-  if (qc.isVarInSingleConstraintList(var_name)) return;
+  if (qc.isVarInAllPossibleValuesList(var_name)) return;
 
   auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
                     ->getDesignEntity();
   auto all_de = QueryExecutor::getSelect(pkb, var_de);
-  qc.addToSingleVariableConstraints(var_name, all_de);
+  qc.addToAllPossibleValuesList(var_name, all_de);
 }

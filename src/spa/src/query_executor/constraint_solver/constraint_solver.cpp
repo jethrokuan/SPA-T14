@@ -15,11 +15,14 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
   std::map<std::string, std::set<std::string>> start_one_synonym_constraints,
       end_one_synonym_constraints;
   do {
+    // std::cout << "\n\n*** Query constraints at start: \n";
+    // std::cout << qc << std::endl;
     // Get individually allowed values from each of the tupled constraints
     start_one_synonym_constraints =
         intersectConstraints(qc.getSingleVariableConstraintListRef(),
                              qc.getPairedVariableConstraintListRef());
-
+    // std::cout << "Constraints after intersect: \n";
+    // printConstraints(start_one_synonym_constraints);
     // Get all the pairs of values that are allowed
     std::map<std::pair<std::string, std::string>,
              std::set<std::pair<std::string, std::string>>>
@@ -33,6 +36,8 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
     end_one_synonym_constraints =
         intersectConstraints(qc.getSingleVariableConstraintListRef(),
                              qc.getPairedVariableConstraintListRef());
+    // std::cout << "Constraints after re-intersect: \n";
+    // printConstraints(end_one_synonym_constraints);
   } while (start_one_synonym_constraints != end_one_synonym_constraints);
 
   // Return intended variable

@@ -27,8 +27,7 @@ class ParentTEvaluator : public SuchThatEvaluator {
   std::vector<std::string> handleRightVarSelectedLeftBasic(
       std::string& basic_value) override {
     // Parent*(3, s)
-    return pkb->getChildLineS(basic_value)
-        .value_or(std::vector<std::string>());
+    return pkb->getChildLineS(basic_value).value_or(std::vector<std::string>());
   }
   bool handleLeftVarSelectedRightUnderscore(std::string& arg_value) override {
     // Parent*(s, _) (for each s)

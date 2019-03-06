@@ -69,4 +69,52 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
     REQUIRE(qm->makeQuery(query) ==
             std::vector<std::string>{"v", "v1", "v2", "v3", "v4", "v5"});
   }
+
+  SECTION (
+      "Test select variable that is constrained by pattern, and one synonym in "
+      "the pattern is constrained by the such-that (Uses)") {
+    auto querystr = std::string(
+        "assign a, a1; variable v; Select a such that Uses(a1, v) pattern a(v, "
+        "_)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10", "11", "12",
+                                                             "13", "14", "15",
+                                                             "16", "21", "22"});
+  }
+
+  SECTION (
+      "Test select variable that is constrained by pattern, and both synonyms "
+      "in "
+      "the pattern are constrained by the such-that (Uses)") {
+    auto querystr = std::string(
+        "assign a, a1; variable v; Select a such that Uses(a, v) pattern a(v, "
+        "_)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"10", "11", "16", "22"});
+  }
+
+  SECTION (
+      "Test select variable that is constrained by pattern, and one synonym in "
+      "the pattern is constrained by the such-that (Modifies)") {
+    auto querystr = std::string(
+        "assign a, a1; variable v; Select a such that Modifies(a1, v) pattern "
+        "a(v, "
+        "_)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10", "11", "12",
+                                                             "13", "14", "15",
+                                                             "16", "21", "22"});
+  }
+
+  SECTION (
+      "Test select variable that is constrained by pattern with "
+      "DoubleUnderscore RHS, and one synonym in "
+      "the pattern is constrained by the such-that (Uses)") {
+    auto querystr = std::string(
+        "assign a, a1; variable v; Select a such that Uses(a1, v) pattern a(v, "
+        "_\"v\"_)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10"});
+  }
 }

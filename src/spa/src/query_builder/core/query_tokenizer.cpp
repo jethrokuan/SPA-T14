@@ -69,7 +69,11 @@ QueryTokenizerTokens QueryTokenizer::getTokens(std::string pql_query_string) {
         std::string::iterator end_pos =
             std::remove(synonym_string.begin(), synonym_string.end(), ' ');
         synonym_string.erase(end_pos, synonym_string.end());
-        // Get all synonyms that are currently stuck together - comma delimited
+        end_pos =
+            std::remove(synonym_string.begin(), synonym_string.end(), '\t');
+        synonym_string.erase(end_pos, synonym_string.end());
+        // Get all synonyms that are currently stuck together - comma
+        // delimited
         auto synonym_tokens = QueryTokenizer::splitString(
             synonym_string, QueryTokenizer::COMMA_DELIMITER);
         // Add the design entity, and then every synonym associated with it

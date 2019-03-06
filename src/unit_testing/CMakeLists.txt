@@ -4,6 +4,7 @@ set(srcs ${srcs}
   src/simple_source/parser/TestCondExpr.cpp
   src/simple_source/parser/TestExpr.cpp
   src/simple_source/parser/TestIf.cpp
+  src/simple_source/parser/TestMultiProcedure.cpp
   src/simple_source/parser/TestPrint.cpp
   src/simple_source/parser/TestProcedure.cpp
   src/simple_source/parser/TestRead.cpp

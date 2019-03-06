@@ -21,25 +21,30 @@ TEST_CASE ("Test valid conditional expression") {
     auto ast = SimpleInterface::getAstFromFile(
         "tests/simple_source/cond_expr/valid_1.txt");
 
-    std::vector<StmtNode> whileStmtList;
+    std::vector<StmtNode> while_stmt_list;
 
     auto read = make_shared<ReadNode>(make_shared<VariableNode>("x"));
-    whileStmtList.push_back(move(read));
+    while_stmt_list.push_back(move(read));
 
-    auto condExpr = make_shared<CondExprNode>(make_shared<RelExprNode>(
+    auto cond_expr = make_shared<CondExprNode>(make_shared<RelExprNode>(
         make_shared<VariableNode>("i"), "==", make_shared<NumberNode>("0")));
 
-    auto whileNode = make_shared<WhileNode>(
-        std::move(condExpr),
-        make_shared<StmtListNode>(std::move(whileStmtList)));
+    auto while_node = make_shared<WhileNode>(
+        std::move(cond_expr),
+        make_shared<StmtListNode>(std::move(while_stmt_list)));
 
-    std::vector<StmtNode> stmtList;
-    stmtList.push_back(whileNode);
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
-    auto StmtList = make_shared<StmtListNode>(move(stmtList));
-    auto expected = make_shared<ProcedureNode>("main", move(StmtList));
+    stmt_list.push_back(while_node);
 
-    REQUIRE(*ast == *expected);
+    auto stmt_list_node = make_shared<StmtListNode>(move(stmt_list));
+    auto proc_main = make_shared<ProcedureNode>("main", move(stmt_list_node));
+
+    proc_list.push_back(proc_main);
+    auto root = make_shared<RootNode>(move(proc_list));
+
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("!(i == 0)") {
@@ -51,26 +56,32 @@ TEST_CASE ("Test valid conditional expression") {
     auto ast = SimpleInterface::getAstFromFile(
         "tests/simple_source/cond_expr/valid_2.txt");
 
-    std::vector<StmtNode> whileStmtList;
+    std::vector<StmtNode> while_stmt_list;
 
     auto read = make_shared<ReadNode>(make_shared<VariableNode>("x"));
-    whileStmtList.push_back(move(read));
+    while_stmt_list.push_back(move(read));
 
-    auto condExpr = make_shared<CondExprNode>(make_shared<CondExprNode>(
+    auto cond_expr = make_shared<CondExprNode>(make_shared<CondExprNode>(
         make_shared<RelExprNode>(make_shared<VariableNode>("i"),
                                  "==", make_shared<NumberNode>("0"))));
 
-    auto whileNode = make_shared<WhileNode>(
-        std::move(condExpr),
-        make_shared<StmtListNode>(std::move(whileStmtList)));
+    auto while_node = make_shared<WhileNode>(
+        std::move(cond_expr),
+        make_shared<StmtListNode>(std::move(while_stmt_list)));
 
-    std::vector<StmtNode> stmtList;
-    stmtList.push_back(whileNode);
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
-    auto StmtList = make_shared<StmtListNode>(move(stmtList));
-    auto expected = make_shared<ProcedureNode>("main", move(StmtList));
+    stmt_list.push_back(while_node);
 
-    REQUIRE(*ast == *expected);
+    auto stmt_list_node = make_shared<StmtListNode>(move(stmt_list));
+    auto proc_main = make_shared<ProcedureNode>("main", move(stmt_list_node));
+
+    proc_list.push_back(move(proc_main));
+
+    auto root = make_shared<RootNode>(move(proc_list));
+
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("(i == 0) && (j >= 1)") {
@@ -82,12 +93,12 @@ TEST_CASE ("Test valid conditional expression") {
     auto ast = SimpleInterface::getAstFromFile(
         "tests/simple_source/cond_expr/valid_3.txt");
 
-    std::vector<StmtNode> whileStmtList;
+    std::vector<StmtNode> while_stmt_list;
 
     auto read = make_shared<ReadNode>(make_shared<VariableNode>("x"));
-    whileStmtList.push_back(move(read));
+    while_stmt_list.push_back(move(read));
 
-    auto condExpr = make_shared<CondExprNode>(
+    auto cond_expr = make_shared<CondExprNode>(
         make_shared<CondExprNode>(
             make_shared<RelExprNode>(make_shared<VariableNode>("i"),
                                      "==", make_shared<NumberNode>("0"))),
@@ -96,17 +107,23 @@ TEST_CASE ("Test valid conditional expression") {
             make_shared<RelExprNode>(make_shared<VariableNode>("j"),
                                      ">=", make_shared<NumberNode>("1"))));
 
-    auto whileNode = make_shared<WhileNode>(
-        std::move(condExpr),
-        make_shared<StmtListNode>(std::move(whileStmtList)));
+    auto while_node = make_shared<WhileNode>(
+        std::move(cond_expr),
+        make_shared<StmtListNode>(std::move(while_stmt_list)));
 
-    std::vector<StmtNode> stmtList;
-    stmtList.push_back(whileNode);
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
-    auto StmtList = make_shared<StmtListNode>(move(stmtList));
-    auto expected = make_shared<ProcedureNode>("main", move(StmtList));
+    stmt_list.push_back(while_node);
 
-    REQUIRE(*ast == *expected);
+    auto stmt_list_node = make_shared<StmtListNode>(move(stmt_list));
+    auto proc_main = make_shared<ProcedureNode>("main", move(stmt_list_node));
+
+    proc_list.push_back(proc_main);
+
+    auto root = make_shared<RootNode>(proc_list);
+
+    REQUIRE(*ast == *root);
   }
 }
 

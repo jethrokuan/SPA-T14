@@ -60,8 +60,6 @@ namespace Simple {
  *
  */
 
-using AST = std::shared_ptr<ProcedureNode>;
-
 class Parser {
  private:
   //! Current index in `tokens`

@@ -16,32 +16,41 @@ TEST_CASE ("Test valid assign statement") {
     auto ast = SimpleInterface::getAstFromFile(
         "tests/simple_source/assign/valid_1.txt");
 
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     auto assign = make_shared<AssignNode>(make_shared<VariableNode>("x"),
                                           make_shared<NumberNode>("1"));
-    stmtList.push_back(std::move(assign));
+    stmt_list.push_back(std::move(assign));
 
-    auto expected =
-        make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmtList));
+    auto proc_main = make_shared<ProcedureNode>(
+        "main", make_shared<StmtListNode>(stmt_list));
 
-    REQUIRE(*ast == *expected);
+    proc_list.push_back(std::move(proc_main));
+
+    auto root = make_shared<RootNode>(std::move(proc_list));
+
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("if = while") {
     auto ast = SimpleInterface::getAstFromFile(
         "tests/simple_source/assign/valid_2.txt");
 
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     auto assign = make_shared<AssignNode>(make_shared<VariableNode>("if"),
                                           make_shared<VariableNode>("while"));
-    stmtList.push_back(std::move(assign));
+    stmt_list.push_back(std::move(assign));
 
-    auto expected =
-        make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmtList));
+    auto proc_main = make_shared<ProcedureNode>(
+        "main", make_shared<StmtListNode>(stmt_list));
+    proc_list.push_back(std::move(proc_main));
 
-    REQUIRE(*ast == *expected);
+    auto root = make_shared<RootNode>(std::move(proc_list));
+
+    REQUIRE(*ast == *root);
   }
 }
 

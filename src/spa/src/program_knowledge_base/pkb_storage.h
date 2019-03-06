@@ -27,7 +27,7 @@ class PKBStorage {
   PKBStorage();
   ~PKBStorage();
   // attributes
-  std::shared_ptr<ProcedureNode> ast;
+  AST ast;
   // TODO deprecate this and use hash map
   std::vector<std::shared_ptr<Node>> lines;
 
@@ -111,7 +111,7 @@ class PKBStorage {
   std::unordered_map<Variable, std::vector<Line>> assign_var_line_map;
 
   // setters
-  void storeAST(const std::shared_ptr<ProcedureNode> proc);
+  void storeAST(const AST proc);
   // TODO upon adding the hash function for line number mapping
   // change the parameters for storeLine to take in both
   // the node and the line number (instead of just the node)

@@ -13,11 +13,12 @@
 #include "simple_parser/lexer.h"
 #include "simple_parser/parser.h"
 #include "simple_parser/token.h"
+#include "structs/node.h"
 
 namespace Simple {
-class SimpleInterface {
+struct SimpleInterface {
  public:
-  static std::shared_ptr<ProcedureNode> getAstFromFile(std::string filename);
+  static AST getAstFromFile(std::string filename);
   static Expr parseExpression(std::string expression);
 };
 }  // namespace Simple

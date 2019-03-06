@@ -15,16 +15,19 @@ TEST_CASE ("Test valid print statement") {
   auto ast =
       SimpleInterface::getAstFromFile("tests/simple_source/print/valid.txt");
 
-  std::vector<StmtNode> stmtList;
+  std::vector<StmtNode> stmt_list;
+  std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
   auto print_x = make_shared<PrintNode>(make_shared<VariableNode>("x"));
 
-  stmtList.push_back(std::move(print_x));
+  stmt_list.push_back(std::move(print_x));
 
-  auto expected =
-      make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmtList));
+  auto proc_main =
+      make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmt_list));
+  proc_list.push_back(proc_main);
+  auto root = make_shared<RootNode>(proc_list);
 
-  REQUIRE(*ast == *expected);
+  REQUIRE(*ast == *root);
 }
 
 TEST_CASE ("Test invalid print statement") {

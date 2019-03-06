@@ -2,13 +2,23 @@
 
 #include <iostream>
 
-template <class... Ts>
-struct overload : Ts... {
-  using Ts::operator()...;
-};
-
-template <class... Ts>
-overload(Ts...)->overload<Ts...>;
+RootNode::RootNode(std::vector<std::shared_ptr<ProcedureNode>> procList)
+    : ProcList(std::move(procList)){};
+bool RootNode::operator==(const Node& other) const {
+  auto casted_other = dynamic_cast<const RootNode*>(&other);
+  return casted_other != 0 &&
+         std::equal(begin(this->ProcList), end(this->ProcList),
+                    begin(casted_other->ProcList), end(casted_other->ProcList),
+                    [](const auto t, const auto o) { return *t == *o; });
+}
+std::string RootNode::to_str() {
+  std::string acc = "(RootNode ";
+  for (const auto& proc : this->ProcList) {
+    acc += proc->to_str();
+    acc += " ";
+  }
+  return acc;
+}
 
 StmtListNode::StmtListNode(std::vector<StmtNode> stmtList)
     : StmtList(std::move(stmtList)){};
@@ -19,10 +29,8 @@ bool StmtListNode::operator==(const Node& other) const {
          std::equal(begin(this->StmtList), end(this->StmtList),
                     begin(casted_other->StmtList), end(casted_other->StmtList),
                     [](const auto t, const auto o) {
-                      return std::visit(overload{[](auto& tp, auto& op) {
-                                          return *tp == *op;
-                                        }},
-                                        t, o);
+                      return std::visit(
+                          [](auto& tp, auto& op) { return *tp == *op; }, t, o);
                     });
 };
 std::string StmtListNode::to_str() {

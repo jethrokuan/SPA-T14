@@ -156,8 +156,14 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
   // If it was in either of those clauses, this function would have run.
   if (qc.isVarInAllPossibleValues(var_name)) return;
 
+  auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);
+  qc.addToAllPossibleValues(var_name, all_de);
+}
+
+std::vector<std::string> QueryExecutor::getAllDesignEntityValuesByVarName(
+    std::vector<Declaration>* declarations, PKBManager* pkb,
+    std::string& var_name) {
   auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
                     ->getDesignEntity();
-  auto all_de = QueryExecutor::getSelect(pkb, var_de);
-  qc.addToAllPossibleValues(var_name, all_de);
+  return QueryExecutor::getSelect(pkb, var_de);
 }

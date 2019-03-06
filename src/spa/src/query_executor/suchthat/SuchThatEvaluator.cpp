@@ -148,10 +148,11 @@ bool SuchThatEvaluator::dispatchRightVarSelectedLeftBasic() {
 }
 
 bool SuchThatEvaluator::dispatchLeftVarSelectedRightUnderscore() {
-  auto all_selected_designentities = QueryExecutor::getSelect(
-      pkb, query->selected_declaration->getDesignEntity());
+  auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+      query->declarations, pkb, arg1AsSynonym->synonym);
+
   std::vector<std::string> results;
-  for (auto de : all_selected_designentities) {
+  for (auto de : lhs_designentities) {
     if (handleLeftVarSelectedRightUnderscore(de)) {
       results.push_back(de);
     }
@@ -162,10 +163,10 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightUnderscore() {
 }
 
 bool SuchThatEvaluator::dispatchRightVarSelectedLeftUnderscore() {
-  auto all_selected_designentities = QueryExecutor::getSelect(
-      pkb, query->selected_declaration->getDesignEntity());
+  auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+      query->declarations, pkb, arg2AsSynonym->synonym);
   std::vector<std::string> results;
-  for (auto de : all_selected_designentities) {
+  for (auto de : rhs_designentities) {
     if (handleRightVarSelectedLeftUnderscore(de)) {
       results.push_back(de);
     }
@@ -181,19 +182,16 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightVarUnselected() {
     // TODO: maybe this one and the one below sets the variable to nullset?
     return false;
   }
+  auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+      query->declarations, pkb, arg1AsSynonym->synonym);
+  auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+      query->declarations, pkb, arg2AsSynonym->synonym);
 
-  auto all_selected_designentities = QueryExecutor::getSelect(
-      pkb, query->selected_declaration->getDesignEntity());
-  auto right_arg_de = Declaration::findDeclarationForSynonym(
-                          query->declarations, *arg2AsSynonym)
-                          ->getDesignEntity();
-  auto all_unselected_designentities =
-      QueryExecutor::getSelect(pkb, right_arg_de);
   PairedConstraintSet results;
-  for (auto de : all_selected_designentities) {
-    for (auto unselect_de : all_unselected_designentities) {
-      if (handleLeftVarSelectedRightVarUnselected(de, unselect_de)) {
-        results.insert({de, unselect_de});
+  for (auto lhs_de : lhs_designentities) {
+    for (auto rhs_de : rhs_designentities) {
+      if (handleLeftVarSelectedRightVarUnselected(lhs_de, rhs_de)) {
+        results.insert({lhs_de, rhs_de});
       }
     }
   }
@@ -238,21 +236,17 @@ bool SuchThatEvaluator::dispatchBothVarsUnselected() {
     // Cannot follow yourself
     return false;
   }
-  auto left_arg_de = Declaration::findDeclarationForSynonym(query->declarations,
-                                                            *arg1AsSynonym)
-                         ->getDesignEntity();
-  auto right_arg_de = Declaration::findDeclarationForSynonym(
-                          query->declarations, *arg1AsSynonym)
-                          ->getDesignEntity();
+  auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+      query->declarations, pkb, arg1AsSynonym->synonym);
+  auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+      query->declarations, pkb, arg2AsSynonym->synonym);
 
-  auto all_left_designentities = QueryExecutor::getSelect(pkb, left_arg_de);
-  auto all_right_designentities = QueryExecutor::getSelect(pkb, right_arg_de);
   PairedConstraintSet results;
-  for (auto left_de : all_left_designentities) {
-    for (auto right_de : all_right_designentities) {
+  for (auto lhs_de : lhs_designentities) {
+    for (auto rhs_de : rhs_designentities) {
       // Any satisfied relation would mean this clause is true overall
-      if (handleBothVarsUnselected(left_de, right_de)) {
-        results.insert({left_de, right_de});
+      if (handleBothVarsUnselected(lhs_de, rhs_de)) {
+        results.insert({lhs_de, rhs_de});
       }
     }
   }

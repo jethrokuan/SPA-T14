@@ -59,4 +59,14 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
                                                              "13", "14", "15",
                                                              "16", "21", "22"});
   }
+
+  SECTION (
+      "Test select variable not constrained by such-that, where such-that is "
+      "Uses(w, _) that returns results") {
+    auto querystr =
+        std::string("while w; variable v; Select v such that Uses(w, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) ==
+            std::vector<std::string>{"v", "v1", "v2", "v3", "v4", "v5"});
+  }
 }

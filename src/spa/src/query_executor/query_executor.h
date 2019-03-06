@@ -41,6 +41,9 @@ class QueryExecutor {
       std::vector<QE::Declaration>*, PKBManager* pkb, std::string&,
       QueryConstraints&);
 
+  static std::vector<std::string> getAllDesignEntityValuesByVarName(
+      std::vector<QE::Declaration>*, PKBManager*, std::string&);
+
   //! Convert a StmtOrEntRef to a string to pass to PKB
   static std::string suchThatArgToString(QE::StmtOrEntRef);
   static std::string stmtRefToString(QE::StmtRef);

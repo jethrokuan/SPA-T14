@@ -1,5 +1,6 @@
 #pragma once
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <string>
 #include <vector>
@@ -33,7 +34,10 @@ class UsesSEvaluator : public SuchThatEvaluator {
   }
   bool handleLeftVarSelectedRightUnderscore(std::string& arg_value) override {
     // Uses(s, _)
-    return pkb->getVarUsedByLine(arg_value) ? true : false;
+    auto res = pkb->getVarUsedByLine(arg_value).has_value();
+    std::cout << "Checking Uses(" << arg_value << ", _) = " << std::boolalpha
+              << res << std::endl;
+    return res ? true : false;
   }
   bool handleRightVarSelectedLeftUnderscore(std::string&) override {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";

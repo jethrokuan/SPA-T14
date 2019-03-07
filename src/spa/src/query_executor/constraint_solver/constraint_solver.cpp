@@ -11,7 +11,7 @@
 
 //! Actually constrain the set of values and select the synonym indicated
 std::vector<std::string> ConstraintSolver::constrainAndSelect(
-    QueryConstraints& qc, std::string toSelect) {
+    QueryConstraints& qc, const std::string toSelect) {
   std::map<std::string, std::set<std::string>> start_one_synonym_constraints,
       end_one_synonym_constraints;
   do {
@@ -164,7 +164,7 @@ void ConstraintSolver::filterQueryConstraints(
 }
 
 void ConstraintSolver::printConstraints(
-    std::map<std::string, std::set<std::string>> constraints) {
+    const std::map<std::string, std::set<std::string>> constraints) {
   for (auto m : constraints) {
     std::cout << "Intersected constraints for: " << m.first << std::endl;
     for (auto s : m.second) {

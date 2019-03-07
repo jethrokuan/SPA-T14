@@ -7,18 +7,23 @@ namespace PKB {
 PKBPreprocessor::PKBPreprocessor(const AST ast,
                                  std::shared_ptr<PKBStorage> pkb_storage) {
   storage = pkb_storage;
-  for (const auto &proc : ast->ProcList) {
-    setLineNumbers(proc);
-    setDesignEntities(proc);
-    setFollowsRelations(proc);
-    setParentRelations(proc);
-    setUsesRelations(proc);
-    setModifiesRelations(proc);
-    setPattern(proc);
-  }
+  setLineNumbers(ast);
+  setDesignEntities(ast);
+  setFollowsRelations(ast);
+  setParentRelations(ast);
+  setUsesRelations(ast);
+  setModifiesRelations(ast);
+  setPattern(ast);
 }
 
 PKBPreprocessor::~PKBPreprocessor() {}
+
+void PKBPreprocessor::setLineNumbers(
+    const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    setLineNumbers(proc);
+  }
+}
 
 void PKBPreprocessor::setLineNumbers(
     const std::shared_ptr<ProcedureNode> node) {
@@ -63,6 +68,13 @@ void PKBPreprocessor::setLineNumbersIterator(
   // iterate through AST via DFS
   for (const auto &stmt : stmt_lst) {
     std::visit([this, proc](const auto &s) { setLineNumbers(s, proc); }, stmt);
+  }
+}
+
+void PKBPreprocessor::setDesignEntities(
+    const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    setDesignEntities(proc);
   }
 }
 
@@ -154,6 +166,13 @@ void PKBPreprocessor::setDesignEntitiesIterator(
 }
 
 void PKBPreprocessor::setFollowsRelations(
+    const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    setFollowsRelations(proc);
+  }
+}
+
+void PKBPreprocessor::setFollowsRelations(
     const std::shared_ptr<ProcedureNode> node) {
   setFollowsRelationsIterator(node->StmtList->StmtList);
 }
@@ -207,6 +226,13 @@ void PKBPreprocessor::setFollowsRelationsIterator(
           }
         },
         stmt);
+  }
+}
+
+void PKBPreprocessor::setParentRelations(
+    const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    setParentRelations(proc);
   }
 }
 
@@ -266,6 +292,13 @@ void PKBPreprocessor::setParentRelationsIterator(
           }
         },
         stmt);
+  }
+}
+
+void PKBPreprocessor::setUsesRelations(
+    const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    setUsesRelations(proc);
   }
 }
 
@@ -358,6 +391,13 @@ void PKBPreprocessor::setUsesRelationsIterator(
 }
 
 void PKBPreprocessor::setModifiesRelations(
+    const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    setModifiesRelations(proc);
+  }
+}
+
+void PKBPreprocessor::setModifiesRelations(
     const std::shared_ptr<ProcedureNode> node) {
   setModifiesRelationsIterator(node->StmtList->StmtList);
 }
@@ -407,6 +447,13 @@ void PKBPreprocessor::setModifiesRelationsIterator(
     const std::vector<StmtNode> stmt_lst) {
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setModifiesRelations(s); }, stmt);
+  }
+}
+
+void PKBPreprocessor::setPattern(
+    const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    setPattern(proc);
   }
 }
 

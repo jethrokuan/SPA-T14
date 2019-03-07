@@ -7,7 +7,7 @@ namespace PKB {
 PKBStorage::PKBStorage(){};
 PKBStorage::~PKBStorage(){};
 
-void PKBStorage::storeAST(const AST proc) { ast = proc; };
+void PKBStorage::storeAST(const AST ast_node) { ast = ast_node; };
 
 Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
   lines.push_back(node);

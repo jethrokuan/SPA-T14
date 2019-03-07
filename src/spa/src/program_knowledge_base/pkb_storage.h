@@ -111,7 +111,7 @@ class PKBStorage {
   std::unordered_map<Variable, std::vector<Line>> assign_var_line_map;
 
   // setters
-  void storeAST(const AST proc);
+  void storeAST(const AST);
   // TODO upon adding the hash function for line number mapping
   // change the parameters for storeLine to take in both
   // the node and the line number (instead of just the node)

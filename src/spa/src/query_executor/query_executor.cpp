@@ -146,7 +146,7 @@ bool QueryExecutor::handlePattern(Query* query, QueryConstraints& qc) {
 
 void QueryExecutor::addAllValuesForVariableToConstraints(
     std::vector<Declaration>* declarations, PKBManager* pkb,
-    std::string& var_name, QueryConstraints& qc) {
+    const std::string& var_name, QueryConstraints& qc) {
   // For optimizations's sake: if we spot the variable already in the constraint
   // list - do not re-execute getSelect and re-constrain.
   // If the variable is already in the list, we can assume that this function
@@ -162,7 +162,7 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
 
 std::vector<std::string> QueryExecutor::getAllDesignEntityValuesByVarName(
     std::vector<Declaration>* declarations, PKBManager* pkb,
-    std::string& var_name) {
+    const std::string& var_name) {
   auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
                     ->getDesignEntity();
   return QueryExecutor::getSelect(pkb, var_de);

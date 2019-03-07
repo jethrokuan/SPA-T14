@@ -30,8 +30,8 @@ bool PatternEvaluator::evaluate() {
   }
 }
 
-bool PatternEvaluator::handlePatternLHSUnderscore(Synonym& syn,
-                                                  ExpressionSpec& pattern_rhs) {
+bool PatternEvaluator::handlePatternLHSUnderscore(
+    const Synonym& syn, const ExpressionSpec& pattern_rhs) {
   // pattern a (_, <...>)
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (_, _) --> all assignments
@@ -53,8 +53,9 @@ bool PatternEvaluator::handlePatternLHSUnderscore(Synonym& syn,
   }
 }
 
-bool PatternEvaluator::handlePatternLHSQuoteIdent(Synonym& syn, std::string lhs,
-                                                  ExpressionSpec& pattern_rhs) {
+bool PatternEvaluator::handlePatternLHSQuoteIdent(
+    const Synonym& syn, const std::string lhs,
+    const ExpressionSpec& pattern_rhs) {
   // pattern a ("x", <...>)
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a ("x", _) --> all assignments with LHS "x"
@@ -77,8 +78,8 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(Synonym& syn, std::string lhs,
   }
 }
 
-bool PatternEvaluator::handlePatternLHSSynonym(Synonym& syn, Synonym& lhs,
-                                               ExpressionSpec& pattern_rhs) {
+bool PatternEvaluator::handlePatternLHSSynonym(
+    const Synonym& syn, const Synonym& lhs, const ExpressionSpec& pattern_rhs) {
   // Add entire set of values for lhs pattern variable
   QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,
                                                       lhs.synonym, qc);

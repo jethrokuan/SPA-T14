@@ -12,19 +12,19 @@ using namespace QE;
 
 class PatternEvaluator {
  private:
-  QE::Query* query;
-  PKBManager* pkb;
+  const QE::Query* query;
+    PKBManager* pkb;
   QueryConstraints& qc;
 
-  bool handlePatternLHSUnderscore(Synonym& syn,
-                                  QE::ExpressionSpec& pattern_rhs);
-  bool handlePatternLHSQuoteIdent(Synonym& syn, std::string lhs,
-                                  QE::ExpressionSpec& pattern_rhs);
-  bool handlePatternLHSSynonym(Synonym& syn, Synonym& lhs,
-                               QE::ExpressionSpec& pattern_rhs);
+  bool handlePatternLHSUnderscore(const Synonym& syn,
+                                  const QE::ExpressionSpec& pattern_rhs);
+  bool handlePatternLHSQuoteIdent(const Synonym& syn, const std::string lhs,
+                                  const QE::ExpressionSpec& pattern_rhs);
+  bool handlePatternLHSSynonym(const Synonym& syn, const Synonym& lhs,
+                               const QE::ExpressionSpec& pattern_rhs);
 
  public:
-  PatternEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
+  PatternEvaluator(const Query* query, PKBManager* pkb, QueryConstraints& qc)
       : query(query), pkb(pkb), qc(qc){};
   bool evaluate();
 };

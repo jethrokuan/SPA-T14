@@ -23,6 +23,15 @@ class PKBPreprocessor {
   void setLineNumbersIterator(const std::vector<StmtNode> stmt_lst,
                               const Procedure proc);
 
+  void setCFG(const std::shared_ptr<RootNode> node);
+  void setCFG(const std::shared_ptr<ProcedureNode> node);
+  void setCFG(const std::shared_ptr<IfNode> node);
+  void setCFG(const std::shared_ptr<WhileNode> node);
+  void setCFG(const std::shared_ptr<ReadNode>);
+  void setCFG(const std::shared_ptr<PrintNode>);
+  void setCFG(const std::shared_ptr<AssignNode>);
+  void setCFGIterator(const std::vector<StmtNode> stmt_lst);
+
   void setDesignEntities(const std::shared_ptr<RootNode> node);
   void setDesignEntities(const std::shared_ptr<ProcedureNode> node);
   void setDesignEntities(const std::shared_ptr<IfNode> node);

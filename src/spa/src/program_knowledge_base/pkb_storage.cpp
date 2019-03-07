@@ -1,6 +1,6 @@
+#include "program_knowledge_base/pkb_storage.h"
 #include <iostream>
 #include "program_knowledge_base/pkb_exceptions.h"
-#include "program_knowledge_base/pkb_storage.h"
 
 namespace PKB {
 
@@ -28,6 +28,20 @@ std::string PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
     }
   }
   return "";  // TODO error handling
+}
+
+void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
+  // add to edge list
+  cfgEdgeList.insert(std::pair(source, dest));
+  // add to adjacency list
+  if (cfgAdjacencyList.find(source) == cfgAdjacencyList.end()) {
+    std::unordered_set<std::string> ls;
+    ls.insert(dest);
+    cfgAdjacencyList[source] = ls;
+    cfgAdjacencyList.at(source).insert(dest);
+  } else {
+    cfgAdjacencyList.at(source).insert(dest);
+  }
 }
 
 void PKBStorage::storeFollowsRelation(const LineBefore line_before,

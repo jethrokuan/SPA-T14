@@ -30,6 +30,11 @@ class PKBStorage {
   AST ast;
   // TODO deprecate this and use hash map
   std::vector<std::shared_ptr<Node>> lines;
+  // storing CFG as an edge list
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
+      cfgEdgeList;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      cfgAdjacencyList;
 
   std::string getLineFromNode(const std::shared_ptr<Node> node);
 
@@ -116,6 +121,7 @@ class PKBStorage {
   // change the parameters for storeLine to take in both
   // the node and the line number (instead of just the node)
   Line storeLine(const std::shared_ptr<Node> node);
+  void storeCFGEdge(const Line, const Line);
   void storeFollowsRelation(const LineBefore, const LineAfter);
   void storeFollowsRelationS(const LineBefore, const LineAfter);
   void storeParentRelation(const ParentLine, const ChildLine);

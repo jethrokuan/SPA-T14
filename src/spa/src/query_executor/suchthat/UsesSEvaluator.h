@@ -35,8 +35,6 @@ class UsesSEvaluator : public SuchThatEvaluator {
   bool handleLeftVarSelectedRightUnderscore(std::string& arg_value) override {
     // Uses(s, _)
     auto res = pkb->getVarUsedByLine(arg_value).has_value();
-    std::cout << "Checking Uses(" << arg_value << ", _) = " << std::boolalpha
-              << res << std::endl;
     return res ? true : false;
   }
   bool handleRightVarSelectedLeftUnderscore(std::string&) override {

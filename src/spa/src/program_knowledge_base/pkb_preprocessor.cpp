@@ -58,6 +58,11 @@ void PKBPreprocessor::setLineNumbers(const std::shared_ptr<AssignNode> node,
   storage->storeLineProcedureRelation(line_number, proc);
 }
 
+void PKBPreprocessor::setLineNumbers(const std::shared_ptr<CallNode> node,
+                                     const Procedure proc) {
+  // TODO
+}
+
 void PKBPreprocessor::setLineNumbersIterator(
     const std::vector<StmtNode> stmt_lst, const Procedure proc) {
   // iterate through AST via DFS
@@ -85,6 +90,10 @@ void PKBPreprocessor::setDesignEntities(const std::shared_ptr<WhileNode> node) {
   storage->storeWhile(storage->getLineFromNode(node));
   setDesignEntities(node->CondExpr);
   setDesignEntitiesIterator(node->StmtList->StmtList);
+}
+
+void PKBPreprocessor::setDesignEntities(const std::shared_ptr<CallNode> node) {
+  // TODO
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<ReadNode> node) {
@@ -293,6 +302,10 @@ void PKBPreprocessor::setUsesRelations(const std::shared_ptr<AssignNode> node) {
   setUsesRelationsH(node->Exp, node);
 }
 
+void PKBPreprocessor::setUsesRelations(const std::shared_ptr<CallNode> node) {
+  // TODO
+}
+
 void PKBPreprocessor::setUsesRelations(const std::shared_ptr<ReadNode>) {}
 
 void PKBPreprocessor::setUsesRelationsH(const Expr node,
@@ -380,6 +393,11 @@ void PKBPreprocessor::setModifiesRelations(
 }
 
 void PKBPreprocessor::setModifiesRelations(
+    const std::shared_ptr<CallNode> node) {
+  // TODO
+}
+
+void PKBPreprocessor::setModifiesRelations(
     const std::shared_ptr<AssignNode> node) {
   setModifiesRelationsH(node->Var, node);
 }
@@ -433,6 +451,10 @@ void PKBPreprocessor::setPattern(const std::shared_ptr<WhileNode> node) {
 }
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<ReadNode>) {}
+
+void PKBPreprocessor::setPattern(const std::shared_ptr<CallNode>) {
+  // TODO
+}
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<PrintNode>) {}
 

@@ -120,6 +120,12 @@ std::optional<StmtNode> Parser::parseStatement() {
   }
 
   auto current_loc = current;
+
+  auto callStmt = parseCall();
+  if (callStmt) {
+    return callStmt;
+  }
+
   auto readStmt = parseRead();
   if (readStmt) {
     return readStmt;
@@ -210,6 +216,26 @@ std::shared_ptr<ReadNode> Parser::parseRead() {
   expect(";");
 
   return std::make_shared<ReadNode>(std::move(Var));
+};
+
+std::shared_ptr<CallNode> Parser::parseCall() {
+  auto current_loc = current;
+  if (!match("call")) {
+    current = current_loc;
+    return nullptr;
+  }
+
+  std::string procName;
+  if (match(TokenType::SYMBOL)) {
+    procName = static_cast<SymbolToken*>(previous())->Val;
+  } else {
+    current = current_loc;
+    return nullptr;
+  }
+
+  expect(";");
+
+  return std::make_shared<CallNode>(std::move(procName));
 };
 
 std::shared_ptr<PrintNode> Parser::parsePrint() {

@@ -2,6 +2,7 @@
 #include "simple_parser/lexer.h"
 #include "simple_parser/parser.h"
 #include "simple_parser/pratt.h"
+#include "structs/node.h"
 
 #include <fstream>
 #include <memory>
@@ -10,8 +11,7 @@
 
 using namespace Simple;
 
-std::shared_ptr<ProcedureNode> SimpleInterface::getAstFromFile(
-    std::string filename) {
+AST SimpleInterface::getAstFromFile(std::string filename) {
   std::ifstream input(filename);
 
   Lexer lexer = Lexer(&input);

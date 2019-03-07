@@ -1,0 +1,7 @@
+procedure main {
+  x = 1;
+}
+
+procedure bar {
+  y = 2;
+}

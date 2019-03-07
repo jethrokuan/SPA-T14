@@ -16,6 +16,7 @@ TEST_CASE ("Test valid if statement") {
       SimpleInterface::getAstFromFile("tests/simple_source/if/valid.txt");
 
   std::vector<StmtNode> stmtList;
+  std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
   // if (i == 0) then {
   //   read x;
@@ -32,17 +33,19 @@ TEST_CASE ("Test valid if statement") {
   stmtListThen.push_back(std::move(read_x));
   stmtListElse.push_back(std::move(read_y));
 
-  auto ifNode = make_shared<IfNode>(
+  auto if_node = make_shared<IfNode>(
       make_shared<CondExprNode>(make_shared<RelExprNode>(
           make_shared<VariableNode>("i"), "==", make_shared<NumberNode>("0"))),
       make_shared<StmtListNode>(std::move(stmtListThen)),
       make_shared<StmtListNode>(std::move(stmtListElse)));
-  stmtList.push_back(std::move(ifNode));
+  stmtList.push_back(std::move(if_node));
 
-  auto expected =
+  auto proc_main =
       make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmtList));
+  proc_list.push_back(proc_main);
+  auto root = make_shared<RootNode>(proc_list);
 
-  REQUIRE(*ast == *expected);
+  REQUIRE(*ast == *root);
 }
 
 TEST_CASE ("Test invalid if statement") {

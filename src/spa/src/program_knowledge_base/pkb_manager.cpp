@@ -6,7 +6,7 @@ struct overload : Ts... {
 };
 
 namespace PKB {
-PKBManager::PKBManager(const std::shared_ptr<ProcedureNode> ast) {
+PKBManager::PKBManager(const AST ast) {
   pkb_storage->storeAST(ast);
   std::unique_ptr<PKBPreprocessor> pkb_preprocessor =
       std::make_unique<PKBPreprocessor>(ast, pkb_storage);

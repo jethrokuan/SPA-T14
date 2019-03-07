@@ -89,8 +89,7 @@ class PKBPreprocessor {
   void setPatternIterator(const std::vector<StmtNode> stmt_lst);
 
  public:
-  PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
-                  std::shared_ptr<PKBStorage> pkb_storage);
+  PKBPreprocessor(const AST ast, std::shared_ptr<PKBStorage> pkb_storage);
   ~PKBPreprocessor();
 };
 

@@ -1,19 +1,21 @@
-#include "program_knowledge_base/pkb_preprocessor.h"
 #include <iostream>
+#include "program_knowledge_base/pkb_preprocessor.h"
 #include "structs/node.h"
 
 namespace PKB {
 
-PKBPreprocessor::PKBPreprocessor(const std::shared_ptr<ProcedureNode> ast,
+PKBPreprocessor::PKBPreprocessor(const AST ast,
                                  std::shared_ptr<PKBStorage> pkb_storage) {
   storage = pkb_storage;
-  setLineNumbers(ast);
-  setDesignEntities(ast);
-  setFollowsRelations(ast);
-  setParentRelations(ast);
-  setUsesRelations(ast);
-  setModifiesRelations(ast);
-  setPattern(ast);
+  for (const auto &proc : ast->ProcList) {
+    setLineNumbers(proc);
+    setDesignEntities(proc);
+    setFollowsRelations(proc);
+    setParentRelations(proc);
+    setUsesRelations(proc);
+    setModifiesRelations(proc);
+    setPattern(proc);
+  }
 }
 
 PKBPreprocessor::~PKBPreprocessor() {}

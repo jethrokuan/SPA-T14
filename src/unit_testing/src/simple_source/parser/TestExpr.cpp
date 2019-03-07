@@ -1,5 +1,4 @@
-#include "simple_parser/lexer.h"
-#include "simple_parser/parser.h"
+#include "simple_parser/interface.h"
 
 #include "catch.hpp"
 
@@ -13,65 +12,58 @@ using std::shared_ptr;
 
 TEST_CASE ("Test Expr parse works") {
   SECTION ("i = 5") {
-    std::string filename = "tests/simple_source/arithmetic/1.txt";
-    std::ifstream input(filename);
+    AST ast =
+        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/1.txt");
 
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    AST ast = parser.parse();
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     auto assign = std::make_shared<AssignNode>(make_shared<VariableNode>("i"),
                                                make_shared<NumberNode>("5"));
 
-    stmtList.push_back(std::move(assign));
+    stmt_list.push_back(std::move(assign));
 
-    auto StmtList = std::make_shared<StmtListNode>(std::move(stmtList));
+    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
 
-    auto expected =
-        std::make_shared<ProcedureNode>("main", std::move(StmtList));
+    auto proc_main =
+        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
+    proc_list.push_back(proc_main);
 
-    REQUIRE(*ast == *expected);
+    auto root = make_shared<RootNode>(proc_list);
+
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("i = 2 + 5") {
-    std::string filename = "tests/simple_source/arithmetic/2.txt";
-    std::ifstream input(filename);
+    AST ast =
+        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/2.txt");
 
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    AST ast = parser.parse();
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     auto assign = std::make_shared<AssignNode>(
         make_shared<VariableNode>("i"),
         make_shared<BinOpNode>(make_shared<NumberNode>("2"),
                                make_shared<NumberNode>("5"), "+"));
 
-    stmtList.push_back(std::move(assign));
+    stmt_list.push_back(std::move(assign));
 
-    auto StmtList = std::make_shared<StmtListNode>(std::move(stmtList));
+    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
 
-    auto expected =
-        std::make_shared<ProcedureNode>("main", std::move(StmtList));
+    auto proc_main =
+        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
+    proc_list.push_back(proc_main);
+    auto root = make_shared<RootNode>(proc_list);
 
-    REQUIRE(*ast == *expected);
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("i = 2 + 5 * j") {
-    std::string filename = "tests/simple_source/arithmetic/3.txt";
-    std::ifstream input(filename);
+    AST ast =
+        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/3.txt");
 
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    AST ast = parser.parse();
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     auto assign = std::make_shared<AssignNode>(
         make_shared<VariableNode>("i"),
@@ -81,26 +73,24 @@ TEST_CASE ("Test Expr parse works") {
                                    make_shared<VariableNode>("j"), "*"),
             "+"));
 
-    stmtList.push_back(std::move(assign));
+    stmt_list.push_back(std::move(assign));
 
-    auto StmtList = std::make_shared<StmtListNode>(std::move(stmtList));
+    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
 
-    auto expected =
-        std::make_shared<ProcedureNode>("main", std::move(StmtList));
+    auto proc_main =
+        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
+    proc_list.push_back(proc_main);
+    auto root = make_shared<RootNode>(proc_list);
 
-    REQUIRE(*ast == *expected);
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("i = 2 + (5 * j)") {
-    std::string filename = "tests/simple_source/arithmetic/4.txt";
-    std::ifstream input(filename);
+    AST ast =
+        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/4.txt");
 
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    AST ast = parser.parse();
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     auto assign = std::make_shared<AssignNode>(
         make_shared<VariableNode>("i"),
@@ -110,26 +100,24 @@ TEST_CASE ("Test Expr parse works") {
                                    make_shared<VariableNode>("j"), "*"),
             "+"));
 
-    stmtList.push_back(std::move(assign));
+    stmt_list.push_back(std::move(assign));
 
-    auto StmtList = std::make_shared<StmtListNode>(std::move(stmtList));
+    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
 
-    auto expected =
-        std::make_shared<ProcedureNode>("main", std::move(StmtList));
+    auto proc_main =
+        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
+    proc_list.push_back(proc_main);
+    auto root = make_shared<RootNode>(proc_list);
 
-    REQUIRE(*ast == *expected);
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("i = (2 + 5) * j") {
-    std::string filename = "tests/simple_source/arithmetic/5.txt";
-    std::ifstream input(filename);
+    AST ast =
+        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/5.txt");
 
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    AST ast = parser.parse();
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     auto assign = std::make_shared<AssignNode>(
         make_shared<VariableNode>("i"),
@@ -138,27 +126,24 @@ TEST_CASE ("Test Expr parse works") {
                                    make_shared<NumberNode>("5"), "+"),
             make_shared<VariableNode>("j"), "*"));
 
-    stmtList.push_back(std::move(assign));
+    stmt_list.push_back(std::move(assign));
 
-    auto StmtList = std::make_shared<StmtListNode>(std::move(stmtList));
+    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
 
-    auto expected =
-        std::make_shared<ProcedureNode>("main", std::move(StmtList));
+    auto proc_main =
+        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
+    proc_list.push_back(proc_main);
+    auto root = make_shared<RootNode>(proc_list);
 
-    REQUIRE(*ast == *expected);
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("while (i > (2 + 5) * j)") {
-    std::string filename = "tests/simple_source/arithmetic/6.txt";
-    std::ifstream input(filename);
+    AST ast =
+        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/6.txt");
 
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    AST ast = parser.parse();
-
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     std::vector<StmtNode> ws;
     auto assign = make_shared<AssignNode>(
@@ -177,89 +162,60 @@ TEST_CASE ("Test Expr parse works") {
                 make_shared<VariableNode>("j"), "*"))),
         make_shared<StmtListNode>(std::move(ws)));
 
-    stmtList.push_back(std::move(w));
+    stmt_list.push_back(std::move(w));
 
-    auto StmtList = std::make_shared<StmtListNode>(std::move(stmtList));
+    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
 
-    auto expected =
-        std::make_shared<ProcedureNode>("main", std::move(StmtList));
+    auto proc_main =
+        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
+    proc_list.push_back(proc_main);
+    auto root = make_shared<RootNode>(proc_list);
 
-    REQUIRE(*ast == *expected);
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("valid assign statements") {
-    std::string filename = "tests/simple_source/arithmetic/valid.txt";
-    std::ifstream input(filename);
-
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    REQUIRE_NOTHROW(parser.parse());
+    REQUIRE_NOTHROW(SimpleInterface::getAstFromFile(
+        "tests/simple_source/arithmetic/valid.txt"));
   }
 }
 
 TEST_CASE ("Test Expr parse throws when invalid") {
   SECTION ("consecutive operands") {
-    std::string filename =
-        "tests/simple_source/arithmetic/consecutive_operands.txt";
-    std::ifstream input(filename);
-
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    REQUIRE_THROWS_WITH(parser.parse(), "Unexpected token '9'.");
+    REQUIRE_THROWS_WITH(
+        SimpleInterface::getAstFromFile(
+            "tests/simple_source/arithmetic/consecutive_operands.txt"),
+        "Unexpected token '9'.");
   }
 
   SECTION ("double operators") {
-    std::string filename =
-        "tests/simple_source/arithmetic/double_operators.txt";
-    std::ifstream input(filename);
-
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    REQUIRE_THROWS_WITH(parser.parse(), "Expected an expression, got '-'.");
+    REQUIRE_THROWS_WITH(
+        SimpleInterface::getAstFromFile(
+            "tests/simple_source/arithmetic/double_operators.txt"),
+        "Expected an expression, got '-'.");
   }
 
   SECTION ("empty parentheses") {
-    std::string filename =
-        "tests/simple_source/arithmetic/empty_parentheses.txt";
-    std::ifstream input(filename);
-
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    REQUIRE_THROWS_WITH(parser.parse(), "Expected an expression, got ')'.");
+    REQUIRE_THROWS_WITH(
+        SimpleInterface::getAstFromFile(
+            "tests/simple_source/arithmetic/empty_parentheses.txt"),
+        "Expected an expression, got ')'.");
   }
 
   SECTION ("incomplete parentheses") {
-    std::string filename =
-        "tests/simple_source/arithmetic/incomplete_parentheses.txt";
-    std::ifstream input(filename);
-
-    Lexer lexer = Lexer(&input);
-    lexer.lex();
-
-    Parser parser = Parser(lexer.tokens);
-    REQUIRE_THROWS_WITH(parser.parse(), "Expected ')', got ';'.");
+    REQUIRE_THROWS_WITH(
+        SimpleInterface::getAstFromFile(
+            "tests/simple_source/arithmetic/incomplete_parentheses.txt"),
+        "Expected ')', got ';'.");
   }
 
   SECTION ("other invalid expressions") {
-    int NUM_TESTCASES = 21;
-    for (int i = 0; i < NUM_TESTCASES; i++) {
+    int num_testcases = 21;
+    for (int i = 0; i < num_testcases; i++) {
       std::string filename = "tests/simple_source/arithmetic/other_invalids/" +
                              std::to_string(i) + ".txt";
-      std::ifstream input(filename);
 
-      Lexer lexer = Lexer(&input);
-      lexer.lex();
-
-      Parser parser = Parser(lexer.tokens);
-      REQUIRE_THROWS(parser.parse());
+      REQUIRE_THROWS(SimpleInterface::getAstFromFile(filename));
     }
   }
 }

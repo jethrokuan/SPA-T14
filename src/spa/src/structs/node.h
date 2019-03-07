@@ -13,6 +13,7 @@
 #include <vector>
 
 class Node;
+class RootNode;
 class NumberNode;
 class VariableNode;
 class ReadNode;
@@ -36,6 +37,7 @@ using StmtNode =
     std::variant<std::shared_ptr<ReadNode>, std::shared_ptr<PrintNode>,
                  std::shared_ptr<WhileNode>, std::shared_ptr<IfNode>,
                  std::shared_ptr<AssignNode>>;
+using AST = std::shared_ptr<RootNode>;
 
 //! Abstract base class for other AST nodes.
 class Node {
@@ -46,6 +48,14 @@ class Node {
     return !operator==(other);
   };
   virtual std::string to_str() = 0;
+};
+
+class RootNode : public Node {
+ public:
+  std::vector<std::shared_ptr<ProcedureNode>> ProcList;
+  explicit RootNode(std::vector<std::shared_ptr<ProcedureNode>> procList);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
 };
 
 //! AST Node representing a Statement List

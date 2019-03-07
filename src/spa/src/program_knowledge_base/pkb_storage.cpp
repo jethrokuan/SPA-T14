@@ -1,15 +1,13 @@
-#include "program_knowledge_base/pkb_storage.h"
 #include <iostream>
 #include "program_knowledge_base/pkb_exceptions.h"
+#include "program_knowledge_base/pkb_storage.h"
 
 namespace PKB {
 
 PKBStorage::PKBStorage(){};
 PKBStorage::~PKBStorage(){};
 
-void PKBStorage::storeAST(const std::shared_ptr<ProcedureNode> proc) {
-  ast = proc;
-};
+void PKBStorage::storeAST(const AST proc) { ast = proc; };
 
 Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
   lines.push_back(node);

@@ -13,16 +13,19 @@ TEST_CASE ("Test SIMPLE interface") {
     auto ast =
         SimpleInterface::getAstFromFile("tests/simple_source/read/valid.txt");
 
-    std::vector<StmtNode> stmtList;
+    std::vector<StmtNode> stmt_list;
+    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     auto read_x = make_shared<ReadNode>(make_shared<VariableNode>("x"));
 
-    stmtList.push_back(std::move(read_x));
+    stmt_list.push_back(std::move(read_x));
 
-    auto expected =
-        make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmtList));
+    auto proc_main = make_shared<ProcedureNode>(
+        "main", make_shared<StmtListNode>(stmt_list));
+    proc_list.push_back(proc_main);
+    auto root = make_shared<RootNode>(proc_list);
 
-    REQUIRE(*ast == *expected);
+    REQUIRE(*ast == *root);
   }
 
   SECTION ("parseExpression") {

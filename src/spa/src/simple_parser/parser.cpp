@@ -1,7 +1,8 @@
-#include "simple_parser/parser.h"
 #include "simple_parser/exceptions.h"
+#include "simple_parser/parser.h"
 #include "simple_parser/pratt.h"
 
+#include <iostream>
 #include <unordered_set>
 
 using namespace Simple;
@@ -32,15 +33,9 @@ bool Parser::expect(std::string s) {
                              "'.");
 };
 
-bool Parser::check(TokenType type) {
-  if (isAtEnd()) return false;
-  return peek()->T == type;
-};
+bool Parser::check(TokenType type) { return peek()->T == type; };
 
-bool Parser::check(std::string s) {
-  if (isAtEnd()) return false;
-  return peek()->Val.compare(s) == 0;
-};
+bool Parser::check(std::string s) { return peek()->Val.compare(s) == 0; };
 
 Token* Parser::advance() {
   if (!isAtEnd()) current++;
@@ -376,10 +371,29 @@ std::shared_ptr<IfNode> Parser::parseIf() {
                                   std::move(stmtListElse));
 };
 
+AST Parser::parse() {
+  std::vector<std::shared_ptr<ProcedureNode>> proc_list;
+  while (true) {
+    // No more procedures left to parse
+    if (match(TokenType::END_OF_FILE)) {
+      break;
+    }
+
+    auto procedure = parseProcedure();
+
+    proc_list.push_back(procedure);
+  }
+
+  if (proc_list.size() == 0) {
+    throw SimpleParseException("Expected at least 1 procedure.");
+  }
+
+  return std::make_shared<RootNode>(std::move(proc_list));
+}
+
 Parser::Parser(std::vector<Token*> t)
     : exprParser(Simple::ExprParser(
           tokens, &current,
           std::unordered_set<std::string>(
               {">", ">=", "<", "<=", "==", "!=", ";", ")"}))),
       tokens(t){};
-std::shared_ptr<ProcedureNode> Parser::parse() { return parseProcedure(); }

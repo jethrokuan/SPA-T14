@@ -15,28 +15,31 @@ TEST_CASE ("Test valid while statement") {
   auto ast =
       SimpleInterface::getAstFromFile("tests/simple_source/while/valid.txt");
 
-  std::vector<StmtNode> stmtList;
+  std::vector<StmtNode> stmt_list;
+  std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
   // while (i == 0) {
   //   read x;
   // }
 
-  std::vector<StmtNode> whileStmtList;
+  std::vector<StmtNode> while_stmt_list;
 
   auto read_x = make_shared<ReadNode>(make_shared<VariableNode>("x"));
 
-  whileStmtList.push_back(std::move(read_x));
+  while_stmt_list.push_back(std::move(read_x));
 
-  auto whileNode = make_shared<WhileNode>(
+  auto while_node = make_shared<WhileNode>(
       make_shared<CondExprNode>(make_shared<RelExprNode>(
           make_shared<VariableNode>("i"), "==", make_shared<NumberNode>("0"))),
-      make_shared<StmtListNode>(std::move(whileStmtList)));
-  stmtList.push_back(std::move(whileNode));
+      make_shared<StmtListNode>(std::move(while_stmt_list)));
+  stmt_list.push_back(std::move(while_node));
 
-  auto expected =
-      make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmtList));
+  auto proc_main =
+      make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmt_list));
+  proc_list.push_back(proc_main);
+  auto root = make_shared<RootNode>(proc_list);
 
-  REQUIRE(*ast == *expected);
+  REQUIRE(*ast == *root);
 }
 
 TEST_CASE ("Test invalid while statement") {

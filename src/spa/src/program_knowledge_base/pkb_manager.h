@@ -26,7 +26,7 @@ class PKBManager {
   std::vector<std::string> getUniqueVector(std::vector<std::string>);
 
  public:
-  PKBManager(const std::shared_ptr<ProcedureNode> ast);
+  PKBManager(const AST ast);
   ~PKBManager();
 
   // API exposed to Query Manager

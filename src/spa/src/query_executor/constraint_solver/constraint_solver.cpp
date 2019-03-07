@@ -19,7 +19,6 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
     start_one_synonym_constraints =
         intersectConstraints(qc.getSingleVariableConstraintListRef(),
                              qc.getPairedVariableConstraintListRef());
-
     // Get all the pairs of values that are allowed
     std::map<std::pair<std::string, std::string>,
              std::set<std::pair<std::string, std::string>>>

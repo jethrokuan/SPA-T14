@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "query_builder/core/query_preprocessor.h"
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
@@ -50,12 +51,13 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // All clauses returned true and potentially added constraints
   // Have to evaluate constraints now
 
-  // Add the Select clause - this is in case no queries touch the variable
-  // Then - the unconstrained set must be returned
+  // Since the Select variable's values will either be returned or constrained
+  // add all possible values for it to take in at the start
+  // Case: Select v such that Follows(1, 2) [Follows(1, 2) == true]
   auto select_var = query->selected_declaration->getSynonym().synonym;
-  auto select_values =
-      getSelect(pkb, query->selected_declaration->getDesignEntity());
-  query_constraints.addToSingleVariableConstraints(select_var, select_values);
+  // Add entire set of values for variable into the overall constraints
+  addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
+                                       query_constraints);
 
   auto result = ConstraintSolver::constrainAndSelect(
       query_constraints, query->selected_declaration->getSynonym().synonym);
@@ -140,4 +142,28 @@ bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
 
 bool QueryExecutor::handlePattern(Query* query, QueryConstraints& qc) {
   return PatternEvaluator(query, pkb, qc).evaluate();
+}
+
+void QueryExecutor::addAllValuesForVariableToConstraints(
+    std::vector<Declaration>* declarations, PKBManager* pkb,
+    std::string& var_name, QueryConstraints& qc) {
+  // For optimizations's sake: if we spot the variable already in the constraint
+  // list - do not re-execute getSelect and re-constrain.
+  // If the variable is already in the list, we can assume that this function
+  // was already run.
+  // Because for a variable to be in the constraint list, it must have been
+  // either in a such-that clause or pattern clause (ignoring select).
+  // If it was in either of those clauses, this function would have run.
+  if (qc.isVarInAllPossibleValues(var_name)) return;
+
+  auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);
+  qc.addToAllPossibleValues(var_name, all_de);
+}
+
+std::vector<std::string> QueryExecutor::getAllDesignEntityValuesByVarName(
+    std::vector<Declaration>* declarations, PKBManager* pkb,
+    std::string& var_name) {
+  auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
+                    ->getDesignEntity();
+  return QueryExecutor::getSelect(pkb, var_de);
 }

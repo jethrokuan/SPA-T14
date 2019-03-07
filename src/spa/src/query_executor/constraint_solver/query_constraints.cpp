@@ -24,3 +24,23 @@ void QueryConstraints::addToPairedVariableConstraints(
         {{var1_name, var2_name}, constraint_values});
   }
 }
+
+void QueryConstraints::addToAllPossibleValues(
+    std::string var_name, std::set<std::string> constraint_values) {
+  allPossibleValues.insert({var_name, constraint_values});
+  addToSingleVariableConstraints(var_name, constraint_values);
+}
+
+bool QueryConstraints::containsNoAllowedResults(
+    std::vector<std::string> constraint_values, std::string var_name) {
+  // Doing this for efficiency - no need to actually do the intersection
+  for (auto c : constraint_values) {
+    if (allPossibleValues.at(var_name).find(c) !=
+        allPossibleValues.at(var_name).end()) {
+      // One of the values in the constraint set is in the domain of all
+      // possible values
+      return false;
+    }
+  }
+  return true;
+}

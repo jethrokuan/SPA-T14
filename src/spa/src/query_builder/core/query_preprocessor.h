@@ -20,14 +20,14 @@ class QueryPreprocessor {
   void parsePattern(Query*, std::vector<std::string>*);
 
   // Utility methods
-  static Declaration* findDeclaration(std::vector<Declaration>* declarations,
-                                      std::string synonym_to_match);
   static std::optional<StmtOrEntRef> argToStmtOrEntRef(std::string, RefType);
   static std::optional<StmtRef> argToStmtRef(std::string arg);
   static std::optional<EntRef> argToEntRef(std::string arg);
   static std::optional<ExpressionSpec> argToExprSpec(std::string arg);
 
  public:
+  static Declaration* findDeclaration(std::vector<Declaration>* declarations,
+                                      std::string synonym_to_match);
   // Given a string containing PQL,
   // returns the Query object representing the query's structure
   Query* getQuery(std::string&);

@@ -106,6 +106,8 @@ void QueryPreprocessor::parseSuchThat(
   std::string::iterator end_pos =
       std::remove(joined_such_that.begin(), joined_such_that.end(), ' ');
   joined_such_that.erase(end_pos, joined_such_that.end());
+  end_pos = std::remove(joined_such_that.begin(), joined_such_that.end(), '\t');
+  joined_such_that.erase(end_pos, joined_such_that.end());
 
   // For a Relation to match: it must match 'RelationName'+'(' since some
   // relations are substrings of other relations
@@ -193,8 +195,11 @@ void QueryPreprocessor::parsePattern(Query* query,
   }
 
   // Erase all whitespace
+  // May the programming gods have mercy on my soul
   std::string::iterator end_pos =
       std::remove(joined_pattern.begin(), joined_pattern.end(), ' ');
+  joined_pattern.erase(end_pos, joined_pattern.end());
+  end_pos = std::remove(joined_pattern.begin(), joined_pattern.end(), '\t');
   joined_pattern.erase(end_pos, joined_pattern.end());
 
   auto syn_assign_len = joined_pattern.find('(');

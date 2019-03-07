@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "query_builder/core/query_preprocessor.h"
 #include "query_executor/query_executor.h"
 
 bool PatternEvaluator::evaluate() {
@@ -10,11 +11,10 @@ bool PatternEvaluator::evaluate() {
   auto pattern_syn = pattern->getSynonym();
   auto pattern_lhs = pattern->getFirstArg();
   auto pattern_rhs = pattern->getSecondArg();
-  // pattern-cl : ‘pattern’ syn-assign ‘(‘ entRef ‘,’ expression-spec ’)’
-  // entRef : synonym | ‘_’ | ‘"’ IDENT ‘"’
-  // expression-spec : ‘"‘ expr’"’ | ‘_’ ‘"’ expr ‘"’ ‘_’ | ‘_’ [BASIC-SPA]
-  // expression-spec: ‘_’ ‘"’ factor ‘"’ ‘_’ | ‘_’ [ITER1]
-  // factor: var_name | const_value [ITER1]
+
+  // Add entire set of values for the pattern synoynm
+  QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,
+                                                      pattern_syn.synonym, qc);
 
   // Clearly: 6 possible cases (cross product of entRef and expression-spec)
   // Match on entRef
@@ -79,6 +79,9 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(Synonym& syn, std::string lhs,
 
 bool PatternEvaluator::handlePatternLHSSynonym(Synonym& syn, Synonym& lhs,
                                                ExpressionSpec& pattern_rhs) {
+  // Add entire set of values for lhs pattern variable
+  QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,
+                                                      lhs.synonym, qc);
   // pattern a (v, <...>)
   // Get all variables so that we can make this query
   if (std::get_if<Underscore>(&pattern_rhs)) {

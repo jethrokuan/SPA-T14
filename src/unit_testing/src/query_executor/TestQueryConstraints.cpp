@@ -17,8 +17,8 @@ TEST_CASE ("Test Query Constraints swapping functionality") {
   SingleVariableConstraints s1 = {"y", std::set<std::string>{"4", "5", "6"}};
   PairedVariableConstraints s2 = {{"x", "y"}, {{"1", "2"}, {"3", "4"}}};
   PairedVariableConstraints s3 = {{"x", "y"}, {{"1", "3"}, {"3", "4"}}};
-  REQUIRE(qc.getSingleVariableConstraintListRef()[0] == s0);
-  REQUIRE(qc.getSingleVariableConstraintListRef()[1] == s1);
+  REQUIRE(qc.getSingleVariableConstraintMapRef()["x"] == s0.second);
+  REQUIRE(qc.getSingleVariableConstraintMapRef()["y"] == s1.second);
   REQUIRE(qc.getPairedVariableConstraintListRef()[0] == s2);
   REQUIRE(qc.getPairedVariableConstraintListRef()[1] == s3);
 }

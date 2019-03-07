@@ -17,7 +17,7 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
   do {
     // Get individually allowed values from each of the tupled constraints
     start_one_synonym_constraints =
-        intersectConstraints(qc.getSingleVariableConstraintListRef(),
+        intersectConstraints(qc.getSingleVariableConstraintMapRef(),
                              qc.getPairedVariableConstraintListRef());
     // Get all the pairs of values that are allowed
     std::map<std::pair<std::string, std::string>,
@@ -30,7 +30,7 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
 
     // Re-constrain this set
     end_one_synonym_constraints =
-        intersectConstraints(qc.getSingleVariableConstraintListRef(),
+        intersectConstraints(qc.getSingleVariableConstraintMapRef(),
                              qc.getPairedVariableConstraintListRef());
   } while (start_one_synonym_constraints != end_one_synonym_constraints);
 
@@ -41,13 +41,14 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
 }
 
 std::map<std::string, std::set<std::string>>
-ConstraintSolver::intersectConstraints(SingleVariableConstraintList& svcl,
+ConstraintSolver::intersectConstraints(SingleVariableConstraintMap& svcm,
                                        PairedVariableConstraintList& pvcl) {
   std::map<std::string, std::set<std::string>> new_synonym_constraints;
 
   // Iterate through all variables that are constrained
   // Use these to construct an intersected set of constraints
-  for (auto single_var_constraints : svcl) {
+  for (std::pair<std::string, SingleConstraintSet> single_var_constraints :
+       svcm) {
     intersectTwoConstraints(new_synonym_constraints, single_var_constraints);
   }
   // Convert paired constraints into single constraints for single-intersection
@@ -55,10 +56,10 @@ ConstraintSolver::intersectConstraints(SingleVariableConstraintList& svcl,
     auto [var1, var2] = paired_var_constraints.first;
     auto var1_set = getFirstsFromSet(paired_var_constraints.second);
     auto var2_set = getSecondsFromSet(paired_var_constraints.second);
-    SingleVariableConstraints var1_svcl = {var1, var1_set};
-    SingleVariableConstraints var2_svcl = {var2, var2_set};
-    intersectTwoConstraints(new_synonym_constraints, var1_svcl);
-    intersectTwoConstraints(new_synonym_constraints, var2_svcl);
+    SingleVariableConstraints var1_svcm = {var1, var1_set};
+    SingleVariableConstraints var2_svcm = {var2, var2_set};
+    intersectTwoConstraints(new_synonym_constraints, var1_svcm);
+    intersectTwoConstraints(new_synonym_constraints, var2_svcm);
   }
 
   return new_synonym_constraints;
@@ -119,8 +120,8 @@ void ConstraintSolver::filterQueryConstraints(
     QueryConstraints& qc) {
   // Go through each QueryConstraint and remove values that aren't allowed
   // Filter single values first
-  SingleVariableConstraintList svcl;
-  for (auto single_var_constraints : qc.getSingleVariableConstraintListRef()) {
+  SingleVariableConstraintMap svcm;
+  for (auto single_var_constraints : qc.getSingleVariableConstraintMapRef()) {
     SingleConstraintSet constraint_set;
     std::string var_name = single_var_constraints.first;
     for (auto single_constraint : single_var_constraints.second) {
@@ -131,7 +132,7 @@ void ConstraintSolver::filterQueryConstraints(
         constraint_set.insert(single_constraint);
       }
     }
-    svcl.push_back({var_name, constraint_set});
+    svcm[var_name] = constraint_set;
   }
 
   // Make sure every tupled constraint is present in individual and tupled sets
@@ -158,7 +159,7 @@ void ConstraintSolver::filterQueryConstraints(
     pvcl.push_back({paired_var_constraints.first, constraint_set});
   }
   // Set these values back to the query constraints container
-  qc.setSingleVariableConstraintListRef(svcl);
+  qc.setSingleVariableConstraintMapRef(svcm);
   qc.setPairedVariableConstraintListRef(pvcl);
 }
 

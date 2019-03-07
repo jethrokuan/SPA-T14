@@ -30,7 +30,7 @@ class ConstraintSolver {
 
   //! Get a map of constraints from single variables to allowed values
   static std::map<std::string, std::set<std::string>> intersectConstraints(
-      SingleVariableConstraintList& svcl, PairedVariableConstraintList& pvcl);
+      SingleVariableConstraintMap& svcm, PairedVariableConstraintList& pvcl);
 
   //! Intersects the current list of single constraints with a new constraint
   static void intersectTwoConstraints(

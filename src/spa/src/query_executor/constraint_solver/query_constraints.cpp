@@ -44,7 +44,8 @@ void QueryConstraints::addToAllPossibleValues(
 }
 
 bool QueryConstraints::containsNoAllowedResults(
-    std::vector<std::string> constraint_values, std::string var_name) {
+    const std::vector<std::string> constraint_values,
+    const std::string var_name) {
   // Doing this for efficiency - no need to actually do the intersection
   for (auto c : constraint_values) {
     if (allPossibleValues.at(var_name).find(c) !=

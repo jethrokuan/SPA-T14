@@ -111,8 +111,9 @@ class QueryConstraints {
 
   //! \brief Checks if a vector of constraint values has at least one result in
   //! the domain of all possible values that this variable can take
-  bool containsNoAllowedResults(std::vector<std::string> constraint_values,
-                                std::string var_name);
+  bool containsNoAllowedResults(
+      const std::vector<std::string> constraint_values,
+      const std::string var_name);
 
   friend std::ostream& operator<<(std::ostream& os,
                                   QueryConstraints const& qc) {

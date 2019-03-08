@@ -17,9 +17,6 @@ class UsesSEvaluator : public SuchThatEvaluator {
   UsesSEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  // Handle cases with at least one variable selected
-
-  // Handle cases with at least one variable selected
   std::vector<std::string> handleLeftVarSynonymRightBasic(
       std::string& basic_value) override {
     // Uses(s, "x")
@@ -46,31 +43,8 @@ class UsesSEvaluator : public SuchThatEvaluator {
     // Uses(s, v)
     return pkb->isLineUsesVar(arg_select, arg_unselect) ? true : false;
   }
-
-  bool handleRightVarSelectedLeftVarUnselected(
-      std::string& arg_unselect, std::string& arg_select) override {
-    // Uses(s1, s)
-    return pkb->isLineUsesVar(arg_unselect, arg_select) ? true : false;
-  }
-
-  // Handle cases with no variables selected
   bool handleDoubleUnderscore() override {
     return !pkb->isLineUsesVarSetEmpty();
-  }
-  bool handleBothVarsUnselected(std::string& left_arg,
-                                std::string& right_arg) override {
-    // Uses(s1, s2)
-    return pkb->isLineUsesVar(left_arg, right_arg) ? true : false;
-  }
-  std::vector<std::string> handleLeftVarUnselectedRightBasic(
-      std::string& arg) override {
-    // Uses(s1, "x")
-    return handleLeftVarSynonymRightBasic(arg);
-  }
-  std::vector<std::string> handleRightVarUnselectedLeftBasic(
-      std::string& arg) override {
-    // Uses(3, v1)
-    return handleRightVarSynonymLeftBasic(arg);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Uses(3, _)
@@ -79,16 +53,6 @@ class UsesSEvaluator : public SuchThatEvaluator {
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
     // Uses(_, "x")
     return pkb->getLineUsesVar(arg).has_value();
-  }
-  bool handleLeftVarUnselectedRightUnderscore(std::string& arg) override {
-    // Uses(s1, _) --> is there a statement that modifies anything?
-    // Reuse the left-var selected results until an optimized PKB query can help
-    return handleLeftVarSynonymRightUnderscore(arg);
-  }
-  bool handleRightVarUnselectedLeftUnderscore(std::string& arg) override {
-    // Uses(_, v1) --> is there a variable that is modified?
-    // Reuse the left-var selected results until an optimized PKB query can help
-    return handleRightVarSynonymLeftUnderscore(arg);
   }
   bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
     // Uses(2, "v")?

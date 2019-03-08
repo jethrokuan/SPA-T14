@@ -59,7 +59,7 @@ bool SuchThatEvaluator::dispatch() {
     return dispatchRightBasicLeftUnderscore();
   } else if (arg1AsBasic && arg2AsBasic) {
     // Case 9: Follows(2, 3)
-    return handleBothVarsUnselected(*arg1AsBasic, *arg2AsBasic);
+    return handleDoubleBasic(*arg1AsBasic, *arg2AsBasic);
   } else {
     std::cout << "This case should not be triggered\n";
     assert(false);

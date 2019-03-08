@@ -43,7 +43,6 @@ class SuchThatEvaluator {
   bool dispatchRightBasicLeftUnderscore();
 
   // These are the PKB calls that need to be overloaded for each subclass
-  // At least one variable is selected
   virtual std::vector<std::string> handleLeftVarSynonymRightBasic(
       std::string&) = 0;
   virtual std::vector<std::string> handleRightVarSynonymLeftBasic(
@@ -51,22 +50,9 @@ class SuchThatEvaluator {
   virtual bool handleLeftVarSynonymRightUnderscore(std::string&) = 0;
   virtual bool handleRightVarSynonymLeftUnderscore(std::string&) = 0;
   virtual bool handleBothVarsSynonyms(std::string&, std::string&) = 0;
-  virtual bool handleRightVarSelectedLeftVarUnselected(std::string&,
-                                                       std::string&) = 0;
-
-  // No variable is selected
   virtual bool handleDoubleUnderscore() = 0;
-  virtual bool handleBothVarsUnselected(std::string&, std::string&) = 0;
-  virtual std::vector<std::string> handleLeftVarUnselectedRightBasic(
-      std::string&) = 0;
-  virtual std::vector<std::string> handleRightVarUnselectedLeftBasic(
-      std::string&) = 0;
   virtual bool handleLeftBasicRightUnderscore(std::string&) = 0;
   virtual bool handleRightBasicLeftUnderscore(std::string&) = 0;
-  virtual bool handleLeftVarUnselectedRightUnderscore(std::string&) = 0;
-  virtual bool handleRightVarUnselectedLeftUnderscore(std::string&) = 0;
-
-  //! Handle case with basic values in both arguments
   virtual bool handleDoubleBasic(std::string&, std::string&) = 0;
 
  public:

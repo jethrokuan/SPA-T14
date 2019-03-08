@@ -17,8 +17,6 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   FollowsTEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  // Handle cases with at least one variable selected
-
   std::vector<std::string> handleLeftVarSynonymRightBasic(
       std::string& basic_value) override {
     // Follows*(s, 3)
@@ -44,31 +42,9 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     // Follows*(s, s1)
     return pkb->isLineFollowLineS(arg_select, arg_unselect) ? true : false;
   }
-
-  bool handleRightVarSelectedLeftVarUnselected(
-      std::string& arg_unselect, std::string& arg_select) override {
-    // Follows*(s1, s)
-    return pkb->isLineFollowLineS(arg_unselect, arg_select) ? true : false;
-  }
-
   // Handle cases with no variables selected
   bool handleDoubleUnderscore() override {
     return !pkb->isLineFollowLineSSetEmpty();
-  }
-  bool handleBothVarsUnselected(std::string& left_arg,
-                                std::string& right_arg) override {
-    // Follows*(s1, s2)
-    return pkb->isLineFollowLineS(left_arg, right_arg) ? true : false;
-  }
-  std::vector<std::string> handleLeftVarUnselectedRightBasic(
-      std::string& arg) override {
-    // Follows*(s1, 3)
-    return handleLeftVarSynonymRightBasic(arg);
-  }
-  std::vector<std::string> handleRightVarUnselectedLeftBasic(
-      std::string& arg) override {
-    // Follows*(3, s1)
-    return handleRightVarSynonymLeftBasic(arg);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Follows*(3, _)
@@ -77,16 +53,6 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
     // Follows*(_, 3)
     return pkb->getBeforeLineS(arg).has_value();
-  }
-  bool handleLeftVarUnselectedRightUnderscore(std::string& arg) override {
-    // Follows*(s1, _) --> is there a statement that is followed by anything?
-    // Reuse the left-var selected results until an optimized PKB query can help
-    return handleLeftVarSynonymRightUnderscore(arg);
-  }
-  bool handleRightVarUnselectedLeftUnderscore(std::string& arg) override {
-    // Follows*(_, s1) --> is there a statement that follows anything?
-    // Reuse the left-var selected results until an optimized PKB query can help
-    return handleRightVarSynonymLeftUnderscore(arg);
   }
   bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
     // Follows*(2, 3)?

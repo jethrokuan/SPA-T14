@@ -120,6 +120,9 @@ class PKBManager {
   std::vector<std::pair<Line, Variable>> getAllPatternLinesAndVars();
   bool isPatternExists(const Pattern);
 
+  // next
+  bool isLineNextLine(Line, Line);
+
   // misc helpers
   std::optional<std::vector<Line>> getLineForAssignVar(const Variable);
 };

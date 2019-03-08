@@ -7,7 +7,7 @@ namespace PKB {
 PKBStorage::PKBStorage(){};
 PKBStorage::~PKBStorage(){};
 
-void PKBStorage::storeAST(const AST proc) { ast = proc; };
+void PKBStorage::storeAST(const AST ast_node) { ast = ast_node; };
 
 Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
   lines.push_back(node);
@@ -28,6 +28,20 @@ std::string PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
     }
   }
   return "";  // TODO error handling
+}
+
+void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
+  // add to edge list
+  cfgEdgeList.insert(std::pair(source, dest));
+  // add to adjacency list
+  if (cfgAdjacencyList.find(source) == cfgAdjacencyList.end()) {
+    std::unordered_set<std::string> ls;
+    ls.insert(dest);
+    cfgAdjacencyList[source] = ls;
+    cfgAdjacencyList.at(source).insert(dest);
+  } else {
+    cfgAdjacencyList.at(source).insert(dest);
+  }
 }
 
 void PKBStorage::storeFollowsRelation(const LineBefore line_before,
@@ -144,6 +158,11 @@ void PKBStorage::storeProcedure(const Procedure proc) {
   }
   procedure_set.insert(proc);
   procedure_list.push_back(proc);
+}
+
+void PKBStorage::storeCall(const Line line) {
+  call_set.insert(line);
+  call_list.push_back(line);
 }
 
 void PKBStorage::storeLineProcedureRelation(const Line line,

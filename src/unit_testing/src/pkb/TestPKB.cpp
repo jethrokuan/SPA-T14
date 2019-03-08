@@ -334,6 +334,28 @@ TEST_CASE ("Test PKB for simple_1.txt") {
     }
   }
   REQUIRE(pattern_test_1_set == pattern_test_1_check);
+
+  // CFG
+  auto cfg_test_1 = pkb.isLineNextLine("1", "2");
+  REQUIRE(cfg_test_1 == true);
+  auto cfg_test_2 = pkb.isLineNextLine("2", "3");
+  REQUIRE(cfg_test_2 == true);
+  auto cfg_test_3 = pkb.isLineNextLine("3", "2");
+  REQUIRE(cfg_test_3 == true);
+  auto cfg_test_4 = pkb.isLineNextLine("2", "4");
+  REQUIRE(cfg_test_4 == true);
+  auto cfg_test_5 = pkb.isLineNextLine("4", "5");
+  REQUIRE(cfg_test_5 == true);
+  auto cfg_test_6 = pkb.isLineNextLine("0", "1");
+  REQUIRE(cfg_test_6 == false);
+  auto cfg_test_7 = pkb.isLineNextLine("1", "3");
+  REQUIRE(cfg_test_7 == false);
+  auto cfg_test_8 = pkb.isLineNextLine("1", "4");
+  REQUIRE(cfg_test_8 == false);
+  auto cfg_test_9 = pkb.isLineNextLine("1", "5");
+  REQUIRE(cfg_test_9 == false);
+  auto cfg_test_10 = pkb.isLineNextLine("3", "1");
+  REQUIRE(cfg_test_10 == false);
 }
 
 TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {

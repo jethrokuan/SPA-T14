@@ -30,6 +30,11 @@ class PKBStorage {
   AST ast;
   // TODO deprecate this and use hash map
   std::vector<std::shared_ptr<Node>> lines;
+  // storing CFG as an edge list
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
+      cfgEdgeList;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      cfgAdjacencyList;
 
   std::string getLineFromNode(const std::shared_ptr<Node> node);
 
@@ -85,7 +90,9 @@ class PKBStorage {
   std::unordered_set<Line> if_set;
   std::unordered_set<Constant> constant_set;
   std::unordered_set<Procedure> procedure_set;
+  std::unordered_set<Line> call_set;
 
+  // TODO deprecate lists
   std::vector<Variable> var_list;
   std::vector<Line> assign_list;
   std::vector<Line> statement_list;
@@ -95,6 +102,7 @@ class PKBStorage {
   std::vector<Line> if_list;
   std::vector<Constant> constant_list;
   std::vector<Procedure> procedure_list;
+  std::vector<Line> call_list;
 
   // pattern
   std::unordered_map<Variable, std::vector<std::pair<Line, ExprStr>>>
@@ -111,11 +119,12 @@ class PKBStorage {
   std::unordered_map<Variable, std::vector<Line>> assign_var_line_map;
 
   // setters
-  void storeAST(const AST proc);
+  void storeAST(const AST);
   // TODO upon adding the hash function for line number mapping
   // change the parameters for storeLine to take in both
   // the node and the line number (instead of just the node)
   Line storeLine(const std::shared_ptr<Node> node);
+  void storeCFGEdge(const Line, const Line);
   void storeFollowsRelation(const LineBefore, const LineAfter);
   void storeFollowsRelationS(const LineBefore, const LineAfter);
   void storeParentRelation(const ParentLine, const ChildLine);
@@ -134,6 +143,7 @@ class PKBStorage {
   void storeIf(const Line);
   void storeConstant(const Constant);
   void storeProcedure(const Procedure);
+  void storeCall(const Line);
 
   void storePatternAssign(const Variable, const ExprStr, const Line);
 

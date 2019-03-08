@@ -501,4 +501,9 @@ std::optional<std::vector<Line>> PKBManager::getLineForAssignVar(
   return getUniqueVectorFromMap(pkb_storage->assign_var_line_map, var);
 }
 
+bool PKBManager::isLineNextLine(const Line l1, const Line l2) {
+  return pkb_storage->cfgEdgeList.find(std::pair<Line, Line>(l1, l2)) !=
+         pkb_storage->cfgEdgeList.end();
+}
+
 }  // namespace PKB

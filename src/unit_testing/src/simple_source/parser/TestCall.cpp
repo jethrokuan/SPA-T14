@@ -23,7 +23,7 @@ TEST_CASE ("Test valid call statement") {
     stmt_list.push_back(std::move(call));
 
     auto proc_main = make_shared<ProcedureNode>(
-        "main", make_shared<StmtListNode>(stmt_list));
+        "main", stmt_list);
 
     proc_list.push_back(std::move(proc_main));
 

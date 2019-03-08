@@ -197,25 +197,7 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightVarUnselected() {
 }
 
 bool SuchThatEvaluator::dispatchRightVarSelectedLeftVarUnselected() {
-  auto all_selected_designentities = QueryExecutor::getSelect(
-      pkb, query->selected_declaration->getDesignEntity());
-  auto left_arg_de = Declaration::findDeclarationForSynonym(query->declarations,
-                                                            *arg1AsSynonym)
-                         ->getDesignEntity();
-  auto all_unselected_designentities =
-      QueryExecutor::getSelect(pkb, left_arg_de);
-  PairedConstraintSet results;
-  for (auto de : all_selected_designentities) {
-    for (auto unselect_de : all_unselected_designentities) {
-      if (handleRightVarSelectedLeftVarUnselected(unselect_de, de)) {
-        results.insert({unselect_de, de});
-      }
-    }
-  }
-  if (results.empty()) return false;
-  qc.addToPairedVariableConstraints(arg1AsSynonym->synonym,
-                                    arg2AsSynonym->synonym, results);
-  return true;
+  return dispatchLeftVarSelectedRightVarUnselected();
 }
 
 // No variable is selected
@@ -224,24 +206,7 @@ bool SuchThatEvaluator::dispatchDoubleUnderscore() {
 }
 
 bool SuchThatEvaluator::dispatchBothVarsUnselected() {
-  auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, arg1AsSynonym->synonym);
-  auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, arg2AsSynonym->synonym);
-
-  PairedConstraintSet results;
-  for (auto lhs_de : lhs_designentities) {
-    for (auto rhs_de : rhs_designentities) {
-      // Any satisfied relation would mean this clause is true overall
-      if (handleBothVarsUnselected(lhs_de, rhs_de)) {
-        results.insert({lhs_de, rhs_de});
-      }
-    }
-  }
-  if (results.empty()) return false;
-  qc.addToPairedVariableConstraints(arg1AsSynonym->synonym,
-                                    arg2AsSynonym->synonym, results);
-  return true;
+  return dispatchLeftVarSelectedRightVarUnselected();
 }
 bool SuchThatEvaluator::dispatchLeftVarUnselectedRightBasic() {
   return dispatchLeftVarSelectedRightBasic();

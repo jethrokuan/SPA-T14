@@ -90,7 +90,9 @@ class PKBStorage {
   std::unordered_set<Line> if_set;
   std::unordered_set<Constant> constant_set;
   std::unordered_set<Procedure> procedure_set;
+  std::unordered_set<Line> call_set;
 
+  // TODO deprecate lists
   std::vector<Variable> var_list;
   std::vector<Line> assign_list;
   std::vector<Line> statement_list;
@@ -100,6 +102,7 @@ class PKBStorage {
   std::vector<Line> if_list;
   std::vector<Constant> constant_list;
   std::vector<Procedure> procedure_list;
+  std::vector<Line> call_list;
 
   // pattern
   std::unordered_map<Variable, std::vector<std::pair<Line, ExprStr>>>
@@ -140,6 +143,7 @@ class PKBStorage {
   void storeIf(const Line);
   void storeConstant(const Constant);
   void storeProcedure(const Procedure);
+  void storeCall(const Line);
 
   void storePatternAssign(const Variable, const ExprStr, const Line);
 

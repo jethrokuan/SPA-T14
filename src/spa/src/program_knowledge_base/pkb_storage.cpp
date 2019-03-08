@@ -160,6 +160,11 @@ void PKBStorage::storeProcedure(const Procedure proc) {
   procedure_list.push_back(proc);
 }
 
+void PKBStorage::storeCall(const Line line) {
+  call_set.insert(line);
+  call_list.push_back(line);
+}
+
 void PKBStorage::storeLineProcedureRelation(const Line line,
                                             const Procedure proc) {
   line_procedure_map[line] = proc;

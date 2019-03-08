@@ -11,17 +11,7 @@ class PKBPreprocessor {
 
   void setLineNumbers(const std::shared_ptr<RootNode> node);
   void setLineNumbers(const std::shared_ptr<ProcedureNode> node);
-  void setLineNumbers(const std::shared_ptr<IfNode> node, const Procedure proc);
-  void setLineNumbers(const std::shared_ptr<WhileNode> node,
-                      const Procedure proc);
-  void setLineNumbers(const std::shared_ptr<ReadNode> node,
-                      const Procedure proc);
-  void setLineNumbers(const std::shared_ptr<PrintNode> node,
-                      const Procedure proc);
-  void setLineNumbers(const std::shared_ptr<AssignNode> node,
-                      const Procedure proc);
-  void setLineNumbers(const std::shared_ptr<CallNode> node,
-                      const Procedure proc);
+  void setLineNumbers(const StmtNode, const Procedure proc);
   void setLineNumbersIterator(const std::vector<StmtNode> stmt_lst,
                               const Procedure proc);
 
@@ -32,6 +22,7 @@ class PKBPreprocessor {
   void setCFG(const std::shared_ptr<ReadNode>);
   void setCFG(const std::shared_ptr<PrintNode>);
   void setCFG(const std::shared_ptr<AssignNode>);
+  void setCFG(const std::shared_ptr<CallNode>);
   void setCFGIterator(const std::vector<StmtNode> stmt_lst);
 
   void setDesignEntities(const std::shared_ptr<RootNode> node);

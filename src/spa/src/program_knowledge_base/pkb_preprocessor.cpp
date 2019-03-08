@@ -30,42 +30,25 @@ void PKBPreprocessor::setLineNumbers(
   setLineNumbersIterator(node->StmtList->StmtList, node->Name);
 }
 
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<IfNode> node,
+void PKBPreprocessor::setLineNumbers(const StmtNode node,
                                      const Procedure proc) {
-  Line line_number = storage->storeLine(node);
-  storage->storeLineProcedureRelation(line_number, proc);
-  setLineNumbersIterator(node->StmtListThen->StmtList, proc);
-  setLineNumbersIterator(node->StmtListElse->StmtList, proc);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<WhileNode> node,
-                                     const Procedure proc) {
-  Line line_number = storage->storeLine(node);
-  storage->storeLineProcedureRelation(line_number, proc);
-  setLineNumbersIterator(node->StmtList->StmtList, proc);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<ReadNode> node,
-                                     const Procedure proc) {
-  Line line_number = storage->storeLine(node);
-  storage->storeLineProcedureRelation(line_number, proc);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<PrintNode> node,
-                                     const Procedure proc) {
-  Line line_number = storage->storeLine(node);
-  storage->storeLineProcedureRelation(line_number, proc);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<AssignNode> node,
-                                     const Procedure proc) {
-  Line line_number = storage->storeLine(node);
-  storage->storeLineProcedureRelation(line_number, proc);
-}
-
-void PKBPreprocessor::setLineNumbers(const std::shared_ptr<CallNode> node,
-                                     const Procedure proc) {
-  // TODO
+  std::visit(
+      [this, proc](const auto &s) {
+        const Line line_number = storage->storeLine(s);
+        storage->storeLineProcedureRelation(line_number, proc);
+      },
+      node);
+  std::visit(
+      [this, proc](const auto &s) {
+        using T = std::decay_t<decltype(s)>;
+        if constexpr (std::is_same_v<T, std::shared_ptr<IfNode>>) {
+          setLineNumbersIterator(s->StmtListThen->StmtList, proc);
+          setLineNumbersIterator(s->StmtListElse->StmtList, proc);
+        } else if constexpr (std::is_same_v<T, std::shared_ptr<WhileNode>>) {
+          setLineNumbersIterator(s->StmtList->StmtList, proc);
+        }
+      },
+      node);
 }
 
 void PKBPreprocessor::setLineNumbersIterator(
@@ -119,6 +102,8 @@ void PKBPreprocessor::setCFG(const std::shared_ptr<PrintNode>) {}
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<AssignNode>) {}
 
+void PKBPreprocessor::setCFG(const std::shared_ptr<CallNode>) {}
+
 void PKBPreprocessor::setCFGIterator(const std::vector<StmtNode> stmt_lst) {
   for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
     // add edge for consecutive lines
@@ -165,10 +150,6 @@ void PKBPreprocessor::setDesignEntities(const std::shared_ptr<WhileNode> node) {
   setDesignEntitiesIterator(node->StmtList->StmtList);
 }
 
-void PKBPreprocessor::setDesignEntities(const std::shared_ptr<CallNode> node) {
-  // TODO
-}
-
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<ReadNode> node) {
   storage->storeStatement(storage->getLineFromNode(node));
   storage->storeRead(storage->getLineFromNode(node));
@@ -187,6 +168,12 @@ void PKBPreprocessor::setDesignEntities(
   storage->storeAssign(storage->getLineFromNode(node), node->Var->Name);
   setDesignEntities(node->Var);
   setDesignEntities(node->Exp);
+}
+
+void PKBPreprocessor::setDesignEntities(const std::shared_ptr<CallNode> node) {
+  const Line cur_line = storage->getLineFromNode(node);
+  storage->storeStatement(cur_line);
+  storage->storeCall(cur_line);
 }
 
 void PKBPreprocessor::setDesignEntities(const Expr node) {

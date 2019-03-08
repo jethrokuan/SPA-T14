@@ -17,21 +17,21 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
   do {
     // Get individually allowed values from each of the tupled constraints
     start_one_synonym_constraints =
-        intersectConstraints(qc.getSingleVariableConstraintMapRef(),
-                             qc.getPairedVariableConstraintListRef());
+        intersectSingleVarConstraints(qc.getSingleVariableConstraintMapRef(),
+                                      qc.getPairedVariableConstraintListRef());
     // Get all the pairs of values that are allowed
     std::map<std::pair<std::string, std::string>,
              std::set<std::pair<std::string, std::string>>>
-        tupled_constraints =
-            intersectTupledConstraints(qc.getPairedVariableConstraintListRef());
+        tupled_constraints = intersectPairedVarConstraints(
+            qc.getPairedVariableConstraintListRef());
 
     filterQueryConstraints(start_one_synonym_constraints, tupled_constraints,
                            qc);
 
     // Re-constrain this set
     end_one_synonym_constraints =
-        intersectConstraints(qc.getSingleVariableConstraintMapRef(),
-                             qc.getPairedVariableConstraintListRef());
+        intersectSingleVarConstraints(qc.getSingleVariableConstraintMapRef(),
+                                      qc.getPairedVariableConstraintListRef());
   } while (start_one_synonym_constraints != end_one_synonym_constraints);
 
   // Return intended variable
@@ -41,8 +41,8 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
 }
 
 std::map<std::string, std::set<std::string>>
-ConstraintSolver::intersectConstraints(SingleVariableConstraintMap& svcm,
-                                       PairedVariableConstraintList& pvcl) {
+ConstraintSolver::intersectSingleVarConstraints(
+    SingleVariableConstraintMap& svcm, PairedVariableConstraintList& pvcl) {
   std::map<std::string, std::set<std::string>> new_synonym_constraints;
 
   // Iterate through all variables that are constrained
@@ -86,7 +86,7 @@ void ConstraintSolver::intersectTwoConstraints(
 
 std::map<std::pair<std::string, std::string>,
          std::set<std::pair<std::string, std::string>>>
-ConstraintSolver::intersectTupledConstraints(
+ConstraintSolver::intersectPairedVarConstraints(
     PairedVariableConstraintList& pvcl) {
   std::map<std::pair<std::string, std::string>,
            std::set<std::pair<std::string, std::string>>>

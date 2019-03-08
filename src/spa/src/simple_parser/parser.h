@@ -36,6 +36,7 @@ namespace Simple {
  *       | if
  *       | assign
  *     read: 'read' var_name;
+ *     call: 'call' proc_name;
  *     print: 'print' var_name;
  *     while: 'while' '(' cond_expr ')' '{' stmtLst '}'
  *     if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
@@ -169,6 +170,12 @@ class Parser {
     read: 'read' var_name;
    */
   std::shared_ptr<ReadNode> parseRead();
+
+  //! Parses a call expression.
+  /*!
+    call: 'call' proc_name;
+   */
+  std::shared_ptr<CallNode> parseCall();
 
   //! Parses a print expression.
   /*!

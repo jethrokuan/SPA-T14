@@ -1,6 +1,7 @@
 # Simple Component
 set(srcs ${srcs}
   src/simple_source/parser/TestAssign.cpp
+  src/simple_source/parser/TestCall.cpp
   src/simple_source/parser/TestCondExpr.cpp
   src/simple_source/parser/TestExpr.cpp
   src/simple_source/parser/TestIf.cpp

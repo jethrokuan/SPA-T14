@@ -32,11 +32,12 @@ class RelExprNode;
 class CondExprNode;
 class WhileNode;
 class IfNode;
+class CallNode;
 
 using StmtNode =
     std::variant<std::shared_ptr<ReadNode>, std::shared_ptr<PrintNode>,
                  std::shared_ptr<WhileNode>, std::shared_ptr<IfNode>,
-                 std::shared_ptr<AssignNode>>;
+                 std::shared_ptr<AssignNode>, std::shared_ptr<CallNode>>;
 using AST = std::shared_ptr<RootNode>;
 
 //! Abstract base class for other AST nodes.
@@ -90,6 +91,15 @@ class ReadNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
   explicit ReadNode(std::shared_ptr<VariableNode> var);
+  bool operator==(const Node& other) const override;
+  std::string to_str() override;
+};
+
+//! AST Node representing a Call statement
+class CallNode : public Node {
+ public:
+  std::string ProcName;
+  explicit CallNode(std::string procName);
   bool operator==(const Node& other) const override;
   std::string to_str() override;
 };

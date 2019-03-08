@@ -20,7 +20,9 @@
 #include "simple_parser/lexer.h"
 #include "simple_parser/token.h"
 
-using namespace Simple;
+using Simple::Lexer;
+using Simple::Token;
+using Simple::TokenType;
 
 std::unordered_set<std::string> single_token_puncts({"{", "}", "(", ")", "+",
                                                      "-", "*", "/", "%", ";"});
@@ -44,7 +46,7 @@ void Lexer::readNumber() {
   }
 }
 
-Lexer::Lexer(std::istream* stream_) : stream(stream_){};
+Lexer::Lexer(std::istream* stream_) : stream(stream_) {}
 
 void Lexer::lex() {
   char nextChar;
@@ -58,8 +60,7 @@ void Lexer::lex() {
     if (nextChar == '\n') {
       lineno++;
       colno = 1;
-    } else if (isspace(nextChar) != 0) {  // Ignore whitespaces
-      ;
+    } else if (isspace(nextChar) != 0) {
     } else if (isalpha(nextChar) != 0) {  // Symbols
       readSymbol();
       tokens.push_back(new SymbolToken(str));
@@ -100,8 +101,6 @@ void Lexer::lex() {
           str += advance();
         }
       } else if (single_token_puncts.find(str) != single_token_puncts.end()) {
-        // Is valid single punct character
-        ;
       } else {
         throw SimpleLexException(lineno, colno, nextChar);
       }
@@ -111,4 +110,4 @@ void Lexer::lex() {
   }
 
   tokens.push_back(new EndOfFileToken());
-};
+}

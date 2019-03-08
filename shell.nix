@@ -14,5 +14,6 @@ stdenv.mkDerivation {
     doxygen
     gdb
     ccls
+    cpplint
   ];
 }

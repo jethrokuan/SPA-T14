@@ -122,7 +122,7 @@ class Parser {
   /*!
     stmtLst: stmt+
   */
-  std::shared_ptr<StmtListNode> parseStmtList();
+  StmtList parseStmtList();
 
   //! Parses a Statement.
   /*!

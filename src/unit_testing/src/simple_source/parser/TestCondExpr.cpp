@@ -29,17 +29,15 @@ TEST_CASE ("Test valid conditional expression") {
     auto cond_expr = make_shared<CondExprNode>(make_shared<RelExprNode>(
         make_shared<VariableNode>("i"), "==", make_shared<NumberNode>("0")));
 
-    auto while_node = make_shared<WhileNode>(
-        std::move(cond_expr),
-        make_shared<StmtListNode>(std::move(while_stmt_list)));
+    auto while_node =
+        make_shared<WhileNode>(std::move(cond_expr), while_stmt_list);
 
     std::vector<StmtNode> stmt_list;
     std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     stmt_list.push_back(while_node);
 
-    auto stmt_list_node = make_shared<StmtListNode>(move(stmt_list));
-    auto proc_main = make_shared<ProcedureNode>("main", move(stmt_list_node));
+    auto proc_main = make_shared<ProcedureNode>("main", stmt_list);
 
     proc_list.push_back(proc_main);
     auto root = make_shared<RootNode>(move(proc_list));
@@ -65,17 +63,15 @@ TEST_CASE ("Test valid conditional expression") {
         make_shared<RelExprNode>(make_shared<VariableNode>("i"),
                                  "==", make_shared<NumberNode>("0"))));
 
-    auto while_node = make_shared<WhileNode>(
-        std::move(cond_expr),
-        make_shared<StmtListNode>(std::move(while_stmt_list)));
+    auto while_node =
+        make_shared<WhileNode>(std::move(cond_expr), while_stmt_list);
 
     std::vector<StmtNode> stmt_list;
     std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     stmt_list.push_back(while_node);
 
-    auto stmt_list_node = make_shared<StmtListNode>(move(stmt_list));
-    auto proc_main = make_shared<ProcedureNode>("main", move(stmt_list_node));
+    auto proc_main = make_shared<ProcedureNode>("main", stmt_list);
 
     proc_list.push_back(move(proc_main));
 
@@ -107,17 +103,15 @@ TEST_CASE ("Test valid conditional expression") {
             make_shared<RelExprNode>(make_shared<VariableNode>("j"),
                                      ">=", make_shared<NumberNode>("1"))));
 
-    auto while_node = make_shared<WhileNode>(
-        std::move(cond_expr),
-        make_shared<StmtListNode>(std::move(while_stmt_list)));
+    auto while_node =
+        make_shared<WhileNode>(std::move(cond_expr), while_stmt_list);
 
     std::vector<StmtNode> stmt_list;
     std::vector<std::shared_ptr<ProcedureNode>> proc_list;
 
     stmt_list.push_back(while_node);
 
-    auto stmt_list_node = make_shared<StmtListNode>(move(stmt_list));
-    auto proc_main = make_shared<ProcedureNode>("main", move(stmt_list_node));
+    auto proc_main = make_shared<ProcedureNode>("main", stmt_list);
 
     proc_list.push_back(proc_main);
 

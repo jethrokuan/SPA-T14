@@ -16,57 +16,32 @@ class ParentTEvaluator : public SuchThatEvaluator {
   ParentTEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  // Handle cases with at least one variable selected
-
-  std::vector<std::string> handleLeftVarSelectedRightBasic(
+  std::vector<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Parent*(s, 3)
     return pkb->getParentLineS(basic_value)
         .value_or(std::vector<std::string>());
   }
-  std::vector<std::string> handleRightVarSelectedLeftBasic(
+  std::vector<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Parent*(3, s)
     return pkb->getChildLineS(basic_value).value_or(std::vector<std::string>());
   }
-  bool handleLeftVarSelectedRightUnderscore(std::string& arg_value) override {
+  bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Parent*(s, _) (for each s)
-    return pkb->getChildLineS(arg_value) ? true : false;
+    return pkb->getChildLineS(arg_value).has_value();
   }
-  bool handleRightVarSelectedLeftUnderscore(std::string& arg_value) override {
+  bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
     // Parent*(_, s) (for each s)
-    return pkb->getParentLineS(arg_value) ? true : false;
+    return pkb->getParentLineS(arg_value).has_value();
   }
-  bool handleLeftVarSelectedRightVarUnselected(
-      std::string& arg_select, std::string& arg_unselect) override {
+  bool handleBothArgsSynonyms(std::string& arg_select,
+                              std::string& arg_unselect) override {
     // Parent*(s, s1)
-    return pkb->isLineParentLineS(arg_select, arg_unselect) ? true : false;
+    return pkb->isLineParentLineS(arg_select, arg_unselect);
   }
-
-  bool handleRightVarSelectedLeftVarUnselected(
-      std::string& arg_unselect, std::string& arg_select) override {
-    // Parent*(s1, s)
-    return pkb->isLineParentLineS(arg_unselect, arg_select) ? true : false;
-  }
-
-  // Handle cases with no variables selected
   bool handleDoubleUnderscore() override {
     return !pkb->isLineFollowLineSSetEmpty();
-  }
-  bool handleBothVarsUnselected(std::string& left_arg,
-                                std::string& right_arg) override {
-    // Parent*(s1, s2)
-    return pkb->isLineParentLineS(left_arg, right_arg) ? true : false;
-  }
-  std::vector<std::string> handleLeftVarUnselectedRightBasic(
-      std::string& arg) override {
-    // Parent*(s1, 3)
-    return handleLeftVarSelectedRightBasic(arg);
-  }
-  std::vector<std::string> handleRightVarUnselectedLeftBasic(
-      std::string& arg) override {
-    // Parent*(3, s1)
-    return handleRightVarSelectedLeftBasic(arg);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Parent*(3, _)
@@ -76,17 +51,7 @@ class ParentTEvaluator : public SuchThatEvaluator {
     // Parent*(_, 3)
     return pkb->getParentLineS(arg).has_value();
   }
-  bool handleLeftVarUnselectedRightUnderscore(std::string& arg) override {
-    // Parent*(s1, _) --> is there a statement that is followed by anything?
-    // Reuse the left-var selected results until an optimized PKB query can help
-    return handleLeftVarSelectedRightUnderscore(arg);
-  }
-  bool handleRightVarUnselectedLeftUnderscore(std::string& arg) override {
-    // Parent*(_, s1) --> is there a statement that follows anything?
-    // Reuse the left-var selected results until an optimized PKB query can help
-    return handleRightVarSelectedLeftUnderscore(arg);
-  }
-  bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
     // Parent*(2, 3)?
     return pkb->isLineParentLineS(arg1, arg2);
   }

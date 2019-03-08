@@ -36,12 +36,10 @@ TEST_CASE ("Test valid if statement") {
   auto if_node = make_shared<IfNode>(
       make_shared<CondExprNode>(make_shared<RelExprNode>(
           make_shared<VariableNode>("i"), "==", make_shared<NumberNode>("0"))),
-      make_shared<StmtListNode>(std::move(stmtListThen)),
-      make_shared<StmtListNode>(std::move(stmtListElse)));
+      stmtListThen, stmtListElse);
   stmtList.push_back(std::move(if_node));
 
-  auto proc_main =
-      make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmtList));
+  auto proc_main = make_shared<ProcedureNode>("main", stmtList);
   proc_list.push_back(proc_main);
   auto root = make_shared<RootNode>(proc_list);
 

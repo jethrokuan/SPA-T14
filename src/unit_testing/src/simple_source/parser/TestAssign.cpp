@@ -23,8 +23,7 @@ TEST_CASE ("Test valid assign statement") {
                                           make_shared<NumberNode>("1"));
     stmt_list.push_back(std::move(assign));
 
-    auto proc_main = make_shared<ProcedureNode>(
-        "main", make_shared<StmtListNode>(stmt_list));
+    auto proc_main = make_shared<ProcedureNode>("main", stmt_list);
 
     proc_list.push_back(std::move(proc_main));
 
@@ -44,8 +43,7 @@ TEST_CASE ("Test valid assign statement") {
                                           make_shared<VariableNode>("while"));
     stmt_list.push_back(std::move(assign));
 
-    auto proc_main = make_shared<ProcedureNode>(
-        "main", make_shared<StmtListNode>(stmt_list));
+    auto proc_main = make_shared<ProcedureNode>("main", stmt_list);
     proc_list.push_back(std::move(proc_main));
 
     auto root = make_shared<RootNode>(std::move(proc_list));

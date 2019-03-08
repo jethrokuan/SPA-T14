@@ -7,9 +7,10 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
+#include <string>
 #include <unordered_set>
 
-using namespace Simple;
+using Simple::SimpleInterface;
 
 AST SimpleInterface::getAstFromFile(std::string filename) {
   std::ifstream input(filename);

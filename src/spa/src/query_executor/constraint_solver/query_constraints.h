@@ -25,17 +25,18 @@ using SingleVariableConstraints = std::pair<std::string, SingleConstraintSet>;
 using PairedVariableConstraints =
     std::pair<PairedVariables, PairedConstraintSet>;
 
-// NOTE: These two lists are not necessarily in a "solved state".
-//! Aggregation of multiple constraints on single variables
-using SingleVariableConstraintList = std::vector<SingleVariableConstraints>;
+// NOTE: These are not necessarily in a "solved state".
 //! Aggregation of multiple constraints on paired variables
 using PairedVariableConstraintList = std::vector<PairedVariableConstraints>;
+
+//!
+using SingleVariableConstraintMap = std::map<std::string, SingleConstraintSet>;
 
 //! Defines the allowed set of values for a given Query
 class QueryConstraints {
  private:
-  std::map<std::string, SingleConstraintSet> allPossibleValues;
-  SingleVariableConstraintList singleVariableConstraintList;
+  SingleVariableConstraintMap allPossibleValues;
+  SingleVariableConstraintMap singleVariableConstraintMap;
   PairedVariableConstraintList pairedVariableConstraintList;
 
   template <class T>
@@ -53,7 +54,9 @@ class QueryConstraints {
   }
 
  public:
-  //! Add to the list of all possible values this variable can take
+  //! \brief Add to the list of all possible values this variable can take
+  //! If the variable already exists in the set, the existing set is
+  //! intersected with the incoming set of constraints
   void addToAllPossibleValues(std::string var_name,
                               std::set<std::string> constraint_values);
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
@@ -78,16 +81,16 @@ class QueryConstraints {
                                                  constraint_values.end()));
   }
 
-  SingleVariableConstraintList& getSingleVariableConstraintListRef() {
-    return singleVariableConstraintList;
+  SingleVariableConstraintMap& getSingleVariableConstraintMapRef() {
+    return singleVariableConstraintMap;
   }
 
   PairedVariableConstraintList& getPairedVariableConstraintListRef() {
     return pairedVariableConstraintList;
   }
 
-  void setSingleVariableConstraintListRef(SingleVariableConstraintList svcl) {
-    singleVariableConstraintList = svcl;
+  void setSingleVariableConstraintMapRef(SingleVariableConstraintMap svcm) {
+    singleVariableConstraintMap = svcm;
   }
 
   void setPairedVariableConstraintListRef(PairedVariableConstraintList pvcl) {
@@ -108,8 +111,9 @@ class QueryConstraints {
 
   //! \brief Checks if a vector of constraint values has at least one result in
   //! the domain of all possible values that this variable can take
-  bool containsNoAllowedResults(std::vector<std::string> constraint_values,
-                                std::string var_name);
+  bool containsNoAllowedResults(
+      const std::vector<std::string> constraint_values,
+      const std::string var_name);
 
   friend std::ostream& operator<<(std::ostream& os,
                                   QueryConstraints const& qc) {
@@ -123,8 +127,7 @@ class QueryConstraints {
       os << "}\n";
     }
     os << std::string("Printing singleVariableConstraints:\n");
-    for (const SingleVariableConstraints& el :
-         qc.singleVariableConstraintList) {
+    for (const SingleVariableConstraints& el : qc.singleVariableConstraintMap) {
       os << el.first << std::string(": {");
       for (const auto& el2 : el.second) {
         os << el2 << std::string(",");

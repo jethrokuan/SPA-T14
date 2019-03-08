@@ -27,7 +27,7 @@ class QueryPreprocessor {
 
  public:
   static Declaration* findDeclaration(std::vector<Declaration>* declarations,
-                                      std::string synonym_to_match);
+                                      const std::string synonym_to_match);
   // Given a string containing PQL,
   // returns the Query object representing the query's structure
   Query* getQuery(std::string&);

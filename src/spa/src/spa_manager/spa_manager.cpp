@@ -1,3 +1,4 @@
+#include "spa_manager/spa_manager.h"
 #include <sstream>
 #include <string>
 #include <vector>
@@ -7,7 +8,6 @@
 #include "query_builder/query_builder.h"
 #include "query_executor/query_executor.h"
 #include "simple_parser/interface.h"
-#include "spa_manager/spa_manager.h"
 
 using namespace PKB;
 using namespace Simple;

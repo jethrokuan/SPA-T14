@@ -68,6 +68,7 @@ bool SuchThatEvaluator::dispatch() {
 
 bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
   // Case 1:  Follows*(s, 3)
+  // Get PKB to give us list of possible s
   auto results = handleLeftSynonymRightBasic(*arg2AsBasic);
   if (results.empty() ||
       qc.containsNoAllowedResults(results, arg1AsSynonym->synonym)) {
@@ -79,6 +80,7 @@ bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
 
 bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
   // Case 2:  Follows*(3, s)
+  // Get PKB to give us list of possible s
   auto results = handleRightSynonymLeftBasic(*arg1AsBasic);
   if (results.empty() ||
       qc.containsNoAllowedResults(results, arg2AsSynonym->synonym)) {
@@ -90,6 +92,9 @@ bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
 
 bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
   // Case 3: Follows*(s, _)
+  // Iterate through all possible s, ask PKB if that relation has any results
+  // Add those that have results to output
+  // E.g. Follows*(3, _)? Follows*(4, _)?
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg1AsSynonym->synonym);
 
@@ -106,6 +111,9 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
 
 bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
   // Case 4: Follows*(_, s)
+  // Iterate through all possible s, ask PKB if that relation has any results
+  // Add those that have results to output
+  // E.g. Follows*(_, 3)? Follows*(, 4)?
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg2AsSynonym->synonym);
   std::vector<std::string> results;
@@ -121,6 +129,9 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
 
 bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   // Case 5:  Follows*(s1, s2)
+  // Iterate through all possible s1, s2 if that relation has any results
+  // Add those that have results to output
+  // E.g. Follows*(2, 3)? Follows*(2, 4)? Follows*(3, 3)? ...
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg1AsSynonym->synonym);
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
@@ -142,20 +153,24 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
 
 bool SuchThatEvaluator::dispatchDoubleUnderscore() {
   // Case 6: Follows*(_, _)
+  // Let PKB tell us if there are any results at all for this relation
   return handleDoubleUnderscore();
 }
 
 bool SuchThatEvaluator::dispatchLeftBasicRightUnderscore() {
   // Case 7: Follows(3, _)
+  // Ask PKB to answer specific case: any results for this LHS?
   return handleLeftBasicRightUnderscore(*arg1AsBasic);
 }
 
 bool SuchThatEvaluator::dispatchRightBasicLeftUnderscore() {
   // Case 8:  Follows(_, 3)
+  // Ask PKB to answer specific case: any results for this RHS?
   return handleRightBasicLeftUnderscore(*arg2AsBasic);
 }
 
 bool SuchThatEvaluator::dispatchBothBasic() {
   // Case 9: Follows(2, 3)
+  // Ask PKB for direct answer to this fully-realized query
   return handleBothArgsBasic(*arg1AsBasic, *arg2AsBasic);
 }

@@ -1,6 +1,6 @@
+#include "program_knowledge_base/pkb_storage.h"
 #include <iostream>
 #include "program_knowledge_base/pkb_exceptions.h"
-#include "program_knowledge_base/pkb_storage.h"
 
 namespace PKB {
 

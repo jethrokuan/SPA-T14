@@ -1,5 +1,5 @@
-#include "simple_parser/exceptions.h"
 #include "simple_parser/parser.h"
+#include "simple_parser/exceptions.h"
 #include "simple_parser/pratt.h"
 
 #include <iostream>

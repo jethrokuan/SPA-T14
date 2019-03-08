@@ -124,7 +124,7 @@ void ConstraintSolver::filterQueryConstraints(
   for (auto single_var_constraints : qc.getSingleVariableConstraintMapRef()) {
     SingleConstraintSet constraint_set;
     std::string var_name = single_var_constraints.first;
-    for (auto single_constraint : single_var_constraints.second) {
+    for (const auto single_constraint : single_var_constraints.second) {
       bool isPresent =
           one_synonym_constraints[var_name].find(single_constraint) !=
           one_synonym_constraints[var_name].end();

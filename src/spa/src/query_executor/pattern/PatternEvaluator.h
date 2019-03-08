@@ -13,7 +13,7 @@ using namespace QE;
 class PatternEvaluator {
  private:
   const QE::Query* query;
-    PKBManager* pkb;
+  PKBManager* pkb;
   QueryConstraints& qc;
 
   bool handlePatternLHSUnderscore(const Synonym& syn,

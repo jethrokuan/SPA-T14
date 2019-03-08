@@ -34,49 +34,34 @@ bool SuchThatEvaluator::evaluate() {
 //! Dispatch correct such that case to correct handler based on arg types
 bool SuchThatEvaluator::dispatch() {
   if (arg1AsSynonym && arg2AsBasic) {
-    // Case 1: Selected variable is in this such_that, left argument
-    // Follows*(s, 3)
+    // Case 1:  Follows*(s, 3)
     return dispatchLeftVarSynonymRightBasic();
   } else if (arg2AsSynonym && arg1AsBasic) {
-    // Case 2: Selected variable is in this such_that, right argument
-    // Follows*(3, s)
+    // Case 2:  Follows*(3, s)
     return dispatchRightVarSynonymLeftBasic();
   } else if (arg1AsSynonym && arg2IsUnderscore) {
-    // Case 3: Selected variable is in this such_that, left argument, right arg
-    // underscore Follows*(s, _)
-    // Need to find all selected things and then run the correct follows fx
+    // Case 3: Follows*(s, _)
     return dispatchLeftVarSynonymRightUnderscore();
   } else if (arg2AsSynonym && arg1IsUnderscore) {
-    // Case 4: Selected variable is in this such_that, right argument, left arg
-    // underscore Follows*(_, s)
+    // Case 4: Follows*(_, s)
     return dispatchRightVarSynonymLeftUnderscore();
   } else if (arg1AsSynonym && arg2AsSynonym) {
-    // Case 5: Selected variable is in this such_that, left argument, right arg
-    // also is a variable, Follows*(s, p)
+    // Case 5:  Follows*(s1, s2)
     return dispatchBothVarsSynonyms();
   } else if (arg1IsUnderscore && arg2IsUnderscore) {
-    // Case 7: Follows*(_, _)
+    // Case 6: Follows*(_, _)
     return dispatchDoubleUnderscore();
-  } else if (arg2AsSynonym && arg1AsBasic) {
-    // Case 10: Selected variable is NOT in this such_that, right argument
-    // Follows(3, s1)
-    return dispatchRightVarUnselectedLeftBasic();
   } else if (arg1AsBasic && arg2IsUnderscore) {
-    // Case 11: Selected variable is NOT in this such_that, left basic,
-    // right underscore: Follows(3, _)
+    // Case 7: Follows(3, _)
     return dispatchLeftBasicRightUnderscore();
   } else if (arg2AsBasic && arg1IsUnderscore) {
-    // Case 12: Selected variable is NOT in this such_that, right basic,
-    // left underscore: Follows(_, 3)
+    // Case 8:  Follows(_, 3)
     return dispatchRightBasicLeftUnderscore();
   } else if (arg1AsBasic && arg2AsBasic) {
-    // Case 15: Both variables basic - boolean query
-    // Follows(2, 3)
-    // No dispatch necesary - simple case
+    // Case 9: Follows(2, 3)
     return handleBothVarsUnselected(*arg1AsBasic, *arg2AsBasic);
   } else {
     std::cout << "This case should not be triggered\n";
-    std::cout << "Query: " << query << std::endl;
     assert(false);
   }
 }

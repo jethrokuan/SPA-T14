@@ -17,27 +17,27 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   FollowsTEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  std::vector<std::string> handleLeftVarSynonymRightBasic(
+  std::vector<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Follows*(s, 3)
     return pkb->getBeforeLineS(basic_value)
         .value_or(std::vector<std::string>());
   }
-  std::vector<std::string> handleRightVarSynonymLeftBasic(
+  std::vector<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Follows*(3, s)
     return pkb->getFollowingLineS(basic_value)
         .value_or(std::vector<std::string>());
   }
-  bool handleLeftVarSynonymRightUnderscore(std::string& arg_value) override {
+  bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Follows*(s, _) (for each s)
     return pkb->getFollowingLineS(arg_value) ? true : false;
   }
-  bool handleRightVarSynonymLeftUnderscore(std::string& arg_value) override {
+  bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
     // Follows*(_, s) (for each s)
     return pkb->getBeforeLineS(arg_value) ? true : false;
   }
-  bool handleBothVarsSynonyms(std::string& arg_select,
+  bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Follows*(s, s1)
     return pkb->isLineFollowLineS(arg_select, arg_unselect) ? true : false;
@@ -54,7 +54,7 @@ class FollowsTEvaluator : public SuchThatEvaluator {
     // Follows*(_, 3)
     return pkb->getBeforeLineS(arg).has_value();
   }
-  bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
     // Follows*(2, 3)?
     return pkb->isLineFollowLineS(arg1, arg2);
   }

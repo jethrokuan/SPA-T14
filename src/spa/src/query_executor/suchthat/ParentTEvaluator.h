@@ -16,26 +16,26 @@ class ParentTEvaluator : public SuchThatEvaluator {
   ParentTEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  std::vector<std::string> handleLeftVarSynonymRightBasic(
+  std::vector<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Parent*(s, 3)
     return pkb->getParentLineS(basic_value)
         .value_or(std::vector<std::string>());
   }
-  std::vector<std::string> handleRightVarSynonymLeftBasic(
+  std::vector<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Parent*(3, s)
     return pkb->getChildLineS(basic_value).value_or(std::vector<std::string>());
   }
-  bool handleLeftVarSynonymRightUnderscore(std::string& arg_value) override {
+  bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Parent*(s, _) (for each s)
     return pkb->getChildLineS(arg_value) ? true : false;
   }
-  bool handleRightVarSynonymLeftUnderscore(std::string& arg_value) override {
+  bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
     // Parent*(_, s) (for each s)
     return pkb->getParentLineS(arg_value) ? true : false;
   }
-  bool handleBothVarsSynonyms(std::string& arg_select,
+  bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Parent*(s, s1)
     return pkb->isLineParentLineS(arg_select, arg_unselect) ? true : false;
@@ -51,7 +51,7 @@ class ParentTEvaluator : public SuchThatEvaluator {
     // Parent*(_, 3)
     return pkb->getParentLineS(arg).has_value();
   }
-  bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
     // Parent*(2, 3)?
     return pkb->isLineParentLineS(arg1, arg2);
   }

@@ -32,28 +32,28 @@ class SuchThatEvaluator {
   // These are the individual handler methods for each case
   // Read the .cpp file to see examples of each case
 
-  bool dispatchLeftVarSynonymRightBasic();
-  bool dispatchRightVarSynonymLeftBasic();
+  bool dispatchLeftSynonymRightBasic();
+  bool dispatchRightSynonymLeftBasic();
   bool dispatchLeftVarSynonymRightUnderscore();
   bool dispatchRightVarSynonymLeftUnderscore();
   bool dispatchBothVarsSynonyms();
-  bool dispatchRightVarSelectedLeftVarUnselected();
   bool dispatchDoubleUnderscore();
   bool dispatchLeftBasicRightUnderscore();
   bool dispatchRightBasicLeftUnderscore();
+  bool dispatchBothBasic();
 
   // These are the PKB calls that need to be overloaded for each subclass
-  virtual std::vector<std::string> handleLeftVarSynonymRightBasic(
+  virtual std::vector<std::string> handleLeftSynonymRightBasic(
       std::string&) = 0;
-  virtual std::vector<std::string> handleRightVarSynonymLeftBasic(
+  virtual std::vector<std::string> handleRightSynonymLeftBasic(
       std::string&) = 0;
-  virtual bool handleLeftVarSynonymRightUnderscore(std::string&) = 0;
-  virtual bool handleRightVarSynonymLeftUnderscore(std::string&) = 0;
-  virtual bool handleBothVarsSynonyms(std::string&, std::string&) = 0;
+  virtual bool handleLeftSynonymRightUnderscore(std::string&) = 0;
+  virtual bool handleRightSynonymLeftUnderscore(std::string&) = 0;
+  virtual bool handleBothArgsSynonyms(std::string&, std::string&) = 0;
   virtual bool handleDoubleUnderscore() = 0;
   virtual bool handleLeftBasicRightUnderscore(std::string&) = 0;
   virtual bool handleRightBasicLeftUnderscore(std::string&) = 0;
-  virtual bool handleDoubleBasic(std::string&, std::string&) = 0;
+  virtual bool handleBothArgsBasic(std::string&, std::string&) = 0;
 
  public:
   SuchThatEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)

@@ -35,10 +35,10 @@ bool SuchThatEvaluator::evaluate() {
 bool SuchThatEvaluator::dispatch() {
   if (arg1AsSynonym && arg2AsBasic) {
     // Case 1:  Follows*(s, 3)
-    return dispatchLeftVarSynonymRightBasic();
+    return dispatchLeftSynonymRightBasic();
   } else if (arg2AsSynonym && arg1AsBasic) {
     // Case 2:  Follows*(3, s)
-    return dispatchRightVarSynonymLeftBasic();
+    return dispatchRightSynonymLeftBasic();
   } else if (arg1AsSynonym && arg2IsUnderscore) {
     // Case 3: Follows*(s, _)
     return dispatchLeftVarSynonymRightUnderscore();
@@ -59,15 +59,15 @@ bool SuchThatEvaluator::dispatch() {
     return dispatchRightBasicLeftUnderscore();
   } else if (arg1AsBasic && arg2AsBasic) {
     // Case 9: Follows(2, 3)
-    return handleDoubleBasic(*arg1AsBasic, *arg2AsBasic);
+    return dispatchBothBasic();
   } else {
     std::cout << "This case should not be triggered\n";
     assert(false);
   }
 }
 
-bool SuchThatEvaluator::dispatchLeftVarSynonymRightBasic() {
-  auto results = handleLeftVarSynonymRightBasic(*arg2AsBasic);
+bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
+  auto results = handleLeftSynonymRightBasic(*arg2AsBasic);
   if (results.empty() ||
       qc.containsNoAllowedResults(results, arg1AsSynonym->synonym)) {
     return false;
@@ -76,8 +76,8 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightBasic() {
   return true;
 }
 
-bool SuchThatEvaluator::dispatchRightVarSynonymLeftBasic() {
-  auto results = handleRightVarSynonymLeftBasic(*arg1AsBasic);
+bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
+  auto results = handleRightSynonymLeftBasic(*arg1AsBasic);
   if (results.empty() ||
       qc.containsNoAllowedResults(results, arg2AsSynonym->synonym)) {
     return false;
@@ -92,7 +92,7 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
 
   std::vector<std::string> results;
   for (auto de : lhs_designentities) {
-    if (handleLeftVarSynonymRightUnderscore(de)) {
+    if (handleLeftSynonymRightUnderscore(de)) {
       results.push_back(de);
     }
   }
@@ -106,7 +106,7 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
       query->declarations, pkb, arg2AsSynonym->synonym);
   std::vector<std::string> results;
   for (auto de : rhs_designentities) {
-    if (handleRightVarSynonymLeftUnderscore(de)) {
+    if (handleRightSynonymLeftUnderscore(de)) {
       results.push_back(de);
     }
   }
@@ -124,7 +124,7 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   PairedConstraintSet results;
   for (auto lhs_de : lhs_designentities) {
     for (auto rhs_de : rhs_designentities) {
-      if (handleBothVarsSynonyms(lhs_de, rhs_de)) {
+      if (handleBothArgsSynonyms(lhs_de, rhs_de)) {
         results.insert({lhs_de, rhs_de});
       }
     }
@@ -135,11 +135,6 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   return true;
 }
 
-bool SuchThatEvaluator::dispatchRightVarSelectedLeftVarUnselected() {
-  return dispatchBothVarsSynonyms();
-}
-
-// No variable is selected
 bool SuchThatEvaluator::dispatchDoubleUnderscore() {
   return handleDoubleUnderscore();
 }
@@ -150,4 +145,8 @@ bool SuchThatEvaluator::dispatchLeftBasicRightUnderscore() {
 
 bool SuchThatEvaluator::dispatchRightBasicLeftUnderscore() {
   return handleRightBasicLeftUnderscore(*arg2AsBasic);
+}
+
+bool SuchThatEvaluator::dispatchBothBasic() {
+  return handleBothArgsBasic(*arg1AsBasic, *arg2AsBasic);
 }

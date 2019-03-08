@@ -17,28 +17,28 @@ class UsesSEvaluator : public SuchThatEvaluator {
   UsesSEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  std::vector<std::string> handleLeftVarSynonymRightBasic(
+  std::vector<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Uses(s, "x")
     return pkb->getLineUsesVar(basic_value)
         .value_or(std::vector<std::string>());
   }
-  std::vector<std::string> handleRightVarSynonymLeftBasic(
+  std::vector<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Uses(3, v)
     return pkb->getVarUsedByLine(basic_value)
         .value_or(std::vector<std::string>());
   }
-  bool handleLeftVarSynonymRightUnderscore(std::string& arg_value) override {
+  bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Uses(s, _)
     auto res = pkb->getVarUsedByLine(arg_value).has_value();
     return res ? true : false;
   }
-  bool handleRightVarSynonymLeftUnderscore(std::string&) override {
+  bool handleRightSynonymLeftUnderscore(std::string&) override {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
     assert(false);
   }
-  bool handleBothVarsSynonyms(std::string& arg_select,
+  bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Uses(s, v)
     return pkb->isLineUsesVar(arg_select, arg_unselect) ? true : false;
@@ -54,7 +54,7 @@ class UsesSEvaluator : public SuchThatEvaluator {
     // Uses(_, "x")
     return pkb->getLineUsesVar(arg).has_value();
   }
-  bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
     // Uses(2, "v")?
     return pkb->isLineUsesVar(arg1, arg2);
   }

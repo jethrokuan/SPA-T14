@@ -64,6 +64,20 @@ TEST_CASE ("Test Expr parse works") {
     REQUIRE(exprEqual(expr, expected));
   }
 
+  SECTION ("(2 + 5) * (j) / (a * b)") {
+    Expr expr = SimpleInterface::parseExpression("(2 + 5) * (j) / (a * b)");
+    Expr expected = make_shared<BinOpNode>(
+        make_shared<BinOpNode>(
+            make_shared<BinOpNode>(make_shared<NumberNode>("2"),
+                                   make_shared<NumberNode>("5"), "+"),
+            make_shared<VariableNode>("j"), "*"),
+        make_shared<BinOpNode>(make_shared<VariableNode>("a"),
+                               make_shared<VariableNode>("b"), "*"),
+        "/");
+
+    REQUIRE(exprEqual(expr, expected));
+  }
+
   SECTION ("while (i > (2 + 5) * j)") {
     AST ast =
         SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/6.txt");

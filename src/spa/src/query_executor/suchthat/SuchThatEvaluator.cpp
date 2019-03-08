@@ -177,11 +177,6 @@ bool SuchThatEvaluator::dispatchRightVarSelectedLeftUnderscore() {
 }
 
 bool SuchThatEvaluator::dispatchLeftVarSelectedRightVarUnselected() {
-  if (arg1AsSynonym == arg2AsSynonym) {
-    // Cannot follow/modify yourself
-    // TODO: maybe this one and the one below sets the variable to nullset?
-    return false;
-  }
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg1AsSynonym->synonym);
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
@@ -202,9 +197,6 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightVarUnselected() {
 }
 
 bool SuchThatEvaluator::dispatchRightVarSelectedLeftVarUnselected() {
-  if (arg1AsSynonym == arg2AsSynonym) {
-    return false;
-  }
   auto all_selected_designentities = QueryExecutor::getSelect(
       pkb, query->selected_declaration->getDesignEntity());
   auto left_arg_de = Declaration::findDeclarationForSynonym(query->declarations,
@@ -232,10 +224,6 @@ bool SuchThatEvaluator::dispatchDoubleUnderscore() {
 }
 
 bool SuchThatEvaluator::dispatchBothVarsUnselected() {
-  if (arg1AsSynonym == arg2AsSynonym) {
-    // Cannot follow yourself
-    return false;
-  }
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg1AsSynonym->synonym);
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(

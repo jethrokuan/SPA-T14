@@ -244,7 +244,8 @@ void QueryPreprocessor::parsePattern(Query* query,
 
 // Find the first declaration that matches this synonym
 Declaration* QueryPreprocessor::findDeclaration(
-    std::vector<Declaration>* declarations, std::string synonym_to_match) {
+    std::vector<Declaration>* declarations,
+    const std::string synonym_to_match) {
   auto found_declaration = std::find_if(
       declarations->begin(), declarations->end(),
       [&](auto decl) { return decl.getSynonym().synonym == synonym_to_match; });

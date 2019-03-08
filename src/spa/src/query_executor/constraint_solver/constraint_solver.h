@@ -29,8 +29,9 @@ class ConstraintSolver {
   };
 
   //! Get a map of constraints from single variables to allowed values
-  static std::map<std::string, std::set<std::string>> intersectConstraints(
-      SingleVariableConstraintList& svcl, PairedVariableConstraintList& pvcl);
+  static std::map<std::string, std::set<std::string>>
+  intersectSingleVarConstraints(SingleVariableConstraintMap& svcm,
+                                PairedVariableConstraintList& pvcl);
 
   //! Intersects the current list of single constraints with a new constraint
   static void intersectTwoConstraints(
@@ -40,7 +41,7 @@ class ConstraintSolver {
   //! Get a map of all constraints from paired variables to their allowed values
   static std::map<std::pair<std::string, std::string>,
                   std::set<std::pair<std::string, std::string>>>
-  intersectTupledConstraints(PairedVariableConstraintList& pvcl);
+  intersectPairedVarConstraints(PairedVariableConstraintList& pvcl);
 
   //! Filters a QueryConstraints object based on calculated constraints
   static void filterQueryConstraints(
@@ -49,10 +50,11 @@ class ConstraintSolver {
                std::set<std::pair<std::string, std::string>>>,
       QueryConstraints& qc);
 
-  static void printConstraints(std::map<std::string, std::set<std::string>>);
+  static void printConstraints(
+      const std::map<std::string, std::set<std::string>>);
 
  public:
   //! Actually constrain the set of values and select the synonym indicated
-  static std::vector<std::string> constrainAndSelect(QueryConstraints& qc,
-                                                     std::string toSelect);
+  static std::vector<std::string> constrainAndSelect(
+      QueryConstraints& qc, const std::string toSelect);
 };

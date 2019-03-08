@@ -38,11 +38,11 @@ class QueryExecutor {
 
   //! Utility method to call getSelect for a single variable
   static void addAllValuesForVariableToConstraints(
-      std::vector<QE::Declaration>*, PKBManager* pkb, std::string&,
+      std::vector<QE::Declaration>*, PKBManager* pkb, const std::string&,
       QueryConstraints&);
 
   static std::vector<std::string> getAllDesignEntityValuesByVarName(
-      std::vector<QE::Declaration>*, PKBManager*, std::string&);
+      std::vector<QE::Declaration>*, PKBManager*, const std::string&);
 
   //! Convert a StmtOrEntRef to a string to pass to PKB
   static std::string suchThatArgToString(QE::StmtOrEntRef);

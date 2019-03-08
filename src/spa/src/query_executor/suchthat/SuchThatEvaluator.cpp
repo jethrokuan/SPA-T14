@@ -144,29 +144,10 @@ bool SuchThatEvaluator::dispatchDoubleUnderscore() {
   return handleDoubleUnderscore();
 }
 
-bool SuchThatEvaluator::dispatchBothVarsUnselected() {
-  return dispatchBothVarsSynonyms();
-}
-bool SuchThatEvaluator::dispatchLeftVarUnselectedRightBasic() {
-  return dispatchLeftVarSynonymRightBasic();
-}
-
-bool SuchThatEvaluator::dispatchRightVarUnselectedLeftBasic() {
-  return dispatchRightVarSynonymLeftBasic();
-}
-
 bool SuchThatEvaluator::dispatchLeftBasicRightUnderscore() {
   return handleLeftBasicRightUnderscore(*arg1AsBasic);
 }
 
 bool SuchThatEvaluator::dispatchRightBasicLeftUnderscore() {
   return handleRightBasicLeftUnderscore(*arg2AsBasic);
-}
-
-bool SuchThatEvaluator::dispatchLeftVarUnselectedRightUnderscore() {
-  return dispatchLeftVarSynonymRightUnderscore();
-}
-
-bool SuchThatEvaluator::dispatchRightVarUnselectedLeftUnderscore() {
-  return dispatchRightVarSynonymLeftUnderscore();
 }

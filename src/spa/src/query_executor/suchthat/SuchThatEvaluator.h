@@ -32,23 +32,15 @@ class SuchThatEvaluator {
   // These are the individual handler methods for each case
   // Read the .cpp file to see examples of each case
 
-  // At least one variable is selected
   bool dispatchLeftVarSynonymRightBasic();
   bool dispatchRightVarSynonymLeftBasic();
   bool dispatchLeftVarSynonymRightUnderscore();
   bool dispatchRightVarSynonymLeftUnderscore();
   bool dispatchBothVarsSynonyms();
   bool dispatchRightVarSelectedLeftVarUnselected();
-
-  // No variable is selected
   bool dispatchDoubleUnderscore();
-  bool dispatchBothVarsUnselected();
-  bool dispatchLeftVarUnselectedRightBasic();
-  bool dispatchRightVarUnselectedLeftBasic();
   bool dispatchLeftBasicRightUnderscore();
   bool dispatchRightBasicLeftUnderscore();
-  bool dispatchLeftVarUnselectedRightUnderscore();
-  bool dispatchRightVarUnselectedLeftUnderscore();
 
   // These are the PKB calls that need to be overloaded for each subclass
   // At least one variable is selected

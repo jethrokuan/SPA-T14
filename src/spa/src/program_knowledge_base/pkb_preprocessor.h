@@ -19,6 +19,8 @@ class PKBPreprocessor {
                       const Procedure proc);
   void setLineNumbers(const std::shared_ptr<AssignNode> node,
                       const Procedure proc);
+  void setLineNumbers(const std::shared_ptr<CallNode> node,
+                      const Procedure proc);
   void setLineNumbersIterator(const std::vector<StmtNode> stmt_lst,
                               const Procedure proc);
 
@@ -28,6 +30,7 @@ class PKBPreprocessor {
   void setDesignEntities(const std::shared_ptr<ReadNode> node);
   void setDesignEntities(const std::shared_ptr<PrintNode> node);
   void setDesignEntities(const std::shared_ptr<AssignNode> node);
+  void setDesignEntities(const std::shared_ptr<CallNode> node);
   void setDesignEntities(const Expr node);
   void setDesignEntities(const std::shared_ptr<BinOpNode> node);
   void setDesignEntities(const std::shared_ptr<CondExprNode> node);
@@ -56,6 +59,7 @@ class PKBPreprocessor {
   void setUsesRelations(const std::shared_ptr<WhileNode> node);
   void setUsesRelations(const std::shared_ptr<PrintNode> node);
   void setUsesRelations(const std::shared_ptr<AssignNode> node);
+  void setUsesRelations(const std::shared_ptr<CallNode> node);
   void setUsesRelations(const std::shared_ptr<ReadNode> node);
   void setUsesRelationsH(Expr node, const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<BinOpNode> node,
@@ -75,6 +79,7 @@ class PKBPreprocessor {
   void setModifiesRelations(const std::shared_ptr<WhileNode> node);
   void setModifiesRelations(const std::shared_ptr<ReadNode> node);
   void setModifiesRelations(const std::shared_ptr<AssignNode> node);
+  void setModifiesRelations(const std::shared_ptr<CallNode> node);
   void setModifiesRelations(const std::shared_ptr<PrintNode> node);
   void setModifiesRelationsH(const std::shared_ptr<VariableNode> node,
                              const std::shared_ptr<Node> parent_node);
@@ -82,6 +87,7 @@ class PKBPreprocessor {
 
   void setPattern(const std::shared_ptr<ProcedureNode> node);
   void setPattern(const std::shared_ptr<AssignNode> node);
+  void setPattern(const std::shared_ptr<CallNode> node);
   void setPattern(const std::shared_ptr<IfNode> node);
   void setPattern(const std::shared_ptr<WhileNode> node);
   void setPattern(const std::shared_ptr<ReadNode>);

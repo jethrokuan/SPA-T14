@@ -1,13 +1,15 @@
+#include "simple_parser/exceptions.h"
 #include "simple_parser/parser.h"
+#include "simple_parser/pratt.h"
+
+#include <unordered_set>
+
 #include "simple_parser/exceptions.h"
 #include "simple_parser/pratt.h"
 
-#include <iostream>
-#include <unordered_set>
-
-using namespace Simple;
-
-#include <iostream>
+using Simple::Parser;
+using Simple::Token;
+using Simple::TokenType;
 
 bool Parser::match(TokenType type) {
   if (check(type)) {
@@ -31,22 +33,22 @@ bool Parser::expect(std::string s) {
   }
   throw SimpleParseException("Expected '" + s + "', got '" + peek()->Val +
                              "'.");
-};
+}
 
-bool Parser::check(TokenType type) { return peek()->T == type; };
+bool Parser::check(TokenType type) { return peek()->T == type; }
 
-bool Parser::check(std::string s) { return peek()->Val.compare(s) == 0; };
+bool Parser::check(std::string s) { return peek()->Val.compare(s) == 0; }
 
 Token* Parser::advance() {
   if (!isAtEnd()) current++;
   return previous();
-};
+}
 
-bool Parser::isAtEnd() { return peek()->T == TokenType::END_OF_FILE; };
+bool Parser::isAtEnd() { return peek()->T == TokenType::END_OF_FILE; }
 
-Token* Parser::peek() { return tokens[current]; };
+Token* Parser::peek() { return tokens[current]; }
 
-Token* Parser::previous() { return tokens[current - 1]; };
+Token* Parser::previous() { return tokens[current - 1]; }
 
 std::shared_ptr<NumberNode> Parser::parseNumber() {
   auto current_loc = current;
@@ -70,7 +72,7 @@ std::shared_ptr<VariableNode> Parser::parseVariable() {
     current = current_loc;
     return nullptr;
   }
-};
+}
 
 std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
   if (!match("procedure")) {
@@ -93,7 +95,7 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
   expect("}");
 
   return std::make_shared<ProcedureNode>(procName, std::move(StmtList));
-};
+}
 
 std::shared_ptr<StmtListNode> Parser::parseStmtList() {
   std::vector<StmtNode> stmts;
@@ -111,7 +113,7 @@ std::shared_ptr<StmtListNode> Parser::parseStmtList() {
   }
 
   return std::make_shared<StmtListNode>(std::move(stmts));
-};
+}
 
 std::optional<StmtNode> Parser::parseStatement() {
   if (check("}")) {
@@ -157,7 +159,7 @@ std::optional<StmtNode> Parser::parseStatement() {
   current = current_loc;
   // Shouldn't reach here
   return std::nullopt;
-};
+}
 
 Factor Parser::parseFactor() {
   auto Var = parseVariable();
@@ -175,9 +177,9 @@ Factor Parser::parseFactor() {
   auto Expr = parseExpr();
   expect(")");
   return Expr;
-};
+}
 
-Expr Parser::parseExpr() { return exprParser.parse(0); };
+Expr Parser::parseExpr() { return exprParser.parse(0); }
 
 std::shared_ptr<AssignNode> Parser::parseAssign() {
   auto Var = parseVariable();
@@ -197,7 +199,7 @@ std::shared_ptr<AssignNode> Parser::parseAssign() {
   expect(";");
 
   return std::make_shared<AssignNode>(std::move(Var), std::move(Expr));
-};
+}
 
 std::shared_ptr<ReadNode> Parser::parseRead() {
   auto current_loc = current;
@@ -216,7 +218,7 @@ std::shared_ptr<ReadNode> Parser::parseRead() {
   expect(";");
 
   return std::make_shared<ReadNode>(std::move(Var));
-};
+}
 
 std::shared_ptr<CallNode> Parser::parseCall() {
   auto current_loc = current;
@@ -254,13 +256,13 @@ std::shared_ptr<PrintNode> Parser::parsePrint() {
   expect(";");
 
   return std::make_shared<PrintNode>(std::move(Var));
-};
+}
 
 RelFactor Parser::parseRelFactor() {
   auto Expr = parseExpr();
 
   return Expr;
-};
+}
 
 // rel_expr: rel_factor > rel_factor
 // | rel_factor >= rel_factor
@@ -326,7 +328,7 @@ std::shared_ptr<CondExprNode> Parser::parseCondExpr() {
   }
   // Shouldn't reach here
   return nullptr;
-};
+}
 
 std::shared_ptr<WhileNode> Parser::parseWhile() {
   auto current_loc = current;
@@ -354,7 +356,7 @@ std::shared_ptr<WhileNode> Parser::parseWhile() {
   }
   expect("}");
   return std::make_shared<WhileNode>(std::move(condExpr), std::move(stmtList));
-};
+}
 
 std::shared_ptr<IfNode> Parser::parseIf() {
   auto current_loc = current;
@@ -395,7 +397,7 @@ std::shared_ptr<IfNode> Parser::parseIf() {
   expect("}");
   return std::make_shared<IfNode>(std::move(condExpr), std::move(stmtListThen),
                                   std::move(stmtListElse));
-};
+}
 
 AST Parser::parse() {
   std::vector<std::shared_ptr<ProcedureNode>> proc_list;
@@ -422,4 +424,4 @@ Parser::Parser(std::vector<Token*> t)
           tokens, &current,
           std::unordered_set<std::string>(
               {">", ">=", "<", "<=", "==", "!=", ";", ")"}))),
-      tokens(t){};
+      tokens(t) {}

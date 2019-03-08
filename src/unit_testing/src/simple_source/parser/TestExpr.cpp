@@ -6,136 +6,62 @@
 #include <iostream>
 #include <memory>
 
-using namespace Simple;
+using Simple::SimpleInterface;
 using std::make_shared;
 using std::shared_ptr;
 
+bool exprEqual(Expr e1, Expr e2) {
+  return std::visit([](const auto& a, const auto& b) { return *a == *b; }, e1,
+                    e2);
+}
+
 TEST_CASE ("Test Expr parse works") {
-  SECTION ("i = 5") {
-    AST ast =
-        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/1.txt");
+  SECTION ("5") {
+    Expr expr = SimpleInterface::parseExpression("5");
+    Expr expected = make_shared<NumberNode>("5");
 
-    std::vector<StmtNode> stmt_list;
-    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
-
-    auto assign = std::make_shared<AssignNode>(make_shared<VariableNode>("i"),
-                                               make_shared<NumberNode>("5"));
-
-    stmt_list.push_back(std::move(assign));
-
-    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
-
-    auto proc_main =
-        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
-    proc_list.push_back(proc_main);
-
-    auto root = make_shared<RootNode>(proc_list);
-
-    REQUIRE(*ast == *root);
+    REQUIRE(exprEqual(expr, expected));
   }
 
-  SECTION ("i = 2 + 5") {
-    AST ast =
-        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/2.txt");
+  SECTION ("2 + 5") {
+    Expr expr = SimpleInterface::parseExpression("2 + 5");
+    Expr expected = make_shared<BinOpNode>(make_shared<NumberNode>("2"),
+                                           make_shared<NumberNode>("5"), "+");
+    REQUIRE(exprEqual(expr, expected));
+  }
 
-    std::vector<StmtNode> stmt_list;
-    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
+  SECTION ("2 + 5 * j") {
+    Expr expr = SimpleInterface::parseExpression("2 + 5 * j");
 
-    auto assign = std::make_shared<AssignNode>(
-        make_shared<VariableNode>("i"),
+    Expr expected = make_shared<BinOpNode>(
+        make_shared<NumberNode>("2"),
+        make_shared<BinOpNode>(make_shared<NumberNode>("5"),
+                               make_shared<VariableNode>("j"), "*"),
+        "+");
+
+    REQUIRE(exprEqual(expr, expected));
+  }
+
+  SECTION ("2 + (5 * j)") {
+    Expr expr = SimpleInterface::parseExpression("2 + (5 * j)");
+
+    Expr expected = make_shared<BinOpNode>(
+        make_shared<NumberNode>("2"),
+        make_shared<BinOpNode>(make_shared<NumberNode>("5"),
+                               make_shared<VariableNode>("j"), "*"),
+        "+");
+
+    REQUIRE(exprEqual(expr, expected));
+  }
+
+  SECTION ("(2 + 5) * j") {
+    Expr expr = SimpleInterface::parseExpression("(2 + 5) * j");
+    Expr expected = make_shared<BinOpNode>(
         make_shared<BinOpNode>(make_shared<NumberNode>("2"),
-                               make_shared<NumberNode>("5"), "+"));
+                               make_shared<NumberNode>("5"), "+"),
+        make_shared<VariableNode>("j"), "*");
 
-    stmt_list.push_back(std::move(assign));
-
-    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
-
-    auto proc_main =
-        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
-    proc_list.push_back(proc_main);
-    auto root = make_shared<RootNode>(proc_list);
-
-    REQUIRE(*ast == *root);
-  }
-
-  SECTION ("i = 2 + 5 * j") {
-    AST ast =
-        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/3.txt");
-
-    std::vector<StmtNode> stmt_list;
-    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
-
-    auto assign = std::make_shared<AssignNode>(
-        make_shared<VariableNode>("i"),
-        make_shared<BinOpNode>(
-            make_shared<NumberNode>("2"),
-            make_shared<BinOpNode>(make_shared<NumberNode>("5"),
-                                   make_shared<VariableNode>("j"), "*"),
-            "+"));
-
-    stmt_list.push_back(std::move(assign));
-
-    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
-
-    auto proc_main =
-        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
-    proc_list.push_back(proc_main);
-    auto root = make_shared<RootNode>(proc_list);
-
-    REQUIRE(*ast == *root);
-  }
-
-  SECTION ("i = 2 + (5 * j)") {
-    AST ast =
-        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/4.txt");
-
-    std::vector<StmtNode> stmt_list;
-    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
-
-    auto assign = std::make_shared<AssignNode>(
-        make_shared<VariableNode>("i"),
-        make_shared<BinOpNode>(
-            make_shared<NumberNode>("2"),
-            make_shared<BinOpNode>(make_shared<NumberNode>("5"),
-                                   make_shared<VariableNode>("j"), "*"),
-            "+"));
-
-    stmt_list.push_back(std::move(assign));
-
-    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
-
-    auto proc_main =
-        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
-    proc_list.push_back(proc_main);
-    auto root = make_shared<RootNode>(proc_list);
-
-    REQUIRE(*ast == *root);
-  }
-
-  SECTION ("i = (2 + 5) * j") {
-    AST ast =
-        SimpleInterface::getAstFromFile("tests/simple_source/arithmetic/5.txt");
-
-    std::vector<StmtNode> stmt_list;
-    std::vector<std::shared_ptr<ProcedureNode>> proc_list;
-
-    auto assign = std::make_shared<AssignNode>(
-        make_shared<VariableNode>("i"),
-        make_shared<BinOpNode>(
-            make_shared<BinOpNode>(make_shared<NumberNode>("2"),
-                                   make_shared<NumberNode>("5"), "+"),
-            make_shared<VariableNode>("j"), "*"));
-
-    stmt_list.push_back(std::move(assign));
-
-    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
-
-    auto proc_main =
-        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
-    proc_list.push_back(proc_main);
-    auto root = make_shared<RootNode>(proc_list);
-
-    REQUIRE(*ast == *root);
+    REQUIRE(exprEqual(expr, expected));
   }
 
   SECTION ("while (i > (2 + 5) * j)") {

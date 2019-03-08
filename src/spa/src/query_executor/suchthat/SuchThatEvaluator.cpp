@@ -53,31 +53,27 @@ bool SuchThatEvaluator::dispatch() {
 //! Handle 6 different cases where something is selected in the such_that
 // View examples here
 bool SuchThatEvaluator::dispatchSuchThatSelected() {
-  if (arg1AsSynonym && arg1InSelect && arg2AsBasic) {
+  if (arg1AsSynonym && arg2AsBasic) {
     // Case 1: Selected variable is in this such_that, left argument
     // Follows*(s, 3)
-    return dispatchLeftVarSelectedRightBasic();
-  } else if (arg2AsSynonym && arg2InSelect && arg1AsBasic) {
+    return dispatchLeftVarSynonymRightBasic();
+  } else if (arg2AsSynonym && arg1AsBasic) {
     // Case 2: Selected variable is in this such_that, right argument
     // Follows*(3, s)
-    return dispatchRightVarSelectedLeftBasic();
+    return dispatchRightVarSynonymLeftBasic();
   } else if (arg1AsSynonym && arg1InSelect && arg2IsUnderscore) {
     // Case 3: Selected variable is in this such_that, left argument, right arg
     // underscore Follows*(s, _)
     // Need to find all selected things and then run the correct follows fx
-    return dispatchLeftVarSelectedRightUnderscore();
-  } else if (arg2AsSynonym && arg2InSelect && arg1IsUnderscore) {
+    return dispatchLeftVarSynonymRightUnderscore();
+  } else if (arg2AsSynonym && arg1IsUnderscore) {
     // Case 4: Selected variable is in this such_that, right argument, left arg
     // underscore Follows*(_, s)
-    return dispatchRightVarSelectedLeftUnderscore();
-  } else if (arg1AsSynonym && arg2AsSynonym && arg1InSelect) {
+    return dispatchRightVarSynonymLeftUnderscore();
+  } else if (arg1AsSynonym && arg2AsSynonym) {
     // Case 5: Selected variable is in this such_that, left argument, right arg
     // also is a variable, Follows*(s, p)
-    return dispatchLeftVarSelectedRightVarUnselected();
-  } else if (arg1AsSynonym && arg2AsSynonym && arg2InSelect) {
-    // Case 6: Selected variable is in this such_that, right argument, left arg
-    // also is a variable, Follows*(p, s)
-    return dispatchRightVarSelectedLeftVarUnselected();
+    return dispatchBothVarsSynonyms();
   } else {
     std::cout << "This case should not be triggered\n";
     assert(false);
@@ -127,8 +123,8 @@ bool SuchThatEvaluator::dispatchSuchThatNotSelected() {
     assert(false);
   }
 }
-bool SuchThatEvaluator::dispatchLeftVarSelectedRightBasic() {
-  auto results = handleLeftVarSelectedRightBasic(*arg2AsBasic);
+bool SuchThatEvaluator::dispatchLeftVarSynonymRightBasic() {
+  auto results = handleLeftVarSynonymRightBasic(*arg2AsBasic);
   if (results.empty() ||
       qc.containsNoAllowedResults(results, arg1AsSynonym->synonym)) {
     return false;
@@ -137,8 +133,8 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightBasic() {
   return true;
 }
 
-bool SuchThatEvaluator::dispatchRightVarSelectedLeftBasic() {
-  auto results = handleRightVarSelectedLeftBasic(*arg1AsBasic);
+bool SuchThatEvaluator::dispatchRightVarSynonymLeftBasic() {
+  auto results = handleRightVarSynonymLeftBasic(*arg1AsBasic);
   if (results.empty() ||
       qc.containsNoAllowedResults(results, arg2AsSynonym->synonym)) {
     return false;
@@ -147,13 +143,13 @@ bool SuchThatEvaluator::dispatchRightVarSelectedLeftBasic() {
   return true;
 }
 
-bool SuchThatEvaluator::dispatchLeftVarSelectedRightUnderscore() {
+bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg1AsSynonym->synonym);
 
   std::vector<std::string> results;
   for (auto de : lhs_designentities) {
-    if (handleLeftVarSelectedRightUnderscore(de)) {
+    if (handleLeftVarSynonymRightUnderscore(de)) {
       results.push_back(de);
     }
   }
@@ -162,12 +158,12 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightUnderscore() {
   return true;
 }
 
-bool SuchThatEvaluator::dispatchRightVarSelectedLeftUnderscore() {
+bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg2AsSynonym->synonym);
   std::vector<std::string> results;
   for (auto de : rhs_designentities) {
-    if (handleRightVarSelectedLeftUnderscore(de)) {
+    if (handleRightVarSynonymLeftUnderscore(de)) {
       results.push_back(de);
     }
   }
@@ -176,7 +172,7 @@ bool SuchThatEvaluator::dispatchRightVarSelectedLeftUnderscore() {
   return true;
 }
 
-bool SuchThatEvaluator::dispatchLeftVarSelectedRightVarUnselected() {
+bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg1AsSynonym->synonym);
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
@@ -185,7 +181,7 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightVarUnselected() {
   PairedConstraintSet results;
   for (auto lhs_de : lhs_designentities) {
     for (auto rhs_de : rhs_designentities) {
-      if (handleLeftVarSelectedRightVarUnselected(lhs_de, rhs_de)) {
+      if (handleBothVarsSynonyms(lhs_de, rhs_de)) {
         results.insert({lhs_de, rhs_de});
       }
     }
@@ -197,7 +193,7 @@ bool SuchThatEvaluator::dispatchLeftVarSelectedRightVarUnselected() {
 }
 
 bool SuchThatEvaluator::dispatchRightVarSelectedLeftVarUnselected() {
-  return dispatchLeftVarSelectedRightVarUnselected();
+  return dispatchBothVarsSynonyms();
 }
 
 // No variable is selected
@@ -206,14 +202,14 @@ bool SuchThatEvaluator::dispatchDoubleUnderscore() {
 }
 
 bool SuchThatEvaluator::dispatchBothVarsUnselected() {
-  return dispatchLeftVarSelectedRightVarUnselected();
+  return dispatchBothVarsSynonyms();
 }
 bool SuchThatEvaluator::dispatchLeftVarUnselectedRightBasic() {
-  return dispatchLeftVarSelectedRightBasic();
+  return dispatchLeftVarSynonymRightBasic();
 }
 
 bool SuchThatEvaluator::dispatchRightVarUnselectedLeftBasic() {
-  return dispatchRightVarSelectedLeftBasic();
+  return dispatchRightVarSynonymLeftBasic();
 }
 
 bool SuchThatEvaluator::dispatchLeftBasicRightUnderscore() {
@@ -225,9 +221,9 @@ bool SuchThatEvaluator::dispatchRightBasicLeftUnderscore() {
 }
 
 bool SuchThatEvaluator::dispatchLeftVarUnselectedRightUnderscore() {
-  return dispatchLeftVarSelectedRightUnderscore();
+  return dispatchLeftVarSynonymRightUnderscore();
 }
 
 bool SuchThatEvaluator::dispatchRightVarUnselectedLeftUnderscore() {
-  return dispatchRightVarSelectedLeftUnderscore();
+  return dispatchRightVarSynonymLeftUnderscore();
 }

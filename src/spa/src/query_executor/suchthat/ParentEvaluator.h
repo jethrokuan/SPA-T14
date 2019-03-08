@@ -18,7 +18,7 @@ class ParentEvaluator : public SuchThatEvaluator {
 
   // Handle cases with at least one variable selected
 
-  std::vector<std::string> handleLeftVarSelectedRightBasic(
+  std::vector<std::string> handleLeftVarSynonymRightBasic(
       std::string& basic_value) override {
     // Parent(s, 3)
     if (auto beforeLine = pkb->getParentLine(basic_value)) {
@@ -27,7 +27,7 @@ class ParentEvaluator : public SuchThatEvaluator {
       return {};
     }
   }
-  std::vector<std::string> handleRightVarSelectedLeftBasic(
+  std::vector<std::string> handleRightVarSynonymLeftBasic(
       std::string& basic_value) override {
     // Parent(3, s)
     if (auto afterLine = pkb->getChildLine(basic_value)) {
@@ -36,16 +36,16 @@ class ParentEvaluator : public SuchThatEvaluator {
       return {};
     }
   }
-  bool handleLeftVarSelectedRightUnderscore(std::string& arg_value) override {
+  bool handleLeftVarSynonymRightUnderscore(std::string& arg_value) override {
     // Parent(s, _) (for each s)
     return pkb->getChildLine(arg_value) ? true : false;
   }
-  bool handleRightVarSelectedLeftUnderscore(std::string& arg_value) override {
+  bool handleRightVarSynonymLeftUnderscore(std::string& arg_value) override {
     // Parent(_, s) (for each s)
     return pkb->getParentLine(arg_value) ? true : false;
   }
-  bool handleLeftVarSelectedRightVarUnselected(
-      std::string& arg_select, std::string& arg_unselect) override {
+  bool handleBothVarsSynonyms(std::string& arg_select,
+                              std::string& arg_unselect) override {
     // Parent(s, s1)
     return pkb->isLineParentLine(arg_select, arg_unselect) ? true : false;
   }
@@ -68,12 +68,12 @@ class ParentEvaluator : public SuchThatEvaluator {
   std::vector<std::string> handleLeftVarUnselectedRightBasic(
       std::string& arg) override {
     // Parent(s1, 3)
-    return handleLeftVarSelectedRightBasic(arg);
+    return handleLeftVarSynonymRightBasic(arg);
   }
   std::vector<std::string> handleRightVarUnselectedLeftBasic(
       std::string& arg) override {
     // Parent(3, s1)
-    return handleRightVarSelectedLeftBasic(arg);
+    return handleRightVarSynonymLeftBasic(arg);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Parent(3, _)
@@ -86,12 +86,12 @@ class ParentEvaluator : public SuchThatEvaluator {
   bool handleLeftVarUnselectedRightUnderscore(std::string& arg) override {
     // Parent(s1, _) --> is there a statement that is followed by anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return handleLeftVarSelectedRightUnderscore(arg);
+    return handleLeftVarSynonymRightUnderscore(arg);
   }
   bool handleRightVarUnselectedLeftUnderscore(std::string& arg) override {
     // Parent(_, s1) --> is there a statement that follows anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return handleRightVarSelectedLeftUnderscore(arg);
+    return handleRightVarSynonymLeftUnderscore(arg);
   }
   bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
     // Parent(2, 3)?

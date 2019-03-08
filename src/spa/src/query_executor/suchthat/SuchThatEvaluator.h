@@ -41,11 +41,11 @@ class SuchThatEvaluator {
   // Read the .cpp file to see examples of each case
 
   // At least one variable is selected
-  bool dispatchLeftVarSelectedRightBasic();
-  bool dispatchRightVarSelectedLeftBasic();
-  bool dispatchLeftVarSelectedRightUnderscore();
-  bool dispatchRightVarSelectedLeftUnderscore();
-  bool dispatchLeftVarSelectedRightVarUnselected();
+  bool dispatchLeftVarSynonymRightBasic();
+  bool dispatchRightVarSynonymLeftBasic();
+  bool dispatchLeftVarSynonymRightUnderscore();
+  bool dispatchRightVarSynonymLeftUnderscore();
+  bool dispatchBothVarsSynonyms();
   bool dispatchRightVarSelectedLeftVarUnselected();
 
   // No variable is selected
@@ -60,14 +60,13 @@ class SuchThatEvaluator {
 
   // These are the PKB calls that need to be overloaded for each subclass
   // At least one variable is selected
-  virtual std::vector<std::string> handleLeftVarSelectedRightBasic(
+  virtual std::vector<std::string> handleLeftVarSynonymRightBasic(
       std::string&) = 0;
-  virtual std::vector<std::string> handleRightVarSelectedLeftBasic(
+  virtual std::vector<std::string> handleRightVarSynonymLeftBasic(
       std::string&) = 0;
-  virtual bool handleLeftVarSelectedRightUnderscore(std::string&) = 0;
-  virtual bool handleRightVarSelectedLeftUnderscore(std::string&) = 0;
-  virtual bool handleLeftVarSelectedRightVarUnselected(std::string&,
-                                                       std::string&) = 0;
+  virtual bool handleLeftVarSynonymRightUnderscore(std::string&) = 0;
+  virtual bool handleRightVarSynonymLeftUnderscore(std::string&) = 0;
+  virtual bool handleBothVarsSynonyms(std::string&, std::string&) = 0;
   virtual bool handleRightVarSelectedLeftVarUnselected(std::string&,
                                                        std::string&) = 0;
 

@@ -20,29 +20,29 @@ class UsesSEvaluator : public SuchThatEvaluator {
   // Handle cases with at least one variable selected
 
   // Handle cases with at least one variable selected
-  std::vector<std::string> handleLeftVarSelectedRightBasic(
+  std::vector<std::string> handleLeftVarSynonymRightBasic(
       std::string& basic_value) override {
     // Uses(s, "x")
     return pkb->getLineUsesVar(basic_value)
         .value_or(std::vector<std::string>());
   }
-  std::vector<std::string> handleRightVarSelectedLeftBasic(
+  std::vector<std::string> handleRightVarSynonymLeftBasic(
       std::string& basic_value) override {
     // Uses(3, v)
     return pkb->getVarUsedByLine(basic_value)
         .value_or(std::vector<std::string>());
   }
-  bool handleLeftVarSelectedRightUnderscore(std::string& arg_value) override {
+  bool handleLeftVarSynonymRightUnderscore(std::string& arg_value) override {
     // Uses(s, _)
     auto res = pkb->getVarUsedByLine(arg_value).has_value();
     return res ? true : false;
   }
-  bool handleRightVarSelectedLeftUnderscore(std::string&) override {
+  bool handleRightVarSynonymLeftUnderscore(std::string&) override {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
     assert(false);
   }
-  bool handleLeftVarSelectedRightVarUnselected(
-      std::string& arg_select, std::string& arg_unselect) override {
+  bool handleBothVarsSynonyms(std::string& arg_select,
+                              std::string& arg_unselect) override {
     // Uses(s, v)
     return pkb->isLineUsesVar(arg_select, arg_unselect) ? true : false;
   }
@@ -65,12 +65,12 @@ class UsesSEvaluator : public SuchThatEvaluator {
   std::vector<std::string> handleLeftVarUnselectedRightBasic(
       std::string& arg) override {
     // Uses(s1, "x")
-    return handleLeftVarSelectedRightBasic(arg);
+    return handleLeftVarSynonymRightBasic(arg);
   }
   std::vector<std::string> handleRightVarUnselectedLeftBasic(
       std::string& arg) override {
     // Uses(3, v1)
-    return handleRightVarSelectedLeftBasic(arg);
+    return handleRightVarSynonymLeftBasic(arg);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Uses(3, _)
@@ -83,12 +83,12 @@ class UsesSEvaluator : public SuchThatEvaluator {
   bool handleLeftVarUnselectedRightUnderscore(std::string& arg) override {
     // Uses(s1, _) --> is there a statement that modifies anything?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return handleLeftVarSelectedRightUnderscore(arg);
+    return handleLeftVarSynonymRightUnderscore(arg);
   }
   bool handleRightVarUnselectedLeftUnderscore(std::string& arg) override {
     // Uses(_, v1) --> is there a variable that is modified?
     // Reuse the left-var selected results until an optimized PKB query can help
-    return handleRightVarSelectedLeftUnderscore(arg);
+    return handleRightVarSynonymLeftUnderscore(arg);
   }
   bool handleDoubleBasic(std::string& arg1, std::string& arg2) override {
     // Uses(2, "v")?

@@ -3,7 +3,6 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <vector>
 #include "program_knowledge_base/pkb_definitions.h"
 #include "program_knowledge_base/pkb_preprocessor.h"
 #include "program_knowledge_base/pkb_storage.h"
@@ -20,10 +19,9 @@ class PKBManager {
  private:
   std::shared_ptr<PKBStorage> pkb_storage = std::make_shared<PKBStorage>();
 
-  std::optional<std::vector<std::string>> getUniqueVectorFromMap(
-      const std::unordered_map<std::string, std::vector<std::string>> &,
+  std::optional<std::unordered_set<std::string>> getSetFromMap(
+      const std::unordered_map<std::string, std::unordered_set<std::string>> &,
       const std::string);
-  std::vector<std::string> getUniqueVector(std::vector<std::string>);
 
  public:
   PKBManager(const AST ast);
@@ -54,15 +52,15 @@ class PKBManager {
   bool isProcedureExists(const Procedure);
 
   // get design entities
-  std::vector<Variable> getVariableList();
-  std::vector<Line> getAssignList();
-  std::vector<Line> getStatementList();
-  std::vector<Line> getPrintList();
-  std::vector<Line> getReadList();
-  std::vector<Line> getWhileList();
-  std::vector<Line> getIfList();
-  std::vector<Constant> getConstantList();
-  std::vector<Procedure> getProcedureList();
+  std::unordered_set<Variable> getVariableSet();
+  std::unordered_set<Line> getAssignSet();
+  std::unordered_set<Line> getStatementSet();
+  std::unordered_set<Line> getPrintSet();
+  std::unordered_set<Line> getReadSet();
+  std::unordered_set<Line> getWhileSet();
+  std::unordered_set<Line> getIfSet();
+  std::unordered_set<Constant> getConstantSet();
+  std::unordered_set<Procedure> getProcedureSet();
 
   // is relationship set empty
   bool isLineFollowLineSetEmpty();
@@ -87,44 +85,49 @@ class PKBManager {
   // get relationship mapping
   std::optional<LineAfter> getFollowingLine(const LineBefore);
   std::optional<LineBefore> getBeforeLine(const LineAfter);
-  std::optional<std::vector<LineAfter>> getFollowingLineS(const LineBefore);
-  std::optional<std::vector<LineBefore>> getBeforeLineS(const LineAfter);
+  std::optional<std::unordered_set<LineAfter>> getFollowingLineS(
+      const LineBefore);
+  std::optional<std::unordered_set<LineBefore>> getBeforeLineS(const LineAfter);
 
   std::optional<ParentLine> getParentLine(const ChildLine);
-  std::optional<std::vector<ChildLine>> getChildLine(const ParentLine);
-  std::optional<std::vector<ParentLine>> getParentLineS(const ChildLine);
-  std::optional<std::vector<ChildLine>> getChildLineS(const ParentLine);
+  std::optional<std::unordered_set<ChildLine>> getChildLine(const ParentLine);
+  std::optional<std::unordered_set<ParentLine>> getParentLineS(const ChildLine);
+  std::optional<std::unordered_set<ChildLine>> getChildLineS(const ParentLine);
 
-  std::optional<std::vector<Variable>> getVarModifiedByProcedure(
+  std::optional<std::unordered_set<Variable>> getVarModifiedByProcedure(
       const Procedure);
-  std::optional<std::vector<Variable>> getVarModifiedByLine(const Line);
-  std::optional<std::vector<Procedure>> getProcedureModifiesVar(const Variable);
-  std::optional<std::vector<Line>> getLineModifiesVar(const Variable);
+  std::optional<std::unordered_set<Variable>> getVarModifiedByLine(const Line);
+  std::optional<std::unordered_set<Procedure>> getProcedureModifiesVar(
+      const Variable);
+  std::optional<std::unordered_set<Line>> getLineModifiesVar(const Variable);
 
-  std::optional<std::vector<Variable>> getVarUsedByProcedure(const Procedure);
-  std::optional<std::vector<Variable>> getVarUsedByLine(const Line);
-  std::optional<std::vector<Procedure>> getProcedureUsesVar(const Variable);
-  std::optional<std::vector<Line>> getLineUsesVar(const Variable);
+  std::optional<std::unordered_set<Variable>> getVarUsedByProcedure(
+      const Procedure);
+  std::optional<std::unordered_set<Variable>> getVarUsedByLine(const Line);
+  std::optional<std::unordered_set<Procedure>> getProcedureUsesVar(
+      const Variable);
+  std::optional<std::unordered_set<Line>> getLineUsesVar(const Variable);
 
   // pattern
-  std::optional<std::vector<Line>> getCompleteMatchLinesWithVar(const Variable,
-                                                                const Pattern);
-  std::optional<std::vector<Line>> getPartialMatchLinesWithVar(const Variable,
-                                                               const Pattern);
-  std::optional<std::vector<Line>> getCompleteMatchLines(const Pattern);
-  std::optional<std::vector<Line>> getPartialMatchLines(const Pattern);
-  std::optional<std::vector<std::pair<Line, Variable>>>
+  std::optional<std::unordered_set<Line>> getCompleteMatchLinesWithVar(
+      const Variable, const Pattern);
+  std::optional<std::unordered_set<Line>> getPartialMatchLinesWithVar(
+      const Variable, const Pattern);
+  std::optional<std::unordered_set<Line>> getCompleteMatchLines(const Pattern);
+  std::optional<std::unordered_set<Line>> getPartialMatchLines(const Pattern);
+  std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
   getCompleteMatchLinesAndVars(const Pattern);
-  std::optional<std::vector<std::pair<Line, Variable>>>
+  std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
   getPartialMatchLinesAndVars(const Pattern);
-  std::vector<std::pair<Line, Variable>> getAllPatternLinesAndVars();
+  std::unordered_set<std::pair<Line, Variable>, pair_hash>
+  getAllPatternLinesAndVars();
   bool isPatternExists(const Pattern);
 
   // next
   bool isLineNextLine(Line, Line);
 
   // misc helpers
-  std::optional<std::vector<Line>> getLineForAssignVar(const Variable);
+  std::optional<std::unordered_set<Line>> getLineForAssignVar(const Variable);
 };
 
 }  // namespace PKB

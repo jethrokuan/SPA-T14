@@ -16,21 +16,14 @@ PKBManager::PKBManager(const AST ast) {
 PKBManager::~PKBManager() {}
 
 // helper
-std::optional<std::vector<std::string>> PKBManager::getUniqueVectorFromMap(
-    const std::unordered_map<std::string, std::vector<std::string>> &umap,
+std::optional<std::unordered_set<std::string>> PKBManager::getSetFromMap(
+    const std::unordered_map<std::string, std::unordered_set<std::string>>
+        &umap,
     const std::string key) {
   return (umap.find(key) == umap.end())
              ? std::nullopt
-             : std::make_optional<std::vector<std::string>>(
-                   getUniqueVector(umap.at(key)));
-}
-
-std::vector<std::string> PKBManager::getUniqueVector(
-    std::vector<std::string> dupe_vec) {
-  std::unordered_set<std::string> unique_set(dupe_vec.begin(), dupe_vec.end());
-  std::vector<std::string> unique_vec(unique_set.begin(), unique_set.end());
-
-  return unique_vec;
+             : std::make_optional<std::unordered_set<std::string>>(
+                   umap.at(key));
 }
 
 // is design entity set empty
@@ -99,40 +92,40 @@ bool PKBManager::isProcedureExists(const Procedure proc) {
 
 // get design entities
 
-std::vector<Line> PKBManager::getVariableList() {
-  return getUniqueVector(pkb_storage->var_list);
+std::unordered_set<Line> PKBManager::getVariableSet() {
+  return pkb_storage->var_set;
 }
 
-std::vector<Line> PKBManager::getAssignList() {
-  return getUniqueVector(pkb_storage->assign_list);
+std::unordered_set<Line> PKBManager::getAssignSet() {
+  return pkb_storage->assign_set;
 }
 
-std::vector<Line> PKBManager::getStatementList() {
-  return getUniqueVector(pkb_storage->statement_list);
+std::unordered_set<Line> PKBManager::getStatementSet() {
+  return pkb_storage->statement_set;
 }
 
-std::vector<Line> PKBManager::getPrintList() {
-  return getUniqueVector(pkb_storage->print_list);
+std::unordered_set<Line> PKBManager::getPrintSet() {
+  return pkb_storage->print_set;
 }
 
-std::vector<Line> PKBManager::getReadList() {
-  return getUniqueVector(pkb_storage->read_list);
+std::unordered_set<Line> PKBManager::getReadSet() {
+  return pkb_storage->read_set;
 }
 
-std::vector<Procedure> PKBManager::getWhileList() {
-  return getUniqueVector(pkb_storage->while_list);
+std::unordered_set<Procedure> PKBManager::getWhileSet() {
+  return pkb_storage->while_set;
 }
 
-std::vector<Procedure> PKBManager::getIfList() {
-  return getUniqueVector(pkb_storage->if_list);
+std::unordered_set<Procedure> PKBManager::getIfSet() {
+  return pkb_storage->if_set;
 }
 
-std::vector<Procedure> PKBManager::getConstantList() {
-  return getUniqueVector(pkb_storage->constant_list);
+std::unordered_set<Procedure> PKBManager::getConstantSet() {
+  return pkb_storage->constant_set;
 }
 
-std::vector<Procedure> PKBManager::getProcedureList() {
-  return getUniqueVector(pkb_storage->procedure_list);
+std::unordered_set<Procedure> PKBManager::getProcedureSet() {
+  return pkb_storage->procedure_set;
 }
 
 // is relationship set empty
@@ -236,16 +229,14 @@ std::optional<LineBefore> PKBManager::getBeforeLine(
                    pkb_storage->line_after_line_before_map[line_after]);
 }
 
-std::optional<std::vector<LineAfter>> PKBManager::getFollowingLineS(
+std::optional<std::unordered_set<LineAfter>> PKBManager::getFollowingLineS(
     const LineBefore line_before) {
-  return getUniqueVectorFromMap(pkb_storage->line_before_line_after_map_s,
-                                line_before);
+  return getSetFromMap(pkb_storage->line_before_line_after_map_s, line_before);
 }
 
-std::optional<std::vector<LineBefore>> PKBManager::getBeforeLineS(
+std::optional<std::unordered_set<LineBefore>> PKBManager::getBeforeLineS(
     const LineAfter line_after) {
-  return getUniqueVectorFromMap(pkb_storage->line_after_line_before_map_s,
-                                line_after);
+  return getSetFromMap(pkb_storage->line_after_line_before_map_s, line_after);
 }
 
 std::optional<ParentLine> PKBManager::getParentLine(
@@ -257,68 +248,65 @@ std::optional<ParentLine> PKBManager::getParentLine(
                    pkb_storage->child_line_parent_line_map[child_line]);
 }
 
-std::optional<std::vector<ChildLine>> PKBManager::getChildLine(
+std::optional<std::unordered_set<ChildLine>> PKBManager::getChildLine(
     const ParentLine parent_line) {
-  return getUniqueVectorFromMap(pkb_storage->parent_line_child_line_map,
-                                parent_line);
+  return getSetFromMap(pkb_storage->parent_line_child_line_map, parent_line);
 }
 
-std::optional<std::vector<ParentLine>> PKBManager::getParentLineS(
+std::optional<std::unordered_set<ParentLine>> PKBManager::getParentLineS(
     const ChildLine child_line) {
-  return getUniqueVectorFromMap(pkb_storage->child_line_parent_line_map_s,
-                                child_line);
+  return getSetFromMap(pkb_storage->child_line_parent_line_map_s, child_line);
 }
 
-std::optional<std::vector<ChildLine>> PKBManager::getChildLineS(
+std::optional<std::unordered_set<ChildLine>> PKBManager::getChildLineS(
     const ParentLine parent_line) {
-  return getUniqueVectorFromMap(pkb_storage->parent_line_child_line_map_s,
-                                parent_line);
+  return getSetFromMap(pkb_storage->parent_line_child_line_map_s, parent_line);
 }
 
-std::optional<std::vector<Procedure>> PKBManager::getProcedureUsesVar(
+std::optional<std::unordered_set<Procedure>> PKBManager::getProcedureUsesVar(
     const Variable var) {
-  return getUniqueVectorFromMap(pkb_storage->procedure_uses_var_map, var);
+  return getSetFromMap(pkb_storage->procedure_uses_var_map, var);
 }
 
-std::optional<std::vector<Line>> PKBManager::getLineUsesVar(
+std::optional<std::unordered_set<Line>> PKBManager::getLineUsesVar(
     const Variable var) {
-  return getUniqueVectorFromMap(pkb_storage->line_uses_var_map, var);
+  return getSetFromMap(pkb_storage->line_uses_var_map, var);
 }
 
-std::optional<std::vector<Variable>> PKBManager::getVarUsedByProcedure(
+std::optional<std::unordered_set<Variable>> PKBManager::getVarUsedByProcedure(
     const Procedure proc) {
-  return getUniqueVectorFromMap(pkb_storage->var_used_by_procedure_map, proc);
+  return getSetFromMap(pkb_storage->var_used_by_procedure_map, proc);
 }
 
-std::optional<std::vector<Variable>> PKBManager::getVarUsedByLine(
+std::optional<std::unordered_set<Variable>> PKBManager::getVarUsedByLine(
     const Line line) {
-  return getUniqueVectorFromMap(pkb_storage->var_used_by_line_map, line);
+  return getSetFromMap(pkb_storage->var_used_by_line_map, line);
 }
 
-std::optional<std::vector<Variable>> PKBManager::getVarModifiedByProcedure(
-    const Procedure proc) {
-  return getUniqueVectorFromMap(pkb_storage->var_modified_by_procedure_map,
-                                proc);
+std::optional<std::unordered_set<Variable>>
+PKBManager::getVarModifiedByProcedure(const Procedure proc) {
+  return getSetFromMap(pkb_storage->var_modified_by_procedure_map, proc);
 }
 
-std::optional<std::vector<Variable>> PKBManager::getVarModifiedByLine(
+std::optional<std::unordered_set<Variable>> PKBManager::getVarModifiedByLine(
     const Line line) {
-  return getUniqueVectorFromMap(pkb_storage->var_modified_by_line_map, line);
+  return getSetFromMap(pkb_storage->var_modified_by_line_map, line);
 }
 
-std::optional<std::vector<Procedure>> PKBManager::getProcedureModifiesVar(
-    const Variable var) {
-  return getUniqueVectorFromMap(pkb_storage->procedure_modifies_var_map, var);
+std::optional<std::unordered_set<Procedure>>
+PKBManager::getProcedureModifiesVar(const Variable var) {
+  return getSetFromMap(pkb_storage->procedure_modifies_var_map, var);
 }
 
-std::optional<std::vector<Line>> PKBManager::getLineModifiesVar(
+std::optional<std::unordered_set<Line>> PKBManager::getLineModifiesVar(
     const Variable var) {
-  return getUniqueVectorFromMap(pkb_storage->line_modifies_var_map, var);
+  return getSetFromMap(pkb_storage->line_modifies_var_map, var);
 }
 
 // TODO tidy this up
-std::optional<std::vector<Line>> PKBManager::getCompleteMatchLinesWithVar(
-    const Variable var, const Pattern pattern) {
+std::optional<std::unordered_set<Line>>
+PKBManager::getCompleteMatchLinesWithVar(const Variable var,
+                                         const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
@@ -337,23 +325,23 @@ std::optional<std::vector<Line>> PKBManager::getCompleteMatchLinesWithVar(
 
   // retrieve list of patterns for the variable
   auto ys = pkb_storage->var_line_expr_str_map.at(var);
-  std::vector<Line> matching_lines;
+  std::unordered_set<Line> matching_lines;
   for (const auto &elem : ys) {
     auto line = elem.first;
     auto elem_pattern_expr = elem.second;
     if (pattern_expr.compare(elem_pattern_expr) == 0) {
-      matching_lines.push_back(line);
+      matching_lines.insert(line);
     }
   }
 
   if (matching_lines.size() == 0) {
     return std::nullopt;
   } else {
-    return std::make_optional<std::vector<Line>>(matching_lines);
+    return std::make_optional<std::unordered_set<Line>>(matching_lines);
   }
 }
 
-std::optional<std::vector<Line>> PKBManager::getPartialMatchLinesWithVar(
+std::optional<std::unordered_set<Line>> PKBManager::getPartialMatchLinesWithVar(
     const Variable var, const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
@@ -366,23 +354,23 @@ std::optional<std::vector<Line>> PKBManager::getPartialMatchLinesWithVar(
 
   // retrieve list of patterns for the variable
   auto ys = pkb_storage->var_line_expr_str_map.at(var);
-  std::vector<Line> matching_lines;
+  std::unordered_set<Line> matching_lines;
   for (const auto &elem : ys) {
     auto line = elem.first;
     auto elem_pattern_expr = elem.second;
     if (elem_pattern_expr.find(pattern_expr) != std::string::npos) {
-      matching_lines.push_back(line);
+      matching_lines.insert(line);
     }
   }
 
   if (matching_lines.size() == 0) {
     return std::nullopt;
   } else {
-    return std::make_optional<std::vector<Line>>(matching_lines);
+    return std::make_optional<std::unordered_set<Line>>(matching_lines);
   }
 }
 
-std::optional<std::vector<Line>> PKBManager::getCompleteMatchLines(
+std::optional<std::unordered_set<Line>> PKBManager::getCompleteMatchLines(
     const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
@@ -395,47 +383,47 @@ std::optional<std::vector<Line>> PKBManager::getCompleteMatchLines(
     return std::nullopt;
   }
 
-  std::vector<Line> matching_lines;
+  std::unordered_set<Line> matching_lines;
   for (const auto &elem : pkb_storage->line_expr_str_set) {
     auto line = elem.first;
     auto elem_pattern_expr = elem.second;
     // substring
     if (pattern_expr.compare(elem_pattern_expr) == 0) {
-      matching_lines.push_back(line);
+      matching_lines.insert(line);
     }
   }
 
   if (matching_lines.size() == 0) {
     return std::nullopt;
   } else {
-    return std::make_optional<std::vector<Line>>(matching_lines);
+    return std::make_optional<std::unordered_set<Line>>(matching_lines);
   }
 }
 
-std::optional<std::vector<Line>> PKBManager::getPartialMatchLines(
+std::optional<std::unordered_set<Line>> PKBManager::getPartialMatchLines(
     const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
 
-  std::vector<Line> matching_lines;
+  std::unordered_set<Line> matching_lines;
   for (const auto &elem : pkb_storage->line_expr_str_set) {
     auto line = elem.first;
     auto elem_pattern_expr = elem.second;
     // substring
     if (elem_pattern_expr.find(pattern_expr) != std::string::npos) {
-      matching_lines.push_back(line);
+      matching_lines.insert(line);
     }
   }
 
   if (matching_lines.size() == 0) {
     return std::nullopt;
   } else {
-    return std::make_optional<std::vector<Line>>(matching_lines);
+    return std::make_optional<std::unordered_set<Line>>(matching_lines);
   }
 }
 
-std::optional<std::vector<std::pair<Line, Variable>>>
+std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
 PKBManager::getCompleteMatchLinesAndVars(const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
@@ -444,47 +432,48 @@ PKBManager::getCompleteMatchLinesAndVars(const Pattern pattern) {
   return (pkb_storage->expr_str_line_var_map.find(pattern_expr) ==
           pkb_storage->expr_str_line_var_map.end())
              ? std::nullopt
-             : std::make_optional<std::vector<std::pair<Line, Variable>>>(
+             : std::make_optional<
+                   std::unordered_set<std::pair<Line, Variable>, pair_hash>>(
                    pkb_storage->expr_str_line_var_map.at(pattern_expr));
 }
 
 // TODO check for possible errors
 // check if it always returns properly
-std::optional<std::vector<std::pair<Line, Variable>>>
+std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
 PKBManager::getPartialMatchLinesAndVars(const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
 
-  std::vector<ExprStr> matching_expr_str;
+  std::unordered_set<ExprStr> matching_expr_str;
   for (const auto &elem : pkb_storage->expr_str_set) {
     // find the expr_str that matches partially
     if (elem.find(pattern_expr) != std::string::npos) {
-      matching_expr_str.push_back(elem);
+      matching_expr_str.insert(elem);
     }
   }
 
-  std::vector<std::pair<Line, Variable>> matching_line_var;
+  std::unordered_set<std::pair<Line, Variable>> matching_line_var;
   for (const auto &elem : matching_expr_str) {
     // pattern must be in the map already at this point
     auto xs = pkb_storage->expr_str_line_var_map.at(elem);
     for (const auto &x : (xs)) {
-      matching_line_var.push_back(x);
+      matching_line_var.insert(x);
     }
   }
 
   if (matching_expr_str.size() == 0) {
     return std::nullopt;
   } else {
-    return std::make_optional<std::vector<std::pair<Line, Variable>>>(
+    return std::make_optional<
+        std::unordered_set<std::pair<Line, Variable>, pair_hash>>(
         matching_line_var);
   }
 }
 
-std::vector<std::pair<Line, Variable>> PKBManager::getAllPatternLinesAndVars() {
-  return std::vector<std::pair<Line, Variable>>(
-      pkb_storage->assign_line_var_set.begin(),
-      pkb_storage->assign_line_var_set.end());
+std::unordered_set<std::pair<Line, Variable>, pair_hash>
+PKBManager::getAllPatternLinesAndVars() {
+  return pkb_storage->assign_line_var_set;
 }
 
 // TODO use this in the other pattern methods
@@ -496,9 +485,9 @@ bool PKBManager::isPatternExists(Pattern pattern) {
          pkb_storage->expr_str_set.end();
 }
 
-std::optional<std::vector<Line>> PKBManager::getLineForAssignVar(
+std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(
     const Variable var) {
-  return getUniqueVectorFromMap(pkb_storage->assign_var_line_map, var);
+  return getSetFromMap(pkb_storage->assign_var_line_map, var);
 }
 
 bool PKBManager::isLineNextLine(const Line l1, const Line l2) {

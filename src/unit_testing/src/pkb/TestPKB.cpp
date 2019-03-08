@@ -20,9 +20,7 @@ TEST_CASE ("Test PKB for assign.txt") {
 
   std::unordered_set<std::string> var_get_test_1_check;
   var_get_test_1_check.insert("i");
-  auto var_get_test_1_vector = pkb.getVariableList();
-  std::unordered_set<Variable> var_get_test_1_set(var_get_test_1_vector.begin(),
-                                                  var_get_test_1_vector.end());
+  auto var_get_test_1_set = pkb.getVariableSet();
   REQUIRE(var_get_test_1_set == var_get_test_1_check);
 
   // assign
@@ -45,72 +43,32 @@ TEST_CASE ("Test PKB for assign.txt") {
   std::unordered_set<std::string> pattern_test_1_check;
   pattern_test_1_check.insert("1");
   auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("i", "2+5");
-  std::unordered_set<Variable> pattern_test_1_set(pattern_test_1->begin(),
-                                                  pattern_test_1->end());
-  REQUIRE(pattern_test_1_set == pattern_test_1_check);
+  REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   std::unordered_set<std::string> pattern_test_2_check;
   pattern_test_2_check.insert("1");
   auto pattern_test_2 = pkb.getPartialMatchLinesWithVar("i", "2");
-  std::unordered_set<Variable> pattern_test_2_set;
-  if (pattern_test_2) {
-    for (const auto &elem : (*pattern_test_2)) {
-      pattern_test_2_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_2_set == pattern_test_2_check);
+  REQUIRE(*pattern_test_2 == pattern_test_2_check);
 
   std::unordered_set<std::string> pattern_test_3_check;
   pattern_test_3_check.insert("1");
   auto pattern_test_3 = pkb.getPartialMatchLinesWithVar("i", "5");
-  std::unordered_set<Variable> pattern_test_3_set;
-  if (pattern_test_3) {
-    for (const auto &elem : (*pattern_test_3)) {
-      pattern_test_3_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_3_set == pattern_test_3_check);
+  REQUIRE(*pattern_test_3 == pattern_test_3_check);
 
-  std::unordered_set<std::string> pattern_test_4_check;
   auto pattern_test_4 = pkb.getPartialMatchLinesWithVar("x", "x");
-  std::unordered_set<Variable> pattern_test_4_set;
-  if (pattern_test_4) {
-    for (const auto &elem : (*pattern_test_4)) {
-      pattern_test_4_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_4_set == pattern_test_4_check);
+  REQUIRE(pattern_test_4 == std::nullopt);
 
-  std::unordered_set<std::string> pattern_test_5_check;
   auto pattern_test_5 = pkb.getPartialMatchLines("x");
-  std::unordered_set<Variable> pattern_test_5_set;
-  if (pattern_test_5) {
-    for (const auto &elem : (*pattern_test_5)) {
-      pattern_test_5_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_5_set == pattern_test_5_check);
+  REQUIRE(pattern_test_5 == std::nullopt);
 
-  std::unordered_set<std::string> pattern_test_6_check;
   auto pattern_test_6 = pkb.getCompleteMatchLines("x");
   std::unordered_set<Variable> pattern_test_6_set;
-  if (pattern_test_6) {
-    for (const auto &elem : (*pattern_test_6)) {
-      pattern_test_6_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_6_set == pattern_test_6_check);
+  REQUIRE(pattern_test_6 == std::nullopt);
 
   std::unordered_set<std::string> pattern_test_7_check;
   pattern_test_7_check.insert("1");
   auto pattern_test_7 = pkb.getCompleteMatchLines("2+5");
-  std::unordered_set<Variable> pattern_test_7_set;
-  if (pattern_test_7) {
-    for (const auto &elem : (*pattern_test_7)) {
-      pattern_test_7_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_7_set == pattern_test_7_check);
+  REQUIRE(*pattern_test_7 == pattern_test_7_check);
 }
 
 TEST_CASE ("Test PKB for simple_1.txt") {
@@ -132,7 +90,7 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   std::unordered_set<std::string> var_get_test_1_check;
   var_get_test_1_check.insert("i");
   var_get_test_1_check.insert("j");
-  auto var_get_test_1_vector = pkb.getVariableList();
+  auto var_get_test_1_vector = pkb.getVariableSet();
   std::unordered_set<Variable> var_get_test_1_set(var_get_test_1_vector.begin(),
                                                   var_get_test_1_vector.end());
   REQUIRE(var_get_test_1_set == var_get_test_1_check);
@@ -327,13 +285,7 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   std::unordered_set<std::string> pattern_test_1_check;
   pattern_test_1_check.insert("1");
   auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("i", "5");
-  std::unordered_set<Variable> pattern_test_1_set;
-  if (pattern_test_1) {
-    for (const auto &elem : (*pattern_test_1)) {
-      pattern_test_1_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_1_set == pattern_test_1_check);
+  REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   // CFG
   auto cfg_test_1 = pkb.isLineNextLine("1", "2");
@@ -842,37 +794,19 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_1_check.insert("12");
   pattern_test_1_check.insert("17");
   auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("y", "y+1");
-  std::unordered_set<Variable> pattern_test_1_set;
-  if (pattern_test_1) {
-    for (const auto &elem : (*pattern_test_1)) {
-      pattern_test_1_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_1_set == pattern_test_1_check);
+  REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   std::unordered_set<std::string> pattern_test_2_check;
   pattern_test_2_check.insert("10");
   pattern_test_2_check.insert("14");
   pattern_test_2_check.insert("19");
   auto pattern_test_2 = pkb.getCompleteMatchLinesWithVar("z", "z+2");
-  std::unordered_set<Variable> pattern_test_2_set;
-  if (pattern_test_2) {
-    for (const auto &elem : (*pattern_test_2)) {
-      pattern_test_2_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_2_set == pattern_test_2_check);
+  REQUIRE(*pattern_test_2 == pattern_test_2_check);
 
   std::unordered_set<std::string> pattern_test_3_check;
   pattern_test_3_check.insert("21");
   auto pattern_test_3 = pkb.getCompleteMatchLinesWithVar("z", "z+4");
-  std::unordered_set<Variable> pattern_test_3_set;
-  if (pattern_test_3) {
-    for (const auto &elem : (*pattern_test_3)) {
-      pattern_test_3_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_3_set == pattern_test_3_check);
+  REQUIRE(*pattern_test_3 == pattern_test_3_check);
 
   std::unordered_set<std::string> pattern_test_4_check;
   pattern_test_4_check.insert("6");
@@ -886,24 +820,12 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_4_check.insert("20");
   pattern_test_4_check.insert("21");
   auto pattern_test_4 = pkb.getPartialMatchLinesWithVar("z", "z");
-  std::unordered_set<Variable> pattern_test_4_set;
-  if (pattern_test_4) {
-    for (const auto &elem : (*pattern_test_4)) {
-      pattern_test_4_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_4_set == pattern_test_4_check);
+  REQUIRE(*pattern_test_4 == pattern_test_4_check);
 
   std::unordered_set<std::string> pattern_test_5_check;
   pattern_test_5_check.insert("21");
   auto pattern_test_5 = pkb.getCompleteMatchLines("z+4");
-  std::unordered_set<Variable> pattern_test_5_set;
-  if (pattern_test_5) {
-    for (const auto &elem : (*pattern_test_5)) {
-      pattern_test_5_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_5_set == pattern_test_5_check);
+  REQUIRE(*pattern_test_5 == pattern_test_5_check);
 
   std::unordered_set<std::string> pattern_test_6_check;
   pattern_test_6_check.insert("6");
@@ -917,13 +839,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_6_check.insert("20");
   pattern_test_6_check.insert("21");
   auto pattern_test_6 = pkb.getPartialMatchLines("z");
-  std::unordered_set<Line> pattern_test_6_set;
-  if (pattern_test_6) {
-    for (const auto &elem : (*pattern_test_6)) {
-      pattern_test_6_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_6_set == pattern_test_6_check);
+  REQUIRE(*pattern_test_6 == pattern_test_6_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
       pattern_test_7_check;
@@ -932,13 +848,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_7_check.insert(std::pair<Line, Variable>("13", "z"));
   pattern_test_7_check.insert(std::pair<Line, Variable>("18", "z"));
   auto pattern_test_7 = pkb.getCompleteMatchLinesAndVars("z + 1");
-  std::unordered_set<std::pair<Line, Variable>, pair_hash> pattern_test_7_set;
-  if (pattern_test_7) {
-    for (const auto &elem : (*pattern_test_7)) {
-      pattern_test_7_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_7_set == pattern_test_7_check);
+  REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
       pattern_test_8_check;
@@ -953,14 +863,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_8_check.insert(std::pair<Line, Variable>("20", "z"));
   pattern_test_8_check.insert(std::pair<Line, Variable>("21", "z"));
   auto pattern_test_8 = pkb.getPartialMatchLinesAndVars("z");
-  // std::cout << "test" << std::endl;
-  std::unordered_set<std::pair<Line, Variable>, pair_hash> pattern_test_8_set;
-  if (pattern_test_8) {
-    for (const auto &elem : (*pattern_test_8)) {
-      pattern_test_8_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_8_set == pattern_test_8_check);
+  REQUIRE(*pattern_test_8 == pattern_test_8_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
       pattern_test_9_check;
@@ -983,10 +886,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_9_check.insert(std::pair<Line, Variable>("21", "z"));
   pattern_test_9_check.insert(std::pair<Line, Variable>("22", "x"));
   auto pattern_test_9 = pkb.getAllPatternLinesAndVars();
-  // std::cout << "test" << std::endl;
-  std::unordered_set<std::pair<Line, Variable>, pair_hash> pattern_test_9_set(
-      pattern_test_9.begin(), pattern_test_9.end());
-  REQUIRE(pattern_test_9_set == pattern_test_9_check);
+  REQUIRE(pattern_test_9 == pattern_test_9_check);
 
   std::unordered_set<std::string> pattern_test_10_check;
   pattern_test_10_check.insert("3");
@@ -1001,13 +901,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_10_check.insert("20");
   pattern_test_10_check.insert("21");
   auto pattern_test_10 = pkb.getLineForAssignVar("z");
-  std::unordered_set<Line> pattern_test_10_set;
-  if (pattern_test_10) {
-    for (const auto &elem : (*pattern_test_10)) {
-      pattern_test_10_set.insert(elem);
-    }
-  }
-  REQUIRE(pattern_test_10_set == pattern_test_10_check);
+  REQUIRE(*pattern_test_10 == pattern_test_10_check);
 
   auto pattern_test_11 = pkb.isPatternExists("z+1");
   REQUIRE(pattern_test_11 == true);
@@ -1045,7 +939,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     var_get_test_1_check.insert("y");
     var_get_test_1_check.insert("a");
     var_get_test_1_check.insert("b");
-    auto var_get_test_1_vector = pkb.getVariableList();
+    auto var_get_test_1_vector = pkb.getVariableSet();
     std::unordered_set<Variable> var_get_test_1_set(
         var_get_test_1_vector.begin(), var_get_test_1_vector.end());
     REQUIRE(var_get_test_1_set == var_get_test_1_check);
@@ -1061,9 +955,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     std::unordered_set<std::string> assign_get_test_1_check;
     assign_get_test_1_check.insert("1");
     assign_get_test_1_check.insert("9");
-    auto assign_get_test_1 = pkb.getAssignList();
-    std::unordered_set<Line> assign_get_test_1_set(assign_get_test_1.begin(),
-                                                   assign_get_test_1.end());
+    auto assign_get_test_1_set = pkb.getAssignSet();
     REQUIRE(assign_get_test_1_set == assign_get_test_1_check);
   }
 
@@ -1104,9 +996,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     statement_get_test_1_check.insert("7");
     statement_get_test_1_check.insert("8");
     statement_get_test_1_check.insert("9");
-    auto statement_get_test_1 = pkb.getStatementList();
-    std::unordered_set<Line> statement_get_test_1_set(
-        statement_get_test_1.begin(), statement_get_test_1.end());
+    auto statement_get_test_1_set = pkb.getStatementSet();
     REQUIRE(statement_get_test_1_set == statement_get_test_1_check);
   }
 
@@ -1122,9 +1012,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     std::unordered_set<std::string> print_get_test_1_check;
     print_get_test_1_check.insert("6");
     print_get_test_1_check.insert("8");
-    auto print_get_test_1 = pkb.getPrintList();
-    std::unordered_set<Line> print_get_test_1_set(print_get_test_1.begin(),
-                                                  print_get_test_1.end());
+    auto print_get_test_1_set = pkb.getPrintSet();
     REQUIRE(print_get_test_1_set == print_get_test_1_check);
   }
 
@@ -1139,9 +1027,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     std::unordered_set<std::string> read_get_test_1_check;
     read_get_test_1_check.insert("5");
     read_get_test_1_check.insert("7");
-    auto read_get_test_1 = pkb.getReadList();
-    std::unordered_set<Line> read_get_test_1_set(read_get_test_1.begin(),
-                                                 read_get_test_1.end());
+    auto read_get_test_1_set = pkb.getReadSet();
     REQUIRE(read_get_test_1_set == read_get_test_1_check);
   }
 
@@ -1153,9 +1039,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
 
     std::unordered_set<std::string> while_get_test_1_check;
     while_get_test_1_check.insert("3");
-    auto while_get_test_1 = pkb.getWhileList();
-    std::unordered_set<Line> while_get_test_1_set(while_get_test_1.begin(),
-                                                  while_get_test_1.end());
+    auto while_get_test_1_set = pkb.getWhileSet();
     REQUIRE(while_get_test_1_set == while_get_test_1_check);
   }
 
@@ -1168,9 +1052,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     std::unordered_set<std::string> if_get_test_1_check;
     if_get_test_1_check.insert("2");
     if_get_test_1_check.insert("4");
-    auto if_get_test_1 = pkb.getIfList();
-    std::unordered_set<Line> if_get_test_1_set(if_get_test_1.begin(),
-                                               if_get_test_1.end());
+    auto if_get_test_1_set = pkb.getIfSet();
     REQUIRE(if_get_test_1_set == if_get_test_1_check);
   }
 
@@ -1182,9 +1064,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
 
     std::unordered_set<std::string> constant_get_test_1_check;
     constant_get_test_1_check.insert("5");
-    auto constant_get_test_1 = pkb.getConstantList();
-    std::unordered_set<Constant> constant_get_test_1_set(
-        constant_get_test_1.begin(), constant_get_test_1.end());
+    auto constant_get_test_1_set = pkb.getConstantSet();
     REQUIRE(constant_get_test_1_set == constant_get_test_1_check);
   }
 
@@ -1196,9 +1076,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
 
     std::unordered_set<std::string> procedure_get_test_1_check;
     procedure_get_test_1_check.insert("main");
-    auto procedure_get_test_1 = pkb.getProcedureList();
-    std::unordered_set<Procedure> procedure_get_test_1_set(
-        procedure_get_test_1.begin(), procedure_get_test_1.end());
+    auto procedure_get_test_1_set = pkb.getProcedureSet();
     REQUIRE(procedure_get_test_1_set == procedure_get_test_1_check);
   }
 

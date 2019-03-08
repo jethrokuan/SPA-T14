@@ -97,8 +97,8 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
   return std::make_shared<ProcedureNode>(procName, std::move(StmtList));
 }
 
-std::shared_ptr<StmtListNode> Parser::parseStmtList() {
-  std::vector<StmtNode> stmts;
+StmtList Parser::parseStmtList() {
+  StmtList stmts;
   while (true) {
     auto stmt = parseStatement();
     if (stmt) {
@@ -112,7 +112,7 @@ std::shared_ptr<StmtListNode> Parser::parseStmtList() {
     throw SimpleParseException("Statement list cannot be empty.");
   }
 
-  return std::make_shared<StmtListNode>(std::move(stmts));
+  return stmts;
 }
 
 std::optional<StmtNode> Parser::parseStatement() {
@@ -350,10 +350,6 @@ std::shared_ptr<WhileNode> Parser::parseWhile() {
   expect(")");
   expect("{");
   auto stmtList = parseStmtList();
-  if (!stmtList) {
-    throw SimpleParseException("Expected a statement list, got '" +
-                               peek()->Val + "'.");
-  }
   expect("}");
   return std::make_shared<WhileNode>(std::move(condExpr), std::move(stmtList));
 }
@@ -382,18 +378,10 @@ std::shared_ptr<IfNode> Parser::parseIf() {
   expect("then");
   expect("{");
   auto stmtListThen = parseStmtList();
-  if (!stmtListThen) {
-    throw SimpleParseException("Expected a statement list, got '" +
-                               peek()->Val + "'.");
-  }
   expect("}");
   expect("else");
   expect("{");
   auto stmtListElse = parseStmtList();
-  if (!stmtListElse) {
-    throw SimpleParseException("Expected a statement list, got '" +
-                               peek()->Val + "'.");
-  }
   expect("}");
   return std::make_shared<IfNode>(std::move(condExpr), std::move(stmtListThen),
                                   std::move(stmtListElse));

@@ -31,11 +31,10 @@ TEST_CASE ("Test valid while statement") {
   auto while_node = make_shared<WhileNode>(
       make_shared<CondExprNode>(make_shared<RelExprNode>(
           make_shared<VariableNode>("i"), "==", make_shared<NumberNode>("0"))),
-      make_shared<StmtListNode>(std::move(while_stmt_list)));
+      while_stmt_list);
   stmt_list.push_back(std::move(while_node));
 
-  auto proc_main =
-      make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmt_list));
+  auto proc_main = make_shared<ProcedureNode>("main", stmt_list);
   proc_list.push_back(proc_main);
   auto root = make_shared<RootNode>(proc_list);
 

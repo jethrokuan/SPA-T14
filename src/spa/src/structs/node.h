@@ -38,6 +38,9 @@ using StmtNode =
     std::variant<std::shared_ptr<ReadNode>, std::shared_ptr<PrintNode>,
                  std::shared_ptr<WhileNode>, std::shared_ptr<IfNode>,
                  std::shared_ptr<AssignNode>, std::shared_ptr<CallNode>>;
+
+using StmtList = std::vector<StmtNode>;
+
 using AST = std::shared_ptr<RootNode>;
 
 //! Abstract base class for other AST nodes.
@@ -55,15 +58,6 @@ class RootNode : public Node {
  public:
   std::vector<std::shared_ptr<ProcedureNode>> ProcList;
   explicit RootNode(std::vector<std::shared_ptr<ProcedureNode>> procList);
-  bool operator==(const Node& other) const override;
-  std::string to_str() override;
-};
-
-//! AST Node representing a Statement List
-class StmtListNode : public Node {
- public:
-  std::vector<StmtNode> StmtList;
-  explicit StmtListNode(std::vector<StmtNode> stmtList);
   bool operator==(const Node& other) const override;
   std::string to_str() override;
 };
@@ -117,9 +111,8 @@ class PrintNode : public Node {
 class ProcedureNode : public Node {
  public:
   std::string Name;
-  std::shared_ptr<StmtListNode> StmtList;
-  explicit ProcedureNode(const std::string name,
-                         std::shared_ptr<StmtListNode> stmtList);
+  StmtList StmtList;
+  explicit ProcedureNode(const std::string name, ::StmtList stmtList);
   bool operator==(const Node& other) const override;
   std::string to_str() override;
 };
@@ -178,10 +171,10 @@ class CondExprNode : public Node {
 class WhileNode : public Node {
  public:
   std::shared_ptr<CondExprNode> CondExpr;
-  std::shared_ptr<StmtListNode> StmtList;
+  StmtList StmtList;
 
   explicit WhileNode(std::shared_ptr<CondExprNode> condExpr,
-                     std::shared_ptr<StmtListNode> stmtList);
+                     ::StmtList stmtList);
   bool operator==(const Node& other) const override;
   std::string to_str() override;
 };
@@ -190,12 +183,11 @@ class WhileNode : public Node {
 class IfNode : public Node {
  public:
   std::shared_ptr<CondExprNode> CondExpr;
-  std::shared_ptr<StmtListNode> StmtListThen;
-  std::shared_ptr<StmtListNode> StmtListElse;
+  StmtList StmtListThen;
+  StmtList StmtListElse;
 
   explicit IfNode(std::shared_ptr<CondExprNode> condExpr,
-                  std::shared_ptr<StmtListNode> stmtListThen,
-                  std::shared_ptr<StmtListNode> stmtListElse);
+                  ::StmtList stmtListThen, ::StmtList stmtListElse);
   bool operator==(const Node& other) const override;
   std::string to_str() override;
 };

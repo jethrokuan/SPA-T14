@@ -22,8 +22,7 @@ TEST_CASE ("Test valid print statement") {
 
   stmt_list.push_back(std::move(print_x));
 
-  auto proc_main =
-      make_shared<ProcedureNode>("main", make_shared<StmtListNode>(stmt_list));
+  auto proc_main = make_shared<ProcedureNode>("main", stmt_list);
   proc_list.push_back(proc_main);
   auto root = make_shared<RootNode>(proc_list);
 

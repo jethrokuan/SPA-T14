@@ -25,15 +25,13 @@ TEST_CASE ("Test multi-procedure parses") {
                                             make_shared<NumberNode>("1"));
     stmt_list_1.push_back(std::move(assign_1));
 
-    auto proc_main = make_shared<ProcedureNode>(
-        "main", make_shared<StmtListNode>(stmt_list_1));
+    auto proc_main = make_shared<ProcedureNode>("main", stmt_list_1);
 
     auto assign_2 = make_shared<AssignNode>(make_shared<VariableNode>("y"),
                                             make_shared<NumberNode>("2"));
     stmt_list_2.push_back(std::move(assign_2));
 
-    auto proc_bar = make_shared<ProcedureNode>(
-        "bar", make_shared<StmtListNode>(stmt_list_2));
+    auto proc_bar = make_shared<ProcedureNode>("bar", stmt_list_2);
 
     proc_list.push_back(std::move(proc_main));
     proc_list.push_back(std::move(proc_bar));

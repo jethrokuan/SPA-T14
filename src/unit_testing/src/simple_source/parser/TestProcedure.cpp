@@ -20,8 +20,7 @@ TEST_CASE ("Test Valid Procedure") {
 
   auto read = make_shared<ReadNode>(std::make_shared<VariableNode>("x"));
   stmt_list.push_back(move(read));
-  auto stmt_list_node = make_shared<StmtListNode>(move(stmt_list));
-  auto proc_main = make_shared<ProcedureNode>("main", move(stmt_list_node));
+  auto proc_main = make_shared<ProcedureNode>("main", stmt_list);
   proc_list.push_back(proc_main);
   auto root = make_shared<RootNode>(proc_list);
 

@@ -100,14 +100,11 @@ TEST_CASE ("Test Expr parse works") {
                 make_shared<BinOpNode>(make_shared<NumberNode>("2"),
                                        make_shared<NumberNode>("5"), "+"),
                 make_shared<VariableNode>("j"), "*"))),
-        make_shared<StmtListNode>(std::move(ws)));
+        ws);
 
     stmt_list.push_back(std::move(w));
 
-    auto stmt_list_node = std::make_shared<StmtListNode>(std::move(stmt_list));
-
-    auto proc_main =
-        std::make_shared<ProcedureNode>("main", std::move(stmt_list_node));
+    auto proc_main = std::make_shared<ProcedureNode>("main", stmt_list);
     proc_list.push_back(proc_main);
     auto root = make_shared<RootNode>(proc_list);
 

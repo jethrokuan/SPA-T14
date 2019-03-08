@@ -67,6 +67,7 @@ bool SuchThatEvaluator::dispatch() {
 }
 
 bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
+  // Case 1:  Follows*(s, 3)
   auto results = handleLeftSynonymRightBasic(*arg2AsBasic);
   if (results.empty() ||
       qc.containsNoAllowedResults(results, arg1AsSynonym->synonym)) {
@@ -77,6 +78,7 @@ bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
 }
 
 bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
+  // Case 2:  Follows*(3, s)
   auto results = handleRightSynonymLeftBasic(*arg1AsBasic);
   if (results.empty() ||
       qc.containsNoAllowedResults(results, arg2AsSynonym->synonym)) {
@@ -87,6 +89,7 @@ bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
 }
 
 bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
+  // Case 3: Follows*(s, _)
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg1AsSynonym->synonym);
 
@@ -102,6 +105,7 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
 }
 
 bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
+  // Case 4: Follows*(_, s)
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg2AsSynonym->synonym);
   std::vector<std::string> results;
@@ -116,6 +120,7 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
 }
 
 bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
+  // Case 5:  Follows*(s1, s2)
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       query->declarations, pkb, arg1AsSynonym->synonym);
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
@@ -136,17 +141,21 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
 }
 
 bool SuchThatEvaluator::dispatchDoubleUnderscore() {
+  // Case 6: Follows*(_, _)
   return handleDoubleUnderscore();
 }
 
 bool SuchThatEvaluator::dispatchLeftBasicRightUnderscore() {
+  // Case 7: Follows(3, _)
   return handleLeftBasicRightUnderscore(*arg1AsBasic);
 }
 
 bool SuchThatEvaluator::dispatchRightBasicLeftUnderscore() {
+  // Case 8:  Follows(_, 3)
   return handleRightBasicLeftUnderscore(*arg2AsBasic);
 }
 
 bool SuchThatEvaluator::dispatchBothBasic() {
+  // Case 9: Follows(2, 3)
   return handleBothArgsBasic(*arg1AsBasic, *arg2AsBasic);
 }

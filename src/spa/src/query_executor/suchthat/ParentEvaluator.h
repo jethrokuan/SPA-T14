@@ -36,16 +36,16 @@ class ParentEvaluator : public SuchThatEvaluator {
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Parent(s, _) (for each s)
-    return pkb->getChildLine(arg_value) ? true : false;
+    return pkb->getChildLine(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
     // Parent(_, s) (for each s)
-    return pkb->getParentLine(arg_value) ? true : false;
+    return pkb->getParentLine(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Parent(s, s1)
-    return pkb->isLineParentLine(arg_select, arg_unselect) ? true : false;
+    return pkb->isLineParentLine(arg_select, arg_unselect);
   }
   bool handleDoubleUnderscore() override {
     return !pkb->isLineFollowLineSSetEmpty();

@@ -31,8 +31,7 @@ class UsesSEvaluator : public SuchThatEvaluator {
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Uses(s, _)
-    auto res = pkb->getVarUsedByLine(arg_value).has_value();
-    return res ? true : false;
+    return pkb->getVarUsedByLine(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string&) override {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
@@ -41,7 +40,7 @@ class UsesSEvaluator : public SuchThatEvaluator {
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Uses(s, v)
-    return pkb->isLineUsesVar(arg_select, arg_unselect) ? true : false;
+    return pkb->isLineUsesVar(arg_select, arg_unselect);
   }
   bool handleDoubleUnderscore() override {
     return !pkb->isLineUsesVarSetEmpty();

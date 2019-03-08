@@ -31,16 +31,16 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Follows*(s, _) (for each s)
-    return pkb->getFollowingLineS(arg_value) ? true : false;
+    return pkb->getFollowingLineS(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
     // Follows*(_, s) (for each s)
-    return pkb->getBeforeLineS(arg_value) ? true : false;
+    return pkb->getBeforeLineS(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Follows*(s, s1)
-    return pkb->isLineFollowLineS(arg_select, arg_unselect) ? true : false;
+    return pkb->isLineFollowLineS(arg_select, arg_unselect);
   }
   // Handle cases with no variables selected
   bool handleDoubleUnderscore() override {

@@ -30,7 +30,7 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Modifies(s, _)
-    return pkb->getVarModifiedByLine(arg_value) ? true : false;
+    return pkb->getVarModifiedByLine(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string&) override {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
@@ -39,7 +39,7 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Modifies(s, v)
-    return pkb->isLineModifiesVar(arg_select, arg_unselect) ? true : false;
+    return pkb->isLineModifiesVar(arg_select, arg_unselect);
   }
   bool handleDoubleUnderscore() override {
     return !pkb->isLineModifiesVarSetEmpty();

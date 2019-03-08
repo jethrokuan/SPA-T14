@@ -12,25 +12,17 @@ bool SuchThatEvaluator::evaluate() {
   // easily done
   arg1AsSynonym = QueryExecutor::getSuchThatArgAsSynonym(arg1);
   arg2AsSynonym = QueryExecutor::getSuchThatArgAsSynonym(arg2);
-  arg1InSelect = false;
-  arg2InSelect = false;
   arg1IsUnderscore = QueryExecutor::isSuchThatArgUnderscore(arg1),
   arg2IsUnderscore = QueryExecutor::isSuchThatArgUnderscore(arg2);
   arg1AsBasic = QueryExecutor::getSuchThatArgAsBasic(arg1);
   arg2AsBasic = QueryExecutor::getSuchThatArgAsBasic(arg2);
 
   if (arg1AsSynonym) {
-    arg1InSelect = query->selected_declaration->getSynonym() == arg1AsSynonym
-                       ? true
-                       : false;
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(
         query->declarations, pkb, arg1AsSynonym->synonym, qc);
   }
   if (arg2AsSynonym) {
-    arg2InSelect = query->selected_declaration->getSynonym() == arg2AsSynonym
-                       ? true
-                       : false;
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(
         query->declarations, pkb, arg2AsSynonym->synonym, qc);
@@ -39,20 +31,8 @@ bool SuchThatEvaluator::evaluate() {
   return dispatch();
 }
 
-//! Calls the correct branch based on whether vars are selected or not
+//! Dispatch correct such that case to correct handler based on arg types
 bool SuchThatEvaluator::dispatch() {
-  if (arg1InSelect || arg2InSelect) {
-    // At least one synonym in such_that is selected
-    return dispatchSuchThatSelected();
-  } else {
-    // Handle cases where nothing in such that is selected
-    return dispatchSuchThatNotSelected();
-  }
-}
-
-//! Handle 6 different cases where something is selected in the such_that
-// View examples here
-bool SuchThatEvaluator::dispatchSuchThatSelected() {
   if (arg1AsSynonym && arg2AsBasic) {
     // Case 1: Selected variable is in this such_that, left argument
     // Follows*(s, 3)
@@ -61,7 +41,7 @@ bool SuchThatEvaluator::dispatchSuchThatSelected() {
     // Case 2: Selected variable is in this such_that, right argument
     // Follows*(3, s)
     return dispatchRightVarSynonymLeftBasic();
-  } else if (arg1AsSynonym && arg1InSelect && arg2IsUnderscore) {
+  } else if (arg1AsSynonym && arg2IsUnderscore) {
     // Case 3: Selected variable is in this such_that, left argument, right arg
     // underscore Follows*(s, _)
     // Need to find all selected things and then run the correct follows fx
@@ -74,26 +54,9 @@ bool SuchThatEvaluator::dispatchSuchThatSelected() {
     // Case 5: Selected variable is in this such_that, left argument, right arg
     // also is a variable, Follows*(s, p)
     return dispatchBothVarsSynonyms();
-  } else {
-    std::cout << "This case should not be triggered\n";
-    assert(false);
-  }
-}
-
-//! Handle 8 cases when nothing is selected in the such_that
-// View examples here
-bool SuchThatEvaluator::dispatchSuchThatNotSelected() {
-  if (arg1IsUnderscore && arg2IsUnderscore) {
+  } else if (arg1IsUnderscore && arg2IsUnderscore) {
     // Case 7: Follows*(_, _)
     return dispatchDoubleUnderscore();
-  } else if (arg1AsSynonym && arg2AsSynonym) {
-    // Case 8: Selected variable is NOT in this such_that, need to check for
-    // truth/falsity overall
-    return dispatchBothVarsUnselected();
-  } else if (arg1AsSynonym && arg2AsBasic) {
-    // Case 9: Selected variable is NOT in this such_that, left argument
-    // Follows(s1, 3)
-    return dispatchLeftVarUnselectedRightBasic();
   } else if (arg2AsSynonym && arg1AsBasic) {
     // Case 10: Selected variable is NOT in this such_that, right argument
     // Follows(3, s1)
@@ -106,23 +69,18 @@ bool SuchThatEvaluator::dispatchSuchThatNotSelected() {
     // Case 12: Selected variable is NOT in this such_that, right basic,
     // left underscore: Follows(_, 3)
     return dispatchRightBasicLeftUnderscore();
-  } else if (arg1AsSynonym && arg2IsUnderscore) {
-    // Case 13: Selected variable is NOT in this such_that, left basic,
-    // right underscore: Follows(s1, _)
-    return dispatchLeftVarUnselectedRightUnderscore();
-  } else if (arg1IsUnderscore && arg2AsSynonym) {
-    // Case 14: Selected variable is NOT in this such_that, right basic,
-    // left underscore: Follows(_, s1)
-    return dispatchRightVarUnselectedLeftUnderscore();
   } else if (arg1AsBasic && arg2AsBasic) {
     // Case 15: Both variables basic - boolean query
+    // Follows(2, 3)
     // No dispatch necesary - simple case
     return handleBothVarsUnselected(*arg1AsBasic, *arg2AsBasic);
   } else {
     std::cout << "This case should not be triggered\n";
+    std::cout << "Query: " << query << std::endl;
     assert(false);
   }
 }
+
 bool SuchThatEvaluator::dispatchLeftVarSynonymRightBasic() {
   auto results = handleLeftVarSynonymRightBasic(*arg2AsBasic);
   if (results.empty() ||

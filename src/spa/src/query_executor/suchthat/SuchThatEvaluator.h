@@ -21,8 +21,6 @@ class SuchThatEvaluator {
   QE::StmtOrEntRef arg2;
   std::optional<Synonym> arg1AsSynonym;
   std::optional<Synonym> arg2AsSynonym;
-  bool arg1InSelect;
-  bool arg2InSelect;
   bool arg1IsUnderscore;
   bool arg2IsUnderscore;
   std::optional<std::string> arg1AsBasic;
@@ -30,12 +28,6 @@ class SuchThatEvaluator {
 
   //! Dispatches such that query to individual methods to handle it
   bool dispatch();
-
-  //! Dispatcher for cases with one variable in Select
-  bool dispatchSuchThatSelected();
-
-  //! Dispatcher for cases with no variables being Select-ed
-  bool dispatchSuchThatNotSelected();
 
   // These are the individual handler methods for each case
   // Read the .cpp file to see examples of each case

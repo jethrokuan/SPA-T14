@@ -47,8 +47,8 @@ std::ostream& operator<<(std::ostream& os, streamer<std::variant<Ts...>> sv) {
 
 // Generic template for swapping keys and value of a map into a new map
 template <class T1, class T2>
-std::map<T2, T1> swapPairs(std::map<T1, T2> m) {
-  std::map<T2, T1> m1;
+std::unordered_map<T2, T1> swapPairs(std::unordered_map<T1, T2> m) {
+  std::unordered_map<T2, T1> m1;
   for (auto&& item : m) {
     m1.emplace(item.second, item.first);
   }

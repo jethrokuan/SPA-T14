@@ -2,6 +2,7 @@
 #include <map>
 #include <regex>
 #include <string>
+#include <unordered_map>
 
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/relation.h"
@@ -18,7 +19,7 @@ enum class Relation {
 };
 Relation getRelation(std::string&);
 std::string getStringFromRelation(Relation);
-const std::map<Relation, std::string>& getRelationToStringMap();
+const std::unordered_map<Relation, std::string>& getRelationToStringMap();
 std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>
 getArgSynonymTypesFromRelation(Relation&);
 }  // namespace QE

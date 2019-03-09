@@ -11,7 +11,7 @@ using namespace Utils;
 
 namespace QE {
 
-std::map<Relation, std::string> relationToStringMap({
+std::unordered_map<Relation, std::string> relationToStringMap({
     {Relation::ModifiesS, "Modifies"},
     {Relation::UsesS, "Uses"},
     {Relation::Parent, "Parent"},
@@ -20,19 +20,22 @@ std::map<Relation, std::string> relationToStringMap({
     {Relation::FollowsT, "Follows*"},
 });
 
-std::map<Relation, std::pair<RefType, RefType>> relationToArgTypesMap({
-    {Relation::ModifiesS, std::make_pair(RefType::STMTREF, RefType::ENTREF)},
-    {Relation::UsesS, std::make_pair(RefType::STMTREF, RefType::ENTREF)},
-    {Relation::Parent, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
-    {Relation::ParentT, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
-    {Relation::Follows, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
-    {Relation::FollowsT, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
-});
+std::unordered_map<Relation, std::pair<RefType, RefType>> relationToArgTypesMap(
+    {
+        {Relation::ModifiesS,
+         std::make_pair(RefType::STMTREF, RefType::ENTREF)},
+        {Relation::UsesS, std::make_pair(RefType::STMTREF, RefType::ENTREF)},
+        {Relation::Parent, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
+        {Relation::ParentT, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
+        {Relation::Follows, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
+        {Relation::FollowsT,
+         std::make_pair(RefType::STMTREF, RefType::STMTREF)},
+    });
 
 //! Maps each relation to design entities for each of its allowed arguments if
 //! they are synonyms
-std::map<Relation,
-         std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>>
+std::unordered_map<
+    Relation, std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>>
     relationToArgSynonymTypesMap({
         {Relation::ModifiesS,
          // No PRINT design entity for Uses: print uses a variable, not
@@ -63,7 +66,7 @@ Relation getRelation(std::string& relation_string) {
 std::string getStringFromRelation(Relation relation) {
   return relationToStringMap.at(relation);
 }
-const std::map<Relation, std::string>& getRelationToStringMap() {
+const std::unordered_map<Relation, std::string>& getRelationToStringMap() {
   return relationToStringMap;
 }
 

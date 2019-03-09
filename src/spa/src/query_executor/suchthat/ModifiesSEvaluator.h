@@ -2,6 +2,7 @@
 #include <cassert>
 #include <optional>
 #include <string>
+#include <unordered_set>
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
@@ -16,17 +17,17 @@ class ModifiesSEvaluator : public SuchThatEvaluator {
   ModifiesSEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  std::vector<std::string> handleLeftSynonymRightBasic(
+  std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Modifies(s, "x")
     return pkb->getLineModifiesVar(basic_value)
-        .value_or(std::vector<std::string>());
+        .value_or(std::unordered_set<std::string>());
   }
-  std::vector<std::string> handleRightSynonymLeftBasic(
+  std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Modifies(3, v)
     return pkb->getVarModifiedByLine(basic_value)
-        .value_or(std::vector<std::string>());
+        .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Modifies(s, _)

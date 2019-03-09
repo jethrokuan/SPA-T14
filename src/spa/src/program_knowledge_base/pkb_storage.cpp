@@ -182,12 +182,12 @@ void PKBStorage::addToSetMap(
 
 void PKBStorage::addToSetMap(
     std::unordered_map<std::string,
-                       std::unordered_set<std::pair<std::string, std::string>>>
-        &umap,
+                       std::unordered_set<std::pair<std::string, std::string>,
+                                          pair_hash>> &umap,
     const std::string index, std::pair<std::string, std::string> data) {
   if (umap.find(index) == umap.end()) {
     // create new vector
-    std::unordered_set<std::pair<std::string, std::string>> v;
+    std::unordered_set<std::pair<std::string, std::string>, pair_hash> v;
     v.insert(data);
     umap[index] = v;
   } else {

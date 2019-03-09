@@ -15,7 +15,7 @@ using PairedConstraint = std::pair<std::string, std::string>;
 using PairedVariables = std::pair<std::string, std::string>;
 
 //! Set of possible values a variable can take
-using SingleConstraintSet = std::set<SingleConstraint>;
+using SingleConstraintSet = std::unordered_set<SingleConstraint>;
 //! Set of possible values a pair of variables can take
 using PairedConstraintSet = std::set<PairedConstraint>;
 
@@ -57,11 +57,11 @@ class QueryConstraints {
   //! \brief Add to the list of all possible values this variable can take
   //! If the variable already exists in the set, the existing set is
   //! intersected with the incoming set of constraints
-  void addToAllPossibleValues(std::string var_name,
-                              std::set<std::string> constraint_values);
+  void addToAllPossibleValues(
+      std::string var_name, std::unordered_set<std::string> constraint_values);
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
-  void addToSingleVariableConstraints(std::string var_name,
-                                      std::set<std::string> constraint_values);
+  void addToSingleVariableConstraints(
+      std::string var_name, std::unordered_set<std::string> constraint_values);
   //! Add paired constraints for 2 vars, e.g. (a, v) = {(2, 3), (3, 4), (1, 2)}
   void addToPairedVariableConstraints(
       std::string var1_name, std::string var2_name,
@@ -70,15 +70,15 @@ class QueryConstraints {
   void addToSingleVariableConstraints(
       std::string var_name, std::vector<std::string> constraint_values) {
     addToSingleVariableConstraints(
-        var_name, std::set<std::string>(constraint_values.begin(),
-                                        constraint_values.end()));
+        var_name, std::unordered_set<std::string>(constraint_values.begin(),
+                                                  constraint_values.end()));
   }
 
   void addToAllPossibleValues(std::string var_name,
                               std::vector<std::string> constraint_values) {
-    addToAllPossibleValues(var_name,
-                           std::set<std::string>(constraint_values.begin(),
-                                                 constraint_values.end()));
+    addToAllPossibleValues(
+        var_name, std::unordered_set<std::string>(constraint_values.begin(),
+                                                  constraint_values.end()));
   }
 
   SingleVariableConstraintMap& getSingleVariableConstraintMapRef() {
@@ -113,6 +113,9 @@ class QueryConstraints {
   //! the domain of all possible values that this variable can take
   bool containsNoAllowedResults(
       const std::vector<std::string> constraint_values,
+      const std::string var_name);
+  bool containsNoAllowedResults(
+      const std::unordered_set<std::string> constraint_values,
       const std::string var_name);
 
   friend std::ostream& operator<<(std::ostream& os,

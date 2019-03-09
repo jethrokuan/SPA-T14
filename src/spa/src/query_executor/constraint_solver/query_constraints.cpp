@@ -3,10 +3,11 @@
 #include <optional>
 #include <set>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 void QueryConstraints::addToSingleVariableConstraints(
-    std::string var_name, SingleConstraintSet constraint_values) {
+    std::string var_name, std::unordered_set<std::string> constraint_values) {
   bool varExistsInMap = singleVariableConstraintMap.find(var_name) !=
                         singleVariableConstraintMap.end();
   if (varExistsInMap) {
@@ -38,13 +39,28 @@ void QueryConstraints::addToPairedVariableConstraints(
 }
 
 void QueryConstraints::addToAllPossibleValues(
-    std::string var_name, std::set<std::string> constraint_values) {
+    std::string var_name, std::unordered_set<std::string> constraint_values) {
   allPossibleValues.insert({var_name, constraint_values});
   addToSingleVariableConstraints(var_name, constraint_values);
 }
 
 bool QueryConstraints::containsNoAllowedResults(
     const std::vector<std::string> constraint_values,
+    const std::string var_name) {
+  // Doing this for efficiency - no need to actually do the intersection
+  for (auto c : constraint_values) {
+    if (allPossibleValues.at(var_name).find(c) !=
+        allPossibleValues.at(var_name).end()) {
+      // One of the values in the constraint set is in the domain of all
+      // possible values
+      return false;
+    }
+  }
+  return true;
+}
+
+bool QueryConstraints::containsNoAllowedResults(
+    const std::unordered_set<std::string> constraint_values,
     const std::string var_name) {
   // Doing this for efficiency - no need to actually do the intersection
   for (auto c : constraint_values) {

@@ -453,7 +453,7 @@ PKBManager::getPartialMatchLinesAndVars(const Pattern pattern) {
     }
   }
 
-  std::unordered_set<std::pair<Line, Variable>> matching_line_var;
+  std::unordered_set<std::pair<Line, Variable>, pair_hash> matching_line_var;
   for (const auto &elem : matching_expr_str) {
     // pattern must be in the map already at this point
     auto xs = pkb_storage->expr_str_line_var_map.at(elem);

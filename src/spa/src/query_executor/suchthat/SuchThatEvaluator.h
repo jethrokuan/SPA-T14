@@ -1,7 +1,7 @@
 #pragma once
 #include <optional>
 #include <string>
-#include <vector>
+#include <unordered_set>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
 // #include "query_executor/constraint_solver/constraint_solver.h"
@@ -43,9 +43,9 @@ class SuchThatEvaluator {
   bool dispatchBothBasic();
 
   // These are the PKB calls that need to be overloaded for each subclass
-  virtual std::vector<std::string> handleLeftSynonymRightBasic(
+  virtual std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string&) = 0;
-  virtual std::vector<std::string> handleRightSynonymLeftBasic(
+  virtual std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string&) = 0;
   virtual bool handleLeftSynonymRightUnderscore(std::string&) = 0;
   virtual bool handleRightSynonymLeftUnderscore(std::string&) = 0;

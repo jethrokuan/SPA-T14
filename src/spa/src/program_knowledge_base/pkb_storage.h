@@ -20,8 +20,8 @@ class PKBStorage {
       std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
       const std::string index, std::string data);
   void addToSetMap(
-      std::unordered_map<Variable, std::unordered_set<std::pair<Line, ExprStr>>>
-          &umap,
+      std::unordered_map<Variable, std::unordered_set<std::pair<Line, ExprStr>,
+                                                      pair_hash>> &umap,
       const Variable index, std::pair<Line, ExprStr> data);
 
  public:
@@ -99,7 +99,8 @@ class PKBStorage {
   // pattern
   std::unordered_map<Variable, std::unordered_set<std::pair<Line, ExprStr>>>
       var_line_expr_str_map;
-  std::unordered_map<ExprStr, std::unordered_set<std::pair<Line, Variable>>>
+  std::unordered_map<ExprStr,
+                     std::unordered_set<std::pair<Line, Variable>, pair_hash>>
       expr_str_line_var_map;
   std::unordered_set<std::pair<Variable, ExprStr>, pair_hash> var_expr_str_set;
   std::unordered_set<std::pair<Line, ExprStr>, pair_hash> line_expr_str_set;

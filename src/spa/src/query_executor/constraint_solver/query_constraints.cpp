@@ -1,7 +1,7 @@
 #include "query_executor/constraint_solver/query_constraints.h"
 #include <iostream>
 #include <optional>
-#include <set>
+
 #include <string>
 #include <unordered_set>
 #include <vector>

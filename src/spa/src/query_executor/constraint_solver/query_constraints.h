@@ -2,11 +2,12 @@
 #include <algorithm>
 #include <map>
 #include <optional>
-#include <set>
+
 #include <sstream>
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include "utils/utils.h"
 
 //! Part of a constraint set for a variable, e.g. ("x")
 using SingleConstraint = std::string;
@@ -18,7 +19,8 @@ using PairedVariables = std::pair<std::string, std::string>;
 //! Set of possible values a variable can take
 using SingleConstraintSet = std::unordered_set<SingleConstraint>;
 //! Set of possible values a pair of variables can take
-using PairedConstraintSet = std::set<PairedConstraint>;
+using PairedConstraintSet =
+    std::unordered_set<PairedConstraint, Utils::pair_hash>;
 
 //! A specific set of constraints tied to a variable name e.g. a->{1, 2}
 using SingleVariableConstraints = std::pair<std::string, SingleConstraintSet>;
@@ -30,7 +32,6 @@ using PairedVariableConstraints =
 //! Aggregation of multiple constraints on paired variables
 using PairedVariableConstraintList = std::vector<PairedVariableConstraints>;
 
-//!
 using SingleVariableConstraintMap = std::map<std::string, SingleConstraintSet>;
 
 //! Defines the allowed set of values for a given Query
@@ -41,8 +42,9 @@ class QueryConstraints {
   PairedVariableConstraintList pairedVariableConstraintList;
 
   template <class T>
-  std::set<std::pair<T, T>> swapElementsInSet(std::set<std::pair<T, T>> s) {
-    std::set<std::pair<T, T>> outSet;
+  std::unordered_set<std::pair<T, T>, Utils::pair_hash> swapElementsInSet(
+      std::unordered_set<std::pair<T, T>, Utils::pair_hash> s) {
+    std::unordered_set<std::pair<T, T>, Utils::pair_hash> outSet;
     for (std::pair<T, T> el : s) {
       swapElements(outSet, el);
     }
@@ -50,7 +52,9 @@ class QueryConstraints {
   }
 
   template <class T>
-  void swapElements(std::set<std::pair<T, T>>& outSet, std::pair<T, T> pair) {
+  void swapElements(
+      std::unordered_set<std::pair<T, T>, Utils::pair_hash>& outSet,
+      std::pair<T, T> pair) {
     outSet.insert({pair.second, pair.first});
   }
 
@@ -58,15 +62,15 @@ class QueryConstraints {
   //! \brief Add to the list of all possible values this variable can take
   //! If the variable already exists in the set, the existing set is
   //! intersected with the incoming set of constraints
-  void addToAllPossibleValues(
-      std::string var_name, std::unordered_set<std::string> constraint_values);
+  void addToAllPossibleValues(std::string var_name,
+                              SingleConstraintSet constraint_values);
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
-  void addToSingleVariableConstraints(
-      std::string var_name, std::unordered_set<std::string> constraint_values);
+  void addToSingleVariableConstraints(std::string var_name,
+                                      SingleConstraintSet constraint_values);
   //! Add paired constraints for 2 vars, e.g. (a, v) = {(2, 3), (3, 4), (1, 2)}
-  void addToPairedVariableConstraints(
-      std::string var1_name, std::string var2_name,
-      std::set<std::pair<std::string, std::string>> constraint_values);
+  void addToPairedVariableConstraints(std::string var1_name,
+                                      std::string var2_name,
+                                      PairedConstraintSet constraint_values);
 
   void addToSingleVariableConstraints(
       std::string var_name, std::vector<std::string> constraint_values) {
@@ -115,9 +119,8 @@ class QueryConstraints {
   bool containsNoAllowedResults(
       const std::vector<std::string> constraint_values,
       const std::string var_name);
-  bool containsNoAllowedResults(
-      const std::unordered_set<std::string> constraint_values,
-      const std::string var_name);
+  bool containsNoAllowedResults(const SingleConstraintSet constraint_values,
+                                const std::string var_name);
 
   friend std::ostream& operator<<(std::ostream& os,
                                   QueryConstraints const& qc) {

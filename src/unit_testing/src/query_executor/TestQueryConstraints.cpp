@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
 #include <iostream>
-#include <set>
+
 #include <vector>
 
 #include "query_executor/constraint_solver/query_constraints.h"

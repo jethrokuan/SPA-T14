@@ -1,6 +1,6 @@
 #pragma once
 #include <optional>
-#include <set>
+
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -11,18 +11,20 @@
 using namespace QE;
 class ConstraintSolver {
  private:
-  template <class T>
-  static std::unordered_set<T> getFirstsFromSet(std::set<std::pair<T, T>>& s) {
-    std::unordered_set<std::string> result;
+  template <class T, class H>
+  static std::unordered_set<T> getFirstsFromSet(
+      std::unordered_set<std::pair<T, T>, H>& s) {
+    std::unordered_set<T> result;
     for (auto el : s) {
       result.insert(el.first);
     }
     return result;
   }
 
-  template <class T>
-  static std::unordered_set<T> getSecondsFromSet(std::set<std::pair<T, T>>& s) {
-    std::unordered_set<std::string> result;
+  template <class T, class H>
+  static std::unordered_set<T> getSecondsFromSet(
+      std::unordered_set<std::pair<T, T>, H>& s) {
+    std::unordered_set<T> result;
     for (auto el : s) {
       result.insert(el.second);
     }
@@ -41,8 +43,9 @@ class ConstraintSolver {
       SingleVariableConstraints& incoming_constraint);
 
   //! Get a map of all constraints from paired variables to their allowed values
-  static std::map<std::pair<std::string, std::string>,
-                  std::set<std::pair<std::string, std::string>>>
+  static std::map<
+      std::pair<std::string, std::string>,
+      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>>
   intersectPairedVarConstraints(PairedVariableConstraintList& pvcl);
 
   //! Filters a QueryConstraints object based on calculated constraints
@@ -50,7 +53,8 @@ class ConstraintSolver {
       std::map<std::string, std::unordered_set<std::string>>
           one_synonym_constraints,
       std::map<std::pair<std::string, std::string>,
-               std::set<std::pair<std::string, std::string>>>,
+               std::unordered_set<std::pair<std::string, std::string>,
+                                  Utils::pair_hash>>,
       QueryConstraints& qc);
 
   static void printConstraints(

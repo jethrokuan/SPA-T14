@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <list>
-#include <set>
+
 #include <string>
 #include <vector>
 #include "query_executor/constraint_solver/query_constraints.h"
@@ -12,16 +12,18 @@
 //! Actually constrain the set of values and select the synonym indicated
 std::vector<std::string> ConstraintSolver::constrainAndSelect(
     QueryConstraints& qc, const std::string toSelect) {
-  std::map<std::string, std::set<std::string>> start_one_synonym_constraints,
-      end_one_synonym_constraints;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      start_one_synonym_constraints, end_one_synonym_constraints;
   do {
     // Get individually allowed values from each of the tupled constraints
     start_one_synonym_constraints =
         intersectSingleVarConstraints(qc.getSingleVariableConstraintMapRef(),
                                       qc.getPairedVariableConstraintListRef());
     // Get all the pairs of values that are allowed
-    std::map<std::pair<std::string, std::string>,
-             std::set<std::pair<std::string, std::string>>>
+    std::unordered_map<std::pair<std::string, std::string>,
+                       std::unordered_set<std::pair<std::string, std::string>,
+                                          Utils::pair_hash>,
+                       Utils::pair_hash>
         tupled_constraints = intersectPairedVarConstraints(
             qc.getPairedVariableConstraintListRef());
 
@@ -37,13 +39,15 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
   // Return intended variable
   auto set_to_return = end_one_synonym_constraints[toSelect];
   std::vector<std::string> result(set_to_return.begin(), set_to_return.end());
+  std::sort(result.begin(), result.end());
   return result;
 }
 
-std::map<std::string, std::set<std::string>>
+std::unordered_map<std::string, std::unordered_set<std::string>>
 ConstraintSolver::intersectSingleVarConstraints(
     SingleVariableConstraintMap& svcm, PairedVariableConstraintList& pvcl) {
-  std::map<std::string, std::set<std::string>> new_synonym_constraints;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      new_synonym_constraints;
 
   // Iterate through all variables that are constrained
   // Use these to construct an intersected set of constraints
@@ -66,7 +70,8 @@ ConstraintSolver::intersectSingleVarConstraints(
 }
 
 void ConstraintSolver::intersectTwoConstraints(
-    std::map<std::string, std::set<std::string>>& new_synonym_constraints,
+    std::unordered_map<std::string, std::unordered_set<std::string>>&
+        new_synonym_constraints,
     SingleVariableConstraints& incoming_constraint) {
   std::string syn = incoming_constraint.first;
   if (new_synonym_constraints.find(syn) == new_synonym_constraints.end()) {
@@ -76,20 +81,21 @@ void ConstraintSolver::intersectTwoConstraints(
     // This synonym has an existing constraint - intersect with the set we found
     auto existing_constraints = new_synonym_constraints[syn];
     new_synonym_constraints[syn].clear();
-    std::set_intersection(
-        existing_constraints.begin(), existing_constraints.end(),
-        incoming_constraint.second.begin(), incoming_constraint.second.end(),
-        std::inserter(new_synonym_constraints[syn],
-                      new_synonym_constraints[syn].begin()));
+    new_synonym_constraints[syn] = Utils::unorderedSetIntersection(
+        existing_constraints, incoming_constraint.second);
   }
 }
 
-std::map<std::pair<std::string, std::string>,
-         std::set<std::pair<std::string, std::string>>>
+std::unordered_map<
+    std::pair<std::string, std::string>,
+    std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>,
+    Utils::pair_hash>
 ConstraintSolver::intersectPairedVarConstraints(
     PairedVariableConstraintList& pvcl) {
-  std::map<std::pair<std::string, std::string>,
-           std::set<std::pair<std::string, std::string>>>
+  std::unordered_map<
+      std::pair<std::string, std::string>,
+      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>,
+      Utils::pair_hash>
       tupled_constraints;
 
   for (auto paired_var_constraints : pvcl) {
@@ -100,12 +106,8 @@ ConstraintSolver::intersectPairedVarConstraints(
     } else {
       auto existing_constraints = tupled_constraints[{var1, var2}];
       tupled_constraints[{var1, var2}].clear();
-      std::set_intersection(
-          existing_constraints.begin(), existing_constraints.end(),
-          paired_var_constraints.second.begin(),
-          paired_var_constraints.second.end(),
-          std::inserter(tupled_constraints[{var1, var2}],
-                        tupled_constraints[{var1, var2}].begin()));
+      tupled_constraints[{var1, var2}] = Utils::unorderedSetIntersection(
+          existing_constraints, paired_var_constraints.second);
     }
   }
 
@@ -113,9 +115,12 @@ ConstraintSolver::intersectPairedVarConstraints(
 }
 
 void ConstraintSolver::filterQueryConstraints(
-    std::map<std::string, std::set<std::string>> one_synonym_constraints,
-    std::map<std::pair<std::string, std::string>,
-             std::set<std::pair<std::string, std::string>>>
+    std::unordered_map<std::string, std::unordered_set<std::string>>
+        one_synonym_constraints,
+    std::unordered_map<std::pair<std::string, std::string>,
+                       std::unordered_set<std::pair<std::string, std::string>,
+                                          Utils::pair_hash>,
+                       Utils::pair_hash>
         tupled_constraints,
     QueryConstraints& qc) {
   // Go through each QueryConstraint and remove values that aren't allowed
@@ -164,7 +169,8 @@ void ConstraintSolver::filterQueryConstraints(
 }
 
 void ConstraintSolver::printConstraints(
-    const std::map<std::string, std::set<std::string>> constraints) {
+    const std::unordered_map<std::string, std::unordered_set<std::string>>
+        constraints) {
   for (auto m : constraints) {
     std::cout << "Intersected constraints for: " << m.first << std::endl;
     for (auto s : m.second) {

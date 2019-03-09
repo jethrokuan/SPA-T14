@@ -17,17 +17,17 @@ class UsesSEvaluator : public SuchThatEvaluator {
   UsesSEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  std::vector<std::string> handleLeftSynonymRightBasic(
+  std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Uses(s, "x")
     return pkb->getLineUsesVar(basic_value)
-        .value_or(std::vector<std::string>());
+        .value_or(std::unordered_set<std::string>());
   }
-  std::vector<std::string> handleRightSynonymLeftBasic(
+  std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Uses(3, v)
     return pkb->getVarUsedByLine(basic_value)
-        .value_or(std::vector<std::string>());
+        .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Uses(s, _)

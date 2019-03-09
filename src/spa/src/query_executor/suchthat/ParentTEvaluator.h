@@ -16,16 +16,17 @@ class ParentTEvaluator : public SuchThatEvaluator {
   ParentTEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  std::vector<std::string> handleLeftSynonymRightBasic(
+  std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Parent*(s, 3)
     return pkb->getParentLineS(basic_value)
-        .value_or(std::vector<std::string>());
+        .value_or(std::unordered_set<std::string>());
   }
-  std::vector<std::string> handleRightSynonymLeftBasic(
+  std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Parent*(3, s)
-    return pkb->getChildLineS(basic_value).value_or(std::vector<std::string>());
+    return pkb->getChildLineS(basic_value)
+        .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Parent*(s, _) (for each s)

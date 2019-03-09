@@ -1,5 +1,5 @@
-#include "simple_parser/exceptions.h"
 #include "simple_parser/pratt.h"
+#include "simple_parser/exceptions.h"
 #include "simple_parser/token.h"
 #include "structs/node.h"
 

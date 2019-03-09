@@ -2,10 +2,10 @@
 #include <cassert>
 #include <optional>
 #include <string>
+#include <unordered_set>
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-// #include "query_executor/constraint_solver/constraint_solver.h"
 #include "query_executor/query_executor.h"
 #include "query_executor/suchthat/SuchThatEvaluator.h"
 
@@ -17,7 +17,7 @@ class FollowsEvaluator : public SuchThatEvaluator {
   FollowsEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
-  std::vector<std::string> handleLeftSynonymRightBasic(
+  std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Follows(s, 3)
     if (auto beforeLine = pkb->getBeforeLine(basic_value)) {
@@ -26,7 +26,7 @@ class FollowsEvaluator : public SuchThatEvaluator {
       return {};
     }
   }
-  std::vector<std::string> handleRightSynonymLeftBasic(
+  std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Follows(3, s)
     if (auto afterLine = pkb->getFollowingLine(basic_value)) {

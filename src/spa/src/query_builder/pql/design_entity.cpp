@@ -4,14 +4,14 @@
 
 #include <stdexcept>
 
-#include <map>
+#include <unordered_map>
 
 using namespace Utils;
 
 namespace QE {
 // Hard to use unordered_map even though faster
 // - need to define specialized hash for enum class
-std::map<DesignEntity, std::string> designEntityToStringMap({
+std::unordered_map<DesignEntity, std::string> designEntityToStringMap({
     {DesignEntity::STMT, "stmt"},
     {DesignEntity::READ, "read"},
     {DesignEntity::PRINT, "print"},

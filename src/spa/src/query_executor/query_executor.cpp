@@ -26,7 +26,9 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
   if (query->such_that == nullptr && query->pattern == nullptr) {
-    return getSelect(pkb, query->selected_declaration->getDesignEntity());
+    auto result_set =
+        getSelect(pkb, query->selected_declaration->getDesignEntity());
+    return std::vector<std::string>(result_set.begin(), result_set.end());
   }
 
   QueryConstraints query_constraints;
@@ -65,14 +67,14 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   return result;
 }
 
-std::vector<std::string> QueryExecutor::getSelect(PKBManager* pkb,
-                                                  DesignEntity de) {
+std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
+                                                         DesignEntity de) {
   // All possible return types from select all PKB calls are vector<string>
   // std::cout << "GetSelect: ";
   switch (de) {
     case DesignEntity::ASSIGN:
       // std::cout << "assign";
-      return pkb->getAssignList();
+      return pkb->getAssignSet();
       break;
     case DesignEntity::CALL:
       // Next iteration
@@ -81,44 +83,42 @@ std::vector<std::string> QueryExecutor::getSelect(PKBManager* pkb,
       break;
     case DesignEntity::CONSTANT:
       // std::cout << "constant";
-      return pkb->getConstantList();
+      return pkb->getConstantSet();
       break;
     case DesignEntity::IF:
       // std::cout << "if";
-      return pkb->getIfList();
+      return pkb->getIfSet();
       break;
     case DesignEntity::PRINT:
       // std::cout << "print";
-      return pkb->getPrintList();
+      return pkb->getPrintSet();
       break;
     case DesignEntity::PROCEDURE:
       // std::cout << "procedure: ";
-      return pkb->getProcedureList();
+      return pkb->getProcedureSet();
       break;
     case DesignEntity::READ:
       // std::cout << "read";
-      return pkb->getReadList();
+      return pkb->getReadSet();
       break;
     case DesignEntity::STMT:
       // std::cout << "stmt";
-      return pkb->getStatementList();
+      return pkb->getStatementSet();
       break;
     case DesignEntity::VARIABLE:
       // std::cout << "variable";
-      return pkb->getVariableList();
+      return pkb->getVariableSet();
       break;
     case DesignEntity::WHILE:
       // std::cout << "while";
-      return pkb->getWhileList();
+      return pkb->getWhileSet();
       break;
     default:
       break;
       // This should never happen - we should have handled all cases
       assert(false);
   }
-
-  std::cout << std::endl;
-  return std::vector<std::string>();
+  return {};
 }
 
 bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
@@ -160,7 +160,8 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
   qc.addToAllPossibleValues(var_name, all_de);
 }
 
-std::vector<std::string> QueryExecutor::getAllDesignEntityValuesByVarName(
+std::unordered_set<std::string>
+QueryExecutor::getAllDesignEntityValuesByVarName(
     std::vector<Declaration>* declarations, PKBManager* pkb,
     const std::string& var_name) {
   auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)

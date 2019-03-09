@@ -20,7 +20,7 @@ class PKBManager {
   std::shared_ptr<PKBStorage> pkb_storage = std::make_shared<PKBStorage>();
 
   std::optional<std::unordered_set<std::string>> getSetFromMap(
-      const std::map<std::string, std::unordered_set<std::string>> &,
+      const std::unordered_map<std::string, std::unordered_set<std::string>> &,
       const std::string);
 
  public:

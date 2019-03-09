@@ -15,12 +15,13 @@ namespace PKB {
 class PKBStorage {
  private:
   // helper
-  std::map<Line, Procedure> line_procedure_map;
-  void addToSetMap(std::map<std::string, std::unordered_set<std::string>> &umap,
-                   const std::string index, std::string data);
+  std::unordered_map<Line, Procedure> line_procedure_map;
   void addToSetMap(
-      std::map<Variable,
-               std::unordered_set<std::pair<Line, ExprStr>, pair_hash>> &umap,
+      std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
+      const std::string index, std::string data);
+  void addToSetMap(
+      std::unordered_map<Variable, std::unordered_set<std::pair<Line, ExprStr>,
+                                                      pair_hash>> &umap,
       const Variable index, std::pair<Line, ExprStr> data);
 
  public:
@@ -33,50 +34,55 @@ class PKBStorage {
   // storing CFG as an edge list
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
       cfgEdgeList;
-  std::map<std::string, std::unordered_set<std::string>> cfgAdjacencyList;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      cfgAdjacencyList;
 
   std::string getLineFromNode(const std::shared_ptr<Node> node);
 
   // follows
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set;
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set_s;
-  std::map<LineBefore, LineAfter> line_before_line_after_map;
-  std::map<LineAfter, LineBefore> line_after_line_before_map;
-  std::map<LineBefore, std::unordered_set<LineAfter>>
+  std::unordered_map<LineBefore, LineAfter> line_before_line_after_map;
+  std::unordered_map<LineAfter, LineBefore> line_after_line_before_map;
+  std::unordered_map<LineBefore, std::unordered_set<LineAfter>>
       line_before_line_after_map_s;
-  std::map<LineAfter, std::unordered_set<LineBefore>>
+  std::unordered_map<LineAfter, std::unordered_set<LineBefore>>
       line_after_line_before_map_s;
 
   // parent
   std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set;
   std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set_s;
-  std::map<ChildLine, ParentLine> child_line_parent_line_map;
-  std::map<ParentLine, std::unordered_set<ChildLine>>
+  std::unordered_map<ChildLine, ParentLine> child_line_parent_line_map;
+  std::unordered_map<ParentLine, std::unordered_set<ChildLine>>
       parent_line_child_line_map;
-  std::map<ChildLine, std::unordered_set<ParentLine>>
+  std::unordered_map<ChildLine, std::unordered_set<ParentLine>>
       child_line_parent_line_map_s;
-  std::map<ParentLine, std::unordered_set<ChildLine>>
+  std::unordered_map<ParentLine, std::unordered_set<ChildLine>>
       parent_line_child_line_map_s;
 
   // uses
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
       procedure_uses_var_set;
   std::unordered_set<std::pair<Line, Variable>, pair_hash> line_uses_var_set;
-  std::map<Procedure, std::unordered_set<Line>> var_used_by_procedure_map;
-  std::map<Line, std::unordered_set<Variable>> var_used_by_line_map;
-  std::map<Variable, std::unordered_set<Procedure>> procedure_uses_var_map;
-  std::map<Variable, std::unordered_set<Variable>> line_uses_var_map;
+  std::unordered_map<Procedure, std::unordered_set<Line>>
+      var_used_by_procedure_map;
+  std::unordered_map<Line, std::unordered_set<Variable>> var_used_by_line_map;
+  std::unordered_map<Variable, std::unordered_set<Procedure>>
+      procedure_uses_var_map;
+  std::unordered_map<Variable, std::unordered_set<Variable>> line_uses_var_map;
 
   // modifies
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
       procedure_modifies_var_set;
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
       line_modifies_var_set;
-  std::map<Procedure, std::unordered_set<Variable>>
+  std::unordered_map<Procedure, std::unordered_set<Variable>>
       var_modified_by_procedure_map;
-  std::map<Line, std::unordered_set<Variable>> var_modified_by_line_map;
-  std::map<Variable, std::unordered_set<Procedure>> procedure_modifies_var_map;
-  std::map<Variable, std::unordered_set<Line>> line_modifies_var_map;
+  std::unordered_map<Line, std::unordered_set<Variable>>
+      var_modified_by_line_map;
+  std::unordered_map<Variable, std::unordered_set<Procedure>>
+      procedure_modifies_var_map;
+  std::unordered_map<Variable, std::unordered_set<Line>> line_modifies_var_map;
 
   // design entities
   std::unordered_set<Variable> var_set;
@@ -91,9 +97,11 @@ class PKBStorage {
   std::unordered_set<Line> call_set;
 
   // pattern
-  std::map<Variable, std::unordered_set<std::pair<Line, ExprStr>, pair_hash>>
+  std::unordered_map<Variable,
+                     std::unordered_set<std::pair<Line, ExprStr>, pair_hash>>
       var_line_expr_str_map;
-  std::map<ExprStr, std::unordered_set<std::pair<Line, Variable>, pair_hash>>
+  std::unordered_map<ExprStr,
+                     std::unordered_set<std::pair<Line, Variable>, pair_hash>>
       expr_str_line_var_map;
   std::unordered_set<std::pair<Variable, ExprStr>, pair_hash> var_expr_str_set;
   std::unordered_set<std::pair<Line, ExprStr>, pair_hash> line_expr_str_set;
@@ -102,7 +110,7 @@ class PKBStorage {
   // misc helpers
   // only assign, does not include read, so not all modifies fulfill this
   std::unordered_set<std::pair<Line, Variable>, pair_hash> assign_line_var_set;
-  std::map<Variable, std::unordered_set<Line>> assign_var_line_map;
+  std::unordered_map<Variable, std::unordered_set<Line>> assign_var_line_map;
 
   // setters
   void storeAST(const AST);

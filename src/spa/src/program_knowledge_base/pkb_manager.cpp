@@ -17,7 +17,7 @@ PKBManager::~PKBManager() {}
 
 // helper
 std::optional<std::unordered_set<std::string>> PKBManager::getSetFromMap(
-    const std::map<std::string, std::unordered_set<std::string>> &umap,
+    const std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
     const std::string key) {
   return (umap.find(key) == umap.end())
              ? std::nullopt

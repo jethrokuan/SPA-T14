@@ -14,7 +14,7 @@ TEST_CASE ("Test Constraint Solver with no constraints") {
 
 TEST_CASE ("Test Constraint Solver with one single-var constraint") {
   auto qc = QueryConstraints();
-  qc.addToSingleVariableConstraints("x", std::set<std::string>{"1", "2", "3"});
+  qc.addToSingleVariableConstraints("x", std::unordered_set<std::string>{"1", "2", "3"});
   REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
           std::vector<std::string>{"1", "2", "3"});
 }
@@ -23,8 +23,8 @@ TEST_CASE (
     "Test Constraint Solver with two single-var constraints not affecting each "
     "other") {
   auto qc = QueryConstraints();
-  qc.addToSingleVariableConstraints("x", std::set<std::string>{"1", "2", "3"});
-  qc.addToSingleVariableConstraints("y", std::set<std::string>{"1", "2", "3"});
+  qc.addToSingleVariableConstraints("x", std::unordered_set<std::string>{"1", "2", "3"});
+  qc.addToSingleVariableConstraints("y", std::unordered_set<std::string>{"1", "2", "3"});
   SECTION ("Select x") {
     REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
             std::vector<std::string>{"1", "2", "3"});
@@ -39,8 +39,8 @@ TEST_CASE (
     "Test Constraint Solver with two single-var constraints affecting each "
     "other") {
   auto qc = QueryConstraints();
-  qc.addToSingleVariableConstraints("x", std::set<std::string>{"1", "2", "3"});
-  qc.addToSingleVariableConstraints("x", std::set<std::string>{"1", "2"});
+  qc.addToSingleVariableConstraints("x", std::unordered_set<std::string>{"1", "2", "3"});
+  qc.addToSingleVariableConstraints("x", std::unordered_set<std::string>{"1", "2"});
   REQUIRE(ConstraintSolver::constrainAndSelect(qc, "x") ==
           std::vector<std::string>{"1", "2"});
 }
@@ -49,7 +49,7 @@ TEST_CASE (
     "Test Constraint Solver with one single-var constraint and one paired "
     "constraint not affecting each other") {
   auto qc = QueryConstraints();
-  qc.addToSingleVariableConstraints("x", std::set<std::string>{"1", "2", "3"});
+  qc.addToSingleVariableConstraints("x", std::unordered_set<std::string>{"1", "2", "3"});
   qc.addToPairedVariableConstraints(
       "y", "z",
       std::set<std::pair<std::string, std::string>>{{"1", "2"}, {"3", "4"}});
@@ -71,7 +71,7 @@ TEST_CASE (
     "Test Constraint Solver with one single-var constraint and one paired "
     "constraint affecting each other") {
   auto qc = QueryConstraints();
-  qc.addToSingleVariableConstraints("x", std::set<std::string>{"1", "2", "3"});
+  qc.addToSingleVariableConstraints("x", std::unordered_set<std::string>{"1", "2", "3"});
   qc.addToPairedVariableConstraints(
       "x", "z",
       std::set<std::pair<std::string, std::string>>{{"1", "2"}, {"3", "4"}});
@@ -174,7 +174,7 @@ TEST_CASE (
       std::set<std::pair<std::string, std::string>>{
           {"2", "v2"}, {"4", "v1"}, {"5", "v2"}});
   qc.addToSingleVariableConstraints("a",
-                                    std::set<std::string>{{"2", "4", "5"}});
+                                    std::unordered_set<std::string>{{"2", "4", "5"}});
   SECTION ("Select a") {
     REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
             std::vector<std::string>{"4", "5"});
@@ -197,7 +197,7 @@ TEST_CASE (
       "a", "v",
       std::set<std::pair<std::string, std::string>>{
           {"2", "v2"}, {"4", "v1"}, {"5", "v2"}});
-  qc.addToSingleVariableConstraints("a", std::set<std::string>{"2", "5"});
+  qc.addToSingleVariableConstraints("a", std::unordered_set<std::string>{"2", "5"});
   SECTION ("Select a") {
     REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
             std::vector<std::string>{"5"});
@@ -221,7 +221,7 @@ TEST_CASE (
       std::set<std::pair<std::string, std::string>>{
           {"v2", "a"}, {"v1", "4"}, {"v2", "5"}});
   qc.addToSingleVariableConstraints("a",
-                                    std::set<std::string>{{"2", "4", "5"}});
+                                    std::unordered_set<std::string>{{"2", "4", "5"}});
   SECTION ("Select a") {
     REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
             std::vector<std::string>{"4", "5"});

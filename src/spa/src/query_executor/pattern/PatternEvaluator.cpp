@@ -59,8 +59,8 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(
   // pattern a ("x", <...>)
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a ("x", _) --> all assignments with LHS "x"
-    auto allowed_lines =
-        pkb->getLineForAssignVar(lhs).value_or(std::unordered_set<std::string>());
+    auto allowed_lines = pkb->getLineForAssignVar(lhs).value_or(
+        std::unordered_set<std::string>());
     qc.addToSingleVariableConstraints(syn.synonym, allowed_lines);
     return true;
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
@@ -98,8 +98,10 @@ bool PatternEvaluator::handlePatternLHSSynonym(
     rhs_partial << *duf;
 
     // Constrain (a,v) together
-    auto allowed_values = pkb->getPartialMatchLinesAndVars(rhs_partial.str())
-                              .value_or(std::vector<PairedConstraint>());
+    auto allowed_values =
+        pkb->getPartialMatchLinesAndVars(rhs_partial.str())
+            .value_or(
+                std::unordered_set<std::pair<Line, Variable>, pair_hash>());
 
     PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
     qc.addToPairedVariableConstraints(syn.synonym, lhs.synonym, avs);

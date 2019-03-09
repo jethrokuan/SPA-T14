@@ -2,6 +2,7 @@
 #include <optional>
 #include <set>
 #include <string>
+#include <unordered_set>
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
@@ -34,14 +35,15 @@ class QueryExecutor {
   std::vector<std::string> makeQuery(QE::Query* query);
 
   //! Gets the result of an unconditional select query (Select <designentity>)
-  static std::vector<std::string> getSelect(PKBManager* pkb, QE::DesignEntity);
+  static std::unordered_set<std::string> getSelect(PKBManager* pkb,
+                                                   QE::DesignEntity);
 
   //! Utility method to call getSelect for a single variable
   static void addAllValuesForVariableToConstraints(
       std::vector<QE::Declaration>*, PKBManager* pkb, const std::string&,
       QueryConstraints&);
 
-  static std::vector<std::string> getAllDesignEntityValuesByVarName(
+  static std::unordered_set<std::string> getAllDesignEntityValuesByVarName(
       std::vector<QE::Declaration>*, PKBManager*, const std::string&);
 
   //! Convert a StmtOrEntRef to a string to pass to PKB

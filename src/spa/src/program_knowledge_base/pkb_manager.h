@@ -1,7 +1,7 @@
 #pragma once
+#include <map>
 #include <optional>
 #include <string>
-#include <unordered_map>
 #include <unordered_set>
 #include "program_knowledge_base/pkb_definitions.h"
 #include "program_knowledge_base/pkb_preprocessor.h"
@@ -20,7 +20,7 @@ class PKBManager {
   std::shared_ptr<PKBStorage> pkb_storage = std::make_shared<PKBStorage>();
 
   std::optional<std::unordered_set<std::string>> getSetFromMap(
-      const std::unordered_map<std::string, std::unordered_set<std::string>> &,
+      const std::map<std::string, std::unordered_set<std::string>> &,
       const std::string);
 
  public:

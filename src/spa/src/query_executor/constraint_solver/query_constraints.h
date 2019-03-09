@@ -5,6 +5,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 //! Part of a constraint set for a variable, e.g. ("x")

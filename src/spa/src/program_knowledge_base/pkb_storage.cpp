@@ -167,7 +167,7 @@ Procedure PKBStorage::getProcedureFromLine(const Line line) {
 
 // helper
 void PKBStorage::addToSetMap(
-    std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
+    std::map<std::string, std::unordered_set<std::string>> &umap,
     const std::string index, std::string data) {
   if (umap.find(index) == umap.end()) {
     // create new set
@@ -181,9 +181,9 @@ void PKBStorage::addToSetMap(
 }
 
 void PKBStorage::addToSetMap(
-    std::unordered_map<std::string,
-                       std::unordered_set<std::pair<std::string, std::string>,
-                                          pair_hash>> &umap,
+    std::map<std::string,
+             std::unordered_set<std::pair<std::string, std::string>, pair_hash>>
+        &umap,
     const std::string index, std::pair<std::string, std::string> data) {
   if (umap.find(index) == umap.end()) {
     // create new vector

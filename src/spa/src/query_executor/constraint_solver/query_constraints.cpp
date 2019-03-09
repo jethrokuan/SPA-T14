@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include "utils/utils.h"
 
 void QueryConstraints::addToSingleVariableConstraints(
     std::string var_name, std::unordered_set<std::string> constraint_values) {
@@ -12,11 +13,8 @@ void QueryConstraints::addToSingleVariableConstraints(
                         singleVariableConstraintMap.end();
   if (varExistsInMap) {
     auto existing_constraints = singleVariableConstraintMap.at(var_name);
-    SingleConstraintSet intersected_set;
-    std::set_intersection(
-        existing_constraints.begin(), existing_constraints.end(),
-        constraint_values.begin(), constraint_values.end(),
-        std::inserter(intersected_set, intersected_set.begin()));
+    SingleConstraintSet intersected_set = Utils::unorderedSetIntersection(
+        existing_constraints, constraint_values);
     singleVariableConstraintMap[var_name] = intersected_set;
   } else {
     singleVariableConstraintMap[var_name] = constraint_values;

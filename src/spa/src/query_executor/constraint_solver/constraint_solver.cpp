@@ -37,6 +37,7 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
   // Return intended variable
   auto set_to_return = end_one_synonym_constraints[toSelect];
   std::vector<std::string> result(set_to_return.begin(), set_to_return.end());
+  std::sort(result.begin(), result.end());
   return result;
 }
 
@@ -78,11 +79,8 @@ void ConstraintSolver::intersectTwoConstraints(
     // This synonym has an existing constraint - intersect with the set we found
     auto existing_constraints = new_synonym_constraints[syn];
     new_synonym_constraints[syn].clear();
-    std::set_intersection(
-        existing_constraints.begin(), existing_constraints.end(),
-        incoming_constraint.second.begin(), incoming_constraint.second.end(),
-        std::inserter(new_synonym_constraints[syn],
-                      new_synonym_constraints[syn].begin()));
+    new_synonym_constraints[syn] = Utils::unorderedSetIntersection(
+        existing_constraints, incoming_constraint.second);
   }
 }
 

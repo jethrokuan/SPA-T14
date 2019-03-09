@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <variant>
 #include <vector>
 
@@ -52,6 +53,21 @@ std::map<T2, T1> swapPairs(std::map<T1, T2> m) {
     m1.emplace(item.second, item.first);
   }
   return m1;
+};
+
+// Generic template for finding a set intersection for unordered sets
+template <class T>
+std::unordered_set<T> unorderedSetIntersection(const std::unordered_set<T> m1,
+                                               const std::unordered_set<T> m2) {
+  // Keep invariant that first set is smaller than second
+  if (m1.size() > m2.size()) return unorderedSetIntersection(m2, m1);
+  std::unordered_set<T> m_out;
+  for (auto&& item : m1) {
+    if (m2.find(item) != m2.end()) {
+      m_out.insert(item);
+    }
+  }
+  return m_out;
 };
 
 bool has_only_digits(const std::string);

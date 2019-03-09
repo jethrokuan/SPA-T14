@@ -90,10 +90,8 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   std::unordered_set<std::string> var_get_test_1_check;
   var_get_test_1_check.insert("i");
   var_get_test_1_check.insert("j");
-  auto var_get_test_1_vector = pkb.getVariableSet();
-  std::unordered_set<Variable> var_get_test_1_set(var_get_test_1_vector.begin(),
-                                                  var_get_test_1_vector.end());
-  REQUIRE(var_get_test_1_set == var_get_test_1_check);
+  auto var_get_test_1 = pkb.getVariableSet();
+  REQUIRE(var_get_test_1 == var_get_test_1_check);
 
   // assign
   auto assign_exist_test_1 = pkb.isAssignExists("1");
@@ -209,12 +207,7 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   parent_test_5_check.insert("2");
   std::unordered_set<Variable> parent_test_5_set;
   auto parent_test_5 = pkb.getParentLineS("3");
-  if (parent_test_5) {
-    for (const auto &elem : (*parent_test_5)) {
-      parent_test_5_set.insert(elem);
-    }
-  }
-  REQUIRE(parent_test_5_set == parent_test_5_check);
+  REQUIRE(*parent_test_5 == parent_test_5_check);
 
   // test uses
   auto uses_test_1 = pkb.isLineUsesVar("2", "i");
@@ -240,12 +233,7 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   uses_test_9_check.insert("j");
   std::unordered_set<Variable> uses_test_9_set;
   auto uses_test_9 = pkb.getVarUsedByProcedure("main");
-  if (uses_test_9) {
-    for (const auto &elem : (*uses_test_9)) {
-      uses_test_9_set.insert(elem);
-    }
-  }
-  REQUIRE(uses_test_9_set == uses_test_9_check);
+  REQUIRE(*uses_test_9 == uses_test_9_check);
 
   // test modifies
   auto modifies_test_1 = pkb.isLineModifiesVar("5", "i");
@@ -274,12 +262,7 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   modifies_test_11_check.insert("i");
   std::unordered_set<Variable> modifies_test_11_set;
   auto modifies_test_11 = pkb.getVarModifiedByProcedure("main");
-  if (modifies_test_11) {
-    for (const auto &elem : (*modifies_test_11)) {
-      modifies_test_11_set.insert(elem);
-    }
-  }
-  REQUIRE(modifies_test_11_set == modifies_test_11_check);
+  REQUIRE(*modifies_test_11 == modifies_test_11_check);
 
   // test pattern
   std::unordered_set<std::string> pattern_test_1_check;
@@ -723,13 +706,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   uses_test_26_check.insert("y");
   uses_test_26_check.insert("z");
   auto uses_test_26 = pkb.getVarUsedByProcedure("main");
-  std::unordered_set<Variable> uses_test_26_set;
-  if (uses_test_26) {
-    for (const auto &elem : (*uses_test_26)) {
-      uses_test_26_set.insert(elem);
-    }
-  }
-  REQUIRE(uses_test_26_set == uses_test_26_check);
+  REQUIRE(*uses_test_26 == uses_test_26_check);
 
   // test modifies
   auto modifies_test_1 = pkb.isLineModifiesVar("1", "x");
@@ -779,13 +756,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   modifies_test_21_check.insert("y");
   modifies_test_21_check.insert("z");
   auto modifies_test_21 = pkb.getVarModifiedByProcedure("main");
-  std::unordered_set<Variable> modifies_test_21_set;
-  if (modifies_test_21) {
-    for (const auto &elem : (*modifies_test_21)) {
-      modifies_test_21_set.insert(elem);
-    }
-  }
-  REQUIRE(modifies_test_21_set == modifies_test_21_check);
+  REQUIRE(*modifies_test_21 == modifies_test_21_check);
 
   // test pattern
   std::unordered_set<std::string> pattern_test_1_check;
@@ -939,10 +910,8 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     var_get_test_1_check.insert("y");
     var_get_test_1_check.insert("a");
     var_get_test_1_check.insert("b");
-    auto var_get_test_1_vector = pkb.getVariableSet();
-    std::unordered_set<Variable> var_get_test_1_set(
-        var_get_test_1_vector.begin(), var_get_test_1_vector.end());
-    REQUIRE(var_get_test_1_set == var_get_test_1_check);
+    auto var_get_test_1 = pkb.getVariableSet();
+    REQUIRE(var_get_test_1 == var_get_test_1_check);
   }
 
   SECTION ("design entity assign") {
@@ -1096,51 +1065,21 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
 
     std::string follows_test_7_check = "2";
     auto follows_test_7 = pkb.getFollowingLine("1");
-    LineAfter follows_test_7_line = "";
-    if (follows_test_7) {
-      follows_test_7_line = (*follows_test_7);
-    }
-    REQUIRE(follows_test_7_line == follows_test_7_check);
+    REQUIRE(*follows_test_7 == follows_test_7_check);
 
     std::unordered_set<std::string> follows_test_8_check;
     follows_test_8_check.insert("2");
     auto follows_test_8 = pkb.getFollowingLineS("1");
-    std::unordered_set<LineAfter> follows_test_8_set;
-    if (follows_test_8) {
-      for (const auto &elem : (*follows_test_8)) {
-        follows_test_8_set.insert(elem);
-      }
-    }
-    REQUIRE(follows_test_8_set == follows_test_8_check);
+    REQUIRE(*follows_test_8 == follows_test_8_check);
 
-    std::unordered_set<std::string> follows_test_9_check;
     auto follows_test_9 = pkb.getFollowingLine("2");
-    std::unordered_set<LineAfter> follows_test_9_set;
-    LineAfter follows_test_9_line = "";
-    if (follows_test_9) {
-      follows_test_9_line = (*follows_test_9);
-    }
-    REQUIRE(follows_test_9_set == follows_test_9_check);
+    REQUIRE(follows_test_9 == std::nullopt);
 
-    std::unordered_set<std::string> follows_test_10_check;
     auto follows_test_10 = pkb.getFollowingLineS("2");
-    std::unordered_set<LineAfter> follows_test_10_set;
-    if (follows_test_10) {
-      for (const auto &elem : (*follows_test_10)) {
-        follows_test_10_set.insert(elem);
-      }
-    }
-    REQUIRE(follows_test_10_set == follows_test_10_check);
+    REQUIRE(follows_test_10 == std::nullopt);
 
-    std::unordered_set<std::string> follows_test_11_check;
     auto follows_test_11 = pkb.getFollowingLineS("9");
-    std::unordered_set<LineAfter> follows_test_11_set;
-    if (follows_test_11) {
-      for (const auto &elem : (*follows_test_11)) {
-        follows_test_11_set.insert(elem);
-      }
-    }
-    REQUIRE(follows_test_11_set == follows_test_11_check);
+    REQUIRE(follows_test_11 == std::nullopt);
   }
 
   SECTION ("parent relations") {
@@ -1189,39 +1128,20 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     auto parent_test_22 = pkb.isLineParentLineS("4", "8");
     REQUIRE(parent_test_22 == true);
 
-    std::unordered_set<std::string> parent_test_23_check;
-    std::unordered_set<Variable> parent_test_23_set;
     auto parent_test_23 = pkb.getParentLineS("1");
-    if (parent_test_23) {
-      for (const auto &elem : (*parent_test_23)) {
-        parent_test_23_set.insert(elem);
-      }
-    }
-    REQUIRE(parent_test_23_set == parent_test_23_check);
+    REQUIRE(parent_test_23 == std::nullopt);
 
     std::unordered_set<std::string> parent_test_24_check;
     parent_test_24_check.insert("2");
-    std::unordered_set<Variable> parent_test_24_set;
     auto parent_test_24 = pkb.getParentLineS("3");
-    if (parent_test_24) {
-      for (const auto &elem : (*parent_test_24)) {
-        parent_test_24_set.insert(elem);
-      }
-    }
-    REQUIRE(parent_test_24_set == parent_test_24_check);
+    REQUIRE(*parent_test_24 == parent_test_24_check);
 
     std::unordered_set<std::string> parent_test_25_check;
     parent_test_25_check.insert("2");
     parent_test_25_check.insert("3");
     parent_test_25_check.insert("4");
-    std::unordered_set<Variable> parent_test_25_set;
     auto parent_test_25 = pkb.getParentLineS("6");
-    if (parent_test_25) {
-      for (const auto &elem : (*parent_test_25)) {
-        parent_test_25_set.insert(elem);
-      }
-    }
-    REQUIRE(parent_test_25_set == parent_test_25_check);
+    REQUIRE(*parent_test_25 == parent_test_25_check);
   }
 
   SECTION ("uses relations") {
@@ -1255,52 +1175,28 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     uses_test_13_check.insert("y");
     uses_test_13_check.insert("b");
     auto uses_test_13 = pkb.getVarUsedByLine("2");
-    std::unordered_set<Variable> uses_test_13_set;
-    if (uses_test_13) {
-      for (const auto &elem : (*uses_test_13)) {
-        uses_test_13_set.insert(elem);
-      }
-    }
-    REQUIRE(uses_test_13_set == uses_test_13_check);
+    REQUIRE(*uses_test_13 == uses_test_13_check);
 
     std::unordered_set<std::string> uses_test_14_check;
     uses_test_14_check.insert("i");
     uses_test_14_check.insert("y");
     uses_test_14_check.insert("b");
     auto uses_test_14 = pkb.getVarUsedByLine("3");
-    std::unordered_set<Variable> uses_test_14_set;
-    if (uses_test_14) {
-      for (const auto &elem : (*uses_test_14)) {
-        uses_test_14_set.insert(elem);
-      }
-    }
-    REQUIRE(uses_test_14_set == uses_test_14_check);
+    REQUIRE(*uses_test_14 == uses_test_14_check);
 
     std::unordered_set<std::string> uses_test_15_check;
     uses_test_15_check.insert("i");
     uses_test_15_check.insert("y");
     uses_test_15_check.insert("b");
     auto uses_test_15 = pkb.getVarUsedByLine("4");
-    std::unordered_set<Variable> uses_test_15_set;
-    if (uses_test_15) {
-      for (const auto &elem : (*uses_test_15)) {
-        uses_test_15_set.insert(elem);
-      }
-    }
-    REQUIRE(uses_test_15_set == uses_test_15_check);
+    REQUIRE(*uses_test_15 == uses_test_15_check);
 
     std::unordered_set<std::string> uses_test_16_check;
     uses_test_16_check.insert("i");
     uses_test_16_check.insert("y");
     uses_test_16_check.insert("b");
     auto uses_test_16 = pkb.getVarUsedByProcedure("main");
-    std::unordered_set<Variable> uses_test_16_set;
-    if (uses_test_16) {
-      for (const auto &elem : (*uses_test_16)) {
-        uses_test_16_set.insert(elem);
-      }
-    }
-    REQUIRE(uses_test_16_set == uses_test_16_check);
+    REQUIRE(*uses_test_16 == uses_test_16_check);
   }
 
   SECTION ("modifies relations") {
@@ -1330,51 +1226,27 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     std::unordered_set<std::string> modifies_test_12_check;
     modifies_test_12_check.insert("i");
     auto modifies_test_12 = pkb.getVarModifiedByLine("1");
-    std::unordered_set<Variable> modifies_test_12_set;
-    if (modifies_test_12) {
-      for (const auto &elem : (*modifies_test_12)) {
-        modifies_test_12_set.insert(elem);
-      }
-    }
-    REQUIRE(modifies_test_12_set == modifies_test_12_check);
+    REQUIRE(*modifies_test_12 == modifies_test_12_check);
 
     std::unordered_set<std::string> modifies_test_13_check;
     modifies_test_13_check.insert("i");
     modifies_test_13_check.insert("x");
     modifies_test_13_check.insert("a");
     auto modifies_test_13 = pkb.getVarModifiedByLine("2");
-    std::unordered_set<Variable> modifies_test_13_set;
-    if (modifies_test_13) {
-      for (const auto &elem : (*modifies_test_13)) {
-        modifies_test_13_set.insert(elem);
-      }
-    }
-    REQUIRE(modifies_test_13_set == modifies_test_13_check);
+    REQUIRE(*modifies_test_13 == modifies_test_13_check);
 
     std::unordered_set<std::string> modifies_test_14_check;
     modifies_test_14_check.insert("x");
     modifies_test_14_check.insert("a");
     auto modifies_test_14 = pkb.getVarModifiedByLine("3");
-    std::unordered_set<Variable> modifies_test_14_set;
-    if (modifies_test_14) {
-      for (const auto &elem : (*modifies_test_14)) {
-        modifies_test_14_set.insert(elem);
-      }
-    }
-    REQUIRE(modifies_test_14_set == modifies_test_14_check);
+    REQUIRE(*modifies_test_14 == modifies_test_14_check);
 
     std::unordered_set<std::string> modifies_test_15_check;
     modifies_test_15_check.insert("i");
     modifies_test_15_check.insert("x");
     modifies_test_15_check.insert("a");
     auto modifies_test_15 = pkb.getVarModifiedByProcedure("main");
-    std::unordered_set<Variable> modifies_test_15_set;
-    if (modifies_test_15) {
-      for (const auto &elem : (*modifies_test_15)) {
-        modifies_test_15_set.insert(elem);
-      }
-    }
-    REQUIRE(modifies_test_15_set == modifies_test_15_check);
+    REQUIRE(*modifies_test_15 == modifies_test_15_check);
   }
 }
 

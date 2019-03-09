@@ -45,7 +45,8 @@ class ConstraintSolver {
   //! Get a map of all constraints from paired variables to their allowed values
   static std::unordered_map<
       std::pair<std::string, std::string>,
-      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>, Utils::pair_hash>
+      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>,
+      Utils::pair_hash>
   intersectPairedVarConstraints(PairedVariableConstraintList& pvcl);
 
   //! Filters a QueryConstraints object based on calculated constraints

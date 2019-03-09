@@ -32,33 +32,34 @@ class ConstraintSolver {
   };
 
   //! Get a map of constraints from single variables to allowed values
-  static std::map<std::string, std::unordered_set<std::string>>
+  static std::unordered_map<std::string, std::unordered_set<std::string>>
   intersectSingleVarConstraints(SingleVariableConstraintMap& svcm,
                                 PairedVariableConstraintList& pvcl);
 
   //! Intersects the current list of single constraints with a new constraint
   static void intersectTwoConstraints(
-      std::map<std::string, std::unordered_set<std::string>>&
+      std::unordered_map<std::string, std::unordered_set<std::string>>&
           new_synonym_constraints,
       SingleVariableConstraints& incoming_constraint);
 
   //! Get a map of all constraints from paired variables to their allowed values
-  static std::map<
+  static std::unordered_map<
       std::pair<std::string, std::string>,
-      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>>
+      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>, Utils::pair_hash>
   intersectPairedVarConstraints(PairedVariableConstraintList& pvcl);
 
   //! Filters a QueryConstraints object based on calculated constraints
   static void filterQueryConstraints(
-      std::map<std::string, std::unordered_set<std::string>>
+      std::unordered_map<std::string, std::unordered_set<std::string>>
           one_synonym_constraints,
-      std::map<std::pair<std::string, std::string>,
-               std::unordered_set<std::pair<std::string, std::string>,
-                                  Utils::pair_hash>>,
+      std::unordered_map<std::pair<std::string, std::string>,
+                         std::unordered_set<std::pair<std::string, std::string>,
+                                            Utils::pair_hash>,
+                         Utils::pair_hash>,
       QueryConstraints& qc);
 
   static void printConstraints(
-      const std::map<std::string, std::unordered_set<std::string>>);
+      const std::unordered_map<std::string, std::unordered_set<std::string>>);
 
  public:
   //! Actually constrain the set of values and select the synonym indicated

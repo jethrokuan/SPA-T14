@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <iostream>
-#include <map>
+
 #include <vector>
 
 #include "query_builder/pql/relation.h"

@@ -1,6 +1,6 @@
 #pragma once
 #include <algorithm>
-#include <map>
+
 #include <optional>
 
 #include <sstream>
@@ -32,7 +32,8 @@ using PairedVariableConstraints =
 //! Aggregation of multiple constraints on paired variables
 using PairedVariableConstraintList = std::vector<PairedVariableConstraints>;
 
-using SingleVariableConstraintMap = std::map<std::string, SingleConstraintSet>;
+using SingleVariableConstraintMap =
+    std::unordered_map<std::string, SingleConstraintSet>;
 
 //! Defines the allowed set of values for a given Query
 class QueryConstraints {

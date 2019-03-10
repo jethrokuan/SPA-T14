@@ -31,17 +31,12 @@ std::string PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
 }
 
 void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
+  // std::cout << source + " " + dest << std::endl;
   // add to edge list
-  cfgEdgeList.insert(std::pair(source, dest));
+  line_previous_line_next_set.insert(std::pair(source, dest));
   // add to adjacency list
-  if (cfgAdjacencyList.find(source) == cfgAdjacencyList.end()) {
-    std::unordered_set<std::string> ls;
-    ls.insert(dest);
-    cfgAdjacencyList[source] = ls;
-    cfgAdjacencyList.at(source).insert(dest);
-  } else {
-    cfgAdjacencyList.at(source).insert(dest);
-  }
+  addToSetMap(line_previous_line_next_map, source, dest);
+  addToSetMap(line_next_line_previous_map, dest, source);
 }
 
 void PKBStorage::storeFollowsRelation(const LineBefore line_before,

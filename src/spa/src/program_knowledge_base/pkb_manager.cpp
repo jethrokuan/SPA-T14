@@ -490,9 +490,21 @@ std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(
   return getSetFromMap(pkb_storage->assign_var_line_map, var);
 }
 
-bool PKBManager::isLineNextLine(const Line l1, const Line l2) {
-  return pkb_storage->cfgEdgeList.find(std::pair<Line, Line>(l1, l2)) !=
-         pkb_storage->cfgEdgeList.end();
+bool PKBManager::isLineNextLine(const PreviousLine previous_line,
+                                const NextLine next_line) {
+  return pkb_storage->line_previous_line_next_set.find(
+             std::pair<PreviousLine, NextLine>(previous_line, next_line)) !=
+         pkb_storage->line_previous_line_next_set.end();
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLine(
+    const NextLine next_line) {
+  return getSetFromMap(pkb_storage->line_next_line_previous_map, next_line);
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLine(
+    const PreviousLine previous_line) {
+  return getSetFromMap(pkb_storage->line_previous_line_next_map, previous_line);
 }
 
 }  // namespace PKB

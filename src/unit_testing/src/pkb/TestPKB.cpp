@@ -1248,6 +1248,100 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     auto modifies_test_15 = pkb.getVarModifiedByProcedure("main");
     REQUIRE(*modifies_test_15 == modifies_test_15_check);
   }
+
+  SECTION ("next relations") {
+    std::unordered_set<std::string> next_test_1_check;
+    next_test_1_check.insert("2");
+    auto next_test_1 = pkb.getNextLine("1");
+    REQUIRE(*next_test_1 == next_test_1_check);
+
+    std::unordered_set<std::string> next_test_2_check;
+    next_test_2_check.insert("3");
+    next_test_2_check.insert("9");
+    auto next_test_2 = pkb.getNextLine("2");
+    REQUIRE(*next_test_2 == next_test_2_check);
+
+    std::unordered_set<std::string> next_test_3_check;
+    next_test_3_check.insert("4");
+    auto next_test_3 = pkb.getNextLine("3");
+    REQUIRE(*next_test_3 == next_test_3_check);
+
+    std::unordered_set<std::string> next_test_4_check;
+    next_test_4_check.insert("5");
+    next_test_4_check.insert("7");
+    auto next_test_4 = pkb.getNextLine("4");
+    REQUIRE(*next_test_4 == next_test_4_check);
+
+    std::unordered_set<std::string> next_test_5_check;
+    next_test_5_check.insert("6");
+    auto next_test_5 = pkb.getNextLine("5");
+    REQUIRE(*next_test_5 == next_test_5_check);
+
+    std::unordered_set<std::string> next_test_6_check;
+    next_test_6_check.insert("8");
+    auto next_test_6 = pkb.getNextLine("7");
+    REQUIRE(*next_test_6 == next_test_6_check);
+
+    std::unordered_set<std::string> next_test_7_check;
+    next_test_7_check.insert("3");
+    auto next_test_7 = pkb.getNextLine("6");
+    REQUIRE(*next_test_7 == next_test_7_check);
+
+    std::unordered_set<std::string> next_test_8_check;
+    next_test_8_check.insert("3");
+    auto next_test_8 = pkb.getNextLine("8");
+    REQUIRE(*next_test_8 == next_test_8_check);
+
+    std::unordered_set<std::string> next_test_9_check;
+    auto next_test_9 = pkb.getNextLine("9");
+    REQUIRE(next_test_9 == std::nullopt);
+
+    std::unordered_set<std::string> next_test_10_check;
+    auto next_test_10 = pkb.getPreviousLine("1");
+    REQUIRE(next_test_10 == std::nullopt);
+
+    std::unordered_set<std::string> next_test_11_check;
+    next_test_11_check.insert("1");
+    auto next_test_11 = pkb.getPreviousLine("2");
+    REQUIRE(*next_test_11 == next_test_11_check);
+
+    std::unordered_set<std::string> next_test_12_check;
+    next_test_12_check.insert("2");
+    next_test_12_check.insert("6");
+    next_test_12_check.insert("8");
+    auto next_test_12 = pkb.getPreviousLine("3");
+    REQUIRE(*next_test_12 == next_test_12_check);
+
+    std::unordered_set<std::string> next_test_13_check;
+    next_test_13_check.insert("3");
+    auto next_test_13 = pkb.getPreviousLine("4");
+    REQUIRE(*next_test_13 == next_test_13_check);
+
+    std::unordered_set<std::string> next_test_14_check;
+    next_test_14_check.insert("4");
+    auto next_test_14 = pkb.getPreviousLine("5");
+    REQUIRE(*next_test_14 == next_test_14_check);
+
+    std::unordered_set<std::string> next_test_15_check;
+    next_test_15_check.insert("5");
+    auto next_test_15 = pkb.getPreviousLine("6");
+    REQUIRE(*next_test_15 == next_test_15_check);
+
+    std::unordered_set<std::string> next_test_16_check;
+    next_test_16_check.insert("4");
+    auto next_test_16 = pkb.getPreviousLine("7");
+    REQUIRE(*next_test_16 == next_test_16_check);
+
+    std::unordered_set<std::string> next_test_17_check;
+    next_test_17_check.insert("7");
+    auto next_test_17 = pkb.getPreviousLine("8");
+    REQUIRE(*next_test_17 == next_test_17_check);
+
+    std::unordered_set<std::string> next_test_18_check;
+    next_test_18_check.insert("2");
+    auto next_test_18 = pkb.getPreviousLine("9");
+    REQUIRE(*next_test_18 == next_test_18_check);
+  }
 }
 
 TEST_CASE ("Test detection of semantic errors in AST") {

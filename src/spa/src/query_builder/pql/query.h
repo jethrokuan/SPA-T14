@@ -13,7 +13,7 @@ class Query {
 
   std::vector<Declaration>* declarations;
   // Selected declaration refers to the synonym that is after the 'Select'
-  Declaration* selected_declaration;
+  std::vector<Declaration*>* selected_declarations;
   // No std::optional (is in C++17 - have to use nullable types)
   std::vector<SuchThat*>* such_that;
   std::vector<Pattern*>* pattern;

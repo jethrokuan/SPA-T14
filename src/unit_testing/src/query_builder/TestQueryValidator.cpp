@@ -21,7 +21,7 @@ TEST_CASE ("Test pattern assignment synonym not-assign Validate") {
   auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.pattern = new std::vector{pattern};
 
   QueryValidator qv = QueryValidator();
@@ -41,7 +41,7 @@ TEST_CASE ("Test pattern assignment synonym assign Validate") {
   auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.pattern = new std::vector{pattern};
   ;
 
@@ -58,7 +58,7 @@ TEST_CASE ("Test no pattern Validate") {
       new Declaration(DesignEntity::ASSIGN, Synonym::construct("p").value());
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
 
   QueryValidator qv = QueryValidator();
 
@@ -77,7 +77,7 @@ TEST_CASE ("Test pattern assignment synonym assign no matching decl Validate") {
   auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.pattern = new std::vector{pattern};
   ;
 
@@ -97,7 +97,7 @@ TEST_CASE ("Test such that with Modifies firstArg underscore Validate") {
   auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.such_that = new std::vector{suchthat};
 
   QueryValidator qv = QueryValidator();
@@ -116,7 +116,7 @@ TEST_CASE ("Test such that with UsesS firstArg underscore Validate") {
   auto suchthat = SuchThat::construct_heap(Relation::UsesS, a1, a2).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.such_that = new std::vector{suchthat};
   ;
 
@@ -136,7 +136,7 @@ TEST_CASE ("Test such that with Follows firstArg underscore (ok) Validate") {
   auto suchthat = SuchThat::construct_heap(Relation::Follows, a1, a2).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.such_that = new std::vector{suchthat};
   ;
 
@@ -153,7 +153,7 @@ TEST_CASE ("Test such that no suchthat Validate") {
       new Declaration(DesignEntity::ASSIGN, Synonym::construct("p").value());
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
 
   QueryValidator qv = QueryValidator();
 
@@ -171,7 +171,7 @@ TEST_CASE ("Test such that with not-found synonym firstarg Validate") {
   auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.such_that = new std::vector{suchthat};
   ;
 
@@ -191,7 +191,7 @@ TEST_CASE ("Test such that with invalid type firstarg Validate") {
   auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.such_that = new std::vector{suchthat};
   ;
 
@@ -212,7 +212,7 @@ TEST_CASE ("Test such that with invalid type secondarg Validate") {
   auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.such_that = new std::vector{suchthat};
   ;
 
@@ -233,7 +233,7 @@ TEST_CASE ("Test multiple declarations with the same name") {
   auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.such_that = new std::vector{suchthat};
   ;
 
@@ -255,7 +255,7 @@ TEST_CASE (
   auto suchthat = SuchThat::construct_heap(Relation::ModifiesS, a1, a2).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.such_that = new std::vector{suchthat};
   ;
 
@@ -277,7 +277,7 @@ TEST_CASE ("Test pattern assignment first argument variable Validate") {
   auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.pattern = new std::vector{pattern};
   ;
 
@@ -299,7 +299,7 @@ TEST_CASE ("Test pattern assignment first argument not-var Validate") {
   auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.pattern = new std::vector{pattern};
   ;
 
@@ -321,7 +321,7 @@ TEST_CASE ("Test pattern assignment first argument not-present Validate") {
   auto pattern = Pattern::construct_heap(syn, entRef, expr).value();
   Query q = Query();
   q.declarations = decl;
-  q.selected_declaration = select;
+  q.selected_declarations->at(0) = select;
   q.pattern = new std::vector{pattern};
   ;
 

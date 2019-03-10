@@ -81,8 +81,8 @@ void QueryPreprocessor::parseSelect(Query* query,
 
   // Search declarations to find one that matches this synyonm
   // THIS CAN THROW AN EXCEPTION - we do not catch
-  query->selected_declaration =
-      findDeclaration(query->declarations, synonym_to_match);
+  query->selected_declarations =
+      new std::vector{findDeclaration(query->declarations, synonym_to_match)};
 }
 
 void QueryPreprocessor::parseSuchThat(

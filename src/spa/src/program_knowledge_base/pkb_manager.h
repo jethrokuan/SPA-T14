@@ -23,6 +23,9 @@ class PKBManager {
       const std::unordered_map<std::string, std::unordered_set<std::string>> &,
       const std::string);
 
+  void getNextLineSH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+  void getPreviousLineSH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+
  public:
   PKBManager(const AST ast);
   ~PKBManager();
@@ -124,7 +127,15 @@ class PKBManager {
   bool isPatternExists(const Pattern);
 
   // next
-  bool isLineNextLine(Line, Line);
+  bool isLineNextLine(const PreviousLine, const NextLine);  // implemented
+  bool isLineNextLineS(const PreviousLine, const NextLine);
+  std::optional<std::unordered_set<PreviousLine>> getPreviousLine(
+      const NextLine);  // implemented
+  std::optional<std::unordered_set<NextLine>> getNextLine(
+      const PreviousLine);  // implemented
+  std::optional<std::unordered_set<PreviousLine>> getPreviousLineS(
+      const NextLine);
+  std::optional<std::unordered_set<NextLine>> getNextLineS(const PreviousLine);
 
   // misc helpers
   std::optional<std::unordered_set<Line>> getLineForAssignVar(const Variable);

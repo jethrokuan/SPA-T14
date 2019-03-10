@@ -20,9 +20,10 @@ class PKBStorage {
       std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
       const std::string index, std::string data);
   void addToSetMap(
-      std::unordered_map<Variable, std::unordered_set<std::pair<Line, ExprStr>,
-                                                      pair_hash>> &umap,
-      const Variable index, std::pair<Line, ExprStr> data);
+      std::unordered_map<Variable,
+                         std::unordered_set<std::pair<std::string, std::string>,
+                                            pair_hash>> &umap,
+      const std::string index, std::pair<std::string, std::string> data);
 
  public:
   PKBStorage();
@@ -31,11 +32,13 @@ class PKBStorage {
   AST ast;
   // TODO deprecate this and use hash map
   std::vector<std::shared_ptr<Node>> lines;
-  // storing CFG as an edge list
+  // CFG
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      cfgEdgeList;
+      line_previous_line_next_set;  // edge list
   std::unordered_map<std::string, std::unordered_set<std::string>>
-      cfgAdjacencyList;
+      line_previous_line_next_map;  // adjacency list
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      line_next_line_previous_map;  // reversed adjacaency list
 
   std::string getLineFromNode(const std::shared_ptr<Node> node);
 

@@ -490,9 +490,83 @@ std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(
   return getSetFromMap(pkb_storage->assign_var_line_map, var);
 }
 
-bool PKBManager::isLineNextLine(const Line l1, const Line l2) {
-  return pkb_storage->cfgEdgeList.find(std::pair<Line, Line>(l1, l2)) !=
-         pkb_storage->cfgEdgeList.end();
+bool PKBManager::isLineNextLine(const PreviousLine previous_line,
+                                const NextLine next_line) {
+  return pkb_storage->line_previous_line_next_set.find(
+             std::pair<PreviousLine, NextLine>(previous_line, next_line)) !=
+         pkb_storage->line_previous_line_next_set.end();
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLine(
+    const NextLine next_line) {
+  return getSetFromMap(pkb_storage->line_next_line_previous_map, next_line);
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLine(
+    const PreviousLine previous_line) {
+  return getSetFromMap(pkb_storage->line_previous_line_next_map, previous_line);
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineS(
+    const PreviousLine previous_line) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  auto to_visit = getPreviousLine(previous_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getPreviousLineSH(neighbour, visited);
+    }
+    if (visited->size() > 0) {
+      return std::make_optional<std::unordered_set<Line>>(*visited.get());
+    }
+  }
+  return std::nullopt;
+}
+
+void PKBManager::getPreviousLineSH(
+    const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(cur_line) != visited->end()) {
+    return;
+  }
+  visited->insert(cur_line);
+  // std::cout << "visited " + cur_line << std::endl;
+  auto to_visit = getPreviousLine(cur_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getPreviousLineSH(neighbour, visited);
+    }
+  }
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLineS(
+    const PreviousLine previous_line) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  auto to_visit = getNextLine(previous_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getNextLineSH(neighbour, visited);
+    }
+    if (visited->size() > 0) {
+      return std::make_optional<std::unordered_set<Line>>(*visited.get());
+    }
+  }
+  return std::nullopt;
+}
+
+void PKBManager::getNextLineSH(
+    const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(cur_line) != visited->end()) {
+    return;
+  }
+  visited->insert(cur_line);
+  // std::cout << "visited " + cur_line << std::endl;
+  auto to_visit = getNextLine(cur_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getNextLineSH(neighbour, visited);
+    }
+  }
 }
 
 }  // namespace PKB

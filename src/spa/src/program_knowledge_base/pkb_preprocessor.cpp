@@ -60,16 +60,20 @@ void PKBPreprocessor::setLineNumbersIterator(
 }
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<RootNode> node) {
+  // std::cout << "RootNode" << std::endl;
   for (const auto &proc : node->ProcList) {
     setCFG(proc);
   }
 }
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<ProcedureNode> node) {
+  // std::cout << "ProcedureNode" << std::endl;
   setCFGIterator(node->StmtList);
 }
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<IfNode> node) {
+void PKBPreprocessor::setCFG(const std::shared_ptr<IfNode> node,
+                             const Line exit_to) {
+  // std::cout << "IfNode" << std::endl;
   const ParentLine parent_line = storage->getLineFromNode(node);
   ChildLine then_child_line =
       std::visit([this](const auto &s) { return storage->getLineFromNode(s); },
@@ -79,32 +83,69 @@ void PKBPreprocessor::setCFG(const std::shared_ptr<IfNode> node) {
                  node->StmtListElse.front());
   storage->storeCFGEdge(parent_line, then_child_line);
   storage->storeCFGEdge(parent_line, else_child_line);
-  setCFGIterator(node->StmtListThen);
-  setCFGIterator(node->StmtListElse);
+  if (exit_to != INVALID_LINE_NUMBER) {
+    setCFGIterator(node->StmtListThen, exit_to);
+    setCFGIterator(node->StmtListElse, exit_to);
+  } else {
+    setCFGIterator(node->StmtListThen);
+    setCFGIterator(node->StmtListElse);
+  }
 }
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<WhileNode> node) {
+void PKBPreprocessor::setCFG(const std::shared_ptr<WhileNode> node,
+                             const Line exit_to) {
+  // std::cout << "WhileNode" << std::endl;
   const ParentLine parent_line = storage->getLineFromNode(node);
-  ChildLine first_child_line =
+  ChildLine child_line =
       std::visit([this](const auto &s) { return storage->getLineFromNode(s); },
                  node->StmtList.front());
-  ChildLine last_child_line =
-      std::visit([this](const auto &s) { return storage->getLineFromNode(s); },
-                 node->StmtList.back());
-  storage->storeCFGEdge(parent_line, first_child_line);
-  storage->storeCFGEdge(last_child_line, parent_line);
-  setCFGIterator(node->StmtList);
+  storage->storeCFGEdge(parent_line, child_line);
+  if (exit_to != INVALID_LINE_NUMBER) {
+    setCFGIterator(node->StmtList, exit_to);
+  } else {
+    setCFGIterator(node->StmtList, parent_line);
+  }
 }
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<ReadNode>) {}
+void PKBPreprocessor::setCFG(const std::shared_ptr<ReadNode> node,
+                             const Line parent_line) {
+  // std::cout << "ReadNode" << std::endl;
+  if (parent_line != INVALID_LINE_NUMBER) {
+    const ChildLine child_line = storage->getLineFromNode(node);
+    storage->storeCFGEdge(child_line, parent_line);
+  }
+}
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<PrintNode>) {}
+void PKBPreprocessor::setCFG(const std::shared_ptr<PrintNode> node,
+                             const Line parent_line) {
+  // std::cout << "PrintNode" << std::endl;
+  if (parent_line != INVALID_LINE_NUMBER) {
+    const ChildLine child_line = storage->getLineFromNode(node);
+    storage->storeCFGEdge(child_line, parent_line);
+  }
+}
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<AssignNode>) {}
+void PKBPreprocessor::setCFG(const std::shared_ptr<AssignNode> node,
+                             const Line parent_line) {
+  // std::cout << "AssignNode" << std::endl;
+  if (parent_line != INVALID_LINE_NUMBER) {
+    const ChildLine child_line = storage->getLineFromNode(node);
+    storage->storeCFGEdge(child_line, parent_line);
+  }
+}
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<CallNode>) {}
+void PKBPreprocessor::setCFG(const std::shared_ptr<CallNode> node,
+                             const Line parent_line) {
+  // std::cout << "CallNode" << std::endl;
+  if (parent_line != INVALID_LINE_NUMBER) {
+    const ChildLine child_line = storage->getLineFromNode(node);
+    storage->storeCFGEdge(child_line, parent_line);
+  }
+}
 
-void PKBPreprocessor::setCFGIterator(const std::vector<StmtNode> stmt_lst) {
+void PKBPreprocessor::setCFGIterator(const std::vector<StmtNode> stmt_lst,
+                                     const Line exit_to) {
+  // std::cout << "iterator" << std::endl;
   for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
     // add edge for consecutive lines
     const LineBefore line_before = std::visit(
@@ -118,8 +159,15 @@ void PKBPreprocessor::setCFGIterator(const std::vector<StmtNode> stmt_lst) {
   }
 
   // iterate through AST via DFS
-  for (const auto &stmt : stmt_lst) {
-    std::visit([this](const auto &s) { setCFG(s); }, stmt);
+  for (std::size_t i = 0; i < stmt_lst.size(); i++) {
+    if (i == (stmt_lst.size() - 1) && exit_to != INVALID_LINE_NUMBER) {
+      // last node in statement list
+      // std::cout << "exit_to valid" << std::endl;
+      std::visit([this, exit_to](const auto &s) { setCFG(s, exit_to); },
+                 stmt_lst[i]);
+    } else {
+      std::visit([this](const auto &s) { setCFG(s); }, stmt_lst[i]);
+    }
   }
 }
 

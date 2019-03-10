@@ -189,7 +189,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -207,7 +207,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(65);
     QE::StmtOrEntRef a2 = QE::StmtRef(78);
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -225,7 +225,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -253,7 +253,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Parent, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -271,7 +271,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(65);
     QE::StmtOrEntRef a2 = QE::StmtRef(78);
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Parent, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -289,7 +289,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Parent, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -318,7 +318,7 @@ TEST_CASE (
     QE::StmtOrEntRef a1 = QE::StmtRef(65);
     QE::StmtOrEntRef a2 =
         QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::ModifiesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -337,7 +337,7 @@ TEST_CASE (
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 =
         QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::ModifiesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -355,7 +355,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::ModifiesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -384,7 +384,7 @@ TEST_CASE (
     QE::StmtOrEntRef a1 = QE::StmtRef(65);
     QE::StmtOrEntRef a2 =
         QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -403,7 +403,7 @@ TEST_CASE (
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 =
         QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -421,7 +421,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -458,7 +458,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
@@ -466,7 +466,7 @@ TEST_CASE (
     QE::ExpressionSpec expr = QE::ExpressionSpec(
         QE::DoubleUnderscoreFactor::construct("_\"y\"_").value());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
   SECTION ("Pattern test UnderScore QuoteIdent") {
     auto qp = QE::QueryPreprocessor();
@@ -482,7 +482,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
@@ -490,7 +490,7 @@ TEST_CASE (
     QE::ExpressionSpec expr = QE::ExpressionSpec(
         QE::DoubleUnderscoreFactor::construct("_\"y\"_").value());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
   SECTION ("Pattern test QuoteIdent UnderScore") {
     auto qp = QE::QueryPreprocessor();
@@ -506,14 +506,14 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
     QE::EntRef entRef = QE::EntRef(QE::QuoteIdent::construct("\"x\"").value());
     QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
   SECTION ("Pattern test UnderScore UnderScore") {
     auto qp = QE::QueryPreprocessor();
@@ -529,14 +529,14 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
     QE::EntRef entRef = QE::EntRef(QE::Underscore());
     QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
   SECTION ("Pattern test Synonym UnderScore") {
     auto qp = QE::QueryPreprocessor();
@@ -552,14 +552,14 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
     QE::EntRef entRef = QE::EntRef(QE::Synonym::construct("x").value());
     QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
 
   SECTION ("Pattern test DoubleUnderscoreFactor UnderScore") {
@@ -593,7 +593,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
@@ -601,7 +601,7 @@ TEST_CASE (
     QE::ExpressionSpec expr = QE::ExpressionSpec(
         QE::DoubleUnderscoreFactor::construct("_\"y\"_").value());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
   SECTION ("Pattern test UnderScore QuoteIdent") {
     auto qp = QE::QueryPreprocessor();
@@ -617,7 +617,7 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
@@ -625,7 +625,7 @@ TEST_CASE (
     QE::ExpressionSpec expr = QE::ExpressionSpec(
         QE::DoubleUnderscoreFactor::construct("_\"y\"_").value());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
   SECTION ("Pattern test QuoteIdent UnderScore") {
     auto qp = QE::QueryPreprocessor();
@@ -641,14 +641,14 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
     QE::EntRef entRef = QE::EntRef(QE::QuoteIdent::construct("\"x\"").value());
     QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
   SECTION ("Pattern test UnderScore UnderScore") {
     auto qp = QE::QueryPreprocessor();
@@ -664,14 +664,14 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
     QE::EntRef entRef = QE::EntRef(QE::Underscore());
     QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
   SECTION ("Pattern test Synonym UnderScore") {
     auto qp = QE::QueryPreprocessor();
@@ -687,14 +687,14 @@ TEST_CASE (
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Synonym::construct("a").value());
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
 
     QE::Synonym syn = QE::Synonym::construct("p").value();
     QE::EntRef entRef = QE::EntRef(QE::Synonym::construct("x").value());
     QE::ExpressionSpec expr = QE::ExpressionSpec(QE::Underscore());
     auto pat = Pattern::construct(syn, entRef, expr);
-    REQUIRE(*(query->pattern) == pat);
+    REQUIRE(*(query->pattern->at(0)) == pat);
   }
 
   SECTION ("Pattern test DoubleUnderscoreFactor UnderScore") {
@@ -920,7 +920,7 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -940,7 +940,7 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }
@@ -960,7 +960,7 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
 
     QE::StmtOrEntRef a1 = QE::StmtRef(QE::Underscore());
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
-    REQUIRE(*(query->such_that) ==
+    REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
     REQUIRE(query->pattern == nullptr);
   }

@@ -15,8 +15,8 @@ class Query {
   // Selected declaration refers to the synonym that is after the 'Select'
   Declaration* selected_declaration;
   // No std::optional (is in C++17 - have to use nullable types)
-  SuchThat* such_that;
-  Pattern* pattern;
+  std::vector<SuchThat*>* such_that;
+  std::vector<Pattern*>* pattern;
 
   // -- Accessors and constructors --
 

@@ -122,7 +122,7 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
 }
 
 bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
-  switch (query->such_that->getRelation()) {
+  switch (query->such_that->at(0)->getRelation()) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb, qc).evaluate();
     case Relation::ModifiesS:

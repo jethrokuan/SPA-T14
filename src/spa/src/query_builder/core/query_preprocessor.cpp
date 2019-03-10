@@ -168,7 +168,7 @@ void QueryPreprocessor::parseSuchThat(
   auto opt_suchthat = SuchThat::construct_heap(
       relation, stmt_or_entref_1.value(), stmt_or_entref_2.value());
   if (opt_suchthat) {
-    query->such_that = opt_suchthat.value();
+    query->such_that = new std::vector{opt_suchthat.value()};
   } else {
     throw PQLParseException(
         "Such That parse error - did not get correct stmtref/entref "
@@ -234,7 +234,7 @@ void QueryPreprocessor::parsePattern(Query* query,
   auto opt_pattern = Pattern::construct_heap(synonym.value(), entref.value(),
                                              exprspec.value());
   if (opt_pattern) {
-    query->pattern = opt_pattern.value();
+    query->pattern = new std::vector{opt_pattern.value()};
   } else {
     throw PQLParseException(
         "Pattern parse error - could not construct final pattern from "

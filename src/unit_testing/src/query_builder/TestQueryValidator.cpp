@@ -22,7 +22,7 @@ TEST_CASE ("Test pattern assignment synonym not-assign Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.pattern = pattern;
+  q.pattern = new std::vector{pattern};
 
   QueryValidator qv = QueryValidator();
 
@@ -42,7 +42,8 @@ TEST_CASE ("Test pattern assignment synonym assign Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.pattern = pattern;
+  q.pattern = new std::vector{pattern};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -77,7 +78,8 @@ TEST_CASE ("Test pattern assignment synonym assign no matching decl Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.pattern = pattern;
+  q.pattern = new std::vector{pattern};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -96,7 +98,7 @@ TEST_CASE ("Test such that with Modifies firstArg underscore Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.such_that = suchthat;
+  q.such_that = new std::vector{suchthat};
 
   QueryValidator qv = QueryValidator();
 
@@ -115,7 +117,8 @@ TEST_CASE ("Test such that with UsesS firstArg underscore Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.such_that = suchthat;
+  q.such_that = new std::vector{suchthat};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -134,7 +137,8 @@ TEST_CASE ("Test such that with Follows firstArg underscore (ok) Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.such_that = suchthat;
+  q.such_that = new std::vector{suchthat};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -168,7 +172,8 @@ TEST_CASE ("Test such that with not-found synonym firstarg Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.such_that = suchthat;
+  q.such_that = new std::vector{suchthat};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -187,7 +192,8 @@ TEST_CASE ("Test such that with invalid type firstarg Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.such_that = suchthat;
+  q.such_that = new std::vector{suchthat};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -207,7 +213,8 @@ TEST_CASE ("Test such that with invalid type secondarg Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.such_that = suchthat;
+  q.such_that = new std::vector{suchthat};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -227,7 +234,8 @@ TEST_CASE ("Test multiple declarations with the same name") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.such_that = suchthat;
+  q.such_that = new std::vector{suchthat};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -248,7 +256,8 @@ TEST_CASE (
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.such_that = suchthat;
+  q.such_that = new std::vector{suchthat};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -269,7 +278,8 @@ TEST_CASE ("Test pattern assignment first argument variable Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.pattern = pattern;
+  q.pattern = new std::vector{pattern};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -290,7 +300,8 @@ TEST_CASE ("Test pattern assignment first argument not-var Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.pattern = pattern;
+  q.pattern = new std::vector{pattern};
+  ;
 
   QueryValidator qv = QueryValidator();
 
@@ -311,7 +322,8 @@ TEST_CASE ("Test pattern assignment first argument not-present Validate") {
   Query q = Query();
   q.declarations = decl;
   q.selected_declaration = select;
-  q.pattern = pattern;
+  q.pattern = new std::vector{pattern};
+  ;
 
   QueryValidator qv = QueryValidator();
 

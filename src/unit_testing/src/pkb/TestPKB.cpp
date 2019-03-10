@@ -1341,6 +1341,180 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_18_check.insert("2");
     auto next_test_18 = pkb.getPreviousLine("9");
     REQUIRE(*next_test_18 == next_test_18_check);
+
+    std::unordered_set<std::string> next_test_19_check;
+    next_test_19_check.insert("2");
+    next_test_19_check.insert("3");
+    next_test_19_check.insert("4");
+    next_test_19_check.insert("5");
+    next_test_19_check.insert("6");
+    next_test_19_check.insert("7");
+    next_test_19_check.insert("8");
+    next_test_19_check.insert("9");
+    auto next_test_19 = pkb.getNextLineS("1");
+    REQUIRE(*next_test_19 == next_test_19_check);
+
+    std::unordered_set<std::string> next_test_20_check;
+    next_test_20_check.insert("3");
+    next_test_20_check.insert("4");
+    next_test_20_check.insert("5");
+    next_test_20_check.insert("6");
+    next_test_20_check.insert("7");
+    next_test_20_check.insert("8");
+    next_test_20_check.insert("9");
+    auto next_test_20 = pkb.getNextLineS("2");
+    REQUIRE(*next_test_20 == next_test_20_check);
+
+    std::unordered_set<std::string> next_test_21_check;
+    next_test_21_check.insert("3");
+    next_test_21_check.insert("4");
+    next_test_21_check.insert("5");
+    next_test_21_check.insert("6");
+    next_test_21_check.insert("7");
+    next_test_21_check.insert("8");
+    auto next_test_21 = pkb.getNextLineS("3");
+    REQUIRE(*next_test_21 == next_test_21_check);
+
+    std::unordered_set<std::string> next_test_22_check;
+    next_test_22_check.insert("3");
+    next_test_22_check.insert("4");
+    next_test_22_check.insert("5");
+    next_test_22_check.insert("6");
+    next_test_22_check.insert("7");
+    next_test_22_check.insert("8");
+    auto next_test_22 = pkb.getNextLineS("4");
+    REQUIRE(*next_test_22 == next_test_22_check);
+
+    std::unordered_set<std::string> next_test_23_check;
+    next_test_23_check.insert("3");
+    next_test_23_check.insert("4");
+    next_test_23_check.insert("5");
+    next_test_23_check.insert("6");
+    next_test_23_check.insert("7");
+    next_test_23_check.insert("8");
+    auto next_test_23 = pkb.getNextLineS("5");
+    REQUIRE(*next_test_23 == next_test_23_check);
+
+    std::unordered_set<std::string> next_test_24_check;
+    next_test_24_check.insert("3");
+    next_test_24_check.insert("4");
+    next_test_24_check.insert("5");
+    next_test_24_check.insert("6");
+    next_test_24_check.insert("7");
+    next_test_24_check.insert("8");
+    auto next_test_24 = pkb.getNextLineS("6");
+    REQUIRE(*next_test_24 == next_test_24_check);
+
+    std::unordered_set<std::string> next_test_25_check;
+    next_test_25_check.insert("3");
+    next_test_25_check.insert("4");
+    next_test_25_check.insert("5");
+    next_test_25_check.insert("6");
+    next_test_25_check.insert("7");
+    next_test_25_check.insert("8");
+    auto next_test_25 = pkb.getNextLineS("7");
+    REQUIRE(*next_test_25 == next_test_25_check);
+
+    std::unordered_set<std::string> next_test_26_check;
+    next_test_26_check.insert("3");
+    next_test_26_check.insert("4");
+    next_test_26_check.insert("5");
+    next_test_26_check.insert("6");
+    next_test_26_check.insert("7");
+    next_test_26_check.insert("8");
+    auto next_test_26 = pkb.getNextLineS("8");
+    REQUIRE(*next_test_26 == next_test_26_check);
+
+    std::unordered_set<std::string> next_test_27_check;
+    auto next_test_27 = pkb.getNextLineS("9");
+    REQUIRE(next_test_27 == std::nullopt);
+
+    std::unordered_set<std::string> next_test_28_check;
+    auto next_test_28 = pkb.getPreviousLineS("1");
+    REQUIRE(next_test_28 == std::nullopt);
+
+    std::unordered_set<std::string> next_test_29_check;
+    next_test_29_check.insert("1");
+    auto next_test_29 = pkb.getPreviousLineS("2");
+    REQUIRE(*next_test_29 == next_test_29_check);
+
+    std::unordered_set<std::string> next_test_30_check;
+    next_test_30_check.insert("1");
+    next_test_30_check.insert("2");
+    next_test_30_check.insert("3");
+    next_test_30_check.insert("4");
+    next_test_30_check.insert("5");
+    next_test_30_check.insert("6");
+    next_test_30_check.insert("7");
+    next_test_30_check.insert("8");
+    auto next_test_30 = pkb.getPreviousLineS("3");
+    REQUIRE(*next_test_30 == next_test_30_check);
+
+    std::unordered_set<std::string> next_test_31_check;
+    next_test_31_check.insert("1");
+    next_test_31_check.insert("2");
+    next_test_31_check.insert("3");
+    next_test_31_check.insert("4");
+    next_test_31_check.insert("5");
+    next_test_31_check.insert("6");
+    next_test_31_check.insert("7");
+    next_test_31_check.insert("8");
+    auto next_test_31 = pkb.getPreviousLineS("4");
+    REQUIRE(*next_test_31 == next_test_31_check);
+
+    std::unordered_set<std::string> next_test_32_check;
+    next_test_32_check.insert("1");
+    next_test_32_check.insert("2");
+    next_test_32_check.insert("3");
+    next_test_32_check.insert("4");
+    next_test_32_check.insert("5");
+    next_test_32_check.insert("6");
+    next_test_32_check.insert("7");
+    next_test_32_check.insert("8");
+    auto next_test_32 = pkb.getPreviousLineS("5");
+    REQUIRE(*next_test_32 == next_test_32_check);
+
+    std::unordered_set<std::string> next_test_33_check;
+    next_test_33_check.insert("1");
+    next_test_33_check.insert("2");
+    next_test_33_check.insert("3");
+    next_test_33_check.insert("4");
+    next_test_33_check.insert("5");
+    next_test_33_check.insert("6");
+    next_test_33_check.insert("7");
+    next_test_33_check.insert("8");
+    auto next_test_33 = pkb.getPreviousLineS("6");
+    REQUIRE(*next_test_33 == next_test_33_check);
+
+    std::unordered_set<std::string> next_test_34_check;
+    next_test_34_check.insert("1");
+    next_test_34_check.insert("2");
+    next_test_34_check.insert("3");
+    next_test_34_check.insert("4");
+    next_test_34_check.insert("5");
+    next_test_34_check.insert("6");
+    next_test_34_check.insert("7");
+    next_test_34_check.insert("8");
+    auto next_test_34 = pkb.getPreviousLineS("7");
+    REQUIRE(*next_test_34 == next_test_34_check);
+
+    std::unordered_set<std::string> next_test_35_check;
+    next_test_35_check.insert("1");
+    next_test_35_check.insert("2");
+    next_test_35_check.insert("3");
+    next_test_35_check.insert("4");
+    next_test_35_check.insert("5");
+    next_test_35_check.insert("6");
+    next_test_35_check.insert("7");
+    next_test_35_check.insert("8");
+    auto next_test_35 = pkb.getPreviousLineS("8");
+    REQUIRE(*next_test_35 == next_test_35_check);
+
+    std::unordered_set<std::string> next_test_36_check;
+    next_test_36_check.insert("1");
+    next_test_36_check.insert("2");
+    auto next_test_36 = pkb.getPreviousLineS("9");
+    REQUIRE(*next_test_36 == next_test_36_check);
   }
 }
 

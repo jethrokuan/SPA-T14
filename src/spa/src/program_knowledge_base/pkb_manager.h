@@ -23,6 +23,9 @@ class PKBManager {
       const std::unordered_map<std::string, std::unordered_set<std::string>> &,
       const std::string);
 
+  void getNextLineSH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+  void getPreviousLineSH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+
  public:
   PKBManager(const AST ast);
   ~PKBManager();

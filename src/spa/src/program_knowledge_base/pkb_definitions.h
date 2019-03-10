@@ -18,4 +18,4 @@ using Constant = std::string;
 using Pattern = std::string;
 using ExprStr = std::string;
 
-const Line INVALID_LINE_NUMBER = "0";
+const Line INVALID_LINE_NUMBER = "-1";

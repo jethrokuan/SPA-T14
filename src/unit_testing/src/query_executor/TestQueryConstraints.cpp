@@ -19,12 +19,10 @@ TEST_CASE ("Test Query Constraints swapping functionality") {
       "x", std::unordered_set<std::string>{"1", "2", "3"}};
   SingleVariableConstraints s1 = {
       "y", std::unordered_set<std::string>{"4", "5", "6"}};
-  PairedVariableConstraints s2 = {{"x", "y"}, {{"1", "2"}, {"3", "4"}}};
-  PairedVariableConstraints s3 = {{"x", "y"}, {{"1", "3"}, {"3", "4"}}};
+  PairedVariableConstraints s4 = {{"x", "y"}, {{"3", "4"}}};
   REQUIRE(qc.getSingleVariableConstraintMapRef()[s0.first] == s0.second);
   REQUIRE(qc.getSingleVariableConstraintMapRef()[s1.first] == s1.second);
-  REQUIRE(qc.getPairedVariableConstraintListRef()[0] == s2);
-  REQUIRE(qc.getPairedVariableConstraintListRef()[1] == s3);
+  REQUIRE(qc.getPairedVariableConstraintMapRef()[s4.first] == s4.second);
 }
 
 TEST_CASE ("Test Query Constraints isVarInAllPossibleValues functionality") {

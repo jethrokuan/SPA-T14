@@ -34,7 +34,7 @@ class ConstraintSolver {
   //! Get a map of constraints from single variables to allowed values
   static std::unordered_map<std::string, std::unordered_set<std::string>>
   intersectSingleVarConstraints(SingleVariableConstraintMap& svcm,
-                                PairedVariableConstraintList& pvcl);
+                                PairedVariableConstraintMap& pvcm);
 
   //! Intersects the current list of single constraints with a new constraint
   static void intersectTwoConstraints(
@@ -47,7 +47,7 @@ class ConstraintSolver {
       std::pair<std::string, std::string>,
       std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>,
       Utils::pair_hash>
-  intersectPairedVarConstraints(PairedVariableConstraintList& pvcl);
+  intersectPairedVarConstraints(PairedVariableConstraintMap& pvcm);
 
   //! Filters a QueryConstraints object based on calculated constraints
   static void filterQueryConstraints(

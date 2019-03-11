@@ -23,7 +23,8 @@ using PairedConstraintSet =
     std::unordered_set<PairedConstraint, Utils::pair_hash>;
 
 //! A specific set of constraints tied to a variable name e.g. a->{1, 2}
-using SingleVariableConstraints = std::pair<std::string, SingleConstraintSet>;
+using SingleVariableConstraints =
+    std::pair<SingleConstraint, SingleConstraintSet>;
 //! A specific set of constraints tied to a variable pair e.g. (a, b)->{(1,2)}
 using PairedVariableConstraints =
     std::pair<PairedVariables, PairedConstraintSet>;
@@ -33,14 +34,17 @@ using PairedVariableConstraints =
 using PairedVariableConstraintList = std::vector<PairedVariableConstraints>;
 
 using SingleVariableConstraintMap =
-    std::unordered_map<std::string, SingleConstraintSet>;
+    std::unordered_map<SingleConstraint, SingleConstraintSet>;
+
+using PairedVariableConstraintMap =
+    std::unordered_map<PairedConstraint, PairedConstraintSet, Utils::pair_hash>;
 
 //! Defines the allowed set of values for a given Query
 class QueryConstraints {
  private:
   SingleVariableConstraintMap allPossibleValues;
   SingleVariableConstraintMap singleVariableConstraintMap;
-  PairedVariableConstraintList pairedVariableConstraintList;
+  PairedVariableConstraintMap pairedVariableConstraintMap;
 
   template <class T>
   std::unordered_set<std::pair<T, T>, Utils::pair_hash> swapElementsInSet(
@@ -91,16 +95,16 @@ class QueryConstraints {
     return singleVariableConstraintMap;
   }
 
-  PairedVariableConstraintList& getPairedVariableConstraintListRef() {
-    return pairedVariableConstraintList;
+  PairedVariableConstraintMap& getPairedVariableConstraintMapRef() {
+    return pairedVariableConstraintMap;
   }
 
   void setSingleVariableConstraintMapRef(SingleVariableConstraintMap svcm) {
     singleVariableConstraintMap = svcm;
   }
 
-  void setPairedVariableConstraintListRef(PairedVariableConstraintList pvcl) {
-    pairedVariableConstraintList = pvcl;
+  void setPairedVariableConstraintMapRef(PairedVariableConstraintMap pvcl) {
+    pairedVariableConstraintMap = pvcl;
   }
 
   //! Checks if a particular variable is already inside the SVCL
@@ -143,8 +147,7 @@ class QueryConstraints {
       os << "}\n";
     }
     os << std::string("Printing pairedVariableConstraints:\n");
-    for (const PairedVariableConstraints& el :
-         qc.pairedVariableConstraintList) {
+    for (const PairedVariableConstraints& el : qc.pairedVariableConstraintMap) {
       os << std::string("(") << el.first.first << std::string(",")
          << el.first.second << std::string("): {");
       for (const auto& el2 : el.second) {

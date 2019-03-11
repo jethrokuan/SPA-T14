@@ -1617,6 +1617,264 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto calls_test_14 = pkb.getCalleeProceduresS("G");
     REQUIRE(calls_test_14 == std::nullopt);
   }
+
+  SECTION ("uses relations") {
+    std::unordered_set<std::string> uses_test_1_check;
+    uses_test_1_check.insert("b");
+    uses_test_1_check.insert("d");
+    uses_test_1_check.insert("x");
+    uses_test_1_check.insert("z");
+    auto uses_test_1 = pkb.getVarUsedByProcedure("A");
+    REQUIRE(*uses_test_1 == uses_test_1_check);
+
+    std::unordered_set<std::string> uses_test_2_check;
+    uses_test_2_check.insert("b");
+    uses_test_2_check.insert("d");
+    uses_test_2_check.insert("x");
+    uses_test_2_check.insert("z");
+    auto uses_test_2 = pkb.getVarUsedByProcedure("B");
+    REQUIRE(*uses_test_2 == uses_test_2_check);
+
+    std::unordered_set<std::string> uses_test_3_check;
+    uses_test_3_check.insert("d");
+    uses_test_3_check.insert("x");
+    auto uses_test_3 = pkb.getVarUsedByProcedure("C");
+    REQUIRE(*uses_test_3 == uses_test_3_check);
+
+    std::unordered_set<std::string> uses_test_4_check;
+    uses_test_4_check.insert("d");
+    uses_test_4_check.insert("x");
+    auto uses_test_4 = pkb.getVarUsedByProcedure("D");
+    REQUIRE(*uses_test_4 == uses_test_4_check);
+
+    std::unordered_set<std::string> uses_test_5_check;
+    auto uses_test_5 = pkb.getVarUsedByProcedure("E");
+    REQUIRE(uses_test_5 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_6_check;
+    uses_test_6_check.insert("f");
+    auto uses_test_6 = pkb.getVarUsedByProcedure("F");
+    REQUIRE(*uses_test_6 == uses_test_6_check);
+
+    std::unordered_set<std::string> uses_test_7_check;
+    auto uses_test_7 = pkb.getVarUsedByProcedure("G");
+    REQUIRE(uses_test_7 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_8_check;
+    uses_test_8_check.insert("b");
+    uses_test_8_check.insert("d");
+    uses_test_8_check.insert("x");
+    uses_test_8_check.insert("z");
+    auto uses_test_8 = pkb.getVarUsedByLine("1");
+    REQUIRE(*uses_test_8 == uses_test_8_check);
+
+    std::unordered_set<std::string> uses_test_9_check;
+    auto uses_test_9 = pkb.getVarUsedByLine("2");
+    REQUIRE(uses_test_9 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_10_check;
+    uses_test_10_check.insert("d");
+    uses_test_10_check.insert("x");
+    auto uses_test_10 = pkb.getVarUsedByLine("3");
+    REQUIRE(*uses_test_10 == uses_test_10_check);
+
+    std::unordered_set<std::string> uses_test_11_check;
+    uses_test_11_check.insert("z");
+    auto uses_test_11 = pkb.getVarUsedByLine("4");
+    REQUIRE(*uses_test_11 == uses_test_11_check);
+
+    std::unordered_set<std::string> uses_test_12_check;
+    uses_test_12_check.insert("b");
+    auto uses_test_12 = pkb.getVarUsedByLine("5");
+    REQUIRE(*uses_test_12 == uses_test_12_check);
+
+    std::unordered_set<std::string> uses_test_13_check;
+    uses_test_13_check.insert("d");
+    uses_test_13_check.insert("x");
+    auto uses_test_13 = pkb.getVarUsedByLine("6");
+    REQUIRE(*uses_test_13 == uses_test_13_check);
+
+    std::unordered_set<std::string> uses_test_14_check;
+    auto uses_test_14 = pkb.getVarUsedByLine("7");
+    REQUIRE(uses_test_14 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_15_check;
+    auto uses_test_15 = pkb.getVarUsedByLine("8");
+    REQUIRE(uses_test_15 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_16_check;
+    uses_test_16_check.insert("x");
+    auto uses_test_16 = pkb.getVarUsedByLine("9");
+    REQUIRE(*uses_test_16 == uses_test_16_check);
+
+    std::unordered_set<std::string> uses_test_17_check;
+    uses_test_17_check.insert("d");
+    auto uses_test_17 = pkb.getVarUsedByLine("10");
+    REQUIRE(*uses_test_17 == uses_test_17_check);
+
+    std::unordered_set<std::string> uses_test_18_check;
+    auto uses_test_18 = pkb.getVarUsedByLine("11");
+    REQUIRE(uses_test_18 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_19_check;
+    auto uses_test_19 = pkb.getVarUsedByLine("12");
+    REQUIRE(uses_test_19 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_20_check;
+    auto uses_test_20 = pkb.getVarUsedByLine("13");
+    REQUIRE(uses_test_20 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_21_check;
+    uses_test_21_check.insert("f");
+    auto uses_test_21 = pkb.getVarUsedByLine("14");
+    REQUIRE(*uses_test_21 == uses_test_21_check);
+
+    std::unordered_set<std::string> uses_test_22_check;
+    auto uses_test_22 = pkb.getVarUsedByLine("15");
+    REQUIRE(uses_test_22 == std::nullopt);
+
+    std::unordered_set<std::string> uses_test_23_check;
+    auto uses_test_23 = pkb.getVarUsedByLine("16");
+    REQUIRE(uses_test_23 == std::nullopt);
+  }
+
+  SECTION ("modifies relations") {
+    std::unordered_set<std::string> modifies_test_1_check;
+    modifies_test_1_check.insert("a");
+    modifies_test_1_check.insert("c");
+    modifies_test_1_check.insert("e");
+    modifies_test_1_check.insert("x");
+    modifies_test_1_check.insert("y");
+    modifies_test_1_check.insert("z");
+    auto modifies_test_1 = pkb.getVarModifiedByProcedure("A");
+    REQUIRE(*modifies_test_1 == modifies_test_1_check);
+
+    std::unordered_set<std::string> modifies_test_2_check;
+    modifies_test_2_check.insert("c");
+    modifies_test_2_check.insert("e");
+    modifies_test_2_check.insert("x");
+    modifies_test_2_check.insert("y");
+    modifies_test_2_check.insert("z");
+    auto modifies_test_2 = pkb.getVarModifiedByProcedure("B");
+    REQUIRE(*modifies_test_2 == modifies_test_2_check);
+
+    std::unordered_set<std::string> modifies_test_3_check;
+    modifies_test_3_check.insert("c");
+    modifies_test_3_check.insert("e");
+    modifies_test_3_check.insert("x");
+    modifies_test_3_check.insert("y");
+    auto modifies_test_3 = pkb.getVarModifiedByProcedure("C");
+    REQUIRE(*modifies_test_3 == modifies_test_3_check);
+
+    std::unordered_set<std::string> modifies_test_4_check;
+    modifies_test_4_check.insert("x");
+    auto modifies_test_4 = pkb.getVarModifiedByProcedure("D");
+    REQUIRE(*modifies_test_4 == modifies_test_4_check);
+
+    std::unordered_set<std::string> modifies_test_5_check;
+    modifies_test_5_check.insert("e");
+    modifies_test_5_check.insert("y");
+    auto modifies_test_5 = pkb.getVarModifiedByProcedure("E");
+    REQUIRE(*modifies_test_5 == modifies_test_5_check);
+
+    std::unordered_set<std::string> modifies_test_6_check;
+    modifies_test_6_check.insert("g");
+    modifies_test_6_check.insert("z");
+    auto modifies_test_6 = pkb.getVarModifiedByProcedure("F");
+    REQUIRE(*modifies_test_6 == modifies_test_6_check);
+
+    std::unordered_set<std::string> modifies_test_7_check;
+    modifies_test_7_check.insert("g");
+    modifies_test_7_check.insert("z");
+    auto modifies_test_7 = pkb.getVarModifiedByProcedure("G");
+    REQUIRE(*modifies_test_7 == modifies_test_7_check);
+
+    std::unordered_set<std::string> modifies_test_8_check;
+    modifies_test_8_check.insert("c");
+    modifies_test_8_check.insert("e");
+    modifies_test_8_check.insert("x");
+    modifies_test_8_check.insert("y");
+    modifies_test_8_check.insert("z");
+    auto modifies_test_8 = pkb.getVarModifiedByLine("1");
+    REQUIRE(*modifies_test_8 == modifies_test_8_check);
+
+    std::unordered_set<std::string> modifies_test_9_check;
+    modifies_test_9_check.insert("a");
+    auto modifies_test_9 = pkb.getVarModifiedByLine("2");
+    REQUIRE(*modifies_test_9 == modifies_test_9_check);
+
+    std::unordered_set<std::string> modifies_test_10_check;
+    modifies_test_10_check.insert("c");
+    modifies_test_10_check.insert("e");
+    modifies_test_10_check.insert("x");
+    modifies_test_10_check.insert("y");
+    auto modifies_test_10 = pkb.getVarModifiedByLine("3");
+    REQUIRE(*modifies_test_10 == modifies_test_10_check);
+
+    std::unordered_set<std::string> modifies_test_11_check;
+    modifies_test_11_check.insert("z");
+    auto modifies_test_11 = pkb.getVarModifiedByLine("4");
+    REQUIRE(*modifies_test_11 == modifies_test_11_check);
+
+    std::unordered_set<std::string> modifies_test_12_check;
+    auto modifies_test_12 = pkb.getVarModifiedByLine("5");
+    REQUIRE(modifies_test_12 == std::nullopt);
+
+    std::unordered_set<std::string> modifies_test_13_check;
+    modifies_test_13_check.insert("x");
+    auto modifies_test_13 = pkb.getVarModifiedByLine("6");
+    REQUIRE(*modifies_test_13 == modifies_test_13_check);
+
+    std::unordered_set<std::string> modifies_test_14_check;
+    modifies_test_14_check.insert("e");
+    modifies_test_14_check.insert("y");
+    auto modifies_test_14 = pkb.getVarModifiedByLine("7");
+    REQUIRE(*modifies_test_14 == modifies_test_14_check);
+
+    std::unordered_set<std::string> modifies_test_15_check;
+    modifies_test_15_check.insert("c");
+    auto modifies_test_15 = pkb.getVarModifiedByLine("8");
+    REQUIRE(*modifies_test_15 == modifies_test_15_check);
+
+    std::unordered_set<std::string> modifies_test_16_check;
+    modifies_test_16_check.insert("x");
+    auto modifies_test_16 = pkb.getVarModifiedByLine("9");
+    REQUIRE(*modifies_test_16 == modifies_test_16_check);
+
+    std::unordered_set<std::string> modifies_test_17_check;
+    auto modifies_test_17 = pkb.getVarModifiedByLine("10");
+    REQUIRE(modifies_test_17 == std::nullopt);
+
+    std::unordered_set<std::string> modifies_test_18_check;
+    modifies_test_18_check.insert("y");
+    auto modifies_test_18 = pkb.getVarModifiedByLine("11");
+    REQUIRE(*modifies_test_18 == modifies_test_18_check);
+
+    std::unordered_set<std::string> modifies_test_19_check;
+    modifies_test_19_check.insert("e");
+    auto modifies_test_19 = pkb.getVarModifiedByLine("12");
+    REQUIRE(*modifies_test_19 == modifies_test_19_check);
+
+    std::unordered_set<std::string> modifies_test_20_check;
+    modifies_test_20_check.insert("g");
+    modifies_test_20_check.insert("z");
+    auto modifies_test_20 = pkb.getVarModifiedByLine("13");
+    REQUIRE(*modifies_test_20 == modifies_test_20_check);
+
+    std::unordered_set<std::string> modifies_test_21_check;
+    auto modifies_test_21 = pkb.getVarModifiedByLine("14");
+    REQUIRE(modifies_test_21 == std::nullopt);
+
+    std::unordered_set<std::string> modifies_test_22_check;
+    modifies_test_22_check.insert("z");
+    auto modifies_test_22 = pkb.getVarModifiedByLine("15");
+    REQUIRE(*modifies_test_22 == modifies_test_22_check);
+
+    std::unordered_set<std::string> modifies_test_23_check;
+    modifies_test_23_check.insert("g");
+    auto modifies_test_23 = pkb.getVarModifiedByLine("16");
+    REQUIRE(*modifies_test_23 == modifies_test_23_check);
+  }
 }
 
 TEST_CASE ("Test detection of semantic errors in AST") {

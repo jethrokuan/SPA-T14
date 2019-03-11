@@ -314,3 +314,69 @@ TEST_CASE ("Test Issue #174 - can we handle complex iterative constraints?") {
             std::vector<std::string>{"1"});
   };
 }
+
+TEST_CASE ("Test multi-variable select from ConstraintSolver") {
+  auto qc = QueryConstraints();
+  qc.addToSingleVariableConstraints(
+      "x", std::unordered_set<std::string>{"1", "2", "3"});
+  qc.addToSingleVariableConstraints(
+      "y", std::unordered_set<std::string>{"4", "5", "6"});
+  SECTION ("Select <x, y>") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(
+                qc, std::vector<std::string>{"x", "y"}) ==
+            std::vector<std::vector<std::string>>{{"1", "2", "3"},
+                                                  {"4", "5", "6"}});
+  }
+}
+
+TEST_CASE (
+    "Test multi-variable select from ConstraintSolver with one var being "
+    "constrained") {
+  auto qc = QueryConstraints();
+  qc.addToSingleVariableConstraints(
+      "x", std::unordered_set<std::string>{"1", "2", "3"});
+  qc.addToSingleVariableConstraints("x",
+                                    std::unordered_set<std::string>{"1", "2"});
+  qc.addToSingleVariableConstraints(
+      "y", std::unordered_set<std::string>{"4", "5", "6"});
+  SECTION ("Select <x, y>") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(
+                qc, std::vector<std::string>{"x", "y"}) ==
+            std::vector<std::vector<std::string>>{{"1", "2"}, {"4", "5", "6"}});
+  }
+}
+
+TEST_CASE (
+    "Test multi-variable select from ConstraintSolver with one paired "
+    "constraint") {
+  auto qc = QueryConstraints();
+  qc.addToPairedVariableConstraints(
+      "s3", "s1",
+      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>{
+          {"1", "100"}, {"2", "101"}, {"3", "103"}});
+  SECTION ("Select <x, y>") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(
+                qc, std::vector<std::string>{"s1", "s3"}) ==
+            std::vector<std::vector<std::string>>{{"100", "101", "103"},
+                                                  {"1", "2", "3"}});
+  }
+}
+
+TEST_CASE (
+    "Test multi-variable select from ConstraintSolver with two paired "
+    "constraints affecting each other") {
+  auto qc = QueryConstraints();
+  qc.addToPairedVariableConstraints(
+      "s3", "s1",
+      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>{
+          {"1", "100"}, {"2", "101"}, {"3", "103"}});
+  qc.addToPairedVariableConstraints(
+      "s3", "s1",
+      std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>{
+          {"1", "100"}, {"2", "101"}});
+  SECTION ("Select <x, y>") {
+    REQUIRE(ConstraintSolver::constrainAndSelect(
+                qc, std::vector<std::string>{"s1", "s3"}) ==
+            std::vector<std::vector<std::string>>{{"100", "101"}, {"1", "2"}});
+  }
+}

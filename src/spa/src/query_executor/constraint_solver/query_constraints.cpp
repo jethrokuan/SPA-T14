@@ -29,9 +29,7 @@ void QueryConstraints::addToPairedVariableConstraints(
   // Do it stably: only swap if var1_name > var2_name
   if (var1_name > var2_name) {
     constraint_values = swapElementsInSet(constraint_values);
-    std::string temp = var1_name;
-    var1_name = var2_name;
-    var2_name = temp;
+    std::swap(var1_name, var2_name);
   }
   // Intersect + add to existing constraints, or just create new set
   bool varExistsInMap =

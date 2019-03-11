@@ -49,16 +49,19 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // Since the Select variable's values will either be returned or constrained
   // add all possible values for it to take in at the start
   // Case: Select v such that Follows(1, 2) [Follows(1, 2) == true]
-  auto select_var = query->selected_declarations->at(0)->getSynonym().synonym;
-  // Add entire set of values for variable into the overall constraints
-  addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
-                                       query_constraints);
+  // Do this for all selected variables
+  for (const auto& select_var : *(query->selected_declarations)) {
+    // Add entire set of values for variable into the overall constraints
+    auto select_var_str = select_var->getSynonym().synonym;
+    addAllValuesForVariableToConstraints(query->declarations, pkb,
+                                         select_var_str, query_constraints);
+  }
 
   // Get vector of vector of results - one for each selected var
   auto result = ConstraintSolver::constrainAndSelect(
       query_constraints, getSynonymsFromSelect(query->selected_declarations));
 
-  return result.at(0);
+  return Utils::cartesianProduct(result);
 }
 
 std::vector<std::vector<std::string>> constrainAndSelect(

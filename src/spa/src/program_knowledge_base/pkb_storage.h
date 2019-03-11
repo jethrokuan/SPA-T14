@@ -42,6 +42,20 @@ class PKBStorage {
 
   std::string getLineFromNode(const std::shared_ptr<Node> node);
 
+  // calls
+  std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
+      calls_set;
+  std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
+      calls_set_s;
+  std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
+      procedure_caller_procedure_callee_map;
+  std::unordered_map<ProcedureCallee, std::unordered_set<ProcedureCaller>>
+      procedure_callee_procedure_caller_map;
+  std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
+      procedure_caller_procedure_callee_map_s;
+  std::unordered_map<ProcedureCallee, std::unordered_set<ProcedureCaller>>
+      procedure_callee_procedure_caller_map_s;
+
   // follows
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set;
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set_s;
@@ -122,6 +136,9 @@ class PKBStorage {
   // the node and the line number (instead of just the node)
   Line storeLine(const std::shared_ptr<Node> node);
   void storeCFGEdge(const Line, const Line);
+
+  void storeCallsRelation(const ProcedureCaller, const ProcedureCallee);
+  void storeCallsRelationS(const ProcedureCaller, const ProcedureCallee);
   void storeFollowsRelation(const LineBefore, const LineAfter);
   void storeFollowsRelationS(const LineBefore, const LineAfter);
   void storeParentRelation(const ParentLine, const ChildLine);

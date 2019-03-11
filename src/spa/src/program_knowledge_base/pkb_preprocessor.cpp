@@ -10,6 +10,7 @@ PKBPreprocessor::PKBPreprocessor(const AST ast,
   setLineNumbers(ast);
   setCFG(ast);
   setDesignEntities(ast);
+  setCallsRelations(ast);
   setFollowsRelations(ast);
   setParentRelations(ast);
   setUsesRelations(ast);
@@ -270,6 +271,90 @@ void PKBPreprocessor::setDesignEntitiesIterator(
   }
 }
 
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<RootNode> node) {
+  // std::cout << "RootNode" << std::endl;
+  // set direct relations
+  for (const auto &proc : node->ProcList) {
+    setCallsRelations(proc);
+  }
+  // set indirect relations after direct relations have been set
+  // std::cout << "SETTING INDIRECT RELATIONS" << std::endl;
+  setCallsIndirectRelations();
+}
+
+void PKBPreprocessor::setCallsIndirectRelations() {
+  // make a copy of calls_set which contains direct relations
+  auto direct_calls_sets =
+      std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>,
+                         pair_hash>(storage->calls_set.begin(),
+                                    storage->calls_set.end());
+  for (const auto &direct_call : direct_calls_sets) {
+    const ProcedureCaller proc_caller = direct_call.first;
+    const ProcedureCallee proc_callee = direct_call.second;
+    setCallsIndirectRelationsH(proc_caller, proc_callee);
+  }
+}
+
+void PKBPreprocessor::setCallsIndirectRelationsH(
+    const ProcedureCaller proc_caller, const ProcedureCallee proc_callee) {
+  // std::cout << "setCallsIndirectRelationsH" << std::endl;
+  bool has_indirect =
+      storage->procedure_caller_procedure_callee_map.find(proc_callee) !=
+      storage->procedure_caller_procedure_callee_map.end();
+  if (has_indirect) {
+    auto proc_callee_callee_set =
+        storage->procedure_caller_procedure_callee_map.at(proc_callee);
+    for (const auto &proc_callee_callee : proc_callee_callee_set) {
+      storage->storeCallsRelationS(proc_caller, proc_callee_callee);
+      setCallsIndirectRelationsH(proc_caller, proc_callee_callee);
+    }
+  }
+}
+
+void PKBPreprocessor::setCallsRelations(
+    const std::shared_ptr<ProcedureNode> node) {
+  // std::cout << "ProcedureNode" << std::endl;
+  setCallsRelationsIterator(node->StmtList);
+}
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<IfNode> node) {
+  // std::cout << "IfNode" << std::endl;
+  setCallsRelationsIterator(node->StmtListThen);
+  setCallsRelationsIterator(node->StmtListElse);
+}
+
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<WhileNode> node) {
+  // std::cout << "WhileNode" << std::endl;
+  setCallsRelationsIterator(node->StmtList);
+}
+
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<ReadNode>) {
+  // std::cout << "ReadNode" << std::endl;
+}
+
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<PrintNode>) {
+  // std::cout << "PrintNode" << std::endl;
+}
+
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<AssignNode>) {
+  // std::cout << "AssignNode" << std::endl;
+}
+
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<CallNode> node) {
+  // std::cout << "CallNode" << std::endl;
+  const Line line_number = storage->getLineFromNode(node);
+  const Procedure proc_caller = storage->getProcedureFromLine(line_number);
+  storage->storeCallsRelation(proc_caller, node->ProcName);
+  storage->storeCallsRelationS(proc_caller, node->ProcName);
+}
+
+void PKBPreprocessor::setCallsRelationsIterator(
+    const std::vector<StmtNode> stmt_lst) {
+  // std::cout << "Iterator" << std::endl;
+  for (const auto &stmt : stmt_lst) {
+    std::visit([this](const auto &s) { setCallsRelations(s); }, stmt);
+  }
+}
+
 void PKBPreprocessor::setFollowsRelations(
     const std::shared_ptr<RootNode> node) {
   for (const auto &proc : node->ProcList) {
@@ -296,11 +381,11 @@ void PKBPreprocessor::setFollowsRelationsIterator(
     const std::vector<StmtNode> stmt_lst) {
   // add direct relations
   for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
-    Line cur_line_number = std::visit(
+    const Line cur_line_number = std::visit(
         [this](const auto &s) { return storage->getLineFromNode(s); },
         stmt_lst[i]);
 
-    Line next_line_number = std::visit(
+    const Line next_line_number = std::visit(
         [this](const auto &s) { return storage->getLineFromNode(s); },
         stmt_lst[i + 1]);
     storage->storeFollowsRelation(cur_line_number, next_line_number);
@@ -308,11 +393,11 @@ void PKBPreprocessor::setFollowsRelationsIterator(
   // add indirect relations
   for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
     for (std::size_t j = i + 1; j < stmt_lst.size(); j++) {
-      Line cur_line_number = std::visit(
+      const Line cur_line_number = std::visit(
           [this](const auto &s) { return storage->getLineFromNode(s); },
           stmt_lst[i]);
 
-      Line next_line_number = std::visit(
+      const Line next_line_number = std::visit(
           [this](const auto &s) { return storage->getLineFromNode(s); },
           stmt_lst[j]);
       storage->storeFollowsRelationS(cur_line_number, next_line_number);
@@ -354,7 +439,7 @@ void PKBPreprocessor::setParentRelationsH(
 
 void PKBPreprocessor::setParentRelationsH(
     const std::shared_ptr<IfNode> node, std::vector<ParentLine> parent_lines) {
-  Line cur_line_number = storage->getLineFromNode(node);
+  const Line cur_line_number = storage->getLineFromNode(node);
   parent_lines.push_back(cur_line_number);
   setParentRelationsIterator(node->StmtListThen, parent_lines);
   setParentRelationsIterator(node->StmtListElse, parent_lines);
@@ -363,7 +448,7 @@ void PKBPreprocessor::setParentRelationsH(
 void PKBPreprocessor::setParentRelationsH(
     const std::shared_ptr<WhileNode> node,
     std::vector<ParentLine> parent_lines) {
-  Line cur_line_number = storage->getLineFromNode(node);
+  const Line cur_line_number = storage->getLineFromNode(node);
   parent_lines.push_back(cur_line_number);
   setParentRelationsIterator(node->StmtList, parent_lines);
 }
@@ -372,9 +457,9 @@ void PKBPreprocessor::setParentRelationsIterator(
     const std::vector<StmtNode> stmt_lst,
     const std::vector<ParentLine> parent_lines) {
   if (parent_lines.size() > 0) {
-    Line direct_parent_line_number = parent_lines.back();
+    const Line direct_parent_line_number = parent_lines.back();
     for (const auto &stmt : stmt_lst) {
-      Line cur_line_number = std::visit(
+      const Line cur_line_number = std::visit(
           [this](const auto &s) { return storage->getLineFromNode(s); }, stmt);
       // add direct relationship
       storage->storeParentRelation(direct_parent_line_number, cur_line_number);
@@ -476,8 +561,8 @@ void PKBPreprocessor::setUsesRelationsH(std::shared_ptr<NumberNode>,
 void PKBPreprocessor::setUsesRelationsH(
     const std::shared_ptr<VariableNode> node,
     const std::shared_ptr<Node> parent_node) {
-  Line cur_line_number = storage->getLineFromNode(parent_node);
-  Procedure proc = storage->getProcedureFromLine(cur_line_number);
+  const Line cur_line_number = storage->getLineFromNode(parent_node);
+  const Procedure proc = storage->getProcedureFromLine(cur_line_number);
   storage->storeProcedureUsesVarRelation(proc, node->Name);
   storage->storeLineUsesVarRelation(cur_line_number, node->Name);
 
@@ -574,9 +659,9 @@ void PKBPreprocessor::setPattern(const std::shared_ptr<ProcedureNode> node) {
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<AssignNode> node) {
   // get var name
-  Variable var_name = node->Var->Name;
-  Line line_num = storage->getLineFromNode(node);
-  ExprStr expr_str =
+  const Variable var_name = node->Var->Name;
+  const Line line_num = storage->getLineFromNode(node);
+  const ExprStr expr_str =
       std::visit([](const auto &s) { return s->to_str(); }, node->Exp);
   storage->storePatternAssign(var_name, expr_str, line_num);
 }

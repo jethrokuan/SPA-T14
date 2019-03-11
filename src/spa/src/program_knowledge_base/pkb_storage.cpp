@@ -39,6 +39,32 @@ void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
   addToSetMap(line_next_line_previous_map, dest, source);
 }
 
+void PKBStorage::storeCallsRelation(const ProcedureCaller procedure_caller,
+                                    const ProcedureCallee procedure_callee) {
+  if (procedure_caller.compare(procedure_callee) == 0) {
+    throw PkbAstSemanticException("Found recursive call to procedure: '" +
+                                  procedure_caller + "'.");
+  }
+  calls_set.insert(std::pair(procedure_caller, procedure_callee));
+  addToSetMap(procedure_caller_procedure_callee_map, procedure_caller,
+              procedure_callee);
+  addToSetMap(procedure_callee_procedure_caller_map, procedure_callee,
+              procedure_caller);
+}
+
+void PKBStorage::storeCallsRelationS(const ProcedureCaller procedure_caller,
+                                     const ProcedureCallee procedure_callee) {
+  if (procedure_caller.compare(procedure_callee) == 0) {
+    throw PkbAstSemanticException("Found recursive call to procedure: '" +
+                                  procedure_caller + "'.");
+  }
+  calls_set_s.insert(std::pair(procedure_caller, procedure_callee));
+  addToSetMap(procedure_caller_procedure_callee_map_s, procedure_caller,
+              procedure_callee);
+  addToSetMap(procedure_callee_procedure_caller_map_s, procedure_callee,
+              procedure_caller);
+}
+
 void PKBStorage::storeFollowsRelation(const LineBefore line_before,
                                       const LineAfter line_after) {
   follows_set.insert(std::pair<LineBefore, LineAfter>(line_before, line_after));

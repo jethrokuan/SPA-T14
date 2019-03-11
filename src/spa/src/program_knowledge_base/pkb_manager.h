@@ -66,6 +66,7 @@ class PKBManager {
   std::unordered_set<Procedure> getProcedureSet();
 
   // is relationship set empty
+  // TODO implement for calls and next
   bool isLineFollowLineSetEmpty();
   bool isLineFollowLineSSetEmpty();
   bool isLineParentLineSetEmpty();
@@ -76,6 +77,7 @@ class PKBManager {
   bool isProcedureModifiesVarSetEmpty();
 
   // is relationship valid
+  bool isProcedureCallsProcedure(const ProcedureCaller, const ProcedureCallee);
   bool isLineFollowLine(const LineBefore, const LineAfter);
   bool isLineFollowLineS(const LineBefore, const LineAfter);
   bool isLineParentLine(const ParentLine, const ChildLine);
@@ -86,6 +88,15 @@ class PKBManager {
   bool isLineUsesVar(const Line, const Variable);
 
   // get relationship mapping
+  std::optional<std::unordered_set<ProcedureCallee>> getCalleeProcedures(
+      const ProcedureCaller);
+  std::optional<std::unordered_set<ProcedureCaller>> getCallerProcedures(
+      const ProcedureCallee);
+  std::optional<std::unordered_set<ProcedureCallee>> getCalleeProceduresS(
+      const ProcedureCaller);
+  std::optional<std::unordered_set<ProcedureCaller>> getCallerProceduresS(
+      const ProcedureCallee);
+
   std::optional<LineAfter> getFollowingLine(const LineBefore);
   std::optional<LineBefore> getBeforeLine(const LineAfter);
   std::optional<std::unordered_set<LineAfter>> getFollowingLineS(

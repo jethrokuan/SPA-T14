@@ -27,7 +27,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
   if (query->such_that == nullptr && query->pattern == nullptr) {
     auto result_set =
-        getSelect(pkb, query->selected_declaration->getDesignEntity());
+        getSelect(pkb, query->selected_declarations->at(0)->getDesignEntity());
     return std::vector<std::string>(result_set.begin(), result_set.end());
   }
 
@@ -56,13 +56,14 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // Since the Select variable's values will either be returned or constrained
   // add all possible values for it to take in at the start
   // Case: Select v such that Follows(1, 2) [Follows(1, 2) == true]
-  auto select_var = query->selected_declaration->getSynonym().synonym;
+  auto select_var = query->selected_declarations->at(0)->getSynonym().synonym;
   // Add entire set of values for variable into the overall constraints
   addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
                                        query_constraints);
 
   auto result = ConstraintSolver::constrainAndSelect(
-      query_constraints, query->selected_declaration->getSynonym().synonym);
+      query_constraints,
+      query->selected_declarations->at(0)->getSynonym().synonym);
 
   return result;
 }
@@ -122,7 +123,7 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
 }
 
 bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
-  switch (query->such_that->getRelation()) {
+  switch (query->such_that->at(0)->getRelation()) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb, qc).evaluate();
     case Relation::ModifiesS:

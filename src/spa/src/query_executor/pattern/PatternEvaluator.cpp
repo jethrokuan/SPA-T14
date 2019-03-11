@@ -8,9 +8,9 @@
 
 bool PatternEvaluator::evaluate() {
   auto pattern = query->pattern;
-  auto pattern_syn = pattern->getSynonym();
-  auto pattern_lhs = pattern->getFirstArg();
-  auto pattern_rhs = pattern->getSecondArg();
+  auto pattern_syn = pattern->at(0)->getSynonym();
+  auto pattern_lhs = pattern->at(0)->getFirstArg();
+  auto pattern_rhs = pattern->at(0)->getSecondArg();
 
   // Add entire set of values for the pattern synoynm
   QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,

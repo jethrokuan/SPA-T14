@@ -60,8 +60,8 @@ class SuchThatEvaluator {
       : query(query),
         pkb(pkb),
         qc(qc),
-        arg1(query->such_that->getFirstArg()),
-        arg2(query->such_that->getSecondArg()){};
+        arg1(query->such_that->at(0)->getFirstArg()),
+        arg2(query->such_that->at(0)->getSecondArg()){};
 
   //! External API to run the such-that query on the given PKB instance
   bool evaluate();

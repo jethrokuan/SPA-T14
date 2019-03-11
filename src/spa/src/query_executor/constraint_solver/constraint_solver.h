@@ -63,7 +63,12 @@ class ConstraintSolver {
       const std::unordered_map<std::string, std::unordered_set<std::string>>);
 
  public:
-  //! Actually constrain the set of values and select the synonym indicated
+  //! Special case of constrainAndSelect - select only one variable
   static std::vector<std::string> constrainAndSelect(
       QueryConstraints& qc, const std::string toSelect);
+  //! \brief Intersect and resolve constraints and select allowed set of values
+  //! for multiple variables from the results: returns one vector for each var
+  //! in order - if vars_to_select = {x, y, z}, result will be in that order
+  static std::vector<std::vector<std::string>> constrainAndSelect(
+      QueryConstraints& qc, const std::vector<std::string> vars_to_select);
 };

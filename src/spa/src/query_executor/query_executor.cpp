@@ -19,18 +19,11 @@ using namespace QE;
 //! This decouples the return order of PKB with the result to screen
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   auto result = makeQueryUnsorted(query);
-  std::sort(result.begin(), result.end());
   return result;
 }
 
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
-  if (query->such_that == nullptr && query->pattern == nullptr) {
-    auto result_set =
-        getSelect(pkb, query->selected_declarations->at(0)->getDesignEntity());
-    return std::vector<std::string>(result_set.begin(), result_set.end());
-  }
-
   QueryConstraints query_constraints;
 
   if (query->such_that) {
@@ -61,15 +54,15 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
                                        query_constraints);
 
+  // Get vector of vector of results - one for each selected var
   auto result = ConstraintSolver::constrainAndSelect(
-      query_constraints,
-      query->selected_declarations->at(0)->getSynonym().synonym);
+      query_constraints, getSynonymsFromSelect(query->selected_declarations));
 
-  return result;
+  return result.at(0);
 }
 
- std::vector<std::vector<std::string>> constrainAndSelect(
-      QueryConstraints& qc, const std::vector<std::string> vars_to_select);
+std::vector<std::vector<std::string>> constrainAndSelect(
+    QueryConstraints& qc, const std::vector<std::string> vars_to_select);
 
 std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
                                                          DesignEntity de) {

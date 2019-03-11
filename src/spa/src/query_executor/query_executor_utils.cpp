@@ -68,3 +68,12 @@ std::optional<std::string> QueryExecutor::getSuchThatArgAsBasic(
                }},
       arg);
 }
+
+std::vector<std::string> QueryExecutor::getSynonymsFromSelect(
+    std::vector<Declaration*>* decls) {
+  std::vector<std::string> result;
+  for (const auto& decl : *decls) {
+    result.push_back(decl->getSynonym().synonym);
+  }
+  return result;
+}

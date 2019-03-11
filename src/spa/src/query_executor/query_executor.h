@@ -28,6 +28,10 @@ class QueryExecutor {
   //! Evaluates any Pattern clause
   bool handlePattern(QE::Query*, QueryConstraints&);
 
+  //! Utility function to get all synonym strings from a list of selected vars
+  std::vector<std::string> getSynonymsFromSelect(
+      std::vector<QE::Declaration*>* decls);
+
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};
 

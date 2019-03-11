@@ -43,10 +43,12 @@ class PKBStorage {
   std::string getLineFromNode(const std::shared_ptr<Node> node);
 
   // calls
+  std::unordered_set<std::pair<Line, Procedure>, pair_hash>
+      line_calls_procedure_set;
   std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
-      calls_set;
+      procedure_calls_procedure_set;
   std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
-      calls_set_s;
+      procedure_calls_procedure_set_s;
   std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
       procedure_caller_procedure_callee_map;
   std::unordered_map<ProcedureCallee, std::unordered_set<ProcedureCaller>>
@@ -81,12 +83,12 @@ class PKBStorage {
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
       procedure_uses_var_set;
   std::unordered_set<std::pair<Line, Variable>, pair_hash> line_uses_var_set;
-  std::unordered_map<Procedure, std::unordered_set<Line>>
+  std::unordered_map<Procedure, std::unordered_set<Variable>>
       var_used_by_procedure_map;
   std::unordered_map<Line, std::unordered_set<Variable>> var_used_by_line_map;
   std::unordered_map<Variable, std::unordered_set<Procedure>>
       procedure_uses_var_map;
-  std::unordered_map<Variable, std::unordered_set<Variable>> line_uses_var_map;
+  std::unordered_map<Variable, std::unordered_set<Line>> line_uses_var_map;
 
   // modifies
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
@@ -157,7 +159,7 @@ class PKBStorage {
   void storeIf(const Line);
   void storeConstant(const Constant);
   void storeProcedure(const Procedure);
-  void storeCall(const Line);
+  void storeCall(const Line, const Procedure);
 
   void storePatternAssign(const Variable, const ExprStr, const Line);
 

@@ -85,8 +85,8 @@ class PKBPreprocessor {
   void setUsesRelations(const std::shared_ptr<WhileNode> node);
   void setUsesRelations(const std::shared_ptr<PrintNode> node);
   void setUsesRelations(const std::shared_ptr<AssignNode> node);
-  void setUsesRelations(const std::shared_ptr<CallNode> node);
-  void setUsesRelations(const std::shared_ptr<ReadNode> node);
+  void setUsesRelations(const std::shared_ptr<CallNode>);
+  void setUsesRelations(const std::shared_ptr<ReadNode>);
   void setUsesRelationsH(Expr node, const std::shared_ptr<Node> parent_node);
   void setUsesRelationsH(const std::shared_ptr<BinOpNode> node,
                          const std::shared_ptr<Node> parent_node);
@@ -99,6 +99,7 @@ class PKBPreprocessor {
   void setUsesRelationsH(const std::shared_ptr<VariableNode> node,
                          const std::shared_ptr<Node> parent_node);
   void setUsesRelationsIterator(const std::vector<StmtNode> stmt_lst);
+  void setUsesIndirectRelations();
 
   void setModifiesRelations(const std::shared_ptr<RootNode> node);
   void setModifiesRelations(const std::shared_ptr<ProcedureNode> node);
@@ -111,6 +112,7 @@ class PKBPreprocessor {
   void setModifiesRelationsH(const std::shared_ptr<VariableNode> node,
                              const std::shared_ptr<Node> parent_node);
   void setModifiesRelationsIterator(const std::vector<StmtNode> stmt_lst);
+  void setModifiesIndirectRelations();
 
   void setPattern(const std::shared_ptr<RootNode> node);
   void setPattern(const std::shared_ptr<ProcedureNode> node);

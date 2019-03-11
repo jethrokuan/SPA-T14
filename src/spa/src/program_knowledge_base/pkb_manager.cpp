@@ -166,10 +166,10 @@ bool PKBManager::isProcedureModifiesVarSetEmpty() {
 bool PKBManager::isProcedureCallsProcedure(
     const ProcedureCaller procedure_caller,
     const ProcedureCallee procedure_callee) {
-  return pkb_storage->calls_set.find(
+  return pkb_storage->procedure_calls_procedure_set.find(
              std::pair<ProcedureCaller, ProcedureCallee>(procedure_caller,
                                                          procedure_callee)) !=
-         pkb_storage->calls_set.end();
+         pkb_storage->procedure_calls_procedure_set.end();
 }
 
 bool PKBManager::isLineFollowLine(const LineBefore line_before,

@@ -222,7 +222,7 @@ void PKBPreprocessor::setDesignEntities(
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<CallNode> node) {
   const Line cur_line = storage->getLineFromNode(node);
   storage->storeStatement(cur_line);
-  storage->storeCall(cur_line);
+  storage->storeCall(cur_line, node->ProcName);
 }
 
 void PKBPreprocessor::setDesignEntities(const Expr node) {
@@ -283,12 +283,14 @@ void PKBPreprocessor::setCallsRelations(const std::shared_ptr<RootNode> node) {
 }
 
 void PKBPreprocessor::setCallsIndirectRelations() {
-  // make a copy of calls_set which contains direct relations
-  auto direct_calls_sets =
+  // make a copy of procedure_calls_procedure_set which contains direct
+  // relations
+  auto direct_procedure_calls_procedure_sets =
       std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>,
-                         pair_hash>(storage->calls_set.begin(),
-                                    storage->calls_set.end());
-  for (const auto &direct_call : direct_calls_sets) {
+                         pair_hash>(
+          storage->procedure_calls_procedure_set.begin(),
+          storage->procedure_calls_procedure_set.end());
+  for (const auto &direct_call : direct_procedure_calls_procedure_sets) {
     const ProcedureCaller proc_caller = direct_call.first;
     const ProcedureCallee proc_callee = direct_call.second;
     setCallsIndirectRelationsH(proc_caller, proc_callee);
@@ -485,8 +487,52 @@ void PKBPreprocessor::setParentRelationsIterator(
 }
 
 void PKBPreprocessor::setUsesRelations(const std::shared_ptr<RootNode> node) {
+  // set relations within each procedure
   for (const auto &proc : node->ProcList) {
     setUsesRelations(proc);
+  }
+  // set indirect relations across procedures
+  setUsesIndirectRelations();
+}
+
+void PKBPreprocessor::setUsesIndirectRelations() {
+  // make a copy of procedure_calls_procedure_set which contains direct
+  // relations
+  auto indirect_procedure_calls_sets =
+      std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>,
+                         pair_hash>(
+          storage->procedure_calls_procedure_set_s.begin(),
+          storage->procedure_calls_procedure_set_s.end());
+  for (const auto &indirect_call : indirect_procedure_calls_sets) {
+    const ProcedureCaller proc_caller = indirect_call.first;
+    const ProcedureCallee proc_callee = indirect_call.second;
+    // if callee uses variables
+    if (storage->var_used_by_procedure_map.find(proc_callee) !=
+        storage->var_used_by_procedure_map.end()) {
+      auto vars_used = storage->var_used_by_procedure_map.at(proc_callee);
+      for (const auto &var : vars_used) {
+        storage->storeProcedureUsesVarRelation(proc_caller, var);
+      }
+    }
+  }
+
+  // loop through call_set
+  // gets the lines where there is a call statement
+  auto line_proc_set =
+      std::unordered_set<std::pair<Line, Procedure>, pair_hash>(
+          storage->line_calls_procedure_set.begin(),
+          storage->line_calls_procedure_set.end());
+  for (const auto &line_proc : line_proc_set) {
+    const Line line = line_proc.first;
+    const Procedure proc_called = line_proc.second;
+    // find out what vars the proc_called uses
+    if (storage->var_used_by_procedure_map.find(proc_called) !=
+        storage->var_used_by_procedure_map.end()) {
+      auto vars_used = storage->var_used_by_procedure_map.at(proc_called);
+      for (const auto &var : vars_used) {
+        storage->storeLineUsesVarRelation(line, var);
+      }
+    }
   }
 }
 
@@ -514,9 +560,7 @@ void PKBPreprocessor::setUsesRelations(const std::shared_ptr<AssignNode> node) {
   setUsesRelationsH(node->Exp, node);
 }
 
-void PKBPreprocessor::setUsesRelations(const std::shared_ptr<CallNode> node) {
-  // TODO
-}
+void PKBPreprocessor::setUsesRelations(const std::shared_ptr<CallNode>) {}
 
 void PKBPreprocessor::setUsesRelations(const std::shared_ptr<ReadNode>) {}
 
@@ -587,6 +631,50 @@ void PKBPreprocessor::setModifiesRelations(
   for (const auto &proc : node->ProcList) {
     setModifiesRelations(proc);
   }
+  setModifiesIndirectRelations();
+}
+
+void PKBPreprocessor::setModifiesIndirectRelations() {
+  // make a copy of procedure_calls_procedure_set which contains direct
+  // relations
+  auto indirect_procedure_calls_sets =
+      std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>,
+                         pair_hash>(
+          storage->procedure_calls_procedure_set_s.begin(),
+          storage->procedure_calls_procedure_set_s.end());
+  for (const auto &indirect_call : indirect_procedure_calls_sets) {
+    const ProcedureCaller proc_caller = indirect_call.first;
+    const ProcedureCallee proc_callee = indirect_call.second;
+    // if callee modifies variables
+    if (storage->var_modified_by_procedure_map.find(proc_callee) !=
+        storage->var_modified_by_procedure_map.end()) {
+      auto vars_modified =
+          storage->var_modified_by_procedure_map.at(proc_callee);
+      for (const auto &var : vars_modified) {
+        storage->storeProcedureModifiesVarRelation(proc_caller, var);
+      }
+    }
+  }
+
+  // loop through call_set
+  // gets the lines where there is a call statement
+  auto line_proc_set =
+      std::unordered_set<std::pair<Line, Procedure>, pair_hash>(
+          storage->line_calls_procedure_set.begin(),
+          storage->line_calls_procedure_set.end());
+  for (const auto &line_proc : line_proc_set) {
+    const Line line = line_proc.first;
+    const Procedure proc_called = line_proc.second;
+    // find out what vars the proc_called modifies
+    if (storage->var_modified_by_procedure_map.find(proc_called) !=
+        storage->var_modified_by_procedure_map.end()) {
+      auto vars_modified =
+          storage->var_modified_by_procedure_map.at(proc_called);
+      for (const auto &var : vars_modified) {
+        storage->storeLineModifiesVarRelation(line, var);
+      }
+    }
+  }
 }
 
 void PKBPreprocessor::setModifiesRelations(
@@ -611,10 +699,7 @@ void PKBPreprocessor::setModifiesRelations(
   setModifiesRelationsH(node->Var, node);
 }
 
-void PKBPreprocessor::setModifiesRelations(
-    const std::shared_ptr<CallNode> node) {
-  // TODO
-}
+void PKBPreprocessor::setModifiesRelations(const std::shared_ptr<CallNode>) {}
 
 void PKBPreprocessor::setModifiesRelations(
     const std::shared_ptr<AssignNode> node) {

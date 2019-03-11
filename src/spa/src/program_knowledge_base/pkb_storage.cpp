@@ -45,7 +45,8 @@ void PKBStorage::storeCallsRelation(const ProcedureCaller procedure_caller,
     throw PkbAstSemanticException("Found recursive call to procedure: '" +
                                   procedure_caller + "'.");
   }
-  calls_set.insert(std::pair(procedure_caller, procedure_callee));
+  procedure_calls_procedure_set.insert(
+      std::pair(procedure_caller, procedure_callee));
   addToSetMap(procedure_caller_procedure_callee_map, procedure_caller,
               procedure_callee);
   addToSetMap(procedure_callee_procedure_caller_map, procedure_callee,
@@ -58,7 +59,8 @@ void PKBStorage::storeCallsRelationS(const ProcedureCaller procedure_caller,
     throw PkbAstSemanticException("Found recursive call to procedure: '" +
                                   procedure_caller + "'.");
   }
-  calls_set_s.insert(std::pair(procedure_caller, procedure_callee));
+  procedure_calls_procedure_set_s.insert(
+      std::pair(procedure_caller, procedure_callee));
   addToSetMap(procedure_caller_procedure_callee_map_s, procedure_caller,
               procedure_callee);
   addToSetMap(procedure_callee_procedure_caller_map_s, procedure_callee,
@@ -160,7 +162,10 @@ void PKBStorage::storeProcedure(const Procedure proc) {
   procedure_set.insert(proc);
 }
 
-void PKBStorage::storeCall(const Line line) { call_set.insert(line); }
+void PKBStorage::storeCall(const Line line, const Procedure proc) {
+  call_set.insert(line);
+  line_calls_procedure_set.insert(std::pair<Line, Procedure>(line, proc));
+}
 
 void PKBStorage::storeLineProcedureRelation(const Line line,
                                             const Procedure proc) {

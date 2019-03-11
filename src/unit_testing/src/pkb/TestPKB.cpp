@@ -1518,6 +1518,107 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
   }
 }
 
+TEST_CASE ("Test PKB for Sample-Source.txt") {
+  auto ast = SimpleInterface::getAstFromFile("tests/Sample-Source.txt");
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
+
+  SECTION ("calls relations") {
+    std::unordered_set<std::string> calls_test_1_check;
+    calls_test_1_check.insert("p");
+    calls_test_1_check.insert("q");
+    auto calls_test_1 = pkb.getCalleeProcedures("Example");
+    REQUIRE(*calls_test_1 == calls_test_1_check);
+
+    std::unordered_set<std::string> calls_test_2_check;
+    calls_test_2_check.insert("q");
+    auto calls_test_2 = pkb.getCalleeProcedures("p");
+    REQUIRE(*calls_test_2 == calls_test_2_check);
+
+    std::unordered_set<std::string> calls_test_3_check;
+    auto calls_test_3 = pkb.getCalleeProcedures("q");
+    REQUIRE(calls_test_3 == std::nullopt);
+  }
+}
+
+TEST_CASE ("Test PKB for complex_call_structure.txt") {
+  auto ast = SimpleInterface::getAstFromFile(
+      "tests/simple_source/call/complex_call_structure.txt");
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
+
+  SECTION ("calls relations") {
+    std::unordered_set<std::string> calls_test_1_check;
+    calls_test_1_check.insert("B");
+    auto calls_test_1 = pkb.getCalleeProcedures("A");
+    REQUIRE(*calls_test_1 == calls_test_1_check);
+
+    std::unordered_set<std::string> calls_test_2_check;
+    calls_test_2_check.insert("C");
+    auto calls_test_2 = pkb.getCalleeProcedures("B");
+    REQUIRE(*calls_test_2 == calls_test_2_check);
+
+    std::unordered_set<std::string> calls_test_3_check;
+    calls_test_3_check.insert("D");
+    calls_test_3_check.insert("E");
+    auto calls_test_3 = pkb.getCalleeProcedures("C");
+    REQUIRE(*calls_test_3 == calls_test_3_check);
+
+    std::unordered_set<std::string> calls_test_4_check;
+    auto calls_test_4 = pkb.getCalleeProcedures("D");
+    REQUIRE(calls_test_4 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_5_check;
+    auto calls_test_5 = pkb.getCalleeProcedures("E");
+    REQUIRE(calls_test_5 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_6_check;
+    calls_test_6_check.insert("G");
+    auto calls_test_6 = pkb.getCalleeProcedures("F");
+    REQUIRE(*calls_test_6 == calls_test_6_check);
+
+    std::unordered_set<std::string> calls_test_7_check;
+    auto calls_test_7 = pkb.getCalleeProcedures("G");
+    REQUIRE(calls_test_7 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_8_check;
+    calls_test_8_check.insert("B");
+    calls_test_8_check.insert("C");
+    calls_test_8_check.insert("D");
+    calls_test_8_check.insert("E");
+    auto calls_test_8 = pkb.getCalleeProceduresS("A");
+    REQUIRE(*calls_test_8 == calls_test_8_check);
+
+    std::unordered_set<std::string> calls_test_9_check;
+    calls_test_9_check.insert("C");
+    calls_test_9_check.insert("D");
+    calls_test_9_check.insert("E");
+    auto calls_test_9 = pkb.getCalleeProceduresS("B");
+    REQUIRE(*calls_test_9 == calls_test_9_check);
+
+    std::unordered_set<std::string> calls_test_10_check;
+    calls_test_10_check.insert("D");
+    calls_test_10_check.insert("E");
+    auto calls_test_10 = pkb.getCalleeProceduresS("C");
+    REQUIRE(*calls_test_10 == calls_test_10_check);
+
+    std::unordered_set<std::string> calls_test_11_check;
+    auto calls_test_11 = pkb.getCalleeProceduresS("D");
+    REQUIRE(calls_test_11 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_12_check;
+    auto calls_test_12 = pkb.getCalleeProceduresS("E");
+    REQUIRE(calls_test_12 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_13_check;
+    calls_test_13_check.insert("G");
+    auto calls_test_13 = pkb.getCalleeProceduresS("F");
+    REQUIRE(*calls_test_13 == calls_test_13_check);
+
+    std::unordered_set<std::string> calls_test_14_check;
+    auto calls_test_14 = pkb.getCalleeProceduresS("G");
+    REQUIRE(calls_test_14 == std::nullopt);
+  }
+}
+
 TEST_CASE ("Test detection of semantic errors in AST") {
   SECTION ("procedure and variable with the same name") {
     auto ast = SimpleInterface::getAstFromFile(
@@ -1526,5 +1627,21 @@ TEST_CASE ("Test detection of semantic errors in AST") {
     REQUIRE_THROWS_WITH(
         PKB::PKBManager(ast),
         "Found procedure and variable with the same name: 'main'.");
+  }
+
+  SECTION ("recursive procedure call") {
+    auto ast =
+        SimpleInterface::getAstFromFile("tests/semantic_errors/recursive.txt");
+
+    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
+                        "Found recursive call to procedure: 'A'.");
+  }
+
+  SECTION ("recursive procedure call") {
+    auto ast = SimpleInterface::getAstFromFile(
+        "tests/semantic_errors/cyclic_calls.txt");
+
+    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
+                        "Found recursive call to procedure: 'A'.");
   }
 }

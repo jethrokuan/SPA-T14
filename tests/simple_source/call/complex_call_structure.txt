@@ -1,0 +1,29 @@
+procedure A {
+  call B;
+}
+
+procedure B {
+  call C;
+  z = z + 1;
+}
+
+procedure C {
+  call D;
+  call E;
+}
+
+procedure D {
+  x = x + 1;
+}
+
+procedure E {
+  y = 1;
+}
+
+procedure F {
+  call G;
+}
+
+procedure G {
+  z = 1;
+}

@@ -42,6 +42,22 @@ class PKBStorage {
 
   std::string getLineFromNode(const std::shared_ptr<Node> node);
 
+  // calls
+  std::unordered_set<std::pair<Line, Procedure>, pair_hash>
+      line_calls_procedure_set;
+  std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
+      procedure_calls_procedure_set;
+  std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
+      procedure_calls_procedure_set_s;
+  std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
+      procedure_caller_procedure_callee_map;
+  std::unordered_map<ProcedureCallee, std::unordered_set<ProcedureCaller>>
+      procedure_callee_procedure_caller_map;
+  std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
+      procedure_caller_procedure_callee_map_s;
+  std::unordered_map<ProcedureCallee, std::unordered_set<ProcedureCaller>>
+      procedure_callee_procedure_caller_map_s;
+
   // follows
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set;
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set_s;
@@ -67,12 +83,12 @@ class PKBStorage {
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
       procedure_uses_var_set;
   std::unordered_set<std::pair<Line, Variable>, pair_hash> line_uses_var_set;
-  std::unordered_map<Procedure, std::unordered_set<Line>>
+  std::unordered_map<Procedure, std::unordered_set<Variable>>
       var_used_by_procedure_map;
   std::unordered_map<Line, std::unordered_set<Variable>> var_used_by_line_map;
   std::unordered_map<Variable, std::unordered_set<Procedure>>
       procedure_uses_var_map;
-  std::unordered_map<Variable, std::unordered_set<Variable>> line_uses_var_map;
+  std::unordered_map<Variable, std::unordered_set<Line>> line_uses_var_map;
 
   // modifies
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>
@@ -122,6 +138,9 @@ class PKBStorage {
   // the node and the line number (instead of just the node)
   Line storeLine(const std::shared_ptr<Node> node);
   void storeCFGEdge(const Line, const Line);
+
+  void storeCallsRelation(const ProcedureCaller, const ProcedureCallee);
+  void storeCallsRelationS(const ProcedureCaller, const ProcedureCallee);
   void storeFollowsRelation(const LineBefore, const LineAfter);
   void storeFollowsRelationS(const LineBefore, const LineAfter);
   void storeParentRelation(const ParentLine, const ChildLine);
@@ -140,7 +159,7 @@ class PKBStorage {
   void storeIf(const Line);
   void storeConstant(const Constant);
   void storeProcedure(const Procedure);
-  void storeCall(const Line);
+  void storeCall(const Line, const Procedure);
 
   void storePatternAssign(const Variable, const ExprStr, const Line);
 

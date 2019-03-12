@@ -1,0 +1,36 @@
+procedure A {
+  call B;
+  read a;
+}
+
+procedure B {
+  call C;
+  z = z + 1;
+  print b;
+}
+
+procedure C {
+  call D;
+  call E;
+  read c;
+}
+
+procedure D {
+  x = x + 1;
+  print d;
+}
+
+procedure E {
+  y = 1;
+  read e;
+}
+
+procedure F {
+  call G;
+  print f;
+}
+
+procedure G {
+  z = 1;
+  read g;
+}

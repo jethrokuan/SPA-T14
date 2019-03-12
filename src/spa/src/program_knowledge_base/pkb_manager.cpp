@@ -163,6 +163,15 @@ bool PKBManager::isProcedureModifiesVarSetEmpty() {
 
 // is relationship valid
 
+bool PKBManager::isProcedureCallsProcedure(
+    const ProcedureCaller procedure_caller,
+    const ProcedureCallee procedure_callee) {
+  return pkb_storage->procedure_calls_procedure_set.find(
+             std::pair<ProcedureCaller, ProcedureCallee>(procedure_caller,
+                                                         procedure_callee)) !=
+         pkb_storage->procedure_calls_procedure_set.end();
+}
+
 bool PKBManager::isLineFollowLine(const LineBefore line_before,
                                   const LineAfter line_after) {
   return pkb_storage->follows_set.find(std::pair<LineBefore, LineAfter>(
@@ -211,6 +220,30 @@ bool PKBManager::isLineModifiesVar(const Line line, const Variable var) {
 }
 
 // get relationship mapping
+std::optional<std::unordered_set<ProcedureCallee>>
+PKBManager::getCalleeProcedures(const ProcedureCaller procedure_caller) {
+  return getSetFromMap(pkb_storage->procedure_caller_procedure_callee_map,
+                       procedure_caller);
+}
+
+std::optional<std::unordered_set<ProcedureCaller>>
+PKBManager::getCallerProceduresS(const ProcedureCaller procedure_callee) {
+  return getSetFromMap(pkb_storage->procedure_callee_procedure_caller_map,
+                       procedure_callee);
+}
+
+std::optional<std::unordered_set<ProcedureCallee>>
+PKBManager::getCalleeProceduresS(const ProcedureCaller procedure_caller) {
+  return getSetFromMap(pkb_storage->procedure_caller_procedure_callee_map_s,
+                       procedure_caller);
+}
+
+std::optional<std::unordered_set<ProcedureCaller>>
+PKBManager::getCallerProcedures(const ProcedureCaller procedure_callee) {
+  return getSetFromMap(pkb_storage->procedure_callee_procedure_caller_map_s,
+                       procedure_callee);
+}
+
 std::optional<LineAfter> PKBManager::getFollowingLine(
     const LineBefore line_before) {
   return (pkb_storage->line_before_line_after_map.find(line_before) ==

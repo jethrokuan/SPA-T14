@@ -1900,6 +1900,6 @@ TEST_CASE ("Test detection of semantic errors in AST") {
         "tests/semantic_errors/cyclic_calls.txt");
 
     REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
-                        "Found recursive call to procedure: 'A'.");
+                        "Found cyclic call between procedures.");
   }
 }

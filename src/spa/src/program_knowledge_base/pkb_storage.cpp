@@ -56,8 +56,7 @@ void PKBStorage::storeCallsRelation(const ProcedureCaller procedure_caller,
 void PKBStorage::storeCallsRelationS(const ProcedureCaller procedure_caller,
                                      const ProcedureCallee procedure_callee) {
   if (procedure_caller.compare(procedure_callee) == 0) {
-    throw PkbAstSemanticException("Found recursive call to procedure: '" +
-                                  procedure_caller + "'.");
+    throw PkbAstSemanticException("Found cyclic call between procedures.");
   }
   procedure_calls_procedure_set_s.insert(
       std::pair(procedure_caller, procedure_callee));

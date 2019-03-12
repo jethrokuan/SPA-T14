@@ -60,6 +60,7 @@ set(headers ${headers}
 # PQL Query Builder files
 set(srcs ${srcs}
   src/query_builder/query_builder.cpp
+  src/query_builder/core/query_lexer.cpp
   src/query_builder/core/query_preprocessor.cpp
   src/query_builder/core/query_tokenizer.cpp
   src/query_builder/core/query_validator.cpp
@@ -74,6 +75,7 @@ set(srcs ${srcs}
  )
 set(headers ${headers}
   src/query_builder/query_builder.h
+  src/query_builder/core/query_lexer.h
   src/query_builder/core/query_preprocessor.h
   src/query_builder/core/query_tokenizer.h
   src/query_builder/core/query_validator.h

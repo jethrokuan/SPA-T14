@@ -18,14 +18,14 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
     // Get individually allowed values from each of the tupled constraints
     start_one_synonym_constraints =
         intersectSingleVarConstraints(qc.getSingleVariableConstraintMapRef(),
-                                      qc.getPairedVariableConstraintListRef());
+                                      qc.getPairedVariableConstraintMapRef());
     // Get all the pairs of values that are allowed
     std::unordered_map<std::pair<std::string, std::string>,
                        std::unordered_set<std::pair<std::string, std::string>,
                                           Utils::pair_hash>,
                        Utils::pair_hash>
         tupled_constraints = intersectPairedVarConstraints(
-            qc.getPairedVariableConstraintListRef());
+            qc.getPairedVariableConstraintMapRef());
 
     filterQueryConstraints(start_one_synonym_constraints, tupled_constraints,
                            qc);
@@ -33,7 +33,7 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
     // Re-constrain this set
     end_one_synonym_constraints =
         intersectSingleVarConstraints(qc.getSingleVariableConstraintMapRef(),
-                                      qc.getPairedVariableConstraintListRef());
+                                      qc.getPairedVariableConstraintMapRef());
   } while (start_one_synonym_constraints != end_one_synonym_constraints);
 
   // Return intended variable
@@ -45,7 +45,7 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
 
 std::unordered_map<std::string, std::unordered_set<std::string>>
 ConstraintSolver::intersectSingleVarConstraints(
-    SingleVariableConstraintMap& svcm, PairedVariableConstraintList& pvcl) {
+    SingleVariableConstraintMap& svcm, PairedVariableConstraintMap& pvcm) {
   std::unordered_map<std::string, std::unordered_set<std::string>>
       new_synonym_constraints;
 
@@ -56,7 +56,7 @@ ConstraintSolver::intersectSingleVarConstraints(
     intersectTwoConstraints(new_synonym_constraints, single_var_constraints);
   }
   // Convert paired constraints into single constraints for single-intersection
-  for (auto paired_var_constraints : pvcl) {
+  for (auto paired_var_constraints : pvcm) {
     auto [var1, var2] = paired_var_constraints.first;
     auto var1_set = getFirstsFromSet(paired_var_constraints.second);
     auto var2_set = getSecondsFromSet(paired_var_constraints.second);
@@ -91,14 +91,14 @@ std::unordered_map<
     std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>,
     Utils::pair_hash>
 ConstraintSolver::intersectPairedVarConstraints(
-    PairedVariableConstraintList& pvcl) {
+    PairedVariableConstraintMap& pvcm) {
   std::unordered_map<
       std::pair<std::string, std::string>,
       std::unordered_set<std::pair<std::string, std::string>, Utils::pair_hash>,
       Utils::pair_hash>
       tupled_constraints;
 
-  for (auto paired_var_constraints : pvcl) {
+  for (auto paired_var_constraints : pvcm) {
     auto [var1, var2] = paired_var_constraints.first;
 
     if (tupled_constraints.find({var1, var2}) == tupled_constraints.end()) {
@@ -141,8 +141,8 @@ void ConstraintSolver::filterQueryConstraints(
   }
 
   // Make sure every tupled constraint is present in individual and tupled sets
-  PairedVariableConstraintList pvcl;
-  for (auto paired_var_constraints : qc.getPairedVariableConstraintListRef()) {
+  PairedVariableConstraintMap pvcm;
+  for (auto paired_var_constraints : qc.getPairedVariableConstraintMapRef()) {
     PairedConstraintSet constraint_set;
     auto [var1, var2] = paired_var_constraints.first;
     for (auto paired_constraint : paired_var_constraints.second) {
@@ -161,11 +161,11 @@ void ConstraintSolver::filterQueryConstraints(
         constraint_set.insert(paired_constraint);
       }
     }
-    pvcl.push_back({paired_var_constraints.first, constraint_set});
+    pvcm[paired_var_constraints.first] = constraint_set;
   }
   // Set these values back to the query constraints container
   qc.setSingleVariableConstraintMapRef(svcm);
-  qc.setPairedVariableConstraintListRef(pvcl);
+  qc.setPairedVariableConstraintMapRef(pvcm);
 }
 
 void ConstraintSolver::printConstraints(

@@ -25,14 +25,24 @@ void QueryConstraints::addToPairedVariableConstraints(
     std::string var1_name, std::string var2_name,
     PairedConstraintSet constraint_values) {
   // Assumes constraint set in form (var1_name, var2_name)
-  // Need to insert in alphabetical order to have some consistency
+  // Need to insert in alphabetical order to allow for consistent intersection
   // Do it stably: only swap if var1_name > var2_name
   if (var1_name > var2_name) {
-    pairedVariableConstraintList.push_back(
-        {{var2_name, var1_name}, swapElementsInSet(constraint_values)});
+    constraint_values = swapElementsInSet(constraint_values);
+    std::swap(var1_name, var2_name);
+  }
+  // Intersect + add to existing constraints, or just create new set
+  bool varExistsInMap =
+      pairedVariableConstraintMap.find({var1_name, var2_name}) !=
+      pairedVariableConstraintMap.end();
+  if (varExistsInMap) {
+    auto existing_constraints =
+        pairedVariableConstraintMap.at({var1_name, var2_name});
+    PairedConstraintSet intersected_set = Utils::unorderedSetIntersection(
+        existing_constraints, constraint_values);
+    pairedVariableConstraintMap[{var1_name, var2_name}] = intersected_set;
   } else {
-    pairedVariableConstraintList.push_back(
-        {{var1_name, var2_name}, constraint_values});
+    pairedVariableConstraintMap[{var1_name, var2_name}] = constraint_values;
   }
 }
 

@@ -9,9 +9,8 @@
 #include <vector>
 #include "query_executor/constraint_solver/query_constraints.h"
 
-//! Actually constrain the set of values and select the synonym indicated
-std::vector<std::string> ConstraintSolver::constrainAndSelect(
-    QueryConstraints& qc, const std::string toSelect) {
+std::vector<std::vector<std::string>> ConstraintSolver::constrainAndSelect(
+    QueryConstraints& qc, const std::vector<std::string> vars_to_select) {
   std::unordered_map<std::string, std::unordered_set<std::string>>
       start_one_synonym_constraints, end_one_synonym_constraints;
   do {
@@ -36,11 +35,24 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
                                       qc.getPairedVariableConstraintMapRef());
   } while (start_one_synonym_constraints != end_one_synonym_constraints);
 
-  // Return intended variable
-  auto set_to_return = end_one_synonym_constraints[toSelect];
-  std::vector<std::string> result(set_to_return.begin(), set_to_return.end());
-  std::sort(result.begin(), result.end());
+  // Get a result vector for each variable and return all
+  std::vector<std::vector<std::string>> result;
+  for (const auto toSelect : vars_to_select) {
+    auto set_to_return = end_one_synonym_constraints[toSelect];
+    std::vector<std::string> result_onevar(set_to_return.begin(),
+                                           set_to_return.end());
+    std::sort(result_onevar.begin(), result_onevar.end());
+    result.push_back(result_onevar);
+  }
+
   return result;
+}
+
+std::vector<std::string> ConstraintSolver::constrainAndSelect(
+    QueryConstraints& qc, const std::string toSelect) {
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      start_one_synonym_constraints, end_one_synonym_constraints;
+  return constrainAndSelect(qc, std::vector{toSelect}).at(0);
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>>

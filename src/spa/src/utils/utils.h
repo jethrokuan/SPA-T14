@@ -99,4 +99,13 @@ struct overload : Ts... {
 
 template <class... Ts>
 overload(Ts...)->overload<Ts...>;
+
+std::vector<std::string> cartesianProduct(const std::vector<std::string> v1,
+                                          const std::vector<std::string> v2,
+                                          const char sep = ' ');
+
+//! Finds the cartesian-product of multiple vectors of strings
+std::vector<std::string> cartesianProduct(
+    const std::vector<std::vector<std::string>> vecs, char sep = ' ');
+
 }  // namespace Utils

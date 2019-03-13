@@ -1540,6 +1540,113 @@ TEST_CASE ("Test PKB for Sample-Source.txt") {
   }
 }
 
+TEST_CASE ("Test PKB for multiple_if_else_nesting.txt") {
+  auto ast = SimpleInterface::getAstFromFile(
+      "tests/simple_source/next/multiple_if_else_nesting.txt");
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
+
+  SECTION ("next relations") {
+    std::unordered_set<std::string> next_test_1_check =
+        std::unordered_set<std::string>{"2", "9"};
+    auto next_test_1 = pkb.getNextLine("1");
+    REQUIRE(*next_test_1 == next_test_1_check);
+
+    std::unordered_set<std::string> next_test_2_check =
+        std::unordered_set<std::string>{"3", "8"};
+    auto next_test_2 = pkb.getNextLine("2");
+    REQUIRE(*next_test_2 == next_test_2_check);
+
+    std::unordered_set<std::string> next_test_3_check =
+        std::unordered_set<std::string>{"4", "10"};
+    auto next_test_3 = pkb.getNextLine("3");
+    REQUIRE(*next_test_3 == next_test_3_check);
+
+    std::unordered_set<std::string> next_test_4_check =
+        std::unordered_set<std::string>{"5", "7"};
+    auto next_test_4 = pkb.getNextLine("4");
+    REQUIRE(*next_test_4 == next_test_4_check);
+
+    std::unordered_set<std::string> next_test_5_check =
+        std::unordered_set<std::string>{"6"};
+    auto next_test_5 = pkb.getNextLine("5");
+    REQUIRE(*next_test_5 == next_test_5_check);
+
+    std::unordered_set<std::string> next_test_6_check =
+        std::unordered_set<std::string>{"3"};
+    auto next_test_6 = pkb.getNextLine("6");
+    REQUIRE(*next_test_6 == next_test_6_check);
+
+    std::unordered_set<std::string> next_test_7_check =
+        std::unordered_set<std::string>{"3"};
+    auto next_test_7 = pkb.getNextLine("7");
+    REQUIRE(*next_test_7 == next_test_7_check);
+
+    std::unordered_set<std::string> next_test_8_check =
+        std::unordered_set<std::string>{"10"};
+    auto next_test_8 = pkb.getNextLine("8");
+    REQUIRE(*next_test_8 == next_test_8_check);
+
+    std::unordered_set<std::string> next_test_9_check =
+        std::unordered_set<std::string>{"10"};
+    auto next_test_9 = pkb.getNextLine("9");
+    REQUIRE(*next_test_9 == next_test_9_check);
+
+    std::unordered_set<std::string> next_test_10_check;
+    auto next_test_10 = pkb.getNextLine("10");
+    REQUIRE(next_test_10 == std::nullopt);
+
+    std::unordered_set<std::string> next_test_11_check =
+        std::unordered_set<std::string>{"2", "3", "4", "5", "6",
+                                        "7", "8", "9", "10"};
+    auto next_test_11 = pkb.getNextLineS("1");
+    REQUIRE(*next_test_11 == next_test_11_check);
+
+    std::unordered_set<std::string> next_test_12_check =
+        std::unordered_set<std::string>{"3", "4", "5", "6", "7", "8", "10"};
+    auto next_test_12 = pkb.getNextLineS("2");
+    REQUIRE(*next_test_12 == next_test_12_check);
+
+    std::unordered_set<std::string> next_test_13_check =
+        std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
+    auto next_test_13 = pkb.getNextLineS("3");
+    REQUIRE(*next_test_13 == next_test_13_check);
+
+    std::unordered_set<std::string> next_test_14_check =
+        std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
+    auto next_test_14 = pkb.getNextLineS("4");
+    REQUIRE(*next_test_14 == next_test_14_check);
+
+    std::unordered_set<std::string> next_test_15_check =
+        std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
+    auto next_test_15 = pkb.getNextLineS("5");
+    REQUIRE(*next_test_15 == next_test_15_check);
+
+    std::unordered_set<std::string> next_test_16_check =
+        std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
+    auto next_test_16 = pkb.getNextLineS("6");
+    REQUIRE(*next_test_16 == next_test_16_check);
+
+    std::unordered_set<std::string> next_test_17_check =
+        std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
+    auto next_test_17 = pkb.getNextLineS("7");
+    REQUIRE(*next_test_17 == next_test_17_check);
+
+    std::unordered_set<std::string> next_test_18_check =
+        std::unordered_set<std::string>{"10"};
+    auto next_test_18 = pkb.getNextLineS("8");
+    REQUIRE(*next_test_18 == next_test_18_check);
+
+    std::unordered_set<std::string> next_test_19_check =
+        std::unordered_set<std::string>{"10"};
+    auto next_test_19 = pkb.getNextLineS("9");
+    REQUIRE(*next_test_19 == next_test_19_check);
+
+    std::unordered_set<std::string> next_test_20_check;
+    auto next_test_20 = pkb.getNextLineS("10");
+    REQUIRE(next_test_20 == std::nullopt);
+  }
+}
+
 TEST_CASE ("Test PKB for complex_call_structure.txt") {
   auto ast = SimpleInterface::getAstFromFile(
       "tests/simple_source/call/complex_call_structure.txt");

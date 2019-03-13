@@ -15,7 +15,9 @@ using QE::QueryParser;
 
 TEST_CASE ("Test Query Parser") {
   SECTION ("Test one assign one select query") {
-    std::string input = "assign a, a1; procedure p; Select <a, p>";
+    std::string input =
+        "assign a, a1; procedure p; Select <a, p> such that Modifies (a, "
+        "\"b\")";
     QueryLexer lexer = QueryLexer(input);
     lexer.lex();
     QueryParser parser = QueryParser(lexer.Tokens);

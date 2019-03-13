@@ -1,9 +1,18 @@
+#include <regex>
 #include "utils/utils.h"
 
 namespace Utils {
 
 bool has_only_digits(const std::string s) {
   return s.find_first_not_of("0123456789") == std::string::npos;
+}
+
+bool is_valid_name(const std::string s) {
+  return std::regex_match(s, std::regex("[a-zA-Z](\\d|[a-zA-Z])*"));
+}
+
+bool is_valid_synonym(const std::string s) {
+  return std::regex_match(s, std::regex("[a-zA-Z](\\d|[a-zA-Z])*"));
 }
 
 std::string& ltrim(std::string& str, const std::string& chars) {

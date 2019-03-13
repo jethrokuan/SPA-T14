@@ -2,7 +2,10 @@
 #include "query_builder/core/query_parser.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
+#include "query_builder/pql/ref.h"
 #include "query_builder/pql/result.h"
+#include "query_builder/pql/suchthat.h"
+#include "utils/utils.h"
 
 #include <optional>
 
@@ -10,8 +13,11 @@ using QE::Declaration;
 using QE::DesignEntity;
 using QE::Query;
 using QE::QueryParser;
+using QE::QuoteIdent;
+using QE::Ref;
 using QE::Result;
 using QE::ResultType;
+using QE::SuchThat;
 using QE::Synonym;
 
 QueryParser::QueryParser(std::vector<std::string> tokens)
@@ -138,10 +144,61 @@ void QueryParser::parseResult() {
   }
 };
 
+Ref QueryParser::parseRef() {
+  if (match("_")) {
+    return QE::Underscore();
+  } else if (has_only_digits(peek())) {
+    return atoi(advance().c_str());
+  } else if (match("\"")) {
+    std::string ident = advance();
+    expect("\"");
+    return QuoteIdent(ident);
+  } else if (is_valid_synonym(peek())) {
+    std::string synonym_str = advance();
+    auto synonym = Synonym::construct(synonym_str);
+    return synonym.value();
+  } else {
+    throw PQLParseException("Expecting a ref, got '" + peek() + "'.");
+  }
+}
+
+bool QueryParser::parseModifies() {
+  if (!match("Modifies")) {
+    return false;
+  }
+
+  expect("(");
+  auto ref_1 = parseRef();
+  expect(",");
+  auto ref_2 = parseRef();
+  expect(")");
+  return true;
+}
+
+void QueryParser::parseRelCond() {
+  bool isModifies = parseModifies();
+  if (isModifies) return;
+  return;
+}
+
+bool QueryParser::parseSuchThat() {
+  unsigned int save_loc = current_;
+
+  if (!match("such")) {
+    current_ = save_loc;
+    return false;
+  }
+
+  expect("that");
+
+  parseRelCond();
+  return true;
+}
+
 Query QueryParser::parse() {
   // Parsing declarations
   while (!isAtEnd()) {
-    while (true) {
+    while (!isAtEnd()) {
       bool isDeclarationClause = parseDeclarationClause();
       if (!isDeclarationClause) {
         break;
@@ -151,6 +208,11 @@ Query QueryParser::parse() {
     expect("Select");
 
     parseResult();
+
+    while (!isAtEnd()) {
+      bool isSuchThat = parseSuchThat();
+      if (isSuchThat) continue;
+    }
   }
 
   return *query_;

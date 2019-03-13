@@ -10,11 +10,10 @@ class QuoteIdent {
   // Spec: LETTER (LETTER | DIGIT)*
   static const std::regex quoteident_regex;
 
-  // Make constructors private
+ public:
   QuoteIdent() {}
   QuoteIdent(std::string& quote_ident) : quote_ident(quote_ident) {}
 
- public:
   std::string quote_ident;
   // Constructs a guaranteed valid Synonym
   static std::optional<QuoteIdent> construct(std::string&);

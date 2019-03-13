@@ -8,10 +8,13 @@
 
 #include "query_builder/pql/declaration.h"
 #include "query_builder/pql/query.h"
+#include "query_builder/pql/ref.h"
 #include "query_builder/pql/result.h"
 
 using QE::Declaration;
+using QE::Ref;
 using QE::Result;
+using QE::SuchThat;
 
 namespace QE {
 class QueryParser {
@@ -48,6 +51,10 @@ class QueryParser {
 
   Declaration* findDeclaration(const Synonym synonym);
   void parseResult();
+  bool parseSuchThat();
+  void parseRelCond();
+  bool parseModifies();
+  Ref parseRef();
   bool parseDeclarationClause();
 
  public:

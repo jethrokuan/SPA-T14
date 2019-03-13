@@ -1,7 +1,7 @@
-#include "query_builder/core/query_validator.h"
 #include <unordered_set>
 #include <variant>
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_validator.h"
 #include "query_builder/pql/declaration.h"
 
 using namespace QE;
@@ -18,9 +18,6 @@ void QueryValidator::validateQuery(const Query& query) {
 }
 
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
-  if (query.pattern == nullptr) {
-    return;
-  }
   for (auto pattern : *(query.pattern)) {
     // Search the available declarations for the pattern synonym
     // The synonym must be an assignment synonym
@@ -41,9 +38,6 @@ void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
 
 void QueryValidator::validateModifyUsesNoFirstArgUnderscore(
     const Query& query) {
-  if (query.such_that == nullptr) {
-    return;
-  }
   for (auto such_that : *(query.such_that)) {
     // Early return if not modifies or uses
     if (such_that->getRelation() != Relation::UsesS &&
@@ -67,10 +61,6 @@ void QueryValidator::validateModifyUsesNoFirstArgUnderscore(
 }
 
 void QueryValidator::validateSuchThatSynonyms(const Query& query) {
-  if (query.such_that == nullptr) {
-    return;
-  }
-
   for (auto such_that : *(query.such_that)) {
     // Error if first arg is underscore otherwise
     auto such_that_firstarg = such_that->getFirstArg();
@@ -108,9 +98,6 @@ void QueryValidator::validateSuchThatSynonyms(const Query& query) {
 }
 
 void QueryValidator::validateSynonymTypes(const Query& query) {
-  if (query.such_that == nullptr) {
-    return;
-  }
   for (auto such_that : *(query.such_that)) {
     // Idea here is to check the synonym's design entity type
     // against the list of allowed design entity types allowed for
@@ -190,10 +177,6 @@ void QueryValidator::validateNoIdenticalSynonyms(const Query& query) {
 
 void QueryValidator::validatePatternFirstArgSynonymIsVariable(
     const Query& query) {
-  if (query.pattern == nullptr) {
-    return;
-  }
-
   for (auto pattern : *(query.pattern)) {
     auto first_arg = pattern->getFirstArg();
     if (auto first_arg_syn = std::get_if<Synonym>(&first_arg)) {

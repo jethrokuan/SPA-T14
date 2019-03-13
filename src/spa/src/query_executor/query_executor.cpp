@@ -1,4 +1,3 @@
-#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
@@ -6,6 +5,7 @@
 #include "query_builder/core/query_preprocessor.h"
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
+#include "query_executor/query_executor.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
@@ -24,9 +24,15 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
+  if (query->such_that->empty() && query->pattern->empty()) {
+    auto result_set =
+        getSelect(pkb, query->selected_declarations->at(0)->getDesignEntity());
+    return std::vector<std::string>(result_set.begin(), result_set.end());
+  }
+
   QueryConstraints query_constraints;
 
-  if (query->such_that) {
+  if (!query->such_that->empty()) {
     // This is a more complex such-that query, pass to individual handlers
     // This call also modifies the query_constraints
     // So only need to check for no results
@@ -36,7 +42,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   }
 
   // Evaluate pattern results if they exist
-  if (query->pattern) {
+  if (!query->pattern->empty()) {
     // Same reasoning as such-that
     if (!handlePattern(query, query_constraints)) {
       return std::vector<std::string>();

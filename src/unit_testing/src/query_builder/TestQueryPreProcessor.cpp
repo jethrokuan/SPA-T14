@@ -18,8 +18,8 @@ TEST_CASE ("Test one entity one select query Preprocess") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Test one variable one select query") {
@@ -32,8 +32,8 @@ TEST_CASE ("Test one entity one select query Preprocess") {
     REQUIRE(*(query->selected_declarations->at(0)) ==
             Declaration(DesignEntity::VARIABLE,
                         QE::Synonym::construct("v").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Test one stmt one select query") {
@@ -46,8 +46,8 @@ TEST_CASE ("Test one entity one select query Preprocess") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::STMT, QE::Synonym::construct("p").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Test one procedure one select query") {
@@ -60,8 +60,8 @@ TEST_CASE ("Test one entity one select query Preprocess") {
     REQUIRE(*(query->selected_declarations->at(0)) ==
             Declaration(DesignEntity::PROCEDURE,
                         QE::Synonym::construct("p").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 }
 
@@ -79,8 +79,8 @@ TEST_CASE ("Test multi-declaration one select query Preprocess") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
   SECTION ("Test two assign compressed whitespace one select query") {
     auto qp = QE::QueryPreprocessor();
@@ -95,8 +95,8 @@ TEST_CASE ("Test multi-declaration one select query Preprocess") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
   SECTION ("Test three assign one select query") {
     auto qp = QE::QueryPreprocessor();
@@ -113,8 +113,8 @@ TEST_CASE ("Test multi-declaration one select query Preprocess") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Test three stmt one select query") {
@@ -132,8 +132,8 @@ TEST_CASE ("Test multi-declaration one select query Preprocess") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::STMT, QE::Synonym::construct("a").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 }
 
@@ -150,8 +150,8 @@ TEST_CASE ("Test two assign one select query Preprocess") {
   REQUIRE(
       *(query->selected_declarations->at(0)) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-  REQUIRE(query->such_that == nullptr);
-  REQUIRE(query->pattern == nullptr);
+  REQUIRE(query->such_that->empty());
+  REQUIRE(query->pattern->empty());
 }
 
 TEST_CASE ("Test three assign one select query Preprocess") {
@@ -169,8 +169,8 @@ TEST_CASE ("Test three assign one select query Preprocess") {
   REQUIRE(
       *(query->selected_declarations->at(0)) ==
       Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-  REQUIRE(query->such_that == nullptr);
-  REQUIRE(query->pattern == nullptr);
+  REQUIRE(query->such_that->empty());
+  REQUIRE(query->pattern->empty());
 }
 
 TEST_CASE (
@@ -191,7 +191,7 @@ TEST_CASE (
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Follows(stmtref(int), stmtref(int))") {
@@ -209,7 +209,7 @@ TEST_CASE (
     QE::StmtOrEntRef a2 = QE::StmtRef(78);
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Follows(stmtref(synonym), stmtref(synonym))") {
@@ -227,7 +227,7 @@ TEST_CASE (
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Follows(stmtref(synonym), entref(\"asd\"))") {
@@ -255,7 +255,7 @@ TEST_CASE (
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Parent, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Parent(stmtref(int), stmtref(int))") {
@@ -273,7 +273,7 @@ TEST_CASE (
     QE::StmtOrEntRef a2 = QE::StmtRef(78);
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Parent, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Parent(stmtref(synonym), stmtref(synonym))") {
@@ -291,7 +291,7 @@ TEST_CASE (
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Synonym::construct("b").value());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Parent, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Parent(stmtref(synonym), entref(\"asd\"))") {
@@ -320,7 +320,7 @@ TEST_CASE (
         QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::ModifiesS, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Modifies(stmtref(synonym), entref(\"asd\"))") {
@@ -339,7 +339,7 @@ TEST_CASE (
         QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::ModifiesS, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Modifies(stmtref(synonym), entref(synonym))") {
@@ -357,7 +357,7 @@ TEST_CASE (
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::ModifiesS, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Modifies(stmtref(synonym), stmtref(int))") {
@@ -386,7 +386,7 @@ TEST_CASE (
         QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Uses(stmtref(synonym), entref(\"asd\"))") {
@@ -405,7 +405,7 @@ TEST_CASE (
         QE::EntRef(QE::QuoteIdent::construct("\"asd\"").value());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Uses(stmtref(synonym), entref(synonym))") {
@@ -423,7 +423,7 @@ TEST_CASE (
     QE::StmtOrEntRef a2 = QE::EntRef(QE::Synonym::construct("b").value());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::UsesS, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION ("Uses(stmtref(synonym), stmtref(int))") {
@@ -823,8 +823,8 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION (
@@ -838,8 +838,8 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION (
@@ -854,8 +854,8 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION (
@@ -870,8 +870,8 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
   SECTION (
       "Test one assign one select query whitespace after assign "
@@ -885,8 +885,8 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION (
@@ -901,8 +901,8 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     REQUIRE(
         *(query->selected_declarations->at(0)) ==
         Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("p").value()));
-    REQUIRE(query->such_that == nullptr);
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->such_that->empty());
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION (
@@ -922,7 +922,7 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION (
@@ -942,7 +942,7 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 
   SECTION (
@@ -962,6 +962,6 @@ TEST_CASE ("Test Preprocess Whitespace Sensitivity") {
     QE::StmtOrEntRef a2 = QE::StmtRef(QE::Underscore());
     REQUIRE(*(query->such_that->at(0)) ==
             SuchThat::construct(Relation::Follows, a1, a2).value());
-    REQUIRE(query->pattern == nullptr);
+    REQUIRE(query->pattern->empty());
   }
 }

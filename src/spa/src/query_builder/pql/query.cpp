@@ -2,10 +2,10 @@
 using namespace QE;
 
 Query::Query()
-    : declarations(nullptr),
-      selected_declarations(nullptr),
-      such_that(nullptr),
-      pattern(nullptr){};
+    : declarations(new std::vector<Declaration>()),
+      selected_declarations(new std::vector<Declaration*>()),
+      such_that(new std::vector<SuchThat*>()),
+      pattern(new std::vector<Pattern*>()){};
 
 Query::~Query() {
   delete declarations;

@@ -44,6 +44,24 @@ TEST_CASE (
     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10"});
   }
 
+  SECTION (
+      "Test pattern constraining unselected variable that returns no results: "
+      "Issue 231") {
+    auto querystr =
+        std::string("assign a; variable v; Select v pattern a(_, _\"v6\"_);");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+  }
+
+  SECTION (
+      "Test pattern constraining unselected variable that returns no results: "
+      "Issue 231 + LHS pattern as string") {
+    auto querystr = std::string(
+        "assign a; variable v; Select v pattern a(\"x\", _\"v6\"_);");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+  }
+
   delete pkb;
   delete qm;
 }

@@ -36,6 +36,7 @@ bool PatternEvaluator::handlePatternLHSUnderscore(
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (_, _) --> all assignments
     auto all_assigns = QueryExecutor::getSelect(pkb, DesignEntity::ASSIGN);
+    if (all_assigns.empty()) return false;  // Empty clause
     qc.addToSingleVariableConstraints(syn.synonym, all_assigns);
     return true;
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
@@ -44,7 +45,7 @@ bool PatternEvaluator::handlePatternLHSUnderscore(
     stream << *duf;
     auto matching_assigns = pkb->getPartialMatchLines(stream.str())
                                 .value_or(std::unordered_set<std::string>());
-
+    if (matching_assigns.empty()) return false;  // Empty clause
     qc.addToSingleVariableConstraints(syn.synonym, matching_assigns);
     return true;
   } else {
@@ -61,6 +62,7 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(
     // pattern a ("x", _) --> all assignments with LHS "x"
     auto allowed_lines = pkb->getLineForAssignVar(lhs).value_or(
         std::unordered_set<std::string>());
+    if (allowed_lines.empty()) return false;  // Empty clause
     qc.addToSingleVariableConstraints(syn.synonym, allowed_lines);
     return true;
   } else if (auto duf = std::get_if<DoubleUnderscoreFactor>(&pattern_rhs)) {
@@ -70,6 +72,7 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(
     auto matching_assigns =
         pkb->getPartialMatchLinesWithVar(lhs, rhs_partial.str())
             .value_or(std::unordered_set<std::string>());
+    if (matching_assigns.empty()) return false;  // Empty clause
     qc.addToSingleVariableConstraints(syn.synonym, matching_assigns);
     return true;
   } else {
@@ -88,6 +91,7 @@ bool PatternEvaluator::handlePatternLHSSynonym(
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (v, _) --> all assignments
     auto allowed_values = pkb->getAllPatternLinesAndVars();
+    if (allowed_values.empty()) return false; // Empty clause
     PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
     qc.addToPairedVariableConstraints(syn.synonym, lhs.synonym, avs);
     return true;
@@ -102,7 +106,7 @@ bool PatternEvaluator::handlePatternLHSSynonym(
         pkb->getPartialMatchLinesAndVars(rhs_partial.str())
             .value_or(
                 std::unordered_set<std::pair<Line, Variable>, pair_hash>());
-
+    if (allowed_values.empty()) return false; // Empty clause
     PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
     qc.addToPairedVariableConstraints(syn.synonym, lhs.synonym, avs);
     return true;

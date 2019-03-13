@@ -8,8 +8,10 @@
 
 #include "query_builder/pql/declaration.h"
 #include "query_builder/pql/query.h"
+#include "query_builder/pql/result.h"
 
 using QE::Declaration;
+using QE::Result;
 
 namespace QE {
 class QueryParser {
@@ -17,10 +19,6 @@ class QueryParser {
   Query* query_;
   unsigned int current_;
   std::vector<std::string> tokens_;
-
-  // Parses the declarations in a clause, and adds it into the Query state.
-  // Returns false if not a declaration clause.
-  bool parseDeclarationClause();
 
   //! Checks if token at the current index has value equal to string
   //! s. If successful, consumes the token, advancing the index.
@@ -44,6 +42,13 @@ class QueryParser {
 
   //! Returns the current token, and consumes it.
   std::string advance();
+
+  // Parses the declarations in a clause, and adds it into the Query state.
+  // Returns false if not a declaration clause.
+
+  Declaration* findDeclaration(const Synonym synonym);
+  void parseResult();
+  bool parseDeclarationClause();
 
  public:
   explicit QueryParser(std::vector<std::string> tokens);

@@ -1,9 +1,9 @@
-#include "query_builder/core/query_preprocessor.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <variant>
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_preprocessor.h"
 #include "query_builder/core/query_tokenizer.h"
 #include "query_builder/pql/pql.h"
 
@@ -81,7 +81,8 @@ void QueryPreprocessor::parseSelect(Query* query,
 
   // Search declarations to find one that matches this synyonm
   // THIS CAN THROW AN EXCEPTION - we do not catch
-  query->selected_declarations =
+  query->result->T = ResultType::TUPLE;
+  query->result->selected_declarations =
       new std::vector{findDeclaration(query->declarations, synonym_to_match)};
 }
 

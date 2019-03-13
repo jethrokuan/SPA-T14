@@ -89,6 +89,7 @@ set(headers ${headers}
   src/query_builder/pql/query.h
   src/query_builder/pql/quoteident.h
   src/query_builder/pql/relation.h
+  src/query_builder/pql/result.h
   src/query_builder/pql/stmtentref.h
   src/query_builder/pql/suchthat.h
   src/query_builder/pql/synonym.h

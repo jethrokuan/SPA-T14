@@ -6,9 +6,13 @@
 #include "query_builder/core/query_preprocessor.h"
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
+#include "query_executor/suchthat/CallsEvaluator.h"
+#include "query_executor/suchthat/CallsTEvaluator.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
+#include "query_executor/suchthat/NextEvaluator.h"
+#include "query_executor/suchthat/NextTEvaluator.h"
 #include "query_executor/suchthat/ParentEvaluator.h"
 #include "query_executor/suchthat/ParentTEvaluator.h"
 #include "query_executor/suchthat/UsesSEvaluator.h"
@@ -135,6 +139,14 @@ bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
       return FollowsEvaluator(query, pkb, qc).evaluate();
     case Relation::Parent:
       return ParentEvaluator(query, pkb, qc).evaluate();
+    case Relation::Next:
+      return NextEvaluator(query, pkb, qc).evaluate();
+    case Relation::NextT:
+      return NextTEvaluator(query, pkb, qc).evaluate();
+    case Relation::Calls:
+      return CallsEvaluator(query, pkb, qc).evaluate();
+    case Relation::CallsT:
+      return CallsTEvaluator(query, pkb, qc).evaluate();
     default:
       assert(false);
   }

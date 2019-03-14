@@ -55,6 +55,11 @@ set(headers ${headers}
   src/query_executor/suchthat/FollowsEvaluator.h
   src/query_executor/suchthat/ParentEvaluator.h
   src/query_executor/pattern/PatternEvaluator.h
+
+  src/query_executor/suchthat/NextEvaluator.h
+  src/query_executor/suchthat/NextTEvaluator.h
+  src/query_executor/suchthat/CallsEvaluator.h
+  src/query_executor/suchthat/CallsTEvaluator.h
   )
 
 # PQL Query Builder files

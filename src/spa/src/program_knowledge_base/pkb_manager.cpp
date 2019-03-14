@@ -129,6 +129,18 @@ std::unordered_set<Procedure> PKBManager::getProcedureSet() {
 }
 
 // is relationship set empty
+bool PKBManager::isLineNextLineSetEmpty() {
+  return pkb_storage->line_previous_line_next_set.empty();
+}
+
+bool PKBManager::isProcedureCallProcedureSetEmpty() {
+  return pkb_storage->procedure_calls_procedure_set.empty();
+}
+
+bool PKBManager::isProcedureCallProcedureTSetEmpty() {
+  return pkb_storage->procedure_calls_procedure_set_s.empty();
+}
+
 bool PKBManager::isLineFollowLineSetEmpty() {
   return pkb_storage->follows_set.empty();
 }

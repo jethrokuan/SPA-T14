@@ -69,6 +69,17 @@ TEST_CASE ("Test PKB for assign.txt") {
   pattern_test_7_check.insert("1");
   auto pattern_test_7 = pkb.getCompleteMatchLines("2+5");
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
+
+  // next
+  auto next_test_1 = pkb.isLineNextLineSetEmpty();
+  REQUIRE(next_test_1 == true);
+
+  // calls
+  auto calls_test_1 = pkb.isProcedureCallProcedureSetEmpty();
+  REQUIRE(calls_test_1 == true);
+
+  auto calls_test_2 = pkb.isProcedureCallProcedureTSetEmpty();
+  REQUIRE(calls_test_2 == true);
 }
 
 TEST_CASE ("Test PKB for simple_1.txt") {

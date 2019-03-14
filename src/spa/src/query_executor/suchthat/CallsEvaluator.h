@@ -19,7 +19,7 @@ class CallsEvaluator : public SuchThatEvaluator {
 
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
-    // Calls(s, 3)
+    // Calls(p, "first")
     if (auto beforeLine = pkb->getCallerProcedures(basic_value)) {
       return {*beforeLine};
     } else {
@@ -28,7 +28,7 @@ class CallsEvaluator : public SuchThatEvaluator {
   }
   std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
-    // Calls(3, s)
+    // Calls("first", p)
     if (auto afterLine = pkb->getCalleeProcedures(basic_value)) {
       return {*afterLine};
     } else {
@@ -36,16 +36,16 @@ class CallsEvaluator : public SuchThatEvaluator {
     }
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
-    // Calls(s, _) (for each s)
+    // Calls(p, _) (for each p)
     return pkb->getCalleeProcedures(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
-    // Calls(_, s) (for each s)
+    // Calls(_, p) (for each p)
     return pkb->getCallerProcedures(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
-    // Calls(s1, s2)
+    // Calls(p1, p2)
     return pkb->isProcedureCallsProcedure(arg_select, arg_unselect);
   }
   bool handleDoubleUnderscore() override {
@@ -55,15 +55,15 @@ class CallsEvaluator : public SuchThatEvaluator {
     assert(false);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
-    // Calls(3, _)
+    // Calls("first", _)
     return pkb->getCalleeProcedures(arg).has_value();
   }
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
-    // Calls(_, 3)
+    // Calls(_, "first")
     return pkb->getCallerProcedures(arg).has_value();
   }
   bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
-    // Calls(2, 3)
+    // Calls("first", "second")
     return pkb->isProcedureCallsProcedure(arg1, arg2);
   }
 };

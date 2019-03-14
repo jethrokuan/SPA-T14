@@ -43,10 +43,10 @@ class FollowsEvaluator : public SuchThatEvaluator {
     // Follows(_, s) (for each s)
     return pkb->getBeforeLine(arg_value).has_value();
   }
-  bool handleBothArgsSynonyms(std::string& arg_select,
-                              std::string& arg_unselect) override {
+  bool handleBothArgsSynonyms(std::string& arg_left,
+                              std::string& arg_right) override {
     // Follows(s1, s2)
-    return pkb->isLineFollowLine(arg_select, arg_unselect);
+    return pkb->isLineFollowLine(arg_left, arg_right);
   }
   bool handleDoubleUnderscore() override {
     // Follows(_, _)
@@ -60,8 +60,9 @@ class FollowsEvaluator : public SuchThatEvaluator {
     // Follows(_, 3)
     return pkb->getBeforeLine(arg).has_value();
   }
-  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg_left,
+                           std::string& arg_right) override {
     // Follows(2, 3)
-    return pkb->isLineFollowLine(arg1, arg2);
+    return pkb->isLineFollowLine(arg_left, arg_right);
   }
 };

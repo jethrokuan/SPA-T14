@@ -37,10 +37,10 @@ class ModifiesPEvaluator : public SuchThatEvaluator {
     std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
     assert(false);
   }
-  bool handleBothArgsSynonyms(std::string& arg_select,
-                              std::string& arg_unselect) override {
+  bool handleBothArgsSynonyms(std::string& arg_left,
+                              std::string& arg_right) override {
     // Modifies(p, v)
-    return pkb->isProcedureModifiesVar(arg_select, arg_unselect);
+    return pkb->isProcedureModifiesVar(arg_left, arg_right);
   }
   bool handleDoubleUnderscore() override {
     return !pkb->isProcedureModifiesVarSetEmpty();
@@ -53,8 +53,9 @@ class ModifiesPEvaluator : public SuchThatEvaluator {
     // Modifies(_, "x")
     return pkb->getProcedureModifiesVar(arg).has_value();
   }
-  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg_left,
+                           std::string& arg_right) override {
     // Modifies("first", "v")?
-    return pkb->isProcedureModifiesVar(arg1, arg2);
+    return pkb->isProcedureModifiesVar(arg_left, arg_right);
   }
 };

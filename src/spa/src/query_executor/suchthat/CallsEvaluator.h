@@ -43,15 +43,14 @@ class CallsEvaluator : public SuchThatEvaluator {
     // Calls(_, p) (for each p)
     return pkb->getCallerProcedures(arg_value).has_value();
   }
-  bool handleBothArgsSynonyms(std::string& arg_select,
-                              std::string& arg_unselect) override {
+  bool handleBothArgsSynonyms(std::string& arg_left,
+                              std::string& arg_right) override {
     // Calls(p1, p2)
-    return pkb->isProcedureCallsProcedure(arg_select, arg_unselect);
+    return pkb->isProcedureCallsProcedure(arg_left, arg_right);
   }
   bool handleDoubleUnderscore() override {
     // Calls(_, _)
-    // TODO after getting PKB call for this
-    // return !pkb->isLineFollowLineSSetEmpty();
+    return !pkb->isProcedureCallProcedureSetEmpty();
     assert(false);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
@@ -62,8 +61,9 @@ class CallsEvaluator : public SuchThatEvaluator {
     // Calls(_, "first")
     return pkb->getCallerProcedures(arg).has_value();
   }
-  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg_left,
+                           std::string& arg_right) override {
     // Calls("first", "second")
-    return pkb->isProcedureCallsProcedure(arg1, arg2);
+    return pkb->isProcedureCallsProcedure(arg_left, arg_right);
   }
 };

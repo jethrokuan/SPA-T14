@@ -10,22 +10,22 @@ bool SuchThatEvaluator::evaluate() {
   // easily done
   // Get all relevant variables so that further work with such_that can be
   // easily done
-  arg1AsSynonym = QueryExecutor::getSuchThatArgAsSynonym(arg1);
-  arg2AsSynonym = QueryExecutor::getSuchThatArgAsSynonym(arg2);
-  arg1IsUnderscore = QueryExecutor::isSuchThatArgUnderscore(arg1),
-  arg2IsUnderscore = QueryExecutor::isSuchThatArgUnderscore(arg2);
-  arg1AsBasic = QueryExecutor::getSuchThatArgAsBasic(arg1);
-  arg2AsBasic = QueryExecutor::getSuchThatArgAsBasic(arg2);
+  argLeftAsSynonym = QueryExecutor::getSuchThatArgAsSynonym(argLeft);
+  argRightAsSynonym = QueryExecutor::getSuchThatArgAsSynonym(argRight);
+  argLeftIsUnderscore = QueryExecutor::isSuchThatArgUnderscore(argLeft),
+  argRightIsUnderscore = QueryExecutor::isSuchThatArgUnderscore(argRight);
+  argLeftAsBasic = QueryExecutor::getSuchThatArgAsBasic(argLeft);
+  argRightAsBasic = QueryExecutor::getSuchThatArgAsBasic(argRight);
 
-  if (arg1AsSynonym) {
+  if (argLeftAsSynonym) {
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(
-        query->declarations, pkb, arg1AsSynonym->synonym, qc);
+        query->declarations, pkb, argLeftAsSynonym->synonym, qc);
   }
-  if (arg2AsSynonym) {
+  if (argRightAsSynonym) {
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(
-        query->declarations, pkb, arg2AsSynonym->synonym, qc);
+        query->declarations, pkb, argRightAsSynonym->synonym, qc);
   }
 
   return dispatch();
@@ -33,31 +33,31 @@ bool SuchThatEvaluator::evaluate() {
 
 //! Dispatch correct such that case to correct handler based on arg types
 bool SuchThatEvaluator::dispatch() {
-  if (arg1AsSynonym && arg2AsBasic) {
+  if (argLeftAsSynonym && argRightAsBasic) {
     // Case 1:  Follows*(s, 3)
     return dispatchLeftSynonymRightBasic();
-  } else if (arg2AsSynonym && arg1AsBasic) {
+  } else if (argRightAsSynonym && argLeftAsBasic) {
     // Case 2:  Follows*(3, s)
     return dispatchRightSynonymLeftBasic();
-  } else if (arg1AsSynonym && arg2IsUnderscore) {
+  } else if (argLeftAsSynonym && argRightIsUnderscore) {
     // Case 3: Follows*(s, _)
     return dispatchLeftVarSynonymRightUnderscore();
-  } else if (arg2AsSynonym && arg1IsUnderscore) {
+  } else if (argRightAsSynonym && argLeftIsUnderscore) {
     // Case 4: Follows*(_, s)
     return dispatchRightVarSynonymLeftUnderscore();
-  } else if (arg1AsSynonym && arg2AsSynonym) {
+  } else if (argLeftAsSynonym && argRightAsSynonym) {
     // Case 5:  Follows*(s1, s2)
     return dispatchBothVarsSynonyms();
-  } else if (arg1IsUnderscore && arg2IsUnderscore) {
+  } else if (argLeftIsUnderscore && argRightIsUnderscore) {
     // Case 6: Follows*(_, _)
     return dispatchDoubleUnderscore();
-  } else if (arg1AsBasic && arg2IsUnderscore) {
+  } else if (argLeftAsBasic && argRightIsUnderscore) {
     // Case 7: Follows(3, _)
     return dispatchLeftBasicRightUnderscore();
-  } else if (arg2AsBasic && arg1IsUnderscore) {
+  } else if (argRightAsBasic && argLeftIsUnderscore) {
     // Case 8:  Follows(_, 3)
     return dispatchRightBasicLeftUnderscore();
-  } else if (arg1AsBasic && arg2AsBasic) {
+  } else if (argLeftAsBasic && argRightAsBasic) {
     // Case 9: Follows(2, 3)
     return dispatchBothBasic();
   } else {
@@ -69,24 +69,24 @@ bool SuchThatEvaluator::dispatch() {
 bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
   // Case 1:  Follows*(s, 3)
   // Get PKB to give us list of possible s
-  auto results = handleLeftSynonymRightBasic(*arg2AsBasic);
+  auto results = handleLeftSynonymRightBasic(*argRightAsBasic);
   if (results.empty() ||
-      qc.containsNoAllowedResults(results, arg1AsSynonym->synonym)) {
+      qc.containsNoAllowedResults(results, argLeftAsSynonym->synonym)) {
     return false;
   }
-  qc.addToSingleVariableConstraints(arg1AsSynonym->synonym, results);
+  qc.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
   return true;
 }
 
 bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
   // Case 2:  Follows*(3, s)
   // Get PKB to give us list of possible s
-  auto results = handleRightSynonymLeftBasic(*arg1AsBasic);
+  auto results = handleRightSynonymLeftBasic(*argLeftAsBasic);
   if (results.empty() ||
-      qc.containsNoAllowedResults(results, arg2AsSynonym->synonym)) {
+      qc.containsNoAllowedResults(results, argRightAsSynonym->synonym)) {
     return false;
   }
-  qc.addToSingleVariableConstraints(arg2AsSynonym->synonym, results);
+  qc.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
   return true;
 }
 
@@ -96,7 +96,7 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
   // Add those that have results to output
   // E.g. Follows*(3, _)? Follows*(4, _)?
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, arg1AsSynonym->synonym);
+      query->declarations, pkb, argLeftAsSynonym->synonym);
 
   std::vector<std::string> results;
   for (auto de : lhs_designentities) {
@@ -105,7 +105,7 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
     }
   }
   if (results.empty()) return false;
-  qc.addToSingleVariableConstraints(arg1AsSynonym->synonym, results);
+  qc.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
   return true;
 }
 
@@ -115,7 +115,7 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
   // Add those that have results to output
   // E.g. Follows*(_, 3)? Follows*(, 4)?
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, arg2AsSynonym->synonym);
+      query->declarations, pkb, argRightAsSynonym->synonym);
   std::vector<std::string> results;
   for (auto de : rhs_designentities) {
     if (handleRightSynonymLeftUnderscore(de)) {
@@ -123,7 +123,7 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
     }
   }
   if (results.empty()) return false;
-  qc.addToSingleVariableConstraints(arg2AsSynonym->synonym, results);
+  qc.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
   return true;
 }
 
@@ -133,9 +133,9 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   // Add those that have results to output
   // E.g. Follows*(2, 3)? Follows*(2, 4)? Follows*(3, 3)? ...
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, arg1AsSynonym->synonym);
+      query->declarations, pkb, argLeftAsSynonym->synonym);
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, arg2AsSynonym->synonym);
+      query->declarations, pkb, argRightAsSynonym->synonym);
 
   PairedConstraintSet results;
   for (auto lhs_de : lhs_designentities) {
@@ -146,8 +146,8 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
     }
   }
   if (results.empty()) return false;
-  qc.addToPairedVariableConstraints(arg1AsSynonym->synonym,
-                                    arg2AsSynonym->synonym, results);
+  qc.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
+                                    argRightAsSynonym->synonym, results);
   return true;
 }
 
@@ -160,17 +160,17 @@ bool SuchThatEvaluator::dispatchDoubleUnderscore() {
 bool SuchThatEvaluator::dispatchLeftBasicRightUnderscore() {
   // Case 7: Follows(3, _)
   // Ask PKB to answer specific case: any results for this LHS?
-  return handleLeftBasicRightUnderscore(*arg1AsBasic);
+  return handleLeftBasicRightUnderscore(*argLeftAsBasic);
 }
 
 bool SuchThatEvaluator::dispatchRightBasicLeftUnderscore() {
   // Case 8:  Follows(_, 3)
   // Ask PKB to answer specific case: any results for this RHS?
-  return handleRightBasicLeftUnderscore(*arg2AsBasic);
+  return handleRightBasicLeftUnderscore(*argRightAsBasic);
 }
 
 bool SuchThatEvaluator::dispatchBothBasic() {
   // Case 9: Follows(2, 3)
   // Ask PKB for direct answer to this fully-realized query
-  return handleBothArgsBasic(*arg1AsBasic, *arg2AsBasic);
+  return handleBothArgsBasic(*argLeftAsBasic, *argRightAsBasic);
 }

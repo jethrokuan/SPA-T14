@@ -37,17 +37,14 @@ class CallsTEvaluator : public SuchThatEvaluator {
     // Calls*(_, p) (for each p)
     return pkb->getCallerProceduresT(arg_value).has_value();
   }
-  bool handleBothArgsSynonyms(std::string& arg_select,
-                              std::string& arg_unselect) override {
+  bool handleBothArgsSynonyms(std::string& arg_left,
+                              std::string& arg_right) override {
     // Calls*(p1, p2)
-    // return pkb->isProcedureCallsProcedureS(arg_select, arg_unselect);
-    // TODO: no such procedure
-    assert(false);
+    return pkb->isProcedureCallsProcedureT(arg_left, arg_right);
   }
   bool handleDoubleUnderscore() override {
     // Calls*(_, _)
-    // TODO after getting PKB call for this
-    // return !pkb->isLineFollowLineSSetEmpty();
+    return !pkb->isProcedureCallProcedureTSetEmpty();
     assert(false);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
@@ -58,10 +55,9 @@ class CallsTEvaluator : public SuchThatEvaluator {
     // Calls*(_, "first")
     return pkb->getCallerProceduresT(arg).has_value();
   }
-  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg_left,
+                           std::string& arg_right) override {
     // Calls*("first", "second")
-    // return pkb->isProcedureCallsProcedureS(arg1, arg2);
-    // TODO: no such procedure
-    assert(false);
+    return pkb->isProcedureCallsProcedureT(arg_left, arg_right);
   }
 };

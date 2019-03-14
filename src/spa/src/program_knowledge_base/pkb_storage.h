@@ -165,6 +165,7 @@ class PKBStorage {
 
   // helper
   void storeLineProcedureRelation(const Line, const Procedure);
+  // TODO should return optional
   Procedure getProcedureFromLine(const Line);
 };
 

@@ -51,6 +51,8 @@ bool PKBManager::isProcedureSetEmpty() {
   return pkb_storage->procedure_set.empty();
 }
 
+bool PKBManager::isCallSetEmpty() { return pkb_storage->call_set.empty(); }
+
 // is design entity exists
 bool PKBManager::isVariableExists(const Variable var) {
   return pkb_storage->var_set.find(var) != pkb_storage->var_set.end();
@@ -90,6 +92,10 @@ bool PKBManager::isProcedureExists(const Procedure proc) {
          pkb_storage->procedure_set.end();
 }
 
+bool PKBManager::isCallExists(const Line line) {
+  return pkb_storage->call_set.find(line) != pkb_storage->call_set.end();
+}
+
 // get design entities
 
 std::unordered_set<Line> PKBManager::getVariableSet() {
@@ -126,6 +132,10 @@ std::unordered_set<Procedure> PKBManager::getConstantSet() {
 
 std::unordered_set<Procedure> PKBManager::getProcedureSet() {
   return pkb_storage->procedure_set;
+}
+
+std::unordered_set<Procedure> PKBManager::getCallSet() {
+  return pkb_storage->call_set;
 }
 
 // is relationship set empty
@@ -549,6 +559,56 @@ bool PKBManager::isLineNextLine(const PreviousLine previous_line,
   return pkb_storage->line_previous_line_next_set.find(
              std::pair<PreviousLine, NextLine>(previous_line, next_line)) !=
          pkb_storage->line_previous_line_next_set.end();
+}
+
+bool PKBManager::isLineNextLineT(const PreviousLine previous_line,
+                                 const NextLine next_line) {
+  // check that lines are in the same procedure
+  // able to eliminate unnecessary DFS
+  if (isStatementExists(previous_line) && isStatementExists(next_line)) {
+    const Procedure p1 = pkb_storage->getProcedureFromLine(previous_line);
+    const Procedure p2 = pkb_storage->getProcedureFromLine(next_line);
+    if (p1 != p2) {
+      return false;
+    }
+  }
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  auto to_visit = getNextLine(previous_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      const bool res = isLineNextLineTH(neighbour, next_line, visited);
+      if (res) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+bool PKBManager::isLineNextLineTH(
+    const Line cur_line, const Line target,
+    std::shared_ptr<std::unordered_set<Line>> visited) {
+  // if node has been visited before
+  if (visited->find(cur_line) != visited->end()) {
+    return false;
+  }
+  // if target node has been reached
+  if (cur_line == target) {
+    return true;
+  }
+  visited->insert(cur_line);
+  auto to_visit = getNextLine(cur_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      const bool res = isLineNextLineTH(neighbour, target, visited);
+      if (res) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLine(

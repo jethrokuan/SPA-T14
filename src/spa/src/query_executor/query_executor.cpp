@@ -21,14 +21,7 @@
 
 using namespace QE;
 
-//! \brief Sorts the vector of strings returned by the query system
-//! This decouples the return order of PKB with the result to screen
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
-  auto result = makeQueryUnsorted(query);
-  return result;
-}
-
-std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
   QueryConstraints query_constraints;
 

@@ -20,22 +20,22 @@ class CallsTEvaluator : public SuchThatEvaluator {
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Calls*(p, "first")
-    return pkb->getCallerProceduresS(basic_value)
+    return pkb->getCallerProceduresT(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Calls*("first", p)
-    return pkb->getCalleeProceduresS(basic_value)
+    return pkb->getCalleeProceduresT(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Calls*(p, _) (for each p)
-    return pkb->getCalleeProceduresS(arg_value).has_value();
+    return pkb->getCalleeProceduresT(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
     // Calls*(_, p) (for each p)
-    return pkb->getCallerProceduresS(arg_value).has_value();
+    return pkb->getCallerProceduresT(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
@@ -52,11 +52,11 @@ class CallsTEvaluator : public SuchThatEvaluator {
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Calls*("first", _)
-    return pkb->getCalleeProceduresS(arg).has_value();
+    return pkb->getCalleeProceduresT(arg).has_value();
   }
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
     // Calls*(_, "first")
-    return pkb->getCallerProceduresS(arg).has_value();
+    return pkb->getCallerProceduresT(arg).has_value();
   }
   bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
     // Calls*("first", "second")

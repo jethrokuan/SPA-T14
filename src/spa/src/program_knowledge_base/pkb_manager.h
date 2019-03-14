@@ -67,12 +67,12 @@ class PKBManager {
 
   // is relationship set empty
   // TODO implement for calls and next
-  bool isLineNextLineTetEmpty();
+  bool isLineNextLineSetEmpty();
   bool isProcedureCallProcedureSetEmpty();
   bool isProcedureCallProcedureTSetEmpty();
   bool isLineFollowLineSetEmpty();
   bool isLineFollowLineTSetEmpty();
-  bool isLineParentLineTetEmpty();
+  bool isLineParentLineSetEmpty();
   bool isLineParentLineTSetEmpty();
   bool isLineUsesVarSetEmpty();
   bool isLineModifiesVarSetEmpty();

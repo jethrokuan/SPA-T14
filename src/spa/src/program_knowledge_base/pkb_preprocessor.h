@@ -19,19 +19,19 @@ class PKBPreprocessor {
   void setCFG(const std::shared_ptr<RootNode> node);
   void setCFG(const std::shared_ptr<ProcedureNode> node);
   void setCFG(const std::shared_ptr<IfNode> node,
-              const Line = INVALID_LINE_NUMBER);
+              std::shared_ptr<std::vector<Line>> terminating_lines);
   void setCFG(const std::shared_ptr<WhileNode> node,
-              const Line = INVALID_LINE_NUMBER);
+              std::shared_ptr<std::vector<Line>> terminating_lines);
   void setCFG(const std::shared_ptr<ReadNode>,
-              const Line = INVALID_LINE_NUMBER);
+              std::shared_ptr<std::vector<Line>> terminating_lines);
   void setCFG(const std::shared_ptr<PrintNode>,
-              const Line = INVALID_LINE_NUMBER);
+              std::shared_ptr<std::vector<Line>> terminating_lines);
   void setCFG(const std::shared_ptr<AssignNode>,
-              const Line = INVALID_LINE_NUMBER);
+              std::shared_ptr<std::vector<Line>> terminating_lines);
   void setCFG(const std::shared_ptr<CallNode>,
-              const Line = INVALID_LINE_NUMBER);
+              std::shared_ptr<std::vector<Line>> terminating_lines);
   void setCFGIterator(const std::vector<StmtNode> stmt_lst,
-                      const Line = INVALID_LINE_NUMBER);
+                      std::shared_ptr<std::vector<Line>> terminating_lines);
 
   void setDesignEntities(const std::shared_ptr<RootNode> node);
   void setDesignEntities(const std::shared_ptr<ProcedureNode> node);

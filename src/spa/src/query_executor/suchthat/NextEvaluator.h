@@ -12,15 +12,15 @@
 using namespace PKB;
 using namespace QE;
 
-class FollowsEvaluator : public SuchThatEvaluator {
+class NextEvaluator : public SuchThatEvaluator {
  public:
-  FollowsEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
+  NextEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
-    // Follows(s, 3)
-    if (auto beforeLine = pkb->getBeforeLine(basic_value)) {
+    // Next(s, 3)
+    if (auto beforeLine = pkb->getPreviousLine(basic_value)) {
       return {*beforeLine};
     } else {
       return {};
@@ -28,40 +28,42 @@ class FollowsEvaluator : public SuchThatEvaluator {
   }
   std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
-    // Follows(3, s)
-    if (auto afterLine = pkb->getFollowingLine(basic_value)) {
+    // Next(3, s)
+    if (auto afterLine = pkb->getNextLine(basic_value)) {
       return {*afterLine};
     } else {
       return {};
     }
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
-    // Follows(s, _) (for each s)
-    return pkb->getFollowingLine(arg_value).has_value();
+    // Next(s, _) (for each s)
+    return pkb->getNextLine(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
-    // Follows(_, s) (for each s)
-    return pkb->getBeforeLine(arg_value).has_value();
+    // Next(_, s) (for each s)
+    return pkb->getPreviousLine(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
-    // Follows(s1, s2)
-    return pkb->isLineFollowLine(arg_select, arg_unselect);
+    // Next(s1, s2)
+    return pkb->isLineNextLine(arg_select, arg_unselect);
   }
   bool handleDoubleUnderscore() override {
-    // Follows(_, _)
-    return !pkb->isLineFollowLineSetEmpty();
+    // Next(_, _)
+    // TODO after getting PKB call for this
+    // return !pkb->isLineFollowLineSSetEmpty();
+    assert(false);
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
-    // Follows(3, _)
-    return pkb->getFollowingLine(arg).has_value();
+    // Next(3, _)
+    return pkb->getNextLine(arg).has_value();
   }
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
-    // Follows(_, 3)
-    return pkb->getBeforeLine(arg).has_value();
+    // Next(_, 3)
+    return pkb->getPreviousLine(arg).has_value();
   }
   bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
-    // Follows(2, 3)
-    return pkb->isLineFollowLine(arg1, arg2);
+    // Next(2, 3)
+    return pkb->isLineNextLine(arg1, arg2);
   }
 };

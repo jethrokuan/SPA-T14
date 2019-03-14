@@ -506,8 +506,8 @@ void PKBPreprocessor::setUsesIndirectRelations() {
   auto indirect_procedure_calls_sets =
       std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>,
                          pair_hash>(
-          storage->procedure_calls_procedure_set_s.begin(),
-          storage->procedure_calls_procedure_set_s.end());
+          storage->procedure_calls_procedure_set_t.begin(),
+          storage->procedure_calls_procedure_set_t.end());
   for (const auto &indirect_call : indirect_procedure_calls_sets) {
     const ProcedureCaller proc_caller = indirect_call.first;
     const ProcedureCallee proc_callee = indirect_call.second;
@@ -615,9 +615,9 @@ void PKBPreprocessor::setUsesRelationsH(
   storage->storeProcedureUsesVarRelation(proc, node->Name);
   storage->storeLineUsesVarRelation(cur_line_number, node->Name);
 
-  if (storage->child_line_parent_line_map_s.find(cur_line_number) !=
-      storage->child_line_parent_line_map_s.end()) {
-    auto parents = storage->child_line_parent_line_map_s.at(cur_line_number);
+  if (storage->child_line_parent_line_map_t.find(cur_line_number) !=
+      storage->child_line_parent_line_map_t.end()) {
+    auto parents = storage->child_line_parent_line_map_t.at(cur_line_number);
     for (const auto &elem : parents) {
       storage->storeLineUsesVarRelation(elem, node->Name);
     }
@@ -645,8 +645,8 @@ void PKBPreprocessor::setModifiesIndirectRelations() {
   auto indirect_procedure_calls_sets =
       std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>,
                          pair_hash>(
-          storage->procedure_calls_procedure_set_s.begin(),
-          storage->procedure_calls_procedure_set_s.end());
+          storage->procedure_calls_procedure_set_t.begin(),
+          storage->procedure_calls_procedure_set_t.end());
   for (const auto &indirect_call : indirect_procedure_calls_sets) {
     const ProcedureCaller proc_caller = indirect_call.first;
     const ProcedureCallee proc_callee = indirect_call.second;
@@ -721,9 +721,9 @@ void PKBPreprocessor::setModifiesRelationsH(
 
   // TODO this bit of code is repeated in pkb_manager
   // perhaps shift it under storage helper function
-  if (storage->child_line_parent_line_map_s.find(cur_line_number) !=
-      storage->child_line_parent_line_map_s.end()) {
-    auto parents = storage->child_line_parent_line_map_s.at(cur_line_number);
+  if (storage->child_line_parent_line_map_t.find(cur_line_number) !=
+      storage->child_line_parent_line_map_t.end()) {
+    auto parents = storage->child_line_parent_line_map_t.at(cur_line_number);
     for (const auto &elem : parents) {
       storage->storeLineModifiesVarRelation(elem, node->Name);
     }

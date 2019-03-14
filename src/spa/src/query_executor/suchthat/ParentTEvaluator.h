@@ -19,41 +19,41 @@ class ParentTEvaluator : public SuchThatEvaluator {
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Parent*(s, 3)
-    return pkb->getParentLineS(basic_value)
+    return pkb->getParentLineT(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Parent*(3, s)
-    return pkb->getChildLineS(basic_value)
+    return pkb->getChildLineT(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Parent*(s, _) (for each s)
-    return pkb->getChildLineS(arg_value).has_value();
+    return pkb->getChildLineT(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
     // Parent*(_, s) (for each s)
-    return pkb->getParentLineS(arg_value).has_value();
+    return pkb->getParentLineT(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Parent*(s, s1)
-    return pkb->isLineParentLineS(arg_select, arg_unselect);
+    return pkb->isLineParentLineT(arg_select, arg_unselect);
   }
   bool handleDoubleUnderscore() override {
-    return !pkb->isLineFollowLineSSetEmpty();
+    return !pkb->isLineFollowLineTSetEmpty();
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Parent*(3, _)
-    return pkb->getChildLineS(arg).has_value();
+    return pkb->getChildLineT(arg).has_value();
   }
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
     // Parent*(_, 3)
-    return pkb->getParentLineS(arg).has_value();
+    return pkb->getParentLineT(arg).has_value();
   }
   bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
     // Parent*(2, 3)?
-    return pkb->isLineParentLineS(arg1, arg2);
+    return pkb->isLineParentLineT(arg1, arg2);
   }
 };

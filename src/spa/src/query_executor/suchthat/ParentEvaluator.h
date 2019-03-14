@@ -48,7 +48,7 @@ class ParentEvaluator : public SuchThatEvaluator {
     return pkb->isLineParentLine(arg_select, arg_unselect);
   }
   bool handleDoubleUnderscore() override {
-    return !pkb->isLineFollowLineSSetEmpty();
+    return !pkb->isLineFollowLineTSetEmpty();
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Parent(3, _)

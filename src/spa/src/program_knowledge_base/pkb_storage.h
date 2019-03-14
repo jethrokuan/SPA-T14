@@ -48,36 +48,36 @@ class PKBStorage {
   std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
       procedure_calls_procedure_set;
   std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
-      procedure_calls_procedure_set_s;
+      procedure_calls_procedure_set_t;
   std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
       procedure_caller_procedure_callee_map;
   std::unordered_map<ProcedureCallee, std::unordered_set<ProcedureCaller>>
       procedure_callee_procedure_caller_map;
   std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
-      procedure_caller_procedure_callee_map_s;
+      procedure_caller_procedure_callee_map_t;
   std::unordered_map<ProcedureCallee, std::unordered_set<ProcedureCaller>>
-      procedure_callee_procedure_caller_map_s;
+      procedure_callee_procedure_caller_map_t;
 
   // follows
   std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set;
-  std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set_s;
+  std::unordered_set<std::pair<LineBefore, LineAfter>, pair_hash> follows_set_t;
   std::unordered_map<LineBefore, LineAfter> line_before_line_after_map;
   std::unordered_map<LineAfter, LineBefore> line_after_line_before_map;
   std::unordered_map<LineBefore, std::unordered_set<LineAfter>>
-      line_before_line_after_map_s;
+      line_before_line_after_map_t;
   std::unordered_map<LineAfter, std::unordered_set<LineBefore>>
-      line_after_line_before_map_s;
+      line_after_line_before_map_t;
 
   // parent
   std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set;
-  std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set_s;
+  std::unordered_set<std::pair<ParentLine, ChildLine>, pair_hash> parent_set_t;
   std::unordered_map<ChildLine, ParentLine> child_line_parent_line_map;
   std::unordered_map<ParentLine, std::unordered_set<ChildLine>>
       parent_line_child_line_map;
   std::unordered_map<ChildLine, std::unordered_set<ParentLine>>
-      child_line_parent_line_map_s;
+      child_line_parent_line_map_t;
   std::unordered_map<ParentLine, std::unordered_set<ChildLine>>
-      parent_line_child_line_map_s;
+      parent_line_child_line_map_t;
 
   // uses
   std::unordered_set<std::pair<Procedure, Variable>, pair_hash>

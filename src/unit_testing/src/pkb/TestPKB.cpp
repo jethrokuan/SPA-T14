@@ -71,7 +71,7 @@ TEST_CASE ("Test PKB for assign.txt") {
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   // next
-  auto next_test_1 = pkb.isLineNextLineSetEmpty();
+  auto next_test_1 = pkb.isLineNextLineTetEmpty();
   REQUIRE(next_test_1 == true);
 
   // calls
@@ -187,21 +187,21 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   REQUIRE(follows_test_9 == false);
   auto follows_test_10 = pkb.isLineFollowLine("8", "0");
   REQUIRE(follows_test_10 == false);
-  auto follows_test_11 = pkb.isLineFollowLineS("1", "2");
+  auto follows_test_11 = pkb.isLineFollowLineT("1", "2");
   REQUIRE(follows_test_11 == true);
-  auto follows_test_12 = pkb.isLineFollowLineS("1", "3");
+  auto follows_test_12 = pkb.isLineFollowLineT("1", "3");
   REQUIRE(follows_test_12 == false);
-  auto follows_test_13 = pkb.isLineFollowLineS("1", "4");
+  auto follows_test_13 = pkb.isLineFollowLineT("1", "4");
   REQUIRE(follows_test_13 == true);
-  auto follows_test_14 = pkb.isLineFollowLineS("1", "5");
+  auto follows_test_14 = pkb.isLineFollowLineT("1", "5");
   REQUIRE(follows_test_14 == true);
-  auto follows_test_15 = pkb.isLineFollowLineS("2", "3");
+  auto follows_test_15 = pkb.isLineFollowLineT("2", "3");
   REQUIRE(follows_test_15 == false);
-  auto follows_test_16 = pkb.isLineFollowLineS("2", "4");
+  auto follows_test_16 = pkb.isLineFollowLineT("2", "4");
   REQUIRE(follows_test_16 == true);
-  auto follows_test_17 = pkb.isLineFollowLineS("2", "5");
+  auto follows_test_17 = pkb.isLineFollowLineT("2", "5");
   REQUIRE(follows_test_17 == true);
-  auto follows_test_18 = pkb.isLineFollowLineS("3", "4");
+  auto follows_test_18 = pkb.isLineFollowLineT("3", "4");
   REQUIRE(follows_test_18 == false);
 
   // test parent
@@ -217,7 +217,7 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   std::unordered_set<std::string> parent_test_5_check;
   parent_test_5_check.insert("2");
   std::unordered_set<Variable> parent_test_5_set;
-  auto parent_test_5 = pkb.getParentLineS("3");
+  auto parent_test_5 = pkb.getParentLineT("3");
   REQUIRE(*parent_test_5 == parent_test_5_check);
 
   // test uses
@@ -557,53 +557,53 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   auto follows_test_26 = pkb.isLineFollowLine("22", "23");
   REQUIRE(follows_test_26 == false);
 
-  auto follows_test_27 = pkb.isLineFollowLineS("1", "2");
+  auto follows_test_27 = pkb.isLineFollowLineT("1", "2");
   REQUIRE(follows_test_27 == true);
-  auto follows_test_28 = pkb.isLineFollowLineS("1", "3");
+  auto follows_test_28 = pkb.isLineFollowLineT("1", "3");
   REQUIRE(follows_test_28 == true);
-  auto follows_test_29 = pkb.isLineFollowLineS("1", "4");
+  auto follows_test_29 = pkb.isLineFollowLineT("1", "4");
   REQUIRE(follows_test_29 == true);
-  auto follows_test_30 = pkb.isLineFollowLineS("1", "5");
+  auto follows_test_30 = pkb.isLineFollowLineT("1", "5");
   REQUIRE(follows_test_30 == false);
-  auto follows_test_31 = pkb.isLineFollowLineS("2", "3");
+  auto follows_test_31 = pkb.isLineFollowLineT("2", "3");
   REQUIRE(follows_test_31 == true);
-  auto follows_test_32 = pkb.isLineFollowLineS("2", "4");
+  auto follows_test_32 = pkb.isLineFollowLineT("2", "4");
   REQUIRE(follows_test_32 == true);
-  auto follows_test_33 = pkb.isLineFollowLineS("2", "5");
+  auto follows_test_33 = pkb.isLineFollowLineT("2", "5");
   REQUIRE(follows_test_33 == false);
-  auto follows_test_34 = pkb.isLineFollowLineS("3", "4");
+  auto follows_test_34 = pkb.isLineFollowLineT("3", "4");
   REQUIRE(follows_test_34 == true);
-  auto follows_test_35 = pkb.isLineFollowLineS("5", "6");
+  auto follows_test_35 = pkb.isLineFollowLineT("5", "6");
   REQUIRE(follows_test_35 == true);
-  auto follows_test_36 = pkb.isLineFollowLineS("5", "7");
+  auto follows_test_36 = pkb.isLineFollowLineT("5", "7");
   REQUIRE(follows_test_36 == true);
-  auto follows_test_37 = pkb.isLineFollowLineS("8", "9");
+  auto follows_test_37 = pkb.isLineFollowLineT("8", "9");
   REQUIRE(follows_test_37 == true);
-  auto follows_test_38 = pkb.isLineFollowLineS("8", "10");
+  auto follows_test_38 = pkb.isLineFollowLineT("8", "10");
   REQUIRE(follows_test_38 == true);
-  auto follows_test_39 = pkb.isLineFollowLineS("8", "12");
+  auto follows_test_39 = pkb.isLineFollowLineT("8", "12");
   REQUIRE(follows_test_39 == false);
-  auto follows_test_40 = pkb.isLineFollowLineS("9", "11");
+  auto follows_test_40 = pkb.isLineFollowLineT("9", "11");
   REQUIRE(follows_test_40 == true);
-  auto follows_test_41 = pkb.isLineFollowLineS("9", "12");
+  auto follows_test_41 = pkb.isLineFollowLineT("9", "12");
   REQUIRE(follows_test_41 == false);
-  auto follows_test_42 = pkb.isLineFollowLineS("12", "13");
+  auto follows_test_42 = pkb.isLineFollowLineT("12", "13");
   REQUIRE(follows_test_42 == true);
-  auto follows_test_43 = pkb.isLineFollowLineS("12", "16");
+  auto follows_test_43 = pkb.isLineFollowLineT("12", "16");
   REQUIRE(follows_test_43 == true);
-  auto follows_test_44 = pkb.isLineFollowLineS("5", "22");
+  auto follows_test_44 = pkb.isLineFollowLineT("5", "22");
   REQUIRE(follows_test_44 == true);
-  auto follows_test_45 = pkb.isLineFollowLineS("1", "23");
+  auto follows_test_45 = pkb.isLineFollowLineT("1", "23");
   REQUIRE(follows_test_45 == true);
-  auto follows_test_46 = pkb.isLineFollowLineS("2", "24");
+  auto follows_test_46 = pkb.isLineFollowLineT("2", "24");
   REQUIRE(follows_test_46 == true);
-  auto follows_test_47 = pkb.isLineFollowLineS("3", "23");
+  auto follows_test_47 = pkb.isLineFollowLineT("3", "23");
   REQUIRE(follows_test_47 == true);
-  auto follows_test_48 = pkb.isLineFollowLineS("3", "24");
+  auto follows_test_48 = pkb.isLineFollowLineT("3", "24");
   REQUIRE(follows_test_48 == true);
-  auto follows_test_49 = pkb.isLineFollowLineS("4", "24");
+  auto follows_test_49 = pkb.isLineFollowLineT("4", "24");
   REQUIRE(follows_test_49 == true);
-  auto follows_test_50 = pkb.isLineFollowLineS("22", "24");
+  auto follows_test_50 = pkb.isLineFollowLineT("22", "24");
   REQUIRE(follows_test_50 == false);
 
   // test parent
@@ -638,25 +638,25 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   auto parent_test_15 = pkb.isLineParentLine("4", "23");
   REQUIRE(parent_test_15 == false);
 
-  auto parent_test_16 = pkb.isLineParentLineS("4", "8");
+  auto parent_test_16 = pkb.isLineParentLineT("4", "8");
   REQUIRE(parent_test_16 == true);
-  auto parent_test_17 = pkb.isLineParentLineS("4", "9");
+  auto parent_test_17 = pkb.isLineParentLineT("4", "9");
   REQUIRE(parent_test_17 == true);
-  auto parent_test_18 = pkb.isLineParentLineS("4", "12");
+  auto parent_test_18 = pkb.isLineParentLineT("4", "12");
   REQUIRE(parent_test_18 == true);
-  auto parent_test_19 = pkb.isLineParentLineS("7", "15");
+  auto parent_test_19 = pkb.isLineParentLineT("7", "15");
   REQUIRE(parent_test_19 == true);
-  auto parent_test_20 = pkb.isLineParentLineS("7", "18");
+  auto parent_test_20 = pkb.isLineParentLineT("7", "18");
   REQUIRE(parent_test_20 == true);
-  auto parent_test_21 = pkb.isLineParentLineS("11", "21");
+  auto parent_test_21 = pkb.isLineParentLineT("11", "21");
   REQUIRE(parent_test_21 == true);
-  auto parent_test_22 = pkb.isLineParentLineS("4", "22");
+  auto parent_test_22 = pkb.isLineParentLineT("4", "22");
   REQUIRE(parent_test_22 == true);
-  auto parent_test_23 = pkb.isLineParentLineS("4", "19");
+  auto parent_test_23 = pkb.isLineParentLineT("4", "19");
   REQUIRE(parent_test_23 == true);
-  auto parent_test_24 = pkb.isLineParentLineS("23", "24");
+  auto parent_test_24 = pkb.isLineParentLineT("23", "24");
   REQUIRE(parent_test_24 == false);
-  auto parent_test_25 = pkb.isLineParentLineS("1", "5");
+  auto parent_test_25 = pkb.isLineParentLineT("1", "5");
   REQUIRE(parent_test_25 == false);
 
   // test uses
@@ -1080,16 +1080,16 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
 
     std::unordered_set<std::string> follows_test_8_check;
     follows_test_8_check.insert("2");
-    auto follows_test_8 = pkb.getFollowingLineS("1");
+    auto follows_test_8 = pkb.getFollowingLineT("1");
     REQUIRE(*follows_test_8 == follows_test_8_check);
 
     auto follows_test_9 = pkb.getFollowingLine("2");
     REQUIRE(follows_test_9 == std::nullopt);
 
-    auto follows_test_10 = pkb.getFollowingLineS("2");
+    auto follows_test_10 = pkb.getFollowingLineT("2");
     REQUIRE(follows_test_10 == std::nullopt);
 
-    auto follows_test_11 = pkb.getFollowingLineS("9");
+    auto follows_test_11 = pkb.getFollowingLineT("9");
     REQUIRE(follows_test_11 == std::nullopt);
   }
 
@@ -1108,50 +1108,50 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     REQUIRE(parent_test_6 == true);
     auto parent_test_7 = pkb.isLineParentLine("2", "9");
     REQUIRE(parent_test_7 == true);
-    auto parent_test_8 = pkb.isLineParentLineS("2", "3");
+    auto parent_test_8 = pkb.isLineParentLineT("2", "3");
     REQUIRE(parent_test_8 == true);
-    auto parent_test_9 = pkb.isLineParentLineS("2", "4");
+    auto parent_test_9 = pkb.isLineParentLineT("2", "4");
     REQUIRE(parent_test_9 == true);
-    auto parent_test_10 = pkb.isLineParentLineS("2", "5");
+    auto parent_test_10 = pkb.isLineParentLineT("2", "5");
     REQUIRE(parent_test_10 == true);
-    auto parent_test_11 = pkb.isLineParentLineS("2", "6");
+    auto parent_test_11 = pkb.isLineParentLineT("2", "6");
     REQUIRE(parent_test_11 == true);
-    auto parent_test_12 = pkb.isLineParentLineS("2", "7");
+    auto parent_test_12 = pkb.isLineParentLineT("2", "7");
     REQUIRE(parent_test_12 == true);
-    auto parent_test_13 = pkb.isLineParentLineS("2", "8");
+    auto parent_test_13 = pkb.isLineParentLineT("2", "8");
     REQUIRE(parent_test_13 == true);
-    auto parent_test_14 = pkb.isLineParentLineS("2", "9");
+    auto parent_test_14 = pkb.isLineParentLineT("2", "9");
     REQUIRE(parent_test_14 == true);
-    auto parent_test_15 = pkb.isLineParentLineS("3", "5");
+    auto parent_test_15 = pkb.isLineParentLineT("3", "5");
     REQUIRE(parent_test_15 == true);
-    auto parent_test_16 = pkb.isLineParentLineS("3", "6");
+    auto parent_test_16 = pkb.isLineParentLineT("3", "6");
     REQUIRE(parent_test_16 == true);
-    auto parent_test_17 = pkb.isLineParentLineS("3", "7");
+    auto parent_test_17 = pkb.isLineParentLineT("3", "7");
     REQUIRE(parent_test_17 == true);
-    auto parent_test_18 = pkb.isLineParentLineS("3", "8");
+    auto parent_test_18 = pkb.isLineParentLineT("3", "8");
     REQUIRE(parent_test_18 == true);
-    auto parent_test_19 = pkb.isLineParentLineS("4", "5");
+    auto parent_test_19 = pkb.isLineParentLineT("4", "5");
     REQUIRE(parent_test_19 == true);
-    auto parent_test_20 = pkb.isLineParentLineS("4", "6");
+    auto parent_test_20 = pkb.isLineParentLineT("4", "6");
     REQUIRE(parent_test_20 == true);
-    auto parent_test_21 = pkb.isLineParentLineS("4", "7");
+    auto parent_test_21 = pkb.isLineParentLineT("4", "7");
     REQUIRE(parent_test_21 == true);
-    auto parent_test_22 = pkb.isLineParentLineS("4", "8");
+    auto parent_test_22 = pkb.isLineParentLineT("4", "8");
     REQUIRE(parent_test_22 == true);
 
-    auto parent_test_23 = pkb.getParentLineS("1");
+    auto parent_test_23 = pkb.getParentLineT("1");
     REQUIRE(parent_test_23 == std::nullopt);
 
     std::unordered_set<std::string> parent_test_24_check;
     parent_test_24_check.insert("2");
-    auto parent_test_24 = pkb.getParentLineS("3");
+    auto parent_test_24 = pkb.getParentLineT("3");
     REQUIRE(*parent_test_24 == parent_test_24_check);
 
     std::unordered_set<std::string> parent_test_25_check;
     parent_test_25_check.insert("2");
     parent_test_25_check.insert("3");
     parent_test_25_check.insert("4");
-    auto parent_test_25 = pkb.getParentLineS("6");
+    auto parent_test_25 = pkb.getParentLineT("6");
     REQUIRE(*parent_test_25 == parent_test_25_check);
   }
 
@@ -1362,7 +1362,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_19_check.insert("7");
     next_test_19_check.insert("8");
     next_test_19_check.insert("9");
-    auto next_test_19 = pkb.getNextLineS("1");
+    auto next_test_19 = pkb.getNextLineT("1");
     REQUIRE(*next_test_19 == next_test_19_check);
 
     std::unordered_set<std::string> next_test_20_check;
@@ -1373,7 +1373,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_20_check.insert("7");
     next_test_20_check.insert("8");
     next_test_20_check.insert("9");
-    auto next_test_20 = pkb.getNextLineS("2");
+    auto next_test_20 = pkb.getNextLineT("2");
     REQUIRE(*next_test_20 == next_test_20_check);
 
     std::unordered_set<std::string> next_test_21_check;
@@ -1383,7 +1383,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_21_check.insert("6");
     next_test_21_check.insert("7");
     next_test_21_check.insert("8");
-    auto next_test_21 = pkb.getNextLineS("3");
+    auto next_test_21 = pkb.getNextLineT("3");
     REQUIRE(*next_test_21 == next_test_21_check);
 
     std::unordered_set<std::string> next_test_22_check;
@@ -1393,7 +1393,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_22_check.insert("6");
     next_test_22_check.insert("7");
     next_test_22_check.insert("8");
-    auto next_test_22 = pkb.getNextLineS("4");
+    auto next_test_22 = pkb.getNextLineT("4");
     REQUIRE(*next_test_22 == next_test_22_check);
 
     std::unordered_set<std::string> next_test_23_check;
@@ -1403,7 +1403,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_23_check.insert("6");
     next_test_23_check.insert("7");
     next_test_23_check.insert("8");
-    auto next_test_23 = pkb.getNextLineS("5");
+    auto next_test_23 = pkb.getNextLineT("5");
     REQUIRE(*next_test_23 == next_test_23_check);
 
     std::unordered_set<std::string> next_test_24_check;
@@ -1413,7 +1413,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_24_check.insert("6");
     next_test_24_check.insert("7");
     next_test_24_check.insert("8");
-    auto next_test_24 = pkb.getNextLineS("6");
+    auto next_test_24 = pkb.getNextLineT("6");
     REQUIRE(*next_test_24 == next_test_24_check);
 
     std::unordered_set<std::string> next_test_25_check;
@@ -1423,7 +1423,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_25_check.insert("6");
     next_test_25_check.insert("7");
     next_test_25_check.insert("8");
-    auto next_test_25 = pkb.getNextLineS("7");
+    auto next_test_25 = pkb.getNextLineT("7");
     REQUIRE(*next_test_25 == next_test_25_check);
 
     std::unordered_set<std::string> next_test_26_check;
@@ -1433,20 +1433,20 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_26_check.insert("6");
     next_test_26_check.insert("7");
     next_test_26_check.insert("8");
-    auto next_test_26 = pkb.getNextLineS("8");
+    auto next_test_26 = pkb.getNextLineT("8");
     REQUIRE(*next_test_26 == next_test_26_check);
 
     std::unordered_set<std::string> next_test_27_check;
-    auto next_test_27 = pkb.getNextLineS("9");
+    auto next_test_27 = pkb.getNextLineT("9");
     REQUIRE(next_test_27 == std::nullopt);
 
     std::unordered_set<std::string> next_test_28_check;
-    auto next_test_28 = pkb.getPreviousLineS("1");
+    auto next_test_28 = pkb.getPreviousLineT("1");
     REQUIRE(next_test_28 == std::nullopt);
 
     std::unordered_set<std::string> next_test_29_check;
     next_test_29_check.insert("1");
-    auto next_test_29 = pkb.getPreviousLineS("2");
+    auto next_test_29 = pkb.getPreviousLineT("2");
     REQUIRE(*next_test_29 == next_test_29_check);
 
     std::unordered_set<std::string> next_test_30_check;
@@ -1458,7 +1458,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_30_check.insert("6");
     next_test_30_check.insert("7");
     next_test_30_check.insert("8");
-    auto next_test_30 = pkb.getPreviousLineS("3");
+    auto next_test_30 = pkb.getPreviousLineT("3");
     REQUIRE(*next_test_30 == next_test_30_check);
 
     std::unordered_set<std::string> next_test_31_check;
@@ -1470,7 +1470,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_31_check.insert("6");
     next_test_31_check.insert("7");
     next_test_31_check.insert("8");
-    auto next_test_31 = pkb.getPreviousLineS("4");
+    auto next_test_31 = pkb.getPreviousLineT("4");
     REQUIRE(*next_test_31 == next_test_31_check);
 
     std::unordered_set<std::string> next_test_32_check;
@@ -1482,7 +1482,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_32_check.insert("6");
     next_test_32_check.insert("7");
     next_test_32_check.insert("8");
-    auto next_test_32 = pkb.getPreviousLineS("5");
+    auto next_test_32 = pkb.getPreviousLineT("5");
     REQUIRE(*next_test_32 == next_test_32_check);
 
     std::unordered_set<std::string> next_test_33_check;
@@ -1494,7 +1494,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_33_check.insert("6");
     next_test_33_check.insert("7");
     next_test_33_check.insert("8");
-    auto next_test_33 = pkb.getPreviousLineS("6");
+    auto next_test_33 = pkb.getPreviousLineT("6");
     REQUIRE(*next_test_33 == next_test_33_check);
 
     std::unordered_set<std::string> next_test_34_check;
@@ -1506,7 +1506,7 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_34_check.insert("6");
     next_test_34_check.insert("7");
     next_test_34_check.insert("8");
-    auto next_test_34 = pkb.getPreviousLineS("7");
+    auto next_test_34 = pkb.getPreviousLineT("7");
     REQUIRE(*next_test_34 == next_test_34_check);
 
     std::unordered_set<std::string> next_test_35_check;
@@ -1518,13 +1518,13 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_35_check.insert("6");
     next_test_35_check.insert("7");
     next_test_35_check.insert("8");
-    auto next_test_35 = pkb.getPreviousLineS("8");
+    auto next_test_35 = pkb.getPreviousLineT("8");
     REQUIRE(*next_test_35 == next_test_35_check);
 
     std::unordered_set<std::string> next_test_36_check;
     next_test_36_check.insert("1");
     next_test_36_check.insert("2");
-    auto next_test_36 = pkb.getPreviousLineS("9");
+    auto next_test_36 = pkb.getPreviousLineT("9");
     REQUIRE(*next_test_36 == next_test_36_check);
   }
 }
@@ -1609,51 +1609,51 @@ TEST_CASE ("Test PKB for multiple_if_else_nesting.txt") {
     std::unordered_set<std::string> next_test_11_check =
         std::unordered_set<std::string>{"2", "3", "4", "5", "6",
                                         "7", "8", "9", "10"};
-    auto next_test_11 = pkb.getNextLineS("1");
+    auto next_test_11 = pkb.getNextLineT("1");
     REQUIRE(*next_test_11 == next_test_11_check);
 
     std::unordered_set<std::string> next_test_12_check =
         std::unordered_set<std::string>{"3", "4", "5", "6", "7", "8", "10"};
-    auto next_test_12 = pkb.getNextLineS("2");
+    auto next_test_12 = pkb.getNextLineT("2");
     REQUIRE(*next_test_12 == next_test_12_check);
 
     std::unordered_set<std::string> next_test_13_check =
         std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
-    auto next_test_13 = pkb.getNextLineS("3");
+    auto next_test_13 = pkb.getNextLineT("3");
     REQUIRE(*next_test_13 == next_test_13_check);
 
     std::unordered_set<std::string> next_test_14_check =
         std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
-    auto next_test_14 = pkb.getNextLineS("4");
+    auto next_test_14 = pkb.getNextLineT("4");
     REQUIRE(*next_test_14 == next_test_14_check);
 
     std::unordered_set<std::string> next_test_15_check =
         std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
-    auto next_test_15 = pkb.getNextLineS("5");
+    auto next_test_15 = pkb.getNextLineT("5");
     REQUIRE(*next_test_15 == next_test_15_check);
 
     std::unordered_set<std::string> next_test_16_check =
         std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
-    auto next_test_16 = pkb.getNextLineS("6");
+    auto next_test_16 = pkb.getNextLineT("6");
     REQUIRE(*next_test_16 == next_test_16_check);
 
     std::unordered_set<std::string> next_test_17_check =
         std::unordered_set<std::string>{"3", "4", "5", "6", "7", "10"};
-    auto next_test_17 = pkb.getNextLineS("7");
+    auto next_test_17 = pkb.getNextLineT("7");
     REQUIRE(*next_test_17 == next_test_17_check);
 
     std::unordered_set<std::string> next_test_18_check =
         std::unordered_set<std::string>{"10"};
-    auto next_test_18 = pkb.getNextLineS("8");
+    auto next_test_18 = pkb.getNextLineT("8");
     REQUIRE(*next_test_18 == next_test_18_check);
 
     std::unordered_set<std::string> next_test_19_check =
         std::unordered_set<std::string>{"10"};
-    auto next_test_19 = pkb.getNextLineS("9");
+    auto next_test_19 = pkb.getNextLineT("9");
     REQUIRE(*next_test_19 == next_test_19_check);
 
     std::unordered_set<std::string> next_test_20_check;
-    auto next_test_20 = pkb.getNextLineS("10");
+    auto next_test_20 = pkb.getNextLineT("10");
     REQUIRE(next_test_20 == std::nullopt);
   }
 }
@@ -1702,37 +1702,37 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     calls_test_8_check.insert("C");
     calls_test_8_check.insert("D");
     calls_test_8_check.insert("E");
-    auto calls_test_8 = pkb.getCalleeProceduresS("A");
+    auto calls_test_8 = pkb.getCalleeProceduresT("A");
     REQUIRE(*calls_test_8 == calls_test_8_check);
 
     std::unordered_set<std::string> calls_test_9_check;
     calls_test_9_check.insert("C");
     calls_test_9_check.insert("D");
     calls_test_9_check.insert("E");
-    auto calls_test_9 = pkb.getCalleeProceduresS("B");
+    auto calls_test_9 = pkb.getCalleeProceduresT("B");
     REQUIRE(*calls_test_9 == calls_test_9_check);
 
     std::unordered_set<std::string> calls_test_10_check;
     calls_test_10_check.insert("D");
     calls_test_10_check.insert("E");
-    auto calls_test_10 = pkb.getCalleeProceduresS("C");
+    auto calls_test_10 = pkb.getCalleeProceduresT("C");
     REQUIRE(*calls_test_10 == calls_test_10_check);
 
     std::unordered_set<std::string> calls_test_11_check;
-    auto calls_test_11 = pkb.getCalleeProceduresS("D");
+    auto calls_test_11 = pkb.getCalleeProceduresT("D");
     REQUIRE(calls_test_11 == std::nullopt);
 
     std::unordered_set<std::string> calls_test_12_check;
-    auto calls_test_12 = pkb.getCalleeProceduresS("E");
+    auto calls_test_12 = pkb.getCalleeProceduresT("E");
     REQUIRE(calls_test_12 == std::nullopt);
 
     std::unordered_set<std::string> calls_test_13_check;
     calls_test_13_check.insert("G");
-    auto calls_test_13 = pkb.getCalleeProceduresS("F");
+    auto calls_test_13 = pkb.getCalleeProceduresT("F");
     REQUIRE(*calls_test_13 == calls_test_13_check);
 
     std::unordered_set<std::string> calls_test_14_check;
-    auto calls_test_14 = pkb.getCalleeProceduresS("G");
+    auto calls_test_14 = pkb.getCalleeProceduresT("G");
     REQUIRE(calls_test_14 == std::nullopt);
 
     auto calls_test_15 = pkb.isProcedureCallsProcedure("A", "B");

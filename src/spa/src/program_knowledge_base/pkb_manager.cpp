@@ -129,7 +129,7 @@ std::unordered_set<Procedure> PKBManager::getProcedureSet() {
 }
 
 // is relationship set empty
-bool PKBManager::isLineNextLineSetEmpty() {
+bool PKBManager::isLineNextLineTetEmpty() {
   return pkb_storage->line_previous_line_next_set.empty();
 }
 
@@ -138,23 +138,23 @@ bool PKBManager::isProcedureCallProcedureSetEmpty() {
 }
 
 bool PKBManager::isProcedureCallProcedureTSetEmpty() {
-  return pkb_storage->procedure_calls_procedure_set_s.empty();
+  return pkb_storage->procedure_calls_procedure_set_t.empty();
 }
 
 bool PKBManager::isLineFollowLineSetEmpty() {
   return pkb_storage->follows_set.empty();
 }
 
-bool PKBManager::isLineFollowLineSSetEmpty() {
-  return pkb_storage->follows_set_s.empty();
+bool PKBManager::isLineFollowLineTSetEmpty() {
+  return pkb_storage->follows_set_t.empty();
 }
 
-bool PKBManager::isLineParentLineSetEmpty() {
+bool PKBManager::isLineParentLineTetEmpty() {
   return pkb_storage->parent_set.empty();
 }
 
-bool PKBManager::isLineParentLineSSetEmpty() {
-  return pkb_storage->parent_set_s.empty();
+bool PKBManager::isLineParentLineTSetEmpty() {
+  return pkb_storage->parent_set_t.empty();
 }
 
 bool PKBManager::isLineUsesVarSetEmpty() {
@@ -187,10 +187,10 @@ bool PKBManager::isProcedureCallsProcedure(
 bool PKBManager::isProcedureCallsProcedureT(
     const ProcedureCaller procedure_caller,
     const ProcedureCallee procedure_callee) {
-  return pkb_storage->procedure_calls_procedure_set_s.find(
+  return pkb_storage->procedure_calls_procedure_set_t.find(
              std::pair<ProcedureCaller, ProcedureCallee>(procedure_caller,
                                                          procedure_callee)) !=
-         pkb_storage->procedure_calls_procedure_set_s.end();
+         pkb_storage->procedure_calls_procedure_set_t.end();
 }
 
 bool PKBManager::isLineFollowLine(const LineBefore line_before,
@@ -199,9 +199,9 @@ bool PKBManager::isLineFollowLine(const LineBefore line_before,
              line_before, line_after)) != pkb_storage->follows_set.end();
 }
 
-bool PKBManager::isLineFollowLineS(const LineBefore line_before,
+bool PKBManager::isLineFollowLineT(const LineBefore line_before,
                                    const LineAfter line_after) {
-  return pkb_storage->follows_set_s.find(std::pair<LineBefore, LineAfter>(
+  return pkb_storage->follows_set_t.find(std::pair<LineBefore, LineAfter>(
              line_before, line_after)) != pkb_storage->follows_set.end();
 }
 
@@ -211,9 +211,9 @@ bool PKBManager::isLineParentLine(const ParentLine parent_line,
              parent_line, child_line)) != pkb_storage->follows_set.end();
 }
 
-bool PKBManager::isLineParentLineS(const ParentLine parent_line,
+bool PKBManager::isLineParentLineT(const ParentLine parent_line,
                                    const ChildLine child_line) {
-  return pkb_storage->parent_set_s.find(std::pair<ParentLine, ChildLine>(
+  return pkb_storage->parent_set_t.find(std::pair<ParentLine, ChildLine>(
              parent_line, child_line)) != pkb_storage->follows_set.end();
 }
 
@@ -248,20 +248,20 @@ PKBManager::getCalleeProcedures(const ProcedureCaller procedure_caller) {
 }
 
 std::optional<std::unordered_set<ProcedureCaller>>
-PKBManager::getCallerProceduresS(const ProcedureCaller procedure_callee) {
+PKBManager::getCallerProceduresT(const ProcedureCaller procedure_callee) {
   return getSetFromMap(pkb_storage->procedure_callee_procedure_caller_map,
                        procedure_callee);
 }
 
 std::optional<std::unordered_set<ProcedureCallee>>
-PKBManager::getCalleeProceduresS(const ProcedureCaller procedure_caller) {
-  return getSetFromMap(pkb_storage->procedure_caller_procedure_callee_map_s,
+PKBManager::getCalleeProceduresT(const ProcedureCaller procedure_caller) {
+  return getSetFromMap(pkb_storage->procedure_caller_procedure_callee_map_t,
                        procedure_caller);
 }
 
 std::optional<std::unordered_set<ProcedureCaller>>
 PKBManager::getCallerProcedures(const ProcedureCaller procedure_callee) {
-  return getSetFromMap(pkb_storage->procedure_callee_procedure_caller_map_s,
+  return getSetFromMap(pkb_storage->procedure_callee_procedure_caller_map_t,
                        procedure_callee);
 }
 
@@ -283,14 +283,14 @@ std::optional<LineBefore> PKBManager::getBeforeLine(
                    pkb_storage->line_after_line_before_map[line_after]);
 }
 
-std::optional<std::unordered_set<LineAfter>> PKBManager::getFollowingLineS(
+std::optional<std::unordered_set<LineAfter>> PKBManager::getFollowingLineT(
     const LineBefore line_before) {
-  return getSetFromMap(pkb_storage->line_before_line_after_map_s, line_before);
+  return getSetFromMap(pkb_storage->line_before_line_after_map_t, line_before);
 }
 
-std::optional<std::unordered_set<LineBefore>> PKBManager::getBeforeLineS(
+std::optional<std::unordered_set<LineBefore>> PKBManager::getBeforeLineT(
     const LineAfter line_after) {
-  return getSetFromMap(pkb_storage->line_after_line_before_map_s, line_after);
+  return getSetFromMap(pkb_storage->line_after_line_before_map_t, line_after);
 }
 
 std::optional<ParentLine> PKBManager::getParentLine(
@@ -307,14 +307,14 @@ std::optional<std::unordered_set<ChildLine>> PKBManager::getChildLine(
   return getSetFromMap(pkb_storage->parent_line_child_line_map, parent_line);
 }
 
-std::optional<std::unordered_set<ParentLine>> PKBManager::getParentLineS(
+std::optional<std::unordered_set<ParentLine>> PKBManager::getParentLineT(
     const ChildLine child_line) {
-  return getSetFromMap(pkb_storage->child_line_parent_line_map_s, child_line);
+  return getSetFromMap(pkb_storage->child_line_parent_line_map_t, child_line);
 }
 
-std::optional<std::unordered_set<ChildLine>> PKBManager::getChildLineS(
+std::optional<std::unordered_set<ChildLine>> PKBManager::getChildLineT(
     const ParentLine parent_line) {
-  return getSetFromMap(pkb_storage->parent_line_child_line_map_s, parent_line);
+  return getSetFromMap(pkb_storage->parent_line_child_line_map_t, parent_line);
 }
 
 std::optional<std::unordered_set<Procedure>> PKBManager::getProcedureUsesVar(
@@ -561,14 +561,14 @@ std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLine(
   return getSetFromMap(pkb_storage->line_previous_line_next_map, previous_line);
 }
 
-std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineS(
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineT(
     const PreviousLine previous_line) {
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
   auto to_visit = getPreviousLine(previous_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
-      getPreviousLineSH(neighbour, visited);
+      getPreviousLineTH(neighbour, visited);
     }
     if (visited->size() > 0) {
       return std::make_optional<std::unordered_set<Line>>(*visited.get());
@@ -577,7 +577,7 @@ std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineS(
   return std::nullopt;
 }
 
-void PKBManager::getPreviousLineSH(
+void PKBManager::getPreviousLineTH(
     const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
   if (visited->find(cur_line) != visited->end()) {
     return;
@@ -587,19 +587,19 @@ void PKBManager::getPreviousLineSH(
   auto to_visit = getPreviousLine(cur_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
-      getPreviousLineSH(neighbour, visited);
+      getPreviousLineTH(neighbour, visited);
     }
   }
 }
 
-std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLineS(
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLineT(
     const PreviousLine previous_line) {
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
   auto to_visit = getNextLine(previous_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
-      getNextLineSH(neighbour, visited);
+      getNextLineTH(neighbour, visited);
     }
     if (visited->size() > 0) {
       return std::make_optional<std::unordered_set<Line>>(*visited.get());
@@ -608,7 +608,7 @@ std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLineS(
   return std::nullopt;
 }
 
-void PKBManager::getNextLineSH(
+void PKBManager::getNextLineTH(
     const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
   if (visited->find(cur_line) != visited->end()) {
     return;
@@ -618,7 +618,7 @@ void PKBManager::getNextLineSH(
   auto to_visit = getNextLine(cur_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
-      getNextLineSH(neighbour, visited);
+      getNextLineTH(neighbour, visited);
     }
   }
 }

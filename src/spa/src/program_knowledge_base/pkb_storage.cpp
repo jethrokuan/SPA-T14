@@ -58,11 +58,11 @@ void PKBStorage::storeCallsRelationS(const ProcedureCaller procedure_caller,
   if (procedure_caller.compare(procedure_callee) == 0) {
     throw PkbAstSemanticException("Found cyclic call between procedures.");
   }
-  procedure_calls_procedure_set_s.insert(
+  procedure_calls_procedure_set_t.insert(
       std::pair(procedure_caller, procedure_callee));
-  addToSetMap(procedure_caller_procedure_callee_map_s, procedure_caller,
+  addToSetMap(procedure_caller_procedure_callee_map_t, procedure_caller,
               procedure_callee);
-  addToSetMap(procedure_callee_procedure_caller_map_s, procedure_callee,
+  addToSetMap(procedure_callee_procedure_caller_map_t, procedure_callee,
               procedure_caller);
 }
 
@@ -75,10 +75,10 @@ void PKBStorage::storeFollowsRelation(const LineBefore line_before,
 
 void PKBStorage::storeFollowsRelationS(const LineBefore line_before,
                                        const LineAfter line_after) {
-  follows_set_s.insert(
+  follows_set_t.insert(
       std::pair<LineBefore, LineAfter>(line_before, line_after));
-  addToSetMap(line_before_line_after_map_s, line_before, line_after);
-  addToSetMap(line_after_line_before_map_s, line_after, line_before);
+  addToSetMap(line_before_line_after_map_t, line_before, line_after);
+  addToSetMap(line_after_line_before_map_t, line_after, line_before);
 }
 
 void PKBStorage::storeParentRelation(const ParentLine parent_line,
@@ -90,10 +90,10 @@ void PKBStorage::storeParentRelation(const ParentLine parent_line,
 
 void PKBStorage::storeParentRelationS(const ParentLine parent_line,
                                       const ChildLine child_line) {
-  parent_set_s.insert(
+  parent_set_t.insert(
       std::pair<ParentLine, ChildLine>(parent_line, child_line));
-  addToSetMap(child_line_parent_line_map_s, child_line, parent_line);
-  addToSetMap(parent_line_child_line_map_s, parent_line, child_line);
+  addToSetMap(child_line_parent_line_map_t, child_line, parent_line);
+  addToSetMap(parent_line_child_line_map_t, parent_line, child_line);
 }
 
 void PKBStorage::storeProcedureUsesVarRelation(const Procedure proc,

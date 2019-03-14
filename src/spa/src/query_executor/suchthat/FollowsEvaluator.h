@@ -50,7 +50,7 @@ class FollowsEvaluator : public SuchThatEvaluator {
   }
   bool handleDoubleUnderscore() override {
     // Follows(_, _)
-    return !pkb->isLineFollowLineSSetEmpty();
+    return !pkb->isLineFollowLineTSetEmpty();
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Follows(3, _)

@@ -20,42 +20,42 @@ class FollowsTEvaluator : public SuchThatEvaluator {
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Follows*(s, 3)
-    return pkb->getBeforeLineS(basic_value)
+    return pkb->getBeforeLineT(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
     // Follows*(3, s)
-    return pkb->getFollowingLineS(basic_value)
+    return pkb->getFollowingLineT(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
     // Follows*(s, _) (for each s)
-    return pkb->getFollowingLineS(arg_value).has_value();
+    return pkb->getFollowingLineT(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
     // Follows*(_, s) (for each s)
-    return pkb->getBeforeLineS(arg_value).has_value();
+    return pkb->getBeforeLineT(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
     // Follows*(s, s1)
-    return pkb->isLineFollowLineS(arg_select, arg_unselect);
+    return pkb->isLineFollowLineT(arg_select, arg_unselect);
   }
   // Handle cases with no variables selected
   bool handleDoubleUnderscore() override {
-    return !pkb->isLineFollowLineSSetEmpty();
+    return !pkb->isLineFollowLineTSetEmpty();
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Follows*(3, _)
-    return pkb->getFollowingLineS(arg).has_value();
+    return pkb->getFollowingLineT(arg).has_value();
   }
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
     // Follows*(_, 3)
-    return pkb->getBeforeLineS(arg).has_value();
+    return pkb->getBeforeLineT(arg).has_value();
   }
   bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
     // Follows*(2, 3)?
-    return pkb->isLineFollowLineS(arg1, arg2);
+    return pkb->isLineFollowLineT(arg1, arg2);
   }
 };

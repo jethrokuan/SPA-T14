@@ -23,8 +23,8 @@ class PKBManager {
       const std::unordered_map<std::string, std::unordered_set<std::string>> &,
       const std::string);
 
-  void getNextLineSH(const Line, std::shared_ptr<std::unordered_set<Line>>);
-  void getPreviousLineSH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+  void getNextLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+  void getPreviousLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
 
  public:
   PKBManager(const AST ast);
@@ -67,10 +67,13 @@ class PKBManager {
 
   // is relationship set empty
   // TODO implement for calls and next
+  bool isLineNextLineSetEmpty();
+  bool isProcedureCallProcedureSetEmpty();
+  bool isProcedureCallProcedureTSetEmpty();
   bool isLineFollowLineSetEmpty();
-  bool isLineFollowLineSSetEmpty();
+  bool isLineFollowLineTSetEmpty();
   bool isLineParentLineSetEmpty();
-  bool isLineParentLineSSetEmpty();
+  bool isLineParentLineTSetEmpty();
   bool isLineUsesVarSetEmpty();
   bool isLineModifiesVarSetEmpty();
   bool isProcedureUsesVarSetEmpty();
@@ -78,10 +81,11 @@ class PKBManager {
 
   // is relationship valid
   bool isProcedureCallsProcedure(const ProcedureCaller, const ProcedureCallee);
+  bool isProcedureCallsProcedureT(const ProcedureCaller, const ProcedureCallee);
   bool isLineFollowLine(const LineBefore, const LineAfter);
-  bool isLineFollowLineS(const LineBefore, const LineAfter);
+  bool isLineFollowLineT(const LineBefore, const LineAfter);
   bool isLineParentLine(const ParentLine, const ChildLine);
-  bool isLineParentLineS(const ParentLine, const ChildLine);
+  bool isLineParentLineT(const ParentLine, const ChildLine);
   bool isProcedureModifiesVar(const Procedure, const Variable);
   bool isLineModifiesVar(const Line, const Variable);
   bool isProcedureUsesVar(const Procedure, const Variable);
@@ -92,21 +96,21 @@ class PKBManager {
       const ProcedureCaller);
   std::optional<std::unordered_set<ProcedureCaller>> getCallerProcedures(
       const ProcedureCallee);
-  std::optional<std::unordered_set<ProcedureCallee>> getCalleeProceduresS(
+  std::optional<std::unordered_set<ProcedureCallee>> getCalleeProceduresT(
       const ProcedureCaller);
-  std::optional<std::unordered_set<ProcedureCaller>> getCallerProceduresS(
+  std::optional<std::unordered_set<ProcedureCaller>> getCallerProceduresT(
       const ProcedureCallee);
 
   std::optional<LineAfter> getFollowingLine(const LineBefore);
   std::optional<LineBefore> getBeforeLine(const LineAfter);
-  std::optional<std::unordered_set<LineAfter>> getFollowingLineS(
+  std::optional<std::unordered_set<LineAfter>> getFollowingLineT(
       const LineBefore);
-  std::optional<std::unordered_set<LineBefore>> getBeforeLineS(const LineAfter);
+  std::optional<std::unordered_set<LineBefore>> getBeforeLineT(const LineAfter);
 
   std::optional<ParentLine> getParentLine(const ChildLine);
   std::optional<std::unordered_set<ChildLine>> getChildLine(const ParentLine);
-  std::optional<std::unordered_set<ParentLine>> getParentLineS(const ChildLine);
-  std::optional<std::unordered_set<ChildLine>> getChildLineS(const ParentLine);
+  std::optional<std::unordered_set<ParentLine>> getParentLineT(const ChildLine);
+  std::optional<std::unordered_set<ChildLine>> getChildLineT(const ParentLine);
 
   std::optional<std::unordered_set<Variable>> getVarModifiedByProcedure(
       const Procedure);
@@ -139,14 +143,14 @@ class PKBManager {
 
   // next
   bool isLineNextLine(const PreviousLine, const NextLine);  // implemented
-  bool isLineNextLineS(const PreviousLine, const NextLine);
+  bool isLineNextLineT(const PreviousLine, const NextLine);
   std::optional<std::unordered_set<PreviousLine>> getPreviousLine(
       const NextLine);  // implemented
   std::optional<std::unordered_set<NextLine>> getNextLine(
       const PreviousLine);  // implemented
-  std::optional<std::unordered_set<PreviousLine>> getPreviousLineS(
+  std::optional<std::unordered_set<PreviousLine>> getPreviousLineT(
       const NextLine);
-  std::optional<std::unordered_set<NextLine>> getNextLineS(const PreviousLine);
+  std::optional<std::unordered_set<NextLine>> getNextLineT(const PreviousLine);
 
   // misc helpers
   std::optional<std::unordered_set<Line>> getLineForAssignVar(const Variable);

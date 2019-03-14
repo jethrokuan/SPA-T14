@@ -18,3 +18,13 @@ procedure p, q;
 Select p such that Calls(p,"alt")
 main,sub
 5000
+5 - Calls clause with _: select all procedures that are called by other procedures
+procedure p;
+Select p such that Calls(_,p)
+sub,alt
+5000
+6 - Calls clause with _: select all procedures that are calls other procedures
+procedure p;
+Select p such that Calls(p,_)
+main,sub
+5000

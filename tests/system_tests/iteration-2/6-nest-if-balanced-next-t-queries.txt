@@ -1,25 +1,35 @@
 1 - Select all program lines that can be executed immediately after another program line
 prog_line n1,n2;
 Select n2 such that Next*(n1,n2)
-2,3,4,5,6,7,8,9,10
+2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
 5000
 2 - test Next* from root node
 prog_line n;
 Select n such that Next*(1,n)
-2,3,4,5,6,7,8,9,10
+2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
 5000
-3 - test Next* from first If node
+3 - test Next* from first If node, i.e. first level of nesting
 prog_line n;
 Select n such that Next*(2,n)
-3,4,5,6,7,8,9,10
+3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
 5000
-4 - test Next* from second If node
+4 - test Next* from first If node under first true branch
 prog_line n;
 Select n such that Next*(4,n)
-5,6,7,8,9
+5,6,7,8,9,10,11,12
 5000
-5 - test Next* from third If node
+5 - test Next* from first If node under first false branch, i.e. second level of nesting
+prog_line n;
+Select n such that Next*(14,n)
+15,16,17,18,19,20,21,22
+5000
+6 - test Next* from if node at line 6, i.e. third/last level of nesting
 prog_line n;
 Select n such that Next*(6,n)
 7,8
+5000
+7 - test Next* from if node at line 20, i.e. third/last level of nesting
+prog_line n;
+Select n such that Next*(20,n)
+21,22
 5000

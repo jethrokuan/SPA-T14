@@ -184,6 +184,15 @@ bool PKBManager::isProcedureCallsProcedure(
          pkb_storage->procedure_calls_procedure_set.end();
 }
 
+bool PKBManager::isProcedureCallsProcedureT(
+    const ProcedureCaller procedure_caller,
+    const ProcedureCallee procedure_callee) {
+  return pkb_storage->procedure_calls_procedure_set_s.find(
+             std::pair<ProcedureCaller, ProcedureCallee>(procedure_caller,
+                                                         procedure_callee)) !=
+         pkb_storage->procedure_calls_procedure_set_s.end();
+}
+
 bool PKBManager::isLineFollowLine(const LineBefore line_before,
                                   const LineAfter line_after) {
   return pkb_storage->follows_set.find(std::pair<LineBefore, LineAfter>(

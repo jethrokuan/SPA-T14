@@ -1734,6 +1734,57 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     std::unordered_set<std::string> calls_test_14_check;
     auto calls_test_14 = pkb.getCalleeProceduresS("G");
     REQUIRE(calls_test_14 == std::nullopt);
+
+    auto calls_test_15 = pkb.isProcedureCallsProcedure("A", "B");
+    REQUIRE(calls_test_15 == true);
+
+    auto calls_test_16 = pkb.isProcedureCallsProcedure("B", "C");
+    REQUIRE(calls_test_16 == true);
+
+    auto calls_test_17 = pkb.isProcedureCallsProcedure("C", "D");
+    REQUIRE(calls_test_17 == true);
+
+    auto calls_test_18 = pkb.isProcedureCallsProcedure("C", "E");
+    REQUIRE(calls_test_18 == true);
+
+    auto calls_test_19 = pkb.isProcedureCallsProcedure("F", "G");
+    REQUIRE(calls_test_19 == true);
+
+    auto calls_test_20 = pkb.isProcedureCallsProcedure("B", "A");
+    REQUIRE(calls_test_20 == false);
+
+    auto calls_test_21 = pkb.isProcedureCallsProcedure("A", "C");
+    REQUIRE(calls_test_21 == false);
+
+    auto calls_test_22 = pkb.isProcedureCallsProcedure("A", "D");
+    REQUIRE(calls_test_22 == false);
+
+    auto calls_test_23 = pkb.isProcedureCallsProcedure("G", "F");
+    REQUIRE(calls_test_23 == false);
+
+    auto calls_test_24 = pkb.isProcedureCallsProcedure("B", "Z");
+    REQUIRE(calls_test_24 == false);
+
+    auto calls_test_25 = pkb.isProcedureCallsProcedureT("A", "B");
+    REQUIRE(calls_test_25 == true);
+
+    auto calls_test_26 = pkb.isProcedureCallsProcedureT("A", "C");
+    REQUIRE(calls_test_26 == true);
+
+    auto calls_test_27 = pkb.isProcedureCallsProcedureT("A", "D");
+    REQUIRE(calls_test_27 == true);
+
+    auto calls_test_28 = pkb.isProcedureCallsProcedureT("A", "E");
+    REQUIRE(calls_test_28 == true);
+
+    auto calls_test_29 = pkb.isProcedureCallsProcedureT("F", "G");
+    REQUIRE(calls_test_29 == true);
+
+    auto calls_test_30 = pkb.isProcedureCallsProcedureT("A", "F");
+    REQUIRE(calls_test_30 == false);
+
+    auto calls_test_31 = pkb.isProcedureCallsProcedureT("A", "G");
+    REQUIRE(calls_test_31 == false);
   }
 
   SECTION ("uses relations") {

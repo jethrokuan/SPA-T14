@@ -172,13 +172,12 @@ bool QueryParser::parseModifies() {
   expect(",");
   auto ref_2 = parseRef();
   expect(")");
+  // TODO: construct SuchThat for modifies
   return true;
 }
 
 void QueryParser::parseRelCond() {
-  bool isModifies = parseModifies();
-  if (isModifies) return;
-  return;
+  if (parseModifies()) return;
 }
 
 bool QueryParser::parseSuchThat() {

@@ -10,11 +10,13 @@
 #include "query_executor/suchthat/CallsTEvaluator.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
+#include "query_executor/suchthat/ModifiesPEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
 #include "query_executor/suchthat/NextEvaluator.h"
 #include "query_executor/suchthat/NextTEvaluator.h"
 #include "query_executor/suchthat/ParentEvaluator.h"
 #include "query_executor/suchthat/ParentTEvaluator.h"
+#include "query_executor/suchthat/UsesPEvaluator.h"
 #include "query_executor/suchthat/UsesSEvaluator.h"
 
 using namespace QE;
@@ -147,6 +149,10 @@ bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
       return CallsEvaluator(query, pkb, qc).evaluate();
     case Relation::CallsT:
       return CallsTEvaluator(query, pkb, qc).evaluate();
+    case Relation::ModifiesP:
+      return ModifiesPEvaluator(query, pkb, qc).evaluate();
+    case Relation::UsesP:
+      return UsesPEvaluator(query, pkb, qc).evaluate();
     default:
       assert(false);
   }

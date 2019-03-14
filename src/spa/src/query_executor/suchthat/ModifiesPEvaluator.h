@@ -12,56 +12,49 @@
 using namespace PKB;
 using namespace QE;
 
-class NextTEvaluator : public SuchThatEvaluator {
+class ModifiesPEvaluator : public SuchThatEvaluator {
  public:
-  NextTEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
+  ModifiesPEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
       : SuchThatEvaluator(query, pkb, qc){};
 
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
-    // Next*(s, 3)
-    return pkb->getPreviousLineS(basic_value)
+    // Modifies(p, "x")
+    return pkb->getProcedureModifiesVar(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
-    // Next*(3, s)
-    return pkb->getNextLineS(basic_value)
+    // Modifies("first", v)
+    return pkb->getVarModifiedByProcedure(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
-    // Next*(s, _) (for each s)
-    return pkb->getNextLineS(arg_value).has_value();
+    // Modifies(p, _)
+    return pkb->getVarModifiedByProcedure(arg_value).has_value();
   }
-  bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
-    // Next*(_, s) (for each s)
-    return pkb->getPreviousLineS(arg_value).has_value();
+  bool handleRightSynonymLeftUnderscore(std::string&) override {
+    std::cout << "Should not happen: ModifiesS first arg cannot be _\n";
+    assert(false);
   }
   bool handleBothArgsSynonyms(std::string& arg_select,
                               std::string& arg_unselect) override {
-    // Next*(s, s1)
-    // return pkb->isLineNextLine(arg_select, arg_unselect);
-    // TODO - PKB side needs implementation
-    assert(false);
+    // Modifies(p, v)
+    return pkb->isProcedureModifiesVar(arg_select, arg_unselect);
   }
-  // Handle cases with no variables selected
   bool handleDoubleUnderscore() override {
-    // TODO
-    // return !pkb->isLineFollowLineSSetEmpty();
-    assert(false);
+    return !pkb->isProcedureModifiesVarSetEmpty();
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
-    // Next*(3, _)
-    return pkb->getNextLineS(arg).has_value();
+    // Modifies("first", _)
+    return pkb->getVarModifiedByProcedure(arg).has_value();
   }
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
-    // Next*(_, 3)
-    return pkb->getPreviousLineS(arg).has_value();
+    // Modifies(_, "x")
+    return pkb->getProcedureModifiesVar(arg).has_value();
   }
   bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
-    // Next*(2, 3)?
-    // return pkb->isLineNextLine(arg1, arg2);
-    // TODO - PKB side needs implementation
-    assert(false);
+    // Modifies("first", "v")?
+    return pkb->isProcedureModifiesVar(arg1, arg2);
   }
 };

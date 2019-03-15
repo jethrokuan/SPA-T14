@@ -23,6 +23,8 @@ class PKBManager {
       const std::unordered_map<std::string, std::unordered_set<std::string>> &,
       const std::string);
 
+  bool isLineNextLineTH(const Line, const Line,
+                        std::shared_ptr<std::unordered_set<Line>>);
   void getNextLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
   void getPreviousLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
 
@@ -42,6 +44,7 @@ class PKBManager {
   bool isIfSetEmpty();
   bool isConstantSetEmpty();
   bool isProcedureSetEmpty();
+  bool isCallSetEmpty();
 
   // is design entity exists
   bool isVariableExists(const Variable);
@@ -53,6 +56,7 @@ class PKBManager {
   bool isIfExists(const Line);
   bool isConstantExists(const Constant);
   bool isProcedureExists(const Procedure);
+  bool isCallExists(const Line);
 
   // get design entities
   std::unordered_set<Variable> getVariableSet();
@@ -64,6 +68,7 @@ class PKBManager {
   std::unordered_set<Line> getIfSet();
   std::unordered_set<Constant> getConstantSet();
   std::unordered_set<Procedure> getProcedureSet();
+  std::unordered_set<Line> getCallSet();
 
   // is relationship set empty
   // TODO implement for calls and next
@@ -142,12 +147,11 @@ class PKBManager {
   bool isPatternExists(const Pattern);
 
   // next
-  bool isLineNextLine(const PreviousLine, const NextLine);  // implemented
+  bool isLineNextLine(const PreviousLine, const NextLine);
   bool isLineNextLineT(const PreviousLine, const NextLine);
   std::optional<std::unordered_set<PreviousLine>> getPreviousLine(
-      const NextLine);  // implemented
-  std::optional<std::unordered_set<NextLine>> getNextLine(
-      const PreviousLine);  // implemented
+      const NextLine);
+  std::optional<std::unordered_set<NextLine>> getNextLine(const PreviousLine);
   std::optional<std::unordered_set<PreviousLine>> getPreviousLineT(
       const NextLine);
   std::optional<std::unordered_set<NextLine>> getNextLineT(const PreviousLine);

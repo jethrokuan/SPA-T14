@@ -79,7 +79,8 @@ TEST_CASE ("Test Expr parse works") {
   }
 
   SECTION ("((((2 + 5))) * (j)) / (a * b)") {
-    Expr expr = SimpleInterface::parseExpression("((((2 + 5))) * (j)) / (a * b)");
+    Expr expr =
+        SimpleInterface::parseExpression("((((2 + 5))) * (j)) / (a * b)");
     Expr expected = make_shared<BinOpNode>(
         make_shared<BinOpNode>(
             make_shared<BinOpNode>(make_shared<NumberNode>("2"),

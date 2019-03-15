@@ -8,7 +8,7 @@
 #include "query_builder/pql/pql.h"
 
 using namespace QE;
-
+/*
 TEST_CASE ("Test pattern assignment synonym not-assign Validate") {
   // procedure p; Select p pattern p (_,_)
   auto decl = new std::vector<Declaration>{
@@ -317,3 +317,4 @@ TEST_CASE ("Test pattern assignment first argument not-present Validate") {
 
   REQUIRE_THROWS_AS(qv.validateQuery(q), PQLValidationException);
 }
+*/

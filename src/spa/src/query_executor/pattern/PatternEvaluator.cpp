@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "query_builder/core/query_preprocessor.h"
+
 #include "query_executor/query_executor.h"
 
 bool PatternEvaluator::evaluate() {

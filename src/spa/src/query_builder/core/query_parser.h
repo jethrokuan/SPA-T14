@@ -14,7 +14,6 @@
 using QE::Declaration;
 using QE::Ref;
 using QE::Result;
-using QE::SuchThat;
 
 namespace QE {
 class QueryParser {

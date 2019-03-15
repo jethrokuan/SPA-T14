@@ -26,7 +26,7 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
       "Test select variable not constrained by such-that, where such-that is "
       "false (Parent)") {
     auto querystr =
-        std::string("assign a; while w; Select w such that Parent(a, 24);");
+        std::string("assign a; while w; Select w such that Parent(a, 24)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
@@ -35,7 +35,7 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
       "Test select variable not constrained by such-that, where such-that is "
       "true (Parent)") {
     auto querystr =
-        std::string("if ifs; while w; Select w such that Parent(ifs, 18);");
+        std::string("if ifs; while w; Select w such that Parent(ifs, 18)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"9"});
   }

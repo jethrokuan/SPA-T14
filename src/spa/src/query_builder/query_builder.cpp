@@ -2,7 +2,6 @@
 #include <iostream>
 #include "query_builder/core/query_lexer.h"
 #include "query_builder/core/query_parser.h"
-#include "query_builder/core/query_preprocessor.h"
 #include "query_builder/core/query_validator.h"
 
 using namespace QE;

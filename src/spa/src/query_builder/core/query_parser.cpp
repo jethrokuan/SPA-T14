@@ -4,7 +4,6 @@
 #include "query_builder/pql/query.h"
 #include "query_builder/pql/ref.h"
 #include "query_builder/pql/result.h"
-#include "query_builder/pql/suchthat.h"
 #include "query_builder/pql/underscore.h"
 #include "utils/utils.h"
 

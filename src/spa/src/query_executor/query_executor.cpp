@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "query_builder/core/query_preprocessor.h"
+
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
@@ -194,7 +194,7 @@ std::unordered_set<std::string>
 QueryExecutor::getAllDesignEntityValuesByVarName(
     std::vector<Declaration>* declarations, PKBManager* pkb,
     const std::string& var_name) {
-  auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
+  auto var_de = Declaration::findDeclarationForString(declarations, var_name)
                     ->getDesignEntity();
   return QueryExecutor::getSelect(pkb, var_de);
 }

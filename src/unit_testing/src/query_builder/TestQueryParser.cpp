@@ -33,11 +33,9 @@ TEST_CASE ("Test Query Parser") {
     REQUIRE(*(query.result->selected_declarations->at(1)) ==
             Declaration(DesignEntity::PROCEDURE,
                         QE::Synonym::construct("p").value()));
-    REQUIRE(query.such_that->empty());
     REQUIRE(*(query.rel_cond->at(0)) ==
             RelCond(Relation::Modifies, QE::Synonym::construct("a").value(),
                     QE::QuoteIdent("b")));
-    REQUIRE(query.pattern->empty());
   }
 
   SECTION ("Test one assign one select query") {
@@ -62,14 +60,12 @@ TEST_CASE ("Test Query Parser") {
     REQUIRE(*(query.result->selected_declarations->at(1)) ==
             Declaration(DesignEntity::PROCEDURE,
                         QE::Synonym::construct("p").value()));
-    REQUIRE(query.such_that->empty());
     REQUIRE(*(query.rel_cond->at(0)) ==
             RelCond(Relation::Uses, QE::Synonym::construct("a").value(),
                     QE::QuoteIdent("b")));
     REQUIRE(*(query.rel_cond->at(1)) ==
             RelCond(Relation::Modifies, QE::Synonym::construct("a").value(),
                     QE::QuoteIdent("b")));
-    REQUIRE(query.pattern->empty());
     REQUIRE(*(query.patternb->at(0)) ==
             PatternB(QE::Synonym::construct("a").value(), QE::QuoteIdent("x"),
                      Matcher(true, "1")));

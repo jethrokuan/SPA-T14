@@ -1,7 +1,7 @@
+#include "query_builder/core/query_validator.h"
 #include <unordered_set>
 #include <variant>
 #include "query_builder/core/exceptions.h"
-#include "query_builder/core/query_validator.h"
 #include "query_builder/pql/declaration.h"
 
 using namespace QE;
@@ -9,16 +9,28 @@ using namespace QE;
 void QueryValidator::validateQuery(const Query& query) {
   // Do not change the order of these calls - there are dependencies to reduce
   // double-checking of conditions
+  std::cout << "1";
   validatePatternVariableAsAssign(query);
+  std::cout << "2";
   validateModifyUsesNoFirstArgUnderscore(query);
+
+  std::cout << "3";
   validateSuchThatSynonyms(query);
-  validateSynonymTypes(query);
+
+  std::cout << "4";
+  // validateSynonymTypes(query);
+
+  std::cout << "5";
   validateNoIdenticalSynonyms(query);
+
+  std::cout << "6";
   validatePatternFirstArgSynonymIsVariable(query);
+
+  std::cout << "7\n";
 }
 
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
-  for (auto pattern : *(query.pattern)) {
+  for (auto pattern : *(query.patternb)) {
     // Search the available declarations for the pattern synonym
     // The synonym must be an assignment synonym
     auto found_declaration = std::find_if(
@@ -38,92 +50,69 @@ void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
 
 void QueryValidator::validateModifyUsesNoFirstArgUnderscore(
     const Query& query) {
-  for (auto such_that : *(query.such_that)) {
+  for (auto such_that : *(query.rel_cond)) {
     // Early return if not modifies or uses
-    if (such_that->getRelation() != Relation::UsesS &&
-        such_that->getRelation() != Relation::ModifiesS) {
+    if (such_that->relation != Relation::Uses &&
+        such_that->relation != Relation::Modifies) {
       return;
     }
 
     // Error if first arg is underscore otherwise
-    auto such_that_firstarg = such_that->getFirstArg();
+    auto such_that_firstarg = such_that->arg1;
     // Check one level deeper in first arg to check for underscore
-    std::visit(
-        [](auto&& arg) {
-          if (std::holds_alternative<Underscore>(arg)) {
-            throw PQLValidationException(
-                "First argument of Modifies/Uses cannot be an underscore - "
-                "ambiguous");
-          }
-        },
-        such_that_firstarg);
+    if (std::holds_alternative<Underscore>(such_that_firstarg)) {
+      throw PQLValidationException(
+          "First argument of Modifies/Uses cannot be an underscore - "
+          "ambiguous");
+    }
   }
 }
 
 void QueryValidator::validateSuchThatSynonyms(const Query& query) {
-  for (auto such_that : *(query.such_that)) {
+  for (auto such_that : *(query.rel_cond)) {
     // Error if first arg is underscore otherwise
-    auto such_that_firstarg = such_that->getFirstArg();
-    auto such_that_secondarg = such_that->getSecondArg();
+    auto such_that_firstarg = such_that->arg1;
+    auto such_that_secondarg = such_that->arg2;
 
     // Lack of code reuse here to allow for more expressive error messages
     // Can be changed in the future: TODO
-    std::visit(
-        [&](auto&& arg) {
-          if (std::holds_alternative<Synonym>(arg)) {
-            if (!Declaration::findDeclarationForSynonym(
-                    query.declarations, std::get<Synonym>(arg))) {
-              throw PQLValidationException(
-                  "Cannot find a matching declaration for synonym " +
-                  std::get<Synonym>(arg).synonym + " in first argument of " +
-                  getStringFromRelation(such_that->getRelation()));
-            }
-          }
-        },
-        such_that_firstarg);
-    std::visit(
-        [&](auto&& arg) {
-          if (std::holds_alternative<Synonym>(arg)) {
-            if (!Declaration::findDeclarationForSynonym(
-                    query.declarations, std::get<Synonym>(arg))) {
-              throw PQLValidationException(
-                  "Cannot find a matching declaration for synonym " +
-                  std::get<Synonym>(arg).synonym + " in second argument of " +
-                  getStringFromRelation(such_that->getRelation()));
-            }
-          }
-        },
-        such_that_secondarg);
+    if (auto arg = std::get_if<Synonym>(&such_that_firstarg)) {
+      if (!Declaration::findDeclarationForSynonym(query.declarations, *arg)) {
+        throw PQLValidationException(
+            "Cannot find a matching declaration for synonym " + arg->synonym +
+            " in first argument of " +
+            getStringFromRelation(such_that->relation));
+      }
+    }
+    if (auto arg = std::get_if<Synonym>(&such_that_secondarg)) {
+      if (!Declaration::findDeclarationForSynonym(query.declarations, *arg)) {
+        throw PQLValidationException(
+            "Cannot find a matching declaration for synonym " + arg->synonym +
+            " in second argument of " +
+            getStringFromRelation(such_that->relation));
+      }
+    }
   }
 }
 
 void QueryValidator::validateSynonymTypes(const Query& query) {
-  for (auto such_that : *(query.such_that)) {
+  for (auto such_that : *(query.rel_cond)) {
     // Idea here is to check the synonym's design entity type
     // against the list of allowed design entity types allowed for
     // each argument of the relation in this query
-    auto relation = such_that->getRelation();
+    auto relation = such_that->relation;
     auto argSynonymTypes = getArgSynonymTypesFromRelation(relation);
 
     // Check both arguments - must be correct type
-    auto first_arg_opt = std::visit(
-        [&](auto&& arg) -> std::optional<Declaration> {
-          if (std::holds_alternative<Synonym>(arg)) {
-            return Declaration::findDeclarationForSynonym(
-                query.declarations, std::get<Synonym>(arg));
-          } else {
-            return std::nullopt;
-          }
-        },
-        such_that->getFirstArg());
-    if (first_arg_opt) {
-      auto found_declaration = *first_arg_opt;
+    if (auto arg = std::get_if<Synonym>(&such_that->arg1)) {
+      auto found_declaration =
+          Declaration::findDeclarationForSynonym(query.declarations, *arg);
       if (std::find(argSynonymTypes.first.begin(), argSynonymTypes.first.end(),
-                    found_declaration.getDesignEntity()) ==
+                    found_declaration->getDesignEntity()) ==
           argSynonymTypes.first.end()) {
         throw PQLValidationException(
             "Cannot match given design entity type: " +
-            getDesignEntityString(found_declaration.getDesignEntity()) +
+            getDesignEntityString(found_declaration->getDesignEntity()) +
             " with allowed list of design entities: " +
             getDesignEntityVectorString(argSynonymTypes.first) +
             " during parse of such_that relation: " +
@@ -131,29 +120,20 @@ void QueryValidator::validateSynonymTypes(const Query& query) {
       }
     }
 
-    auto second_arg_opt = std::visit(
-        [&](auto&& arg) -> std::optional<Declaration> {
-          if (std::holds_alternative<Synonym>(arg)) {
-            return Declaration::findDeclarationForSynonym(
-                query.declarations, std::get<Synonym>(arg));
-          } else {
-            return std::nullopt;
-          }
-        },
-        such_that->getSecondArg());
-    if (second_arg_opt) {
-      auto found_declaration = *second_arg_opt;
+    if (auto arg = std::get_if<Synonym>(&such_that->arg2)) {
+      auto found_declaration =
+          Declaration::findDeclarationForSynonym(query.declarations, *arg);
       if (std::find(argSynonymTypes.second.begin(),
                     argSynonymTypes.second.end(),
-                    found_declaration.getDesignEntity()) ==
+                    found_declaration->getDesignEntity()) ==
           argSynonymTypes.second.end()) {
         throw PQLValidationException(
             "Cannot match given design entity type: " +
-            getDesignEntityString(found_declaration.getDesignEntity()) +
+            getDesignEntityString(found_declaration->getDesignEntity()) +
             " with allowed list of design entities: " +
             getDesignEntityVectorString(argSynonymTypes.second) +
             " during parse of such_that relation: " +
-            getStringFromRelation(relation) + "'s second argument");
+            getStringFromRelation(relation) + "'s first argument");
       }
     }
   }
@@ -177,7 +157,7 @@ void QueryValidator::validateNoIdenticalSynonyms(const Query& query) {
 
 void QueryValidator::validatePatternFirstArgSynonymIsVariable(
     const Query& query) {
-  for (auto pattern : *(query.pattern)) {
+  for (auto pattern : *(query.patternb)) {
     auto first_arg = pattern->getFirstArg();
     if (auto first_arg_syn = std::get_if<Synonym>(&first_arg)) {
       // Search the available declarations for the pattern synonym

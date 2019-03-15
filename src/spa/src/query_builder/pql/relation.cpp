@@ -11,26 +11,23 @@ using namespace Utils;
 
 namespace QE {
 
-std::unordered_map<Relation, std::string> relationToStringMap({
-    {Relation::ModifiesS, "Modifies"},
-    {Relation::UsesS, "Uses"},
-    {Relation::Parent, "Parent"},
-    {Relation::ParentT, "Parent*"},
-    {Relation::Follows, "Follows"},
-    {Relation::FollowsT, "Follows*"},
-});
-
-std::unordered_map<Relation, std::pair<RefType, RefType>> relationToArgTypesMap(
-    {
-        {Relation::ModifiesS,
-         std::make_pair(RefType::STMTREF, RefType::ENTREF)},
-        {Relation::UsesS, std::make_pair(RefType::STMTREF, RefType::ENTREF)},
-        {Relation::Parent, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
-        {Relation::ParentT, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
-        {Relation::Follows, std::make_pair(RefType::STMTREF, RefType::STMTREF)},
-        {Relation::FollowsT,
-         std::make_pair(RefType::STMTREF, RefType::STMTREF)},
-    });
+std::unordered_map<Relation, std::string> relationToStringMap(
+    {{Relation::Affects, "Affects"},
+     {Relation::AffectsT, "Affects*"},
+     {Relation::ModifiesS, "Modifies"},
+     {Relation::UsesS, "Uses"},
+     {Relation::ModifiesP, "Modifies"},
+     {Relation::UsesP, "Uses"},
+     {Relation::Modifies, "Modifies"},
+     {Relation::Uses, "Uses"},
+     {Relation::Parent, "Parent"},
+     {Relation::ParentT, "Parent*"},
+     {Relation::Follows, "Follows"},
+     {Relation::FollowsT, "Follows*"},
+     {Relation::Calls, "Calls"},
+     {Relation::CallsT, "Calls*"},
+     {Relation::Next, "Next"},
+     {Relation::NextT, "Next*"}});
 
 //! Maps each relation to design entities for each of its allowed arguments if
 //! they are synonyms
@@ -68,10 +65,6 @@ std::string getStringFromRelation(Relation relation) {
 }
 const std::unordered_map<Relation, std::string>& getRelationToStringMap() {
   return relationToStringMap;
-}
-
-std::pair<RefType, RefType> getArgTypesFromRelation(Relation& r) {
-  return relationToArgTypesMap.at(r);
 }
 
 std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>

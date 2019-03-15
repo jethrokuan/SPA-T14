@@ -166,8 +166,14 @@ void PKBStorage::storeProcedure(const Procedure proc) {
 }
 
 void PKBStorage::storeCall(const Line line, const Procedure proc) {
-  call_set.insert(line);
-  line_calls_procedure_set.insert(std::pair<Line, Procedure>(line, proc));
+  if (procedure_set.find(proc) == procedure_set.end()) {
+    // Throw an error if there's a call to a non existent procedure
+    throw PkbAstSemanticException(
+        "Found call statement to non-existing procedure: '" + proc + "'.");
+  } else {
+    call_set.insert(line);
+    line_calls_procedure_set.insert(std::pair<Line, Procedure>(line, proc));
+  }
 }
 
 void PKBStorage::storeLineProcedureRelation(const Line line,

@@ -31,7 +31,7 @@ TEST_CASE ("Test Query Manager FollowsT functionality - simple_1") {
   SECTION ("Test select all prints") {
     auto querystr = std::string("print p; Select p;");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"3", "4"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"4", "3"});
   }
 
   SECTION ("Test select all whiles") {
@@ -55,7 +55,7 @@ TEST_CASE ("Test Query Manager FollowsT functionality - simple_1") {
   SECTION ("Test select all variables") {
     auto querystr = std::string("variable v; Select v;");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
+    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"j", "i"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Follows") {

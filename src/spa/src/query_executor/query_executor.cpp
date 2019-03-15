@@ -1,4 +1,3 @@
-#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
@@ -8,6 +7,7 @@
 #include "query_executor/pattern/PatternEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
 #include "query_executor/suchthat/CallsTEvaluator.h"
+#include "query_executor/query_executor.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesPEvaluator.h"
@@ -23,9 +23,15 @@ using namespace QE;
 
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   // If no such-that and pattern clauses - run just the select
+  if (query->such_that->empty() && query->pattern->empty()) {
+    auto result_set = getSelect(
+        pkb, query->result->selected_declarations->at(0)->getDesignEntity());
+    return std::vector<std::string>(result_set.begin(), result_set.end());
+  }
+
   QueryConstraints query_constraints;
 
-  if (query->such_that) {
+  if (!query->such_that->empty()) {
     // This is a more complex such-that query, pass to individual handlers
     // This call also modifies the query_constraints
     // So only need to check for no results
@@ -35,7 +41,7 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   }
 
   // Evaluate pattern results if they exist
-  if (query->pattern) {
+  if (!query->pattern->empty()) {
     // Same reasoning as such-that
     if (!handlePattern(query, query_constraints)) {
       return std::vector<std::string>();
@@ -49,16 +55,22 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   // add all possible values for it to take in at the start
   // Case: Select v such that Follows(1, 2) [Follows(1, 2) == true]
   // Do this for all selected variables
-  for (const auto& select_var : *(query->selected_declarations)) {
+  for (const auto& select_var : *(query->result->selected_declarations)) {
     // Add entire set of values for variable into the overall constraints
     auto select_var_str = select_var->getSynonym().synonym;
     addAllValuesForVariableToConstraints(query->declarations, pkb,
                                          select_var_str, query_constraints);
   }
+  auto select_var =
+      query->result->selected_declarations->at(0)->getSynonym().synonym;
+  // Add entire set of values for variable into the overall constraints
+  addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
+                                       query_constraints);
 
   // Get vector of vector of results - one for each selected var
   auto result = ConstraintSolver::constrainAndSelect(
-      query_constraints, getSynonymsFromSelect(query->selected_declarations));
+      query_constraints,
+      getSynonymsFromSelect(query->result->selected_declarations));
 
   return Utils::cartesianProduct(result);
 }

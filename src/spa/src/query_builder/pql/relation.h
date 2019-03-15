@@ -10,8 +10,10 @@
 namespace QE {
 // WARNING: WHEN UPDATING THIS CLASS --> Update cpp file
 enum class Relation {
-  ModifiesP,
+  Modifies,
   ModifiesS,
+  ModifiesP,
+  Uses,
   UsesP,
   UsesS,
   Calls,

@@ -16,10 +16,10 @@ class SuchThat {
   Relation relation;
   StmtOrEntRef firstArg;
   StmtOrEntRef secondArg;
-  SuchThat(Relation& r, StmtOrEntRef& a1, StmtOrEntRef& a2)
-      : relation(r), firstArg(a1), secondArg(a2){};
 
  public:
+  SuchThat(Relation& r, StmtOrEntRef& a1, StmtOrEntRef& a2)
+      : relation(r), firstArg(a1), secondArg(a2){};
   static std::optional<SuchThat> construct(Relation, StmtOrEntRef&,
                                            StmtOrEntRef&);
   static std::optional<SuchThat*> construct_heap(Relation, StmtOrEntRef&,

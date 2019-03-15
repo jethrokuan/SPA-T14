@@ -1,0 +1,10 @@
+1 - find while pattern
+while w;
+Select w pattern w("x",_)
+5
+5000
+2 - find if pattern
+if i;
+Select i pattern i("x",_,_)
+2
+5000

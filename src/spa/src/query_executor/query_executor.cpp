@@ -77,7 +77,7 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
       break;
     case DesignEntity::CALL:
       // Next iteration
-      // return pkb->getCallList();
+      return pkb->getCallSet();
       // std::cout << "call";
       break;
     case DesignEntity::CONSTANT:

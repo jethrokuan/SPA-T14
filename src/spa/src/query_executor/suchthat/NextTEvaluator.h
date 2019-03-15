@@ -40,9 +40,7 @@ class NextTEvaluator : public SuchThatEvaluator {
   bool handleBothArgsSynonyms(std::string& arg_left,
                               std::string& arg_right) override {
     // Next*(s, s1)
-    // TODO: PKB implementation
-    assert(false);
-    // return pkb->isLineNextLineT(arg_left, arg_right);
+    return pkb->isLineNextLineT(arg_left, arg_right);
   }
   // Handle cases with no variables selected
   bool handleDoubleUnderscore() override {
@@ -62,10 +60,9 @@ class NextTEvaluator : public SuchThatEvaluator {
     // Next*(_, 3)
     return pkb->getPreviousLineT(arg).has_value();
   }
-  bool handleBothArgsBasic(std::string& arg_left, std::string& arg_right) override {
+  bool handleBothArgsBasic(std::string& arg_left,
+                           std::string& arg_right) override {
     // Next*(2, 3)?
-    // TODO: PKB implementation
-    assert(false);
-    // return pkb->isLineNextLineT(arg_left, arg_right);
+    return pkb->isLineNextLineT(arg_left, arg_right);
   }
 };

@@ -26,22 +26,22 @@ TEST_CASE (
   SECTION ("Test basic pattern a (_, _)") {
     auto querystr = std::string("assign a; Select a pattern a (_, _);");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10", "11", "12",
-                                                             "13", "14", "15",
-                                                             "16", "21", "22"});
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"10", "11", "12", "13", "14", "15", "16",
+                                     "21", "22"});
   }
 
   SECTION ("Test doubleunderscorefactor with none: pattern a (_, _\"x\"_)") {
     auto querystr = std::string("assign a; Select a pattern a(_, _\"x\"_);");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
 
   SECTION (
       "Test doubleunderscorefactor with some results: pattern a (_, _\"x\"_)") {
     auto querystr = std::string("assign a; Select a pattern a(_, _\"v5\"_);");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"10"});
   }
 
   SECTION (
@@ -50,7 +50,7 @@ TEST_CASE (
     auto querystr =
         std::string("assign a; variable v; Select v pattern a(_, _\"v6\"_);");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
 
   SECTION (
@@ -59,7 +59,7 @@ TEST_CASE (
     auto querystr = std::string(
         "assign a; variable v; Select v pattern a(\"x\", _\"v6\"_);");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
 
   delete pkb;

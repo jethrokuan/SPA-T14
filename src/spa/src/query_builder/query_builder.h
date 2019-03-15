@@ -17,6 +17,6 @@ class QueryBuilder {
   //! \brief Takes a PQL query string and returns a pointer to a Query object
   //! representing it. The caller is responsible for deleting the Query
   //! object
-  Query* makePqlQuery(std::string&);
+  Query makePqlQuery(std::string&);
 };
 }  // namespace QE

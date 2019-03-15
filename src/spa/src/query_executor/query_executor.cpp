@@ -1,3 +1,4 @@
+#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
@@ -7,7 +8,6 @@
 #include "query_executor/pattern/PatternEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
 #include "query_executor/suchthat/CallsTEvaluator.h"
-#include "query_executor/query_executor.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesPEvaluator.h"
@@ -22,6 +22,12 @@
 using namespace QE;
 
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
+  auto result = makeQueryUnsorted(query);
+  std::sort(result.begin(), result.end());
+  return result;
+}
+
+std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
   if (query->such_that->empty() && query->pattern->empty()) {
     auto result_set = getSelect(

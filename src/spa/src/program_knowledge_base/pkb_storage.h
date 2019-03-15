@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <string>
+#include <optional>
 #include <unordered_set>
 #include <vector>
 #include "program_knowledge_base/pkb_definitions.h"
@@ -14,7 +15,13 @@ namespace PKB {
 
 class PKBStorage {
  private:
+  int num_lines = 1;
+  std::unordered_map<Line, std::shared_ptr<Node>> line_node_map;
+  std::unordered_map<std::shared_ptr<Node>, Line> node_line_map;
+  std::unordered_map<std::shared_ptr<std::string>, std::string> test;
   // helper
+  Line getCurLineNumber();
+  void incrementCurLineNumber();
   std::unordered_map<Line, Procedure> line_procedure_map;
   void addToSetMap(
       std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
@@ -30,8 +37,6 @@ class PKBStorage {
   ~PKBStorage();
   // attributes
   AST ast;
-  // TODO deprecate this and use hash map
-  std::vector<std::shared_ptr<Node>> lines;
   // CFG
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
       line_previous_line_next_set;  // edge list
@@ -40,7 +45,8 @@ class PKBStorage {
   std::unordered_map<std::string, std::unordered_set<std::string>>
       line_next_line_previous_map;  // reversed adjacaency list
 
-  std::string getLineFromNode(const std::shared_ptr<Node> node);
+  Line getLineFromNode(const std::shared_ptr<Node> node);
+  std::optional<std::shared_ptr<Node>> getNodeFromLine(const Line line);
 
   // calls
   std::unordered_set<std::pair<Line, Procedure>, pair_hash>

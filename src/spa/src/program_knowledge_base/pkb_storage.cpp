@@ -10,8 +10,20 @@ PKBStorage::~PKBStorage(){};
 void PKBStorage::storeAST(const AST ast_node) { ast = ast_node; };
 
 Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
-  lines.push_back(node);
-  return std::to_string(lines.size());
+  const Line cur_line_num = getCurLineNumber();
+  incrementCurLineNumber();
+  line_node_map[cur_line_num] = node;
+  node_line_map[node] = cur_line_num;
+
+  return cur_line_num;
+}
+
+Line PKBStorage::getCurLineNumber() {
+  return std::to_string(num_lines);
+}
+
+void PKBStorage::incrementCurLineNumber() {
+  num_lines = num_lines + 1;
 }
 
 // TODO error handling
@@ -20,14 +32,22 @@ Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
 // as well as a hash table
 // return line number
 // returns empty string if node does not exist
-std::string PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
+Line PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
   // loop through vector of nodes
-  for (std::size_t i = 0; i < lines.size(); i++) {
-    if (lines[i] == node) {
-      return std::to_string(i + 1);  // +1 due to 0 based index
-    }
+  if (node_line_map.find(node) != node_line_map.end()) {
+    return node_line_map.at(node);
+  } else {
+    // TODO error handling using optional
+    return "";
   }
-  return "";  // TODO error handling
+}
+
+std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(const Line line) {
+  if (line_node_map.find(line) != line_node_map.end()) {
+    return std::optional<std::shared_ptr<Node>>(line_node_map.at(line));
+  } else {
+    return std::nullopt;
+  }
 }
 
 void PKBStorage::storeCFGEdge(const Line source, const Line dest) {

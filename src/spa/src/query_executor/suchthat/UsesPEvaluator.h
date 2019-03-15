@@ -53,7 +53,8 @@ class UsesPEvaluator : public SuchThatEvaluator {
     // Uses(_, "x")
     return pkb->getProcedureUsesVar(arg).has_value();
   }
-  bool handleBothArgsBasic(std::string& arg_left, std::string& arg_right) override {
+  bool handleBothArgsBasic(std::string& arg_left,
+                           std::string& arg_right) override {
     // Uses("first", "v")?
     return pkb->isProcedureUsesVar(arg_left, arg_right);
   }

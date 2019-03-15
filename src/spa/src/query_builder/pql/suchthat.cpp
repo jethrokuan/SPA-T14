@@ -2,7 +2,8 @@
 using namespace QE;
 
 // Make sure this relation has the correct argument types
-std::optional<SuchThat> SuchThat::construct(Relation rel, StmtOrEntRef& arg_left,
+std::optional<SuchThat> SuchThat::construct(Relation rel,
+                                            StmtOrEntRef& arg_left,
                                             StmtOrEntRef& arg_right) {
   std::pair<RefType, RefType> argTypes = getArgTypesFromRelation(rel);
   if ((argTypes.first == RefType::STMTREF &&

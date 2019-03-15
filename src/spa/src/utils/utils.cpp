@@ -1,5 +1,5 @@
-#include <regex>
 #include "utils/utils.h"
+#include <regex>
 
 namespace Utils {
 

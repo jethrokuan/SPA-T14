@@ -1,3 +1,4 @@
+#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
@@ -7,7 +8,6 @@
 #include "query_executor/pattern/PatternEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
 #include "query_executor/suchthat/CallsTEvaluator.h"
-#include "query_executor/query_executor.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
 #include "query_executor/suchthat/ModifiesPEvaluator.h"

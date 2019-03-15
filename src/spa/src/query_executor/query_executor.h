@@ -51,10 +51,7 @@ class QueryExecutor {
   static std::unordered_set<std::string> getAllDesignEntityValuesByVarName(
       std::vector<QE::Declaration>*, PKBManager*, const std::string&);
 
-  //! Convert a StmtOrEntRef to a string to pass to PKB
-  static std::string suchThatArgToString(QE::StmtOrEntRef);
-  static std::string stmtRefToString(QE::StmtRef);
-  static std::string entRefToString(QE::EntRef);
+  //! Convert a Ref to simpler forms for each evaluator
   static std::optional<QE::Synonym> getRefAsSynonym(QE::Ref);
   static bool isRefUnderscore(QE::Ref);
   static std::optional<std::string> getRefAsBasic(QE::Ref);

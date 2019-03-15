@@ -6,31 +6,6 @@
 
 using namespace QE;
 
-std::string QueryExecutor::suchThatArgToString(StmtOrEntRef arg) {
-  return std::visit(overload{[](StmtRef& s) { return stmtRefToString(s); },
-                             [](EntRef& e) { return entRefToString(e); }},
-                    arg);
-}
-
-std::string QueryExecutor::stmtRefToString(StmtRef arg) {
-  return std::visit(
-      overload{[](Synonym& s) { return s.synonym; },
-               [](Underscore&) { return std::string("_"); },
-               [](StatementNumber& s) { return std::to_string(s); }},
-      arg);
-}
-
-std::string QueryExecutor::entRefToString(EntRef arg) {
-  return std::visit(overload{[](Synonym& s) { return s.synonym; },
-                             [](Underscore&) { return std::string("_"); },
-                             [](QuoteIdent& s) {
-                               // Remove quotes
-                               return s.quote_ident.substr(
-                                   1, s.quote_ident.size() - 2);
-                             }},
-                    arg);
-}
-
 std::optional<Synonym> QueryExecutor::getRefAsSynonym(Ref arg) {
   if (auto syn = std::get_if<Synonym>(&arg)) {
     return *syn;
@@ -49,10 +24,7 @@ std::optional<std::string> QueryExecutor::getRefAsBasic(Ref arg) {
       overload{[](Synonym& s) { return s.synonym; },
                [](Underscore&) { return std::string("_"); },
                [](StatementNumber& s) { return std::to_string(s); },
-               [](QuoteIdent& s) {
-                 // Remove quotes
-                 return s.quote_ident.substr(1, s.quote_ident.size() - 2);
-               }},
+               [](QuoteIdent& s) { return s.quote_ident; }},
       arg);
 }
 

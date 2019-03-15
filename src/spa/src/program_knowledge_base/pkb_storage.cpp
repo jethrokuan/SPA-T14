@@ -157,8 +157,12 @@ void PKBStorage::storeProcedure(const Procedure proc) {
     // the variable
     throw PkbAstSemanticException(
         "Found procedure and variable with the same name: '" + proc + "'.");
+  } else if (procedure_set.find(proc) != procedure_set.end()) {
+    throw PkbAstSemanticException(
+        "Found multiple procedures with the same name: '" + proc + "'.");
+  } else {
+    procedure_set.insert(proc);
   }
-  procedure_set.insert(proc);
 }
 
 void PKBStorage::storeCall(const Line line, const Procedure proc) {

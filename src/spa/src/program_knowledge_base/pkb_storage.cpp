@@ -18,31 +18,24 @@ Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
   return cur_line_num;
 }
 
-Line PKBStorage::getCurLineNumber() {
-  return std::to_string(num_lines);
-}
+Line PKBStorage::getCurLineNumber() { return std::to_string(num_lines); }
 
-void PKBStorage::incrementCurLineNumber() {
-  num_lines = num_lines + 1;
-}
+void PKBStorage::incrementCurLineNumber() { num_lines = num_lines + 1; }
 
-// TODO error handling
-// TODO refactor to use hashmap instead
-// would need to implement hash function of the node
-// as well as a hash table
-// return line number
-// returns empty string if node does not exist
+// decided not to use optional here since every node should technically
+// be assigned a line number.
+// using INVALID_LINE_NUMBER to debug, and should not be encountered
+// as a line number
 Line PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
-  // loop through vector of nodes
   if (node_line_map.find(node) != node_line_map.end()) {
     return node_line_map.at(node);
   } else {
-    // TODO error handling using optional
-    return "";
+    return INVALID_LINE_NUMBER;
   }
 }
 
-std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(const Line line) {
+std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(
+    const Line line) {
   if (line_node_map.find(line) != line_node_map.end()) {
     return std::optional<std::shared_ptr<Node>>(line_node_map.at(line));
   } else {

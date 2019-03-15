@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 
-#include <string>
 #include <optional>
+#include <string>
 #include <unordered_set>
 #include <vector>
 #include "program_knowledge_base/pkb_definitions.h"
@@ -139,9 +139,6 @@ class PKBStorage {
 
   // setters
   void storeAST(const AST);
-  // TODO upon adding the hash function for line number mapping
-  // change the parameters for storeLine to take in both
-  // the node and the line number (instead of just the node)
   Line storeLine(const std::shared_ptr<Node> node);
   void storeCFGEdge(const Line, const Line);
 
@@ -171,7 +168,6 @@ class PKBStorage {
 
   // helper
   void storeLineProcedureRelation(const Line, const Procedure);
-  // TODO should return optional
   Procedure getProcedureFromLine(const Line);
 };
 

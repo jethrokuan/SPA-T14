@@ -36,10 +36,10 @@ class ParentTEvaluator : public SuchThatEvaluator {
     // Parent*(_, s) (for each s)
     return pkb->getParentLineT(arg_value).has_value();
   }
-  bool handleBothArgsSynonyms(std::string& arg_select,
-                              std::string& arg_unselect) override {
+  bool handleBothArgsSynonyms(std::string& arg_left,
+                              std::string& arg_right) override {
     // Parent*(s, s1)
-    return pkb->isLineParentLineT(arg_select, arg_unselect);
+    return pkb->isLineParentLineT(arg_left, arg_right);
   }
   bool handleDoubleUnderscore() override {
     return !pkb->isLineFollowLineTSetEmpty();
@@ -52,8 +52,9 @@ class ParentTEvaluator : public SuchThatEvaluator {
     // Parent*(_, 3)
     return pkb->getParentLineT(arg).has_value();
   }
-  bool handleBothArgsBasic(std::string& arg1, std::string& arg2) override {
+  bool handleBothArgsBasic(std::string& arg_left,
+                           std::string& arg_right) override {
     // Parent*(2, 3)?
-    return pkb->isLineParentLineT(arg1, arg2);
+    return pkb->isLineParentLineT(arg_left, arg_right);
   }
 };

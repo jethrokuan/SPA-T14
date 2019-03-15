@@ -21,8 +21,6 @@ class QueryExecutor {
  private:
   PKBManager* pkb;
 
-  //! Makes the actual query - but returns the result unsorted
-  std::vector<std::string> makeQueryUnsorted(QE::Query* query);
   //! Evaluates any SuchThat clause
   bool handleSuchThat(QE::Query*, QueryConstraints&);
   //! Evaluates any Pattern clause
@@ -35,7 +33,7 @@ class QueryExecutor {
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};
 
-  //! Actual external interface called to make the PQL query
+  //! External interface called to make the PQL query
   std::vector<std::string> makeQuery(QE::Query* query);
 
   //! Gets the result of an unconditional select query (Select <designentity>)

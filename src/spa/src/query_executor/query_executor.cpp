@@ -5,24 +5,23 @@
 #include "query_builder/core/query_preprocessor.h"
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
+#include "query_executor/suchthat/CallsEvaluator.h"
+#include "query_executor/suchthat/CallsTEvaluator.h"
 #include "query_executor/query_executor.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
 #include "query_executor/suchthat/FollowsTEvaluator.h"
+#include "query_executor/suchthat/ModifiesPEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
+#include "query_executor/suchthat/NextEvaluator.h"
+#include "query_executor/suchthat/NextTEvaluator.h"
 #include "query_executor/suchthat/ParentEvaluator.h"
 #include "query_executor/suchthat/ParentTEvaluator.h"
+#include "query_executor/suchthat/UsesPEvaluator.h"
 #include "query_executor/suchthat/UsesSEvaluator.h"
 
 using namespace QE;
 
-//! \brief Sorts the vector of strings returned by the query system
-//! This decouples the return order of PKB with the result to screen
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
-  auto result = makeQueryUnsorted(query);
-  return result;
-}
-
-std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
   if (query->such_that->empty() && query->pattern->empty()) {
     auto result_set = getSelect(
@@ -90,7 +89,7 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
       break;
     case DesignEntity::CALL:
       // Next iteration
-      // return pkb->getCallList();
+      return pkb->getCallSet();
       // std::cout << "call";
       break;
     case DesignEntity::CONSTANT:
@@ -147,6 +146,18 @@ bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
       return FollowsEvaluator(query, pkb, qc).evaluate();
     case Relation::Parent:
       return ParentEvaluator(query, pkb, qc).evaluate();
+    case Relation::Next:
+      return NextEvaluator(query, pkb, qc).evaluate();
+    case Relation::NextT:
+      return NextTEvaluator(query, pkb, qc).evaluate();
+    case Relation::Calls:
+      return CallsEvaluator(query, pkb, qc).evaluate();
+    case Relation::CallsT:
+      return CallsTEvaluator(query, pkb, qc).evaluate();
+    case Relation::ModifiesP:
+      return ModifiesPEvaluator(query, pkb, qc).evaluate();
+    case Relation::UsesP:
+      return UsesPEvaluator(query, pkb, qc).evaluate();
     default:
       assert(false);
   }

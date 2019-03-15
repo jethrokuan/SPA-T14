@@ -17,14 +17,14 @@ class SuchThatEvaluator {
   QueryConstraints& qc;
 
   // Calculated from the Query object
-  QE::StmtOrEntRef arg1;
-  QE::StmtOrEntRef arg2;
-  std::optional<Synonym> arg1AsSynonym;
-  std::optional<Synonym> arg2AsSynonym;
-  bool arg1IsUnderscore;
-  bool arg2IsUnderscore;
-  std::optional<std::string> arg1AsBasic;
-  std::optional<std::string> arg2AsBasic;
+  QE::StmtOrEntRef argLeft;
+  QE::StmtOrEntRef argRight;
+  std::optional<Synonym> argLeftAsSynonym;
+  std::optional<Synonym> argRightAsSynonym;
+  bool argLeftIsUnderscore;
+  bool argRightIsUnderscore;
+  std::optional<std::string> argLeftAsBasic;
+  std::optional<std::string> argRightAsBasic;
 
   //! Dispatches such that query to individual methods to handle it
   bool dispatch();
@@ -60,8 +60,8 @@ class SuchThatEvaluator {
       : query(query),
         pkb(pkb),
         qc(qc),
-        arg1(query->such_that->at(0)->getFirstArg()),
-        arg2(query->such_that->at(0)->getSecondArg()){};
+        argLeft(query->such_that->at(0)->getFirstArg()),
+        argRight(query->such_that->at(0)->getSecondArg()){};
 
   //! External API to run the such-that query on the given PKB instance
   bool evaluate();

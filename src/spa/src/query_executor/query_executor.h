@@ -55,7 +55,7 @@ class QueryExecutor {
   static std::string suchThatArgToString(QE::StmtOrEntRef);
   static std::string stmtRefToString(QE::StmtRef);
   static std::string entRefToString(QE::EntRef);
-  static std::optional<QE::Synonym> getSuchThatArgAsSynonym(QE::StmtOrEntRef);
-  static bool isSuchThatArgUnderscore(QE::StmtOrEntRef);
-  static std::optional<std::string> getSuchThatArgAsBasic(QE::StmtOrEntRef);
+  static std::optional<QE::Synonym> getRefAsSynonym(QE::Ref);
+  static bool isRefUnderscore(QE::Ref);
+  static std::optional<std::string> getRefAsBasic(QE::Ref);
 };

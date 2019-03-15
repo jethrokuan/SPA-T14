@@ -48,10 +48,12 @@ class QueryParser {
 
   // Parses the declarations in a clause, and adds it into the Query state.
   // Returns false if not a declaration clause.
-
   Declaration* findDeclaration(const Synonym synonym);
+  Expression parseExpression();
   void parseResult();
   bool parseSuchThat();
+  bool parsePattern();
+  void parseRelRef();
   void parseRelCond();
   bool parseModifies();
   Ref parseRef();

@@ -12,7 +12,7 @@ class QuoteIdent {
 
  public:
   QuoteIdent() {}
-  QuoteIdent(std::string& quote_ident) : quote_ident(quote_ident) {}
+  QuoteIdent(std::string quote_ident) : quote_ident(quote_ident) {}
 
   std::string quote_ident;
   // Constructs a guaranteed valid Synonym

@@ -5,7 +5,9 @@ Query::Query()
     : declarations(new std::vector<Declaration>()),
       result(new Result),
       such_that(new std::vector<SuchThat*>()),
-      pattern(new std::vector<Pattern*>()){};
+      rel_cond(new std::vector<RelCond*>()),
+      pattern(new std::vector<Pattern*>()),
+      patternb(new std::vector<PatternB*>()){};
 
 Query::~Query() {
   delete declarations;

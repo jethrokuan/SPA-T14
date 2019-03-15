@@ -70,7 +70,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
 
   // Get vector of vector of results - one for each selected var
   auto result = ConstraintSolver::constrainAndSelect(
-      query_constraints, getSynonymsFromSelect(query->result->selected_declarations));
+      query_constraints,
+      getSynonymsFromSelect(query->result->selected_declarations));
 
   return Utils::cartesianProduct(result);
 }

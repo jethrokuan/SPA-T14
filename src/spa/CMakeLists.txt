@@ -88,6 +88,7 @@ set(headers ${headers}
   src/query_builder/pql/pattern.h
   src/query_builder/pql/query.h
   src/query_builder/pql/quoteident.h
+  src/query_builder/pql/relcond.h
   src/query_builder/pql/relation.h
   src/query_builder/pql/result.h
   src/query_builder/pql/ref.h

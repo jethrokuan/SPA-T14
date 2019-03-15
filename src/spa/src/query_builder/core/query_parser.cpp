@@ -5,20 +5,12 @@
 #include "query_builder/pql/ref.h"
 #include "query_builder/pql/result.h"
 #include "query_builder/pql/suchthat.h"
+#include "query_builder/pql/underscore.h"
 #include "utils/utils.h"
 
 #include <optional>
 
-using QE::Declaration;
-using QE::DesignEntity;
-using QE::Query;
-using QE::QueryParser;
-using QE::QuoteIdent;
-using QE::Ref;
-using QE::Result;
-using QE::ResultType;
-using QE::SuchThat;
-using QE::Synonym;
+using namespace QE;
 
 QueryParser::QueryParser(std::vector<std::string> tokens)
     : query_(new Query()), current_(0), tokens_(tokens) {}
@@ -162,9 +154,44 @@ Ref QueryParser::parseRef() {
   }
 }
 
-bool QueryParser::parseModifies() {
-  if (!match("Modifies")) {
-    return false;
+void QueryParser::parseRelRef() {
+  Relation relation;
+  if (match("Modifies")) {
+    relation = Relation::Modifies;
+  } else if (match("Uses")) {
+    relation = Relation::Uses;
+  } else if (match("Calls")) {
+    if (match("*")) {
+      relation = Relation::CallsT;
+    } else {
+      relation = Relation::Calls;
+    }
+  } else if (match("Parent")) {
+    if (match("*")) {
+      relation = Relation::ParentT;
+    } else {
+      relation = Relation::Parent;
+    }
+  } else if (match("Follows")) {
+    if (match("*")) {
+      relation = Relation::FollowsT;
+    } else {
+      relation = Relation::Follows;
+    }
+  } else if (match("Next")) {
+    if (match("*")) {
+      relation = Relation::NextT;
+    } else {
+      relation = Relation::Next;
+    }
+  } else if (match("Affects")) {
+    if (match("*")) {
+      relation = Relation::AffectsT;
+    } else {
+      relation = Relation::Affects;
+    }
+  } else {
+    throw PQLParseException("Unknown relation: " + peek());
   }
 
   expect("(");
@@ -172,12 +199,16 @@ bool QueryParser::parseModifies() {
   expect(",");
   auto ref_2 = parseRef();
   expect(")");
-  // TODO: construct SuchThat for modifies
-  return true;
+
+  RelCond* relcond = new RelCond(relation, ref_1, ref_2);
+  query_->rel_cond->push_back(relcond);
 }
 
 void QueryParser::parseRelCond() {
-  if (parseModifies()) return;
+  parseRelRef();
+  while (match("and")) {
+    parseRelRef();
+  }
 }
 
 bool QueryParser::parseSuchThat() {
@@ -191,6 +222,82 @@ bool QueryParser::parseSuchThat() {
   expect("that");
 
   parseRelCond();
+  return true;
+}
+
+Expression QueryParser::parseExpression() {
+  bool isPartial = true;
+  std::string expr = "";
+
+  if (match("\"")) {
+    expr = advance();
+    isPartial = false;
+    expect("\"");
+  } else {
+    expect("_");
+    if (peek().compare(")") == 0) {
+      return Underscore();
+    } else {
+      expect("\"");
+      expr = advance();
+      expect("\"");
+      expect("_");
+    }
+  }
+
+  return Matcher(isPartial, expr);
+}
+
+bool QueryParser::parsePattern() {
+  if (!match("pattern")) {
+    return false;
+  }
+
+  auto synonym_str = advance();
+  auto synonym = Synonym::construct(synonym_str);
+
+  if (!synonym) {
+    throw PQLParseException("Expected a synonym, got " + previous());
+  }
+
+  auto decl = findDeclaration(synonym.value());
+
+  expect("(");
+
+  PatternB* pattern;
+  Ref ref = Underscore();  // Default, will be overriden
+  Expression expr;
+
+  switch (decl->getDesignEntity()) {
+    case DesignEntity::ASSIGN:
+      ref = parseRef();
+      expect(",");
+      expr = parseExpression();
+      pattern = new PatternB(synonym.value(), ref, expr);
+      break;
+    case DesignEntity::IF:
+      ref = parseRef();
+      expect(",");
+      expect("_");
+      expect(",");
+      expect("_");
+      pattern = new PatternB(synonym.value(), ref);
+      break;
+    case DesignEntity::WHILE:
+      ref = parseRef();
+      expect(",");
+      expect("_");
+      pattern = new PatternB(synonym.value(), ref);
+      break;
+    default:
+      throw PQLParseException("pattern clause not supported for " +
+                              getDesignEntityString(decl->getDesignEntity()));
+  }
+
+  expect(")");
+
+  query_->patternb->push_back(pattern);
+
   return true;
 }
 
@@ -209,8 +316,9 @@ Query QueryParser::parse() {
     parseResult();
 
     while (!isAtEnd()) {
-      bool isSuchThat = parseSuchThat();
-      if (isSuchThat) continue;
+      if (parseSuchThat()) continue;
+      if (parsePattern()) continue;
+      throw PQLParseException("Expected such-that, pattern or with clause.");
     }
   }
 

@@ -31,6 +31,8 @@ set(srcs ${srcs}
   src/query_builder/TestQuoteIdent.cpp
   src/query_builder/TestSuchThat.cpp
   src/query_builder/TestSynonym.cpp
+  src/query_builder/TestQueryLexer.cpp
+  src/query_builder/TestQueryParser.cpp
   )
 
 # PKB

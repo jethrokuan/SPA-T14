@@ -1,7 +1,7 @@
-#include "query_builder/query_builder.h"
 #include <iostream>
 #include "query_builder/core/query_preprocessor.h"
 #include "query_builder/core/query_validator.h"
+#include "query_builder/query_builder.h"
 
 using namespace QE;
 

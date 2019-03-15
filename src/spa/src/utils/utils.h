@@ -86,6 +86,8 @@ std::unordered_set<T, H> unorderedSetIntersection(
 };
 
 bool has_only_digits(const std::string);
+bool is_valid_name(const std::string);
+bool is_valid_synonym(const std::string);
 
 std::string& ltrim(std::string&, const std::string& chars = "\t ");
 std::string& rtrim(std::string&, const std::string& chars = "\t ");

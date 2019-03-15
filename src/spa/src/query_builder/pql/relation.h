@@ -10,12 +10,22 @@
 namespace QE {
 // WARNING: WHEN UPDATING THIS CLASS --> Update cpp file
 enum class Relation {
-  ModifiesS = 1,
+  Modifies,
+  ModifiesS,
+  ModifiesP,
+  Uses,
+  UsesP,
   UsesS,
+  Calls,
+  CallsT,
   Parent,
   ParentT,
   Follows,
-  FollowsT = 6
+  FollowsT,
+  Next,
+  NextT,
+  Affects,
+  AffectsT,
 };
 Relation getRelation(std::string&);
 std::string getStringFromRelation(Relation);

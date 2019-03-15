@@ -23,39 +23,39 @@ TEST_CASE ("Test Query Manager FollowsT functionality - simple_1") {
   auto qe = QueryBuilder();
 
   SECTION ("Test select all assignments") {
-    auto querystr = std::string("assign a; Select a;");
+    auto querystr = std::string("assign a; Select a");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"1"});
   }
 
   SECTION ("Test select all prints") {
-    auto querystr = std::string("print p; Select p;");
+    auto querystr = std::string("print p; Select p");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"4", "3"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"3", "4"});
   }
 
   SECTION ("Test select all whiles") {
-    auto querystr = std::string("while w; Select w;");
+    auto querystr = std::string("while w; Select w");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"2"});
   }
 
   SECTION ("Test select all reads") {
-    auto querystr = std::string("read r; Select r;");
+    auto querystr = std::string("read r; Select r");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"5"});
   }
 
   SECTION ("Test select all procedures") {
-    auto querystr = std::string("procedure p; Select p;");
+    auto querystr = std::string("procedure p; Select p");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"main"});
   }
 
   SECTION ("Test select all variables") {
-    auto querystr = std::string("variable v; Select v;");
+    auto querystr = std::string("variable v; Select v");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"j", "i"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"i", "j"});
   }
 
   SECTION ("Test select all variables with true boolean such_that Follows") {

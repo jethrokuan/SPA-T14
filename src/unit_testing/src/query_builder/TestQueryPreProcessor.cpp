@@ -736,7 +736,7 @@ TEST_CASE ("Test Preprocess Exceptions") {
 
   SECTION ("Test Declaration exception for no select tokens") {
     auto qp = QE::QueryPreprocessor();
-    std::string input = "assign p;";
+    std::string input = "assign p";
     REQUIRE_THROWS_AS(qp.getQuery(input), QE::PQLTokenizeException);
   }
 

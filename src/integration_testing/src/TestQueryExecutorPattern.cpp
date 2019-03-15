@@ -24,7 +24,7 @@ TEST_CASE (
   auto qe = QueryBuilder();
 
   SECTION ("Test basic pattern a (_, _)") {
-    auto querystr = std::string("assign a; Select a pattern a (_, _);");
+    auto querystr = std::string("assign a; Select a pattern a (_, _)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) ==
             std::vector<std::string>{"10", "11", "12", "13", "14", "15", "16",
@@ -32,14 +32,14 @@ TEST_CASE (
   }
 
   SECTION ("Test doubleunderscorefactor with none: pattern a (_, _\"x\"_)") {
-    auto querystr = std::string("assign a; Select a pattern a(_, _\"x\"_);");
+    auto querystr = std::string("assign a; Select a pattern a(_, _\"x\"_)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
 
   SECTION (
       "Test doubleunderscorefactor with some results: pattern a (_, _\"x\"_)") {
-    auto querystr = std::string("assign a; Select a pattern a(_, _\"v5\"_);");
+    auto querystr = std::string("assign a; Select a pattern a(_, _\"v5\"_)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"10"});
   }
@@ -48,7 +48,7 @@ TEST_CASE (
       "Test pattern constraining unselected variable that returns no results: "
       "Issue 231") {
     auto querystr =
-        std::string("assign a; variable v; Select v pattern a(_, _\"v6\"_);");
+        std::string("assign a; variable v; Select v pattern a(_, _\"v6\"_)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
@@ -57,7 +57,7 @@ TEST_CASE (
       "Test pattern constraining unselected variable that returns no results: "
       "Issue 231 + LHS pattern as string") {
     auto querystr = std::string(
-        "assign a; variable v; Select v pattern a(\"x\", _\"v6\"_);");
+        "assign a; variable v; Select v pattern a(\"x\", _\"v6\"_)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }

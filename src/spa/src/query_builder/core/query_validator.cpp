@@ -190,7 +190,7 @@ void QueryValidator::validateSuchThatSynonymTypes(const Query& query) {
             " with allowed list of design entities: " +
             getDesignEntityVectorString(argSynonymTypes.second) +
             " during parse of such_that relation: " +
-            getStringFromRelation(relation) + "'s first argument");
+            getStringFromRelation(relation) + "'s second argument");
       }
     }
   }

@@ -22,15 +22,11 @@ Line PKBStorage::getCurLineNumber() { return std::to_string(num_lines); }
 
 void PKBStorage::incrementCurLineNumber() { num_lines = num_lines + 1; }
 
-// decided not to use optional here since every node should technically
-// be assigned a line number.
-// using INVALID_LINE_NUMBER to debug, and should not be encountered
-// as a line number
 Line PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
   if (node_line_map.find(node) != node_line_map.end()) {
     return node_line_map.at(node);
   } else {
-    return INVALID_LINE_NUMBER;
+    assert(false);
   }
 }
 
@@ -200,7 +196,11 @@ void PKBStorage::storePatternAssign(const Variable var, const ExprStr expr_str,
 }
 
 Procedure PKBStorage::getProcedureFromLine(const Line line) {
-  return line_procedure_map.at(line);
+  if (line_procedure_map.find(line) != line_procedure_map.end()) {
+    return line_procedure_map.at(line);
+  } else {
+    assert(false);
+  }
 }
 
 // helper

@@ -178,14 +178,21 @@ void PKBPreprocessor::setCFGIterator(
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<RootNode> node) {
+  setDesignEntitiesProcListIterator(node->ProcList);
   for (const auto &proc : node->ProcList) {
     setDesignEntities(proc);
   }
 }
 
+void PKBPreprocessor::setDesignEntitiesProcListIterator(
+    const std::vector<std::shared_ptr<ProcedureNode>> proc_lst) {
+  for (const auto &proc : proc_lst) {
+    storage->storeProcedure(proc->Name);
+  }
+}
+
 void PKBPreprocessor::setDesignEntities(
     const std::shared_ptr<ProcedureNode> node) {
-  storage->storeProcedure(node->Name);
   setDesignEntitiesIterator(node->StmtList);
 }
 
@@ -767,9 +774,7 @@ void PKBPreprocessor::setPattern(const std::shared_ptr<WhileNode> node) {
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<ReadNode>) {}
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<CallNode>) {
-  // TODO
-}
+void PKBPreprocessor::setPattern(const std::shared_ptr<CallNode>) {}
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<PrintNode>) {}
 

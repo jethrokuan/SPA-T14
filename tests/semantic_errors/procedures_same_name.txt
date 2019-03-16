@@ -1,0 +1,7 @@
+procedure A {
+  x = 1;
+}
+
+procedure A {
+  x = 1;
+}

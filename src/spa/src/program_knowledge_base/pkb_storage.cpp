@@ -10,24 +10,33 @@ PKBStorage::~PKBStorage(){};
 void PKBStorage::storeAST(const AST ast_node) { ast = ast_node; };
 
 Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
-  lines.push_back(node);
-  return std::to_string(lines.size());
+  const Line cur_line_num = getCurLineNumber();
+  incrementCurLineNumber();
+  line_node_map[cur_line_num] = node;
+  node_line_map[node] = cur_line_num;
+
+  return cur_line_num;
 }
 
-// TODO error handling
-// TODO refactor to use hashmap instead
-// would need to implement hash function of the node
-// as well as a hash table
-// return line number
-// returns empty string if node does not exist
-std::string PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
-  // loop through vector of nodes
-  for (std::size_t i = 0; i < lines.size(); i++) {
-    if (lines[i] == node) {
-      return std::to_string(i + 1);  // +1 due to 0 based index
-    }
+Line PKBStorage::getCurLineNumber() { return std::to_string(num_lines); }
+
+void PKBStorage::incrementCurLineNumber() { num_lines = num_lines + 1; }
+
+Line PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
+  if (node_line_map.find(node) != node_line_map.end()) {
+    return node_line_map.at(node);
+  } else {
+    assert(false);
   }
-  return "";  // TODO error handling
+}
+
+std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(
+    const Line line) {
+  if (line_node_map.find(line) != line_node_map.end()) {
+    return std::optional<std::shared_ptr<Node>>(line_node_map.at(line));
+  } else {
+    return std::nullopt;
+  }
 }
 
 void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
@@ -157,13 +166,23 @@ void PKBStorage::storeProcedure(const Procedure proc) {
     // the variable
     throw PkbAstSemanticException(
         "Found procedure and variable with the same name: '" + proc + "'.");
+  } else if (procedure_set.find(proc) != procedure_set.end()) {
+    throw PkbAstSemanticException(
+        "Found multiple procedures with the same name: '" + proc + "'.");
+  } else {
+    procedure_set.insert(proc);
   }
-  procedure_set.insert(proc);
 }
 
 void PKBStorage::storeCall(const Line line, const Procedure proc) {
-  call_set.insert(line);
-  line_calls_procedure_set.insert(std::pair<Line, Procedure>(line, proc));
+  if (procedure_set.find(proc) == procedure_set.end()) {
+    // Throw an error if there's a call to a non existent procedure
+    throw PkbAstSemanticException(
+        "Found call statement to non-existing procedure: '" + proc + "'.");
+  } else {
+    call_set.insert(line);
+    line_calls_procedure_set.insert(std::pair<Line, Procedure>(line, proc));
+  }
 }
 
 void PKBStorage::storeLineProcedureRelation(const Line line,
@@ -187,7 +206,11 @@ void PKBStorage::storePatternAssign(const Variable var, const ExprStr expr_str,
 }
 
 Procedure PKBStorage::getProcedureFromLine(const Line line) {
-  return line_procedure_map.at(line);
+  if (line_procedure_map.find(line) != line_procedure_map.end()) {
+    return line_procedure_map.at(line);
+  } else {
+    assert(false);
+  }
 }
 
 // helper

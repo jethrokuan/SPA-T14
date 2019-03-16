@@ -3,8 +3,8 @@
 
 #include <vector>
 
+#include "query_builder/pql/ref.h"
 #include "query_builder/pql/relation.h"
-#include "query_builder/pql/stmtentref.h"
 #include "utils/utils.h"
 
 using namespace Utils;
@@ -66,6 +66,26 @@ std::unordered_map<
          {Relation::AffectsT,
           std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)}});
 
+std::unordered_map<Relation, std::pair<RefTypeIndexSet, RefTypeIndexSet>>
+    relationToArgTypesMap(
+        {{Relation::ModifiesS,
+          // No PRINT design entity for Modifies: print does not modify
+          std::make_pair(stmtRefIndices, entRefIndices)},
+         // No READ design entity for Uses: read modifies a variable - not uses
+         {Relation::UsesS, std::make_pair(stmtRefIndices, entRefIndices)},
+         {Relation::ModifiesP, std::make_pair(entRefIndices, entRefIndices)},
+         {Relation::UsesP, std::make_pair(entRefIndices, entRefIndices)},
+         {Relation::Parent, std::make_pair(stmtRefIndices, stmtRefIndices)},
+         {Relation::ParentT, std::make_pair(stmtRefIndices, stmtRefIndices)},
+         {Relation::Follows, std::make_pair(stmtRefIndices, stmtRefIndices)},
+         {Relation::FollowsT, std::make_pair(stmtRefIndices, stmtRefIndices)},
+         {Relation::Calls, std::make_pair(entRefIndices, entRefIndices)},
+         {Relation::CallsT, std::make_pair(entRefIndices, entRefIndices)},
+         {Relation::Next, std::make_pair(lineRefIndices, lineRefIndices)},
+         {Relation::NextT, std::make_pair(lineRefIndices, lineRefIndices)},
+         {Relation::Affects, std::make_pair(stmtRefIndices, stmtRefIndices)},
+         {Relation::AffectsT, std::make_pair(stmtRefIndices, stmtRefIndices)}});
+
 auto stringToRelationMap =
     swapPairs<Relation, std::string>(relationToStringMap);
 
@@ -79,8 +99,13 @@ const std::unordered_map<Relation, std::string>& getRelationToStringMap() {
   return relationToStringMap;
 }
 
+std::pair<RefTypeIndexSet, RefTypeIndexSet> getArgRefTypesFromRelation(
+    const Relation& r) {
+  return relationToArgTypesMap.at(r);
+}
+
 std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>
-getArgSynonymTypesFromRelation(Relation& r) {
+getArgSynonymTypesFromRelation(const Relation& r) {
   return relationToArgSynonymTypesMap.at(r);
 }
 

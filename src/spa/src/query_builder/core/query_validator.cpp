@@ -9,12 +9,14 @@ using namespace QE;
 void QueryValidator::validateQuery(Query& query) {
   // Do not change the order of these calls - there are dependencies to reduce
   // double-checking of conditions
-  validatePatternVariableAsAssign(query);
+  validateNoIdenticalSynonyms(query);
   validateModifyUsesNoFirstArgUnderscore(query);
   validateSuchThatSynonymsAreDeclared(query);
   validateSpecializeModifiesUses(query);
-  validateSynonymTypes(query);
-  validateNoIdenticalSynonyms(query);
+  validateSuchThatRefTypes(query);
+  validatePatternRefTypes(query);
+  validateSuchThatSynonymTypes(query);
+  validatePatternVariableAsAssign(query);
   validatePatternFirstArgSynonymIsVariable(query);
 }
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
@@ -122,7 +124,35 @@ void QueryValidator::validateSpecializeModifiesUses(Query& query) {
   }
 }
 
-void QueryValidator::validateSynonymTypes(const Query& query) {
+void QueryValidator::validateSuchThatRefTypes(const Query& query) {
+  for (auto such_that : *(query.rel_cond)) {
+    auto [ref1Types, ref2Types] =
+        getArgRefTypesFromRelation(such_that->relation);
+    bool such_that_arg1_valid =
+        ref1Types.find(such_that->arg1.index()) != ref1Types.end();
+    bool such_that_arg2_valid =
+        ref2Types.find(such_that->arg2.index()) != ref2Types.end();
+
+    if (!such_that_arg1_valid || !such_that_arg2_valid) {
+      throw PQLValidationException(
+          "One or both of the arguments to " +
+          getStringFromRelation(such_that->relation) +
+          " does not match the expected StmtRef/EntRef/LineRef types!");
+    }
+  }
+}
+
+void QueryValidator::validatePatternRefTypes(const Query& query) {
+  for (auto pattern : *(query.patternb)) {
+    if (entRefIndices.find(pattern->getFirstArg().index()) ==
+        entRefIndices.end()) {
+      throw PQLValidationException(
+          "Pattern first argument is not an EntRef as expected!");
+    }
+  }
+}
+
+void QueryValidator::validateSuchThatSynonymTypes(const Query& query) {
   for (auto such_that : *(query.rel_cond)) {
     // Idea here is to check the synonym's design entity type
     // against the list of allowed design entity types allowed for

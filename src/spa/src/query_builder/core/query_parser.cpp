@@ -48,8 +48,9 @@ Declaration* QueryParser::findDeclaration(const Synonym synonym) {
                    [&](auto decl) { return decl.getSynonym() == synonym; });
 
   if (found_declaration == query_->declarations->end()) {
-    throw PQLParseException("Semantic Error: cannot match synonym " +
-                            synonym.synonym + " to list of declarations given");
+    throw PQLValidationException("Semantic Error: cannot match synonym " +
+                                 synonym.synonym +
+                                 " to list of declarations given");
   }
 
   return &query_->declarations->at(

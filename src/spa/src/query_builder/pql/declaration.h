@@ -4,7 +4,6 @@
 #include <string>
 
 #include "query_builder/pql/design_entity.h"
-#include "query_builder/pql/stmtentref.h"
 #include "query_builder/pql/synonym.h"
 
 namespace QE {

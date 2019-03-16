@@ -8,6 +8,5 @@
 #include "query_builder/pql/relation.h"
 #include "query_builder/pql/relcond.h"
 #include "query_builder/pql/result.h"
-#include "query_builder/pql/stmtentref.h"
 #include "query_builder/pql/synonym.h"
 #include "query_builder/pql/underscore.h"

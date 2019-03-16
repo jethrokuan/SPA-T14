@@ -70,7 +70,6 @@ set(srcs ${srcs}
   src/query_builder/core/query_parser.cpp
   src/query_builder/core/query_validator.cpp
   src/query_builder/pql/design_entity.cpp
-  src/query_builder/pql/factor.cpp
   src/query_builder/pql/quoteident.cpp
   src/query_builder/pql/query.cpp
   src/query_builder/pql/relation.cpp
@@ -84,7 +83,6 @@ set(headers ${headers}
   src/query_builder/pql/pql.h
   src/query_builder/pql/declaration.h
   src/query_builder/pql/design_entity.h
-  src/query_builder/pql/factor.h
   src/query_builder/pql/query.h
   src/query_builder/pql/quoteident.h
   src/query_builder/pql/relcond.h

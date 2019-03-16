@@ -1,7 +1,6 @@
 #pragma once
 #include "query_builder/pql/declaration.h"
 #include "query_builder/pql/design_entity.h"
-#include "query_builder/pql/factor.h"
 #include "query_builder/pql/query.h"
 #include "query_builder/pql/quoteident.h"
 #include "query_builder/pql/ref.h"

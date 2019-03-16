@@ -6,16 +6,20 @@
 
 using namespace QE;
 
-void QueryValidator::validateQuery(const Query& query) {
+void QueryValidator::validateQuery(Query& query) {
   // Do not change the order of these calls - there are dependencies to reduce
   // double-checking of conditions
+
   std::cout << "1";
   validatePatternVariableAsAssign(query);
   std::cout << "2";
   validateModifyUsesNoFirstArgUnderscore(query);
 
   std::cout << "3";
-  validateSuchThatSynonyms(query);
+  validateSuchThatSynonymsAreDeclared(query);
+
+  std::cout << "0";
+  validateSpecializeModifiesUses(query);
 
   std::cout << "4";
   // validateSynonymTypes(query);
@@ -28,7 +32,6 @@ void QueryValidator::validateQuery(const Query& query) {
 
   std::cout << "7\n";
 }
-
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
   for (auto pattern : *(query.patternb)) {
     // Search the available declarations for the pattern synonym
@@ -68,7 +71,7 @@ void QueryValidator::validateModifyUsesNoFirstArgUnderscore(
   }
 }
 
-void QueryValidator::validateSuchThatSynonyms(const Query& query) {
+void QueryValidator::validateSuchThatSynonymsAreDeclared(const Query& query) {
   for (auto such_that : *(query.rel_cond)) {
     // Error if first arg is underscore otherwise
     auto such_that_firstarg = such_that->arg1;
@@ -92,6 +95,45 @@ void QueryValidator::validateSuchThatSynonyms(const Query& query) {
             getStringFromRelation(such_that->relation));
       }
     }
+  }
+}
+
+void QueryValidator::validateSpecializeModifiesUses(Query& query) {
+  for (auto such_that : *(query.rel_cond)) {
+    // Early return if not modifies or uses
+    if (such_that->relation != Relation::Uses &&
+        such_that->relation != Relation::Modifies) {
+      return;
+    }
+
+    auto such_that_firstarg = such_that->arg1;
+    // QuoteIdent ==> first argument entref ==> must be a procedure version
+    if (std::holds_alternative<QuoteIdent>(such_that_firstarg)) {
+      such_that->relation = such_that->relation != Relation::Uses
+                                ? Relation::UsesP
+                                : Relation::ModifiesP;
+    } else if (std::holds_alternative<StatementNumber>(such_that_firstarg)) {
+      // A statementnumber ==> this is a statement relation (*S)
+      such_that->relation = such_that->relation != Relation::Uses
+                                ? Relation::UsesS
+                                : Relation::ModifiesS;
+    } else if (auto syn = std::get_if<Synonym>(&such_that_firstarg)) {
+      // If it's a synonym - need to check if stmt synonym or proc
+      // We can check for value() since previous validator has checked existence
+      auto decl =
+          Declaration::findDeclarationForSynonym(query.declarations, *syn)
+              .value();
+      if (decl.getDesignEntity() == DesignEntity::PROCEDURE) {
+        such_that->relation = such_that->relation != Relation::Uses
+                                  ? Relation::UsesP
+                                  : Relation::ModifiesP;
+      } else {
+        such_that->relation = such_that->relation != Relation::Uses
+                                  ? Relation::UsesS
+                                  : Relation::ModifiesS;
+      }
+    }
+    // Underscore is handled separately
   }
 }
 

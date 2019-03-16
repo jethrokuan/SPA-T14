@@ -290,7 +290,14 @@ bool QueryParser::parsePattern() {
       expect("_");
       pattern = new PatternB(synonym.value(), ref);
       break;
-    default:
+    case DesignEntity::READ:
+    case DesignEntity::STMT:
+    case DesignEntity::PRINT:
+    case DesignEntity::CALL:
+    case DesignEntity::VARIABLE:
+    case DesignEntity::CONSTANT:
+    case DesignEntity::PROCEDURE:
+    case DesignEntity::PROG_LINE:
       throw PQLParseException("pattern clause not supported for " +
                               getDesignEntityString(decl->getDesignEntity()));
   }

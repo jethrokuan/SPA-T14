@@ -41,7 +41,8 @@ TEST_CASE ("Test Query Parser") {
   SECTION ("Test one assign one select query") {
     std::string input =
         "assign a, a1; procedure p; Select <a, p> such that Uses (a, "
-        "\"b\") and Modifies(a, \"b\") pattern a (\"x\", _\"1\"_)";
+        "\"b\") and Modifies(a, \"b\") pattern a (\"x\", _\"1\"_) with a.stmt# "
+        "= 1";
     QueryLexer lexer = QueryLexer(input);
     lexer.lex();
     QueryParser parser = QueryParser(lexer.Tokens);
@@ -69,5 +70,11 @@ TEST_CASE ("Test Query Parser") {
     REQUIRE(*(query.patternb->at(0)) ==
             PatternB(QE::Synonym::construct("a").value(), QE::QuoteIdent("x"),
                      Matcher(true, "1")));
+    REQUIRE(*(query.with_cond->at(0)) ==
+            QE::WithCond(
+                QE::AttrRef(QE::SynAttr(QE::Synonym::construct("a").value(),
+                                        QE::AttrName::STMT_NO),
+                            QE::AttrType::INTEGER),
+                QE::AttrRef(1, QE::AttrType::INTEGER)));
   }
 }

@@ -1,5 +1,6 @@
-#include "query_builder/core/query_parser.h"
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_parser.h"
+#include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
 #include "query_builder/pql/ref.h"
@@ -290,7 +291,14 @@ bool QueryParser::parsePattern() {
       expect("_");
       pattern = new PatternB(synonym.value(), ref);
       break;
-    default:
+    case DesignEntity::READ:
+    case DesignEntity::STMT:
+    case DesignEntity::PRINT:
+    case DesignEntity::CALL:
+    case DesignEntity::VARIABLE:
+    case DesignEntity::CONSTANT:
+    case DesignEntity::PROCEDURE:
+    case DesignEntity::PROG_LINE:
       throw PQLParseException("pattern clause not supported for " +
                               getDesignEntityString(decl->getDesignEntity()));
   }
@@ -299,6 +307,66 @@ bool QueryParser::parsePattern() {
 
   query_->patternb->push_back(pattern);
 
+  return true;
+}
+
+AttrRef QueryParser::parseAttrRef() {
+  std::optional<AttrRef> attr_ref = std::nullopt;
+  if (has_only_digits(peek())) {
+    unsigned int val = std::stoi(advance());
+    attr_ref = AttrRef::construct(val, query_->declarations);
+  } else if (match("\"")) {
+    std::string ident_str = advance();
+    QuoteIdent ident_ = QuoteIdent(ident_str);
+    expect("\"");
+    attr_ref = AttrRef::construct(ident_, query_->declarations);
+  } else if (is_valid_synonym(peek())) {
+    std::string synonym_str = advance();
+    auto synonym = Synonym::construct(synonym_str);
+
+    if (match(".")) {  // is SynAttr
+      AttrName name = attrNameFromString(advance());
+      auto syn_attr = SynAttr::construct(*synonym, name, query_->declarations);
+      if (!syn_attr) {
+        throw PQLParseException("Invalid synonym - attrName pair: (" +
+                                synonym->synonym + ", " + previous() + ")");
+      }
+      attr_ref = AttrRef::construct(*syn_attr, query_->declarations);
+    } else {
+      attr_ref = AttrRef::construct(*synonym, query_->declarations);
+    }
+  } else {
+    attr_ref = std::nullopt;
+  }
+
+  if (!attr_ref) {
+    throw PQLParseException("Couldn't parse attrref.");
+  }
+
+  return attr_ref.value();
+}
+
+void QueryParser::parseAttrCompare() {
+  AttrRef ref1 = parseAttrRef();
+  expect("=");
+  AttrRef ref2 = parseAttrRef();
+  WithCond* with_cond = new WithCond(ref1, ref2);
+  query_->with_cond->push_back(with_cond);
+}
+
+void QueryParser::parseAttrCond() {
+  parseAttrCompare();
+  while (match("and")) {
+    parseAttrCompare();
+  }
+}
+
+bool QueryParser::parseWith() {
+  if (!match("with")) {
+    return false;
+  }
+
+  parseAttrCond();
   return true;
 }
 
@@ -319,6 +387,9 @@ Query QueryParser::parse() {
     while (!isAtEnd()) {
       if (parseSuchThat()) continue;
       if (parsePattern()) continue;
+      if (parseWith()) continue;
+      throw PQLParseException(
+          "Expecting a such-that, pattern or with clause., got " + peek());
     }
   }
 

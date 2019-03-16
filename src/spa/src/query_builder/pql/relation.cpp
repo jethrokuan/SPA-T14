@@ -33,26 +33,38 @@ std::unordered_map<Relation, std::string> relationToStringMap(
 //! they are synonyms
 std::unordered_map<
     Relation, std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>>
-    relationToArgSynonymTypesMap({
-        {Relation::ModifiesS,
-         // No PRINT design entity for Uses: print uses a variable, not
-         // modifies
-         // TODO: Add CALL in later iterations
-         std::make_pair(ALL_STMT_DESIGN_ENTITIES_NO_PRINT,
-                        std::vector<DesignEntity>{DesignEntity::VARIABLE})},
-        // No READ design entity for Uses: read modifies a variable - not uses
-        {Relation::UsesS,
-         std::make_pair(ALL_STMT_DESIGN_ENTITIES_NO_READ,
-                        std::vector<DesignEntity>{DesignEntity::VARIABLE})},
-        {Relation::Parent,
-         std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
-        {Relation::ParentT,
-         std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
-        {Relation::Follows,
-         std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
-        {Relation::FollowsT,
-         std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
-    });
+    relationToArgSynonymTypesMap(
+        {{Relation::ModifiesS,
+          // No PRINT design entity for Modifies: print does not modify
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES_NO_PRINT,
+                         VARIABLE_DESIGN_ENTITY)},
+         // No READ design entity for Uses: read modifies a variable - not uses
+         {Relation::UsesS, std::make_pair(ALL_STMT_DESIGN_ENTITIES_NO_READ,
+                                          VARIABLE_DESIGN_ENTITY)},
+         {Relation::ModifiesP,
+          std::make_pair(PROCEDURE_DESIGN_ENTITY, VARIABLE_DESIGN_ENTITY)},
+         {Relation::UsesP,
+          std::make_pair(PROCEDURE_DESIGN_ENTITY, VARIABLE_DESIGN_ENTITY)},
+         {Relation::Parent,
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+         {Relation::ParentT,
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+         {Relation::Follows,
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+         {Relation::FollowsT,
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+         {Relation::Calls,
+          std::make_pair(PROCEDURE_DESIGN_ENTITY, PROCEDURE_DESIGN_ENTITY)},
+         {Relation::CallsT,
+          std::make_pair(PROCEDURE_DESIGN_ENTITY, PROCEDURE_DESIGN_ENTITY)},
+         {Relation::Next,
+          std::make_pair(PROG_LINE_DESIGN_ENTITY, PROG_LINE_DESIGN_ENTITY)},
+         {Relation::NextT,
+          std::make_pair(PROG_LINE_DESIGN_ENTITY, PROG_LINE_DESIGN_ENTITY)},
+         {Relation::Affects,
+          std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)},
+         {Relation::AffectsT,
+          std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)}});
 
 auto stringToRelationMap =
     swapPairs<Relation, std::string>(relationToStringMap);

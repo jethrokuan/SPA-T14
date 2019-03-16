@@ -9,7 +9,6 @@ using namespace QE;
 void QueryValidator::validateQuery(Query& query) {
   // Do not change the order of these calls - there are dependencies to reduce
   // double-checking of conditions
-
   std::cout << "1";
   validatePatternVariableAsAssign(query);
   std::cout << "2";
@@ -22,7 +21,7 @@ void QueryValidator::validateQuery(Query& query) {
   validateSpecializeModifiesUses(query);
 
   std::cout << "4";
-  // validateSynonymTypes(query);
+  validateSynonymTypes(query);
 
   std::cout << "5";
   validateNoIdenticalSynonyms(query);

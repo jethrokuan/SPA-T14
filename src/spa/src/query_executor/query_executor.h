@@ -21,6 +21,9 @@ class QueryExecutor {
  private:
   PKBManager* pkb;
 
+  //! Internal call to make the PQL query that returns unsorted results
+  std::vector<std::string> makeQueryUnsorted(QE::Query* query);
+
   //! Evaluates any SuchThat clause
   bool handleSuchThat(QE::Query*, QueryConstraints&);
   //! Evaluates any Pattern clause
@@ -48,11 +51,8 @@ class QueryExecutor {
   static std::unordered_set<std::string> getAllDesignEntityValuesByVarName(
       std::vector<QE::Declaration>*, PKBManager*, const std::string&);
 
-  //! Convert a StmtOrEntRef to a string to pass to PKB
-  static std::string suchThatArgToString(QE::StmtOrEntRef);
-  static std::string stmtRefToString(QE::StmtRef);
-  static std::string entRefToString(QE::EntRef);
-  static std::optional<QE::Synonym> getSuchThatArgAsSynonym(QE::StmtOrEntRef);
-  static bool isSuchThatArgUnderscore(QE::StmtOrEntRef);
-  static std::optional<std::string> getSuchThatArgAsBasic(QE::StmtOrEntRef);
+  //! Convert a Ref to simpler forms for each evaluator
+  static std::optional<QE::Synonym> getRefAsSynonym(QE::Ref);
+  static bool isRefUnderscore(QE::Ref);
+  static std::optional<std::string> getRefAsBasic(QE::Ref);
 };

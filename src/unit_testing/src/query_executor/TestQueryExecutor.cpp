@@ -21,25 +21,25 @@
 //   auto qe = QueryBuilder();
 
 //   SECTION ("Test select all assignments") {
-//     auto querystr = std::string("assign a; variable v; Select a;");
+//     auto querystr = std::string("assign a; variable v; Select a");
 //     auto query = qe.makePqlQuery(querystr);
 //     query->result->selected_declarations->push_back(
 //         &query->declarations->at(1));
-//     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"1 i", "1 j"});
+//     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"1 i", "1 j"});
 //   }
 
 //   SECTION ("Test select all <a, v>") {
-//     auto querystr = std::string("assign a; variable v; Select v;");
+//     auto querystr = std::string("assign a; variable v; Select v");
 //     auto query = qe.makePqlQuery(querystr);
-//     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i", "j"});
+//     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"i", "j"});
 //   }
 
 //   SECTION ("Test select all variables") {
-//     auto querystr = std::string("assign a; variable v; Select a;");
+//     auto querystr = std::string("assign a; variable v; Select a");
 //     auto query = qe.makePqlQuery(querystr);
 //     query->result->selected_declarations->insert(
 //         query->result->selected_declarations->begin(),
 //         &query->declarations->at(1));
-//     REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"i 1", "j 1"});
+//     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"i 1", "j 1"});
 //   }
 // }

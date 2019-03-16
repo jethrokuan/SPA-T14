@@ -25,7 +25,7 @@ void SPAManager::loadSimpleSource(std::string filename) {
 std::vector<std::string> SPAManager::query(std::string& pql_query) {
   auto qe = QueryBuilder();
   auto query = qe.makePqlQuery(pql_query);
-  auto query_results = qm->makeQuery(query);
+  auto query_results = qm->makeQuery(&query);
   return query_results;
 }
 

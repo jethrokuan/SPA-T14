@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "query_builder/core/query_preprocessor.h"
+
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
@@ -22,8 +22,15 @@
 using namespace QE;
 
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
+  auto result = makeQueryUnsorted(query);
+  std::sort(result.begin(), result.end());
+  return result;
+}
+
+std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
-  if (query->such_that->empty() && query->pattern->empty()) {
+  if (query->rel_cond->empty() && query->patternb->empty()) {
+    // TODO: no boolean handling yet
     auto result_set = getSelect(
         pkb, query->result->selected_declarations->at(0)->getDesignEntity());
     return std::vector<std::string>(result_set.begin(), result_set.end());
@@ -31,7 +38,7 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 
   QueryConstraints query_constraints;
 
-  if (!query->such_that->empty()) {
+  if (!query->rel_cond->empty()) {
     // This is a more complex such-that query, pass to individual handlers
     // This call also modifies the query_constraints
     // So only need to check for no results
@@ -41,7 +48,7 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   }
 
   // Evaluate pattern results if they exist
-  if (!query->pattern->empty()) {
+  if (!query->patternb->empty()) {
     // Same reasoning as such-that
     if (!handlePattern(query, query_constraints)) {
       return std::vector<std::string>();
@@ -133,7 +140,7 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
 }
 
 bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
-  switch (query->such_that->at(0)->getRelation()) {
+  switch (query->rel_cond->at(0)->relation) {
     case Relation::FollowsT:
       return FollowsTEvaluator(query, pkb, qc).evaluate();
     case Relation::ModifiesS:
@@ -187,7 +194,7 @@ std::unordered_set<std::string>
 QueryExecutor::getAllDesignEntityValuesByVarName(
     std::vector<Declaration>* declarations, PKBManager* pkb,
     const std::string& var_name) {
-  auto var_de = QueryPreprocessor::findDeclaration(declarations, var_name)
+  auto var_de = Declaration::findDeclarationForString(declarations, var_name)
                     ->getDesignEntity();
   return QueryExecutor::getSelect(pkb, var_de);
 }

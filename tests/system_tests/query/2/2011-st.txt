@@ -1,7 +1,7 @@
-1 - Covers all Design Entities, 1 synonym, 1 clause (USES) // currently does not handle procedure
+1 - Covers all Design Entities, 1 synonym, 1 clause (USES)
 procedure p;
 Select p such that Uses(p, "v")
-none
+main
 5000
 2
 stmt s;
@@ -38,10 +38,10 @@ variable v;
 Select v
 v,v1,v2,v3,v4,v5
 5000
-9 - Covers all Design Entities, 1 synonym, 1 clause (MODIFIES) // currently does not handle procedure
+9 - Covers all Design Entities, 1 synonym, 1 clause (MODIFIES)
 procedure p;
 Select p such that Modifies(p, "v1")
-none
+main
 5000
 10
 stmt s;

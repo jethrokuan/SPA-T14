@@ -2,7 +2,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
-#include "query_builder/core/query_preprocessor.h"
+
 #include "query_executor/query_executor.h"
 
 bool SuchThatEvaluator::evaluate() {
@@ -10,12 +10,12 @@ bool SuchThatEvaluator::evaluate() {
   // easily done
   // Get all relevant variables so that further work with such_that can be
   // easily done
-  argLeftAsSynonym = QueryExecutor::getSuchThatArgAsSynonym(argLeft);
-  argRightAsSynonym = QueryExecutor::getSuchThatArgAsSynonym(argRight);
-  argLeftIsUnderscore = QueryExecutor::isSuchThatArgUnderscore(argLeft),
-  argRightIsUnderscore = QueryExecutor::isSuchThatArgUnderscore(argRight);
-  argLeftAsBasic = QueryExecutor::getSuchThatArgAsBasic(argLeft);
-  argRightAsBasic = QueryExecutor::getSuchThatArgAsBasic(argRight);
+  argLeftAsSynonym = QueryExecutor::getRefAsSynonym(argLeft);
+  argRightAsSynonym = QueryExecutor::getRefAsSynonym(argRight);
+  argLeftIsUnderscore = QueryExecutor::isRefUnderscore(argLeft),
+  argRightIsUnderscore = QueryExecutor::isRefUnderscore(argRight);
+  argLeftAsBasic = QueryExecutor::getRefAsBasic(argLeft);
+  argRightAsBasic = QueryExecutor::getRefAsBasic(argRight);
 
   if (argLeftAsSynonym) {
     // Add entire set of values for variable into the overall constraints

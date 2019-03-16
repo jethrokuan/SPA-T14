@@ -44,6 +44,7 @@ class PatternB {
 
   Synonym getSynonym() const { return synonym; }
   Ref getFirstArg() const { return firstArg; }
+  std::optional<Expression> getSecondArg() const { return secondArg; }
 
   bool operator==(const PatternB& pat) const {
     return synonym == pat.synonym && firstArg == pat.firstArg &&

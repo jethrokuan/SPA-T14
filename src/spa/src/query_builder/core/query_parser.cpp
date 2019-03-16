@@ -4,7 +4,6 @@
 #include "query_builder/pql/query.h"
 #include "query_builder/pql/ref.h"
 #include "query_builder/pql/result.h"
-#include "query_builder/pql/suchthat.h"
 #include "query_builder/pql/underscore.h"
 #include "utils/utils.h"
 
@@ -49,8 +48,9 @@ Declaration* QueryParser::findDeclaration(const Synonym synonym) {
                    [&](auto decl) { return decl.getSynonym() == synonym; });
 
   if (found_declaration == query_->declarations->end()) {
-    throw PQLParseException("Semantic Error: cannot match synonym " +
-                            synonym.synonym + " to list of declarations given");
+    throw PQLValidationException("Semantic Error: cannot match synonym " +
+                                 synonym.synonym +
+                                 " to list of declarations given");
   }
 
   return &query_->declarations->at(
@@ -200,7 +200,8 @@ void QueryParser::parseRelRef() {
   auto ref_2 = parseRef();
   expect(")");
 
-  RelCond* relcond = new RelCond(relation, ref_1, ref_2);
+  // Declarations passed to RelCond to do specialization for Modifies/Uses
+  RelCond* relcond = new RelCond(relation, ref_1, ref_2, query_->declarations);
   query_->rel_cond->push_back(relcond);
 }
 
@@ -318,7 +319,6 @@ Query QueryParser::parse() {
     while (!isAtEnd()) {
       if (parseSuchThat()) continue;
       if (parsePattern()) continue;
-      throw PQLParseException("Expected such-that, pattern or with clause.");
     }
   }
 

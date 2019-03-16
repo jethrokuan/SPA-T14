@@ -1,7 +1,7 @@
-1 - Covers all Design Entities, 2 synonym, 1 clause (USES) // does not handle proc
+1 - Covers all Design Entities, 2 synonym, 1 clause (USES)
 procedure p; variable v;
 Select p such that Uses(p, v)
-none
+main
 5000
 2
 stmt s; variable v;
@@ -38,10 +38,10 @@ if i; variable v;
 Select i such that Uses(i, v)
 104,136,170,194,202,55,57,61,33,115,134,173,175,36,187,190,192,140,199,159
 5000
-9 - Covers all Design Entities, 2 synonym, 1 clause (MODIFIES) // does not handle proc
+9 - Covers all Design Entities, 2 synonym, 1 clause (MODIFIES)
 procedure p; variable v;
 Select p such that Modifies(p, v)
-none
+main
 5000
 10
 stmt s; variable v;

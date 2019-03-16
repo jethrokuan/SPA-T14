@@ -24,15 +24,12 @@ set(srcs ${srcs}
 
 # Query Builder
 set(srcs ${srcs}
-  src/query_builder/TestQueryBuilder.cpp
-  src/query_builder/TestQueryPreProcessor.cpp
-  src/query_builder/TestQueryTokenizer.cpp
   src/query_builder/TestQueryValidator.cpp
   src/query_builder/TestQuoteIdent.cpp
-  src/query_builder/TestSuchThat.cpp
   src/query_builder/TestSynonym.cpp
   src/query_builder/TestQueryLexer.cpp
   src/query_builder/TestQueryParser.cpp
+  src/query_builder/TestRelCond.cpp
   )
 
 # PKB

@@ -68,38 +68,27 @@ set(srcs ${srcs}
   src/query_builder/query_builder.cpp
   src/query_builder/core/query_lexer.cpp
   src/query_builder/core/query_parser.cpp
-  src/query_builder/core/query_preprocessor.cpp
-  src/query_builder/core/query_tokenizer.cpp
   src/query_builder/core/query_validator.cpp
   src/query_builder/pql/design_entity.cpp
-  src/query_builder/pql/factor.cpp
-  src/query_builder/pql/pattern.cpp
   src/query_builder/pql/quoteident.cpp
   src/query_builder/pql/query.cpp
   src/query_builder/pql/relation.cpp
-  src/query_builder/pql/suchthat.cpp
   src/query_builder/pql/synonym.cpp
  )
 set(headers ${headers}
   src/query_builder/query_builder.h
   src/query_builder/core/query_lexer.h
   src/query_builder/core/query_parser.h
-  src/query_builder/core/query_preprocessor.h
-  src/query_builder/core/query_tokenizer.h
   src/query_builder/core/query_validator.h
   src/query_builder/pql/pql.h
   src/query_builder/pql/declaration.h
   src/query_builder/pql/design_entity.h
-  src/query_builder/pql/factor.h
-  src/query_builder/pql/pattern.h
   src/query_builder/pql/query.h
   src/query_builder/pql/quoteident.h
   src/query_builder/pql/relcond.h
   src/query_builder/pql/relation.h
   src/query_builder/pql/result.h
   src/query_builder/pql/ref.h
-  src/query_builder/pql/stmtentref.h
-  src/query_builder/pql/suchthat.h
   src/query_builder/pql/synonym.h
   src/query_builder/pql/underscore.h
  )

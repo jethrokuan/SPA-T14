@@ -4,7 +4,6 @@
 #include <string>
 
 #include "query_builder/pql/design_entity.h"
-#include "query_builder/pql/stmtentref.h"
 #include "query_builder/pql/synonym.h"
 
 namespace QE {
@@ -40,10 +39,14 @@ class Declaration {
 
   static std::optional<Declaration> findDeclarationForSynonym(
       std::vector<Declaration>* decls, Synonym& synonym) {
-    auto found_declaration =
-        std::find_if(decls->begin(), decls->end(), [&](auto decl) {
-          return decl.getSynonym().synonym == synonym.synonym;
-        });
+    return findDeclarationForString(decls, synonym.synonym);
+  }
+
+  static std::optional<Declaration> findDeclarationForString(
+      std::vector<Declaration>* decls, const std::string& synonym) {
+    auto found_declaration = std::find_if(
+        decls->begin(), decls->end(),
+        [&](auto decl) { return decl.getSynonym().synonym == synonym; });
     if (found_declaration == decls->end()) {
       return std::nullopt;
     } else {

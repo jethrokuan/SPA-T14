@@ -26,18 +26,18 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
       "Test select variable not constrained by such-that, where such-that is "
       "false (Parent)") {
     auto querystr =
-        std::string("assign a; while w; Select w such that Parent(a, 24);");
+        std::string("assign a; while w; Select w such that Parent(a, 24)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
 
   SECTION (
       "Test select variable not constrained by such-that, where such-that is "
       "true (Parent)") {
     auto querystr =
-        std::string("if ifs; while w; Select w such that Parent(ifs, 18);");
+        std::string("if ifs; while w; Select w such that Parent(ifs, 18)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"9"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"9"});
   }
 
   SECTION (
@@ -46,7 +46,7 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
     auto querystr =
         std::string("read rd; assign a; Select a such that Follows(rd, 25)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
 
   SECTION (
@@ -55,9 +55,9 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
     auto querystr =
         std::string("read rd; assign a; Select a such that Follows(rd, 2)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10", "11", "12",
-                                                             "13", "14", "15",
-                                                             "16", "21", "22"});
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"10", "11", "12", "13", "14", "15", "16",
+                                     "21", "22"});
   }
 
   SECTION (
@@ -66,7 +66,7 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
     auto querystr =
         std::string("while w; variable v; Select v such that Uses(w, _)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) ==
+    REQUIRE(qm->makeQuery(&query) ==
             std::vector<std::string>{"v", "v1", "v2", "v3", "v4", "v5"});
   }
 
@@ -77,9 +77,9 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
         "assign a, a1; variable v; Select a such that Uses(a1, v) pattern a(v, "
         "_)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10", "11", "12",
-                                                             "13", "14", "15",
-                                                             "16", "21", "22"});
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"10", "11", "12", "13", "14", "15", "16",
+                                     "21", "22"});
   }
 
   SECTION (
@@ -90,7 +90,7 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
         "assign a, a1; variable v; Select a such that Uses(a, v) pattern a(v, "
         "_)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) ==
+    REQUIRE(qm->makeQuery(&query) ==
             std::vector<std::string>{"10", "11", "16", "22"});
   }
 
@@ -102,9 +102,9 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
         "a(v, "
         "_)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10", "11", "12",
-                                                             "13", "14", "15",
-                                                             "16", "21", "22"});
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"10", "11", "12", "13", "14", "15", "16",
+                                     "21", "22"});
   }
 
   SECTION (
@@ -115,6 +115,6 @@ TEST_CASE ("Test Query Manager FollowsT functionality - 1.txt") {
         "assign a, a1; variable v; Select a such that Uses(a1, v) pattern a(v, "
         "_\"v\"_)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(query) == std::vector<std::string>{"10"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"10"});
   }
 }

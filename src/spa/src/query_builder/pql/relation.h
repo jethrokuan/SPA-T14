@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "query_builder/pql/design_entity.h"
+#include "query_builder/pql/ref.h"
 #include "query_builder/pql/relation.h"
 
 namespace QE {
@@ -30,6 +31,8 @@ enum class Relation {
 Relation getRelation(std::string&);
 std::string getStringFromRelation(Relation);
 const std::unordered_map<Relation, std::string>& getRelationToStringMap();
+std::pair<RefTypeIndexSet, RefTypeIndexSet> getArgRefTypesFromRelation(
+    const Relation&);
 std::pair<std::vector<DesignEntity>, std::vector<DesignEntity>>
-getArgSynonymTypesFromRelation(Relation&);
+getArgSynonymTypesFromRelation(const Relation&);
 }  // namespace QE

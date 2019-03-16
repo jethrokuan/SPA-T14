@@ -1,7 +1,7 @@
-1 - Covers all Design Entities, 1 synonym, 1 clause (USES). currently  does not handle procedure
+1 - Covers all Design Entities, 1 synonym, 1 clause (USES) - now handles procedure
 procedure p;
 Select p such that Uses(p, "v")
-none
+main
 5000
 2
 stmt s;

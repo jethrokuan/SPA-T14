@@ -17,11 +17,11 @@ class PatternEvaluator {
   QueryConstraints& qc;
 
   bool handlePatternLHSUnderscore(const Synonym& syn,
-                                  const QE::ExpressionSpec& pattern_rhs);
+                                  const QE::Expression& pattern_rhs);
   bool handlePatternLHSQuoteIdent(const Synonym& syn, const std::string lhs,
-                                  const QE::ExpressionSpec& pattern_rhs);
+                                  const QE::Expression& pattern_rhs);
   bool handlePatternLHSSynonym(const Synonym& syn, const Synonym& lhs,
-                               const QE::ExpressionSpec& pattern_rhs);
+                               const QE::Expression& pattern_rhs);
 
  public:
   PatternEvaluator(const Query* query, PKBManager* pkb, QueryConstraints& qc)

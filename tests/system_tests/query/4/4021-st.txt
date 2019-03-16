@@ -1,7 +1,7 @@
-1 - valid query (Uses) // don't handle proc
+1 - valid query (Uses)
 procedure p; variable v;
 Select v such that Uses(p,v)
-none
+x,y,z
 5000
 2 - valid query
 variable v; while w;
@@ -33,15 +33,15 @@ while w; variable v;
 Select v such that Modifies(w,v)
 x, y, z
 5000
-8 - valid query // don't handle proc
+8 - valid query
 procedure p; variable v;
 Select v such that Modifies(p,v)
-none
+x,y,z
 5000
-9 - valid query // don't handle proc
+9 - valid query1
 procedure p; variable v;
 Select p such that Modifies(p,v)
-none
+main
 5000
 10 - valid query (Parent and Parent*)
 assign a; while w;

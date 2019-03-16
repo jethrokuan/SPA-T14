@@ -34,6 +34,8 @@ class PKBPreprocessor {
                       std::shared_ptr<std::vector<Line>> terminating_lines);
 
   void setDesignEntities(const std::shared_ptr<RootNode> node);
+  void setDesignEntitiesProcListIterator(
+      const std::vector<std::shared_ptr<ProcedureNode>> proc_lst);
   void setDesignEntities(const std::shared_ptr<ProcedureNode> node);
   void setDesignEntities(const std::shared_ptr<IfNode> node);
   void setDesignEntities(const std::shared_ptr<WhileNode> node);

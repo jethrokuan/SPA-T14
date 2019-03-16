@@ -2336,4 +2336,20 @@ TEST_CASE ("Test detection of semantic errors in AST") {
     REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
                         "Found cyclic call between procedures.");
   }
+
+  SECTION ("non-existent procedure call") {
+    auto ast = SimpleInterface::getAstFromFile(
+        "tests/semantic_errors/non_existent_procedure.txt");
+
+    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
+                        "Found call statement to non-existing procedure: 'B'.");
+  }
+
+  SECTION ("procedures with same name") {
+    auto ast = SimpleInterface::getAstFromFile(
+        "tests/semantic_errors/procedures_same_name.txt");
+
+    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
+                        "Found multiple procedures with the same name: 'A'.");
+  }
 }

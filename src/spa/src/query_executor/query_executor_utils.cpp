@@ -21,10 +21,17 @@ bool QueryExecutor::isRefUnderscore(Ref arg) {
 //! Returns argument as a basic statementref or quoteident as string
 std::optional<std::string> QueryExecutor::getRefAsBasic(Ref arg) {
   return std::visit(
-      overload{[](Synonym& s) { return s.synonym; },
-               [](Underscore&) { return std::string("_"); },
-               [](StatementNumber& s) { return std::to_string(s); },
-               [](QuoteIdent& s) { return s.quote_ident; }},
+      overload{
+          [](Synonym&) -> std::optional<std::string> { return std::nullopt; },
+          [](Underscore&) -> std::optional<std::string> {
+            return std::nullopt;
+          },
+          [](StatementNumber& s) -> std::optional<std::string> {
+            return std::to_string(s);
+          },
+          [](QuoteIdent& s) -> std::optional<std::string> {
+            return s.quote_ident;
+          }},
       arg);
 }
 

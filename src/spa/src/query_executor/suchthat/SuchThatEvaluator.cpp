@@ -17,6 +17,18 @@ bool SuchThatEvaluator::evaluate() {
   argLeftAsBasic = QueryExecutor::getRefAsBasic(argLeft);
   argRightAsBasic = QueryExecutor::getRefAsBasic(argRight);
 
+  std::cout << "ST values: l: "
+            << argLeftAsSynonym.value_or(Synonym::construct("invalid").value())
+                   .synonym
+            << " r: "
+            << argRightAsSynonym.value_or(Synonym::construct("invalid").value())
+                   .synonym
+            << " Underscore: l: " << std::boolalpha << argLeftIsUnderscore
+            << " r: " << std::boolalpha << argRightIsUnderscore
+            << " Basic: l: " << argLeftAsBasic.value_or("invalid")
+            << " r: " << std::boolalpha << argRightAsBasic.value_or("invalid")
+            << "\n";
+
   if (argLeftAsSynonym) {
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(

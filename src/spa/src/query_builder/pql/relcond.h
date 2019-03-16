@@ -14,5 +14,10 @@ class RelCond {
     return relation == other.relation && arg1 == other.arg1 &&
            arg2 == other.arg2;
   }
+  friend std::ostream& operator<<(std::ostream& os, RelCond const& relcond) {
+    os << getStringFromRelation(relcond.relation) << "(..)";
+    // os << relcond.arg1 << "," << relcond.arg2 << ")";
+    return os;
+  }
 };
 }  // namespace QE

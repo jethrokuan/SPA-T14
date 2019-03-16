@@ -38,14 +38,19 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
 
   QueryConstraints query_constraints;
 
+  std::cout << "QE: 1\n";
+
   if (!query->rel_cond->empty()) {
     // This is a more complex such-that query, pass to individual handlers
     // This call also modifies the query_constraints
     // So only need to check for no results
     if (!handleSuchThat(query, query_constraints)) {
+      std::cout << "Such that returned false!\n";
       return std::vector<std::string>();
     }
   }
+
+  std::cout << "QE: 2\n";
 
   // Evaluate pattern results if they exist
   if (!query->patternb->empty()) {
@@ -54,6 +59,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
       return std::vector<std::string>();
     }
   }
+
+  std::cout << "QE: 3\n";
 
   // All clauses returned true and potentially added constraints
   // Have to evaluate constraints now
@@ -74,10 +81,14 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
                                        query_constraints);
 
+  std::cout << "QE: 4\n";
+
   // Get vector of vector of results - one for each selected var
   auto result = ConstraintSolver::constrainAndSelect(
       query_constraints,
       getSynonymsFromSelect(query->result->selected_declarations));
+
+  std::cout << "QE: 5\n";
 
   return Utils::cartesianProduct(result);
 }

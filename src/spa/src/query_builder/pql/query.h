@@ -22,5 +22,20 @@ class Query {
 
   Query();
   ~Query();
+
+  // -- Printing --
+  friend std::ostream& operator<<(std::ostream& os, Query const& query) {
+    for (const auto& decl : *(query.declarations)) {
+      os << decl << "; ";
+    }
+
+    for (const auto& relcond : *(query.rel_cond)) {
+      os << *relcond << " ";
+    }
+    for (const auto& pat : *(query.patternb)) {
+      os << pat;
+    }
+    return os;
+  }
 };
 }  // namespace QE

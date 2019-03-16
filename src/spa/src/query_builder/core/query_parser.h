@@ -6,6 +6,7 @@
 #include <optional>
 #include <unordered_set>
 
+#include "query_builder/pql/attrref.h"
 #include "query_builder/pql/declaration.h"
 #include "query_builder/pql/query.h"
 #include "query_builder/pql/ref.h"
@@ -50,6 +51,10 @@ class QueryParser {
   Declaration* findDeclaration(const Synonym synonym);
   Expression parseExpression();
   void parseResult();
+  AttrRef parseAttrRef();
+  void parseAttrCompare();
+  void parseAttrCond();
+  bool parseWith();
   bool parseSuchThat();
   bool parsePattern();
   void parseRelRef();

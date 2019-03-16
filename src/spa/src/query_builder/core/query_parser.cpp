@@ -1,5 +1,6 @@
-#include "query_builder/core/query_parser.h"
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_parser.h"
+#include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
 #include "query_builder/pql/ref.h"
@@ -309,6 +310,41 @@ bool QueryParser::parsePattern() {
   return true;
 }
 
+AttrRef QueryParser::parseAttrRef() {
+  if (has_only_digits(peek())) {
+    unsigned int val = std::stoi(advance());
+    auto attrref = AttrRef::construct(val, query_->declarations);
+    if (!attrref) {
+      throw PQLParseException("Couldn't parse attrref.");
+    }
+    return attrref.value();
+  } else {
+    throw PQLParseException("Couldn't parse attrref.");
+  }
+}
+
+void QueryParser::parseAttrCompare() {
+  parseAttrRef();
+  expect("=");
+  parseAttrRef();
+}
+
+void QueryParser::parseAttrCond() {
+  parseAttrCompare();
+  while (match("and")) {
+    parseAttrCompare();
+  }
+}
+
+bool QueryParser::parseWith() {
+  if (!match("with")) {
+    return false;
+  }
+
+  parseAttrCond();
+  return true;
+}
+
 Query QueryParser::parse() {
   // Parsing declarations
   while (!isAtEnd()) {
@@ -326,6 +362,9 @@ Query QueryParser::parse() {
     while (!isAtEnd()) {
       if (parseSuchThat()) continue;
       if (parsePattern()) continue;
+      if (parseWith()) continue;
+      throw PQLParseException(
+          "Expecting a such-that, pattern or with clause., got " + peek());
     }
   }
 

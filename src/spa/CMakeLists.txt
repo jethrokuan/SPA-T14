@@ -74,7 +74,8 @@ set(srcs ${srcs}
   src/query_builder/pql/query.cpp
   src/query_builder/pql/relation.cpp
   src/query_builder/pql/synonym.cpp
- )
+  src/query_builder/pql/attrref.cpp
+  )
 set(headers ${headers}
   src/query_builder/query_builder.h
   src/query_builder/core/query_lexer.h
@@ -89,6 +90,7 @@ set(headers ${headers}
   src/query_builder/pql/relation.h
   src/query_builder/pql/result.h
   src/query_builder/pql/ref.h
+  src/query_builder/pql/attrref.h
   src/query_builder/pql/synonym.h
   src/query_builder/pql/underscore.h
  )

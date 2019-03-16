@@ -1,7 +1,8 @@
 #pragma once
 #include <memory>  // future use of smart pointers
 #include <string>
-#include "query_builder/pql/pql.h"
+
+#include "query_builder/pql/query.h"
 
 //! Contains classes, methods and functions for the PQL Query Engine (QE)
 namespace QE {

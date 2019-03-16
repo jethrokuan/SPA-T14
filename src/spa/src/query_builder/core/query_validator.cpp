@@ -9,27 +9,13 @@ using namespace QE;
 void QueryValidator::validateQuery(Query& query) {
   // Do not change the order of these calls - there are dependencies to reduce
   // double-checking of conditions
-  std::cout << "1";
   validatePatternVariableAsAssign(query);
-  std::cout << "2";
   validateModifyUsesNoFirstArgUnderscore(query);
-
-  std::cout << "3";
   validateSuchThatSynonymsAreDeclared(query);
-
-  std::cout << "0";
   validateSpecializeModifiesUses(query);
-
-  std::cout << "4";
   validateSynonymTypes(query);
-
-  std::cout << "5";
   validateNoIdenticalSynonyms(query);
-
-  std::cout << "6";
   validatePatternFirstArgSynonymIsVariable(query);
-
-  std::cout << "7\n";
 }
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
   for (auto pattern : *(query.patternb)) {
@@ -132,9 +118,6 @@ void QueryValidator::validateSpecializeModifiesUses(Query& query) {
                                   : Relation::ModifiesS;
       }
     }
-
-    std::cout << "Relation is now: "
-              << getStringFromRelation(such_that->relation) << "\n";
     // Underscore is handled separately
   }
 }

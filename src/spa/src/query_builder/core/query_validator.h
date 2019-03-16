@@ -16,8 +16,6 @@ class QueryValidator {
   void validateModifyUsesNoFirstArgUnderscore(const Query&);
   //! Checks that all the synonyms in the such_that clause are declared
   void validateSuchThatSynonymsAreDeclared(const Query&);
-  //! Specializes Modifies/Uses to (Modifies)|Uses(P|S)
-  void validateSpecializeModifiesUses(Query&);
   //! Check that all such-that clauses have correct Ref types
   void validateSuchThatRefTypes(const Query&);
   //! Check that all pattern clauses have correct Ref types
@@ -32,7 +30,7 @@ class QueryValidator {
  public:
   //! \brief Checks the semantics in the Query, throws
   //! PQLValidationException if an error is detected
-  void validateQuery(Query&);
+  void validateQuery(const Query&);
 };
 
 }  // namespace QE

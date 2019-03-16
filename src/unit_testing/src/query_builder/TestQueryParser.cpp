@@ -35,7 +35,7 @@ TEST_CASE ("Test Query Parser") {
                         QE::Synonym::construct("p").value()));
     REQUIRE(*(query.rel_cond->at(0)) ==
             RelCond(Relation::Modifies, QE::Synonym::construct("a").value(),
-                    QE::QuoteIdent("b")));
+                    QE::QuoteIdent("b"), query.declarations));
   }
 
   SECTION ("Test one assign one select query") {
@@ -62,10 +62,10 @@ TEST_CASE ("Test Query Parser") {
                         QE::Synonym::construct("p").value()));
     REQUIRE(*(query.rel_cond->at(0)) ==
             RelCond(Relation::Uses, QE::Synonym::construct("a").value(),
-                    QE::QuoteIdent("b")));
+                    QE::QuoteIdent("b"), query.declarations));
     REQUIRE(*(query.rel_cond->at(1)) ==
             RelCond(Relation::Modifies, QE::Synonym::construct("a").value(),
-                    QE::QuoteIdent("b")));
+                    QE::QuoteIdent("b"), query.declarations));
     REQUIRE(*(query.patternb->at(0)) ==
             PatternB(QE::Synonym::construct("a").value(), QE::QuoteIdent("x"),
                      Matcher(true, "1")));

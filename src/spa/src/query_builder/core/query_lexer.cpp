@@ -1,6 +1,7 @@
+#include "query_builder/core/query_lexer.h"
 #include <cctype>
 #include <iostream>
-#include "query_builder/core/query_lexer.h"
+#include "query_builder/core/exceptions.h"
 
 #include <unordered_set>
 
@@ -75,7 +76,8 @@ void QueryLexer::lex() {
                QE::single_token_puncts.end()) {
       Tokens.push_back(Str);
     } else {
-      std::cout << "Unexpected token " << nextChar << std::endl;
+      throw PQLTokenizeException("Unexpected token " +
+                                 std::string(1, nextChar) + "\n");
     }
 
     Str = "";

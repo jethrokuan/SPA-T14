@@ -774,9 +774,7 @@ void PKBPreprocessor::setPattern(const std::shared_ptr<WhileNode> node) {
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<ReadNode>) {}
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<CallNode>) {
-  // TODO
-}
+void PKBPreprocessor::setPattern(const std::shared_ptr<CallNode>) {}
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<PrintNode>) {}
 

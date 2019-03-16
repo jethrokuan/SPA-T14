@@ -1,9 +1,9 @@
+#include "query_builder/core/query_preprocessor.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <variant>
 #include "query_builder/core/exceptions.h"
-#include "query_builder/core/query_preprocessor.h"
 #include "query_builder/core/query_tokenizer.h"
 #include "query_builder/pql/pql.h"
 

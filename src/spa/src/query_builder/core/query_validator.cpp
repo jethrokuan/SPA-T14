@@ -1,7 +1,7 @@
-#include "query_builder/core/query_validator.h"
 #include <unordered_set>
 #include <variant>
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_validator.h"
 #include "query_builder/pql/declaration.h"
 
 using namespace QE;
@@ -17,6 +17,7 @@ void QueryValidator::validateQuery(const Query& query) {
   validateSuchThatSynonymTypes(query);
   validatePatternVariableAsAssign(query);
   validatePatternFirstArgSynonymIsVariable(query);
+  validateWithCondSameAttrType(query);
 }
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
   for (auto pattern : *(query.patternb)) {
@@ -86,7 +87,7 @@ void QueryValidator::validateSuchThatSynonymsAreDeclared(const Query& query) {
 
 void QueryValidator::validateSuchThatRefTypes(const Query& query) {
   for (auto such_that : *(query.rel_cond)) {
-    auto [ref1Types, ref2Types] =
+    auto[ref1Types, ref2Types] =
         getArgRefTypesFromRelation(such_that->relation);
     bool such_that_arg1_valid =
         ref1Types.find(such_that->arg1.index()) != ref1Types.end();
@@ -191,6 +192,15 @@ void QueryValidator::validatePatternFirstArgSynonymIsVariable(
             "Semantic Error: cannot match synonym " + first_arg_syn->synonym +
             " to an variable synonym in list of declarations");
       }
+    }
+  }
+}
+
+void QueryValidator::validateWithCondSameAttrType(const Query& query) {
+  for (const auto withcond : *(query.with_cond)) {
+    if (withcond->ref1.attrType != withcond->ref2.attrType) {
+      throw PQLValidationException(
+          "Semantic Error: cannot check two attrrefs of differing types.");
     }
   }
 }

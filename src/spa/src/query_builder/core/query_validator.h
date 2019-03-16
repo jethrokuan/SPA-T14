@@ -26,6 +26,8 @@ class QueryValidator {
   void validatePatternVariableAsAssign(const Query&);
   //! Check that if the first argument to pattern is a synonym, must be a var
   void validatePatternFirstArgSynonymIsVariable(const Query&);
+  //! Check that with clause attr refs are of the same type (NAME, INTEGER)
+  void validateWithCondSameAttrType(const Query&);
 
  public:
   //! \brief Checks the semantics in the Query, throws

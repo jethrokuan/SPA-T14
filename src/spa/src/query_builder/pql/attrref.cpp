@@ -33,6 +33,22 @@ AttrType QE::getAttrType(AttrName attrName) {
   return attrNameToTypeMap[attrName];
 };
 
+AttrName QE::attrNameFromString(std::string s) {
+  AttrName name;
+  if (s.compare("procName") == 0) {
+    name = AttrName::PROC_NAME;
+  } else if (s.compare("varName") == 0) {
+    name = AttrName::VAR_NAME;
+  } else if (s.compare("value") == 0) {
+    name = AttrName::VALUE;
+  } else if (s.compare("stmt#") == 0) {
+    name = AttrName::STMT_NO;
+  } else {
+    throw PQLParseException("Expected a valid attrName, got " + s);
+  }
+  return name;
+}
+
 std::optional<AttrRef> AttrRef::construct(
     std::variant<QuoteIdent, unsigned int, Synonym, SynAttr> attr,
     std::vector<Declaration>* decls) {
@@ -56,6 +72,10 @@ std::optional<AttrRef> AttrRef::construct(
       attr);
 };
 
+bool AttrRef::operator==(const AttrRef& other) const {
+  return attr == other.attr && attrType == other.attrType;
+}
+
 std::optional<SynAttr> SynAttr::construct(Synonym synonym, AttrName attrName,
                                           std::vector<Declaration>* decls) {
   auto decl = Declaration::findDeclarationForSynonym(decls, synonym);
@@ -68,4 +88,8 @@ std::optional<SynAttr> SynAttr::construct(Synonym synonym, AttrName attrName,
   }
 
   return SynAttr(synonym, attrName);
+}
+
+bool SynAttr::operator==(const SynAttr& other) const {
+  return synonym == other.synonym && attrName == other.attrName;
 }

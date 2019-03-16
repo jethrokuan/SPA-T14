@@ -5,6 +5,7 @@
 #include "query_builder/pql/patternb.h"
 #include "query_builder/pql/relcond.h"
 #include "query_builder/pql/result.h"
+#include "query_builder/pql/withcond.h"
 
 namespace QE {
 //! Query object containing all relevant information to pass to the PKB
@@ -14,9 +15,9 @@ class Query {
 
   std::vector<Declaration>* declarations;
   Result* result;  // Result clause (boolean or tuple)
-  // No std::optional (is in C++17 - have to use nullable types)
   std::vector<RelCond*>* rel_cond;
   std::vector<PatternB*>* patternb;
+  std::vector<WithCond*>* with_cond;
 
   // -- Accessors and constructors --
 
@@ -35,6 +36,8 @@ class Query {
     for (const auto& pat : *(query.patternb)) {
       os << pat;
     }
+
+    // TODO: print WithCond
     return os;
   }
 };

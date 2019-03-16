@@ -1,15 +1,14 @@
-#include "query_builder/core/query_lexer.h"
 #include <cctype>
 #include <iostream>
 #include <unordered_set>
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_lexer.h"
 
 using QE::QueryLexer;
 
 namespace QE {
 std::unordered_set<std::string> single_token_puncts({"(", ")", ",", "_", "<",
-                                                     "*", "#", ">", ";", "=",
-                                                     "."});
+                                                     "*", ">", ";", "=", "."});
 }
 
 QueryLexer::QueryLexer(std::string query) : Curr(0), Query(query){};
@@ -31,7 +30,7 @@ char QueryLexer::advance() {
 }
 
 void QueryLexer::readSymbol() {
-  while (isalnum(peek())) {
+  while (isalnum(peek()) || peek() == '#') {
     Str += advance();
   }
 }

@@ -3,12 +3,12 @@ procedure p, q;
 Select p such that Calls*(p,q)
 main,sub
 5000
-2 - Select procedures that are called by other procedure
+2 - Select procedures that are calls* by other procedure
 procedure p, q;
 Select q such that Calls*(p,q)
 sub,alt
 5000
-3 - Select procedures that is called by sub
+3 - Select procedures that is calls* by sub
 procedure p, q;
 Select q such that Calls*("sub",q)
 alt

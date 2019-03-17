@@ -1,0 +1,53 @@
+1 - Select all program lines that can be executed immediately after another program line
+prog_line n1,n2;
+Select n2 such that Next*(n1,n2)
+2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+5000
+2 - Select next from first If 
+prog_line n1,n2;
+Select n2 such that Next*(2,n2)
+3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+5000
+3 - Select next from first while (left) 
+prog_line n1,n2;
+Select n2 such that Next*(3,n2)
+3,4,5,6,7,8,9,19
+5000
+4 - Select next from second if (left) 
+prog_line n1,n2;
+Select n2 such that Next*(4,n2)
+3,4,5,6,7,8,9,19
+5000
+5 - Select next from second If (right) 
+prog_line n1,n2;
+Select n2 such that Next*(10,n2)
+11,12,13,14,15,16,17,18,19
+5000
+6 - Select next from second If, exit point (right) 
+prog_line n1,n2;
+Select n2 such that Next*(18,n2)
+19
+5000
+7 - Select next from first while (right) 
+prog_line n1,n2;
+Select n2 such that Next*(11,n2)
+11,12,13,14,15,16,17,19
+5000
+8 - Select next from second while (right) 
+prog_line n1,n2;
+Select n2 such that Next*(12,n2)
+11,12,13,14,15,16,17,19
+5000
+8 - Select next from deepest nest's end point (right) 
+prog_line n1,n2;
+Select n2 such that Next*(16,n2)
+11,12,13,14,15,16,17,19
+5000
+9 - Select next from deepest nest's end point (right) 
+prog_line n1,n2;
+Select n2 such that Next*(17,n2)
+11,12,13,14,15,16,17,19
+5000
+
+
+

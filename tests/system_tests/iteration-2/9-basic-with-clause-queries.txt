@@ -1,0 +1,10 @@
+1 - test evaluation of stmt number and constant value (attrName), test with clause
+stmt s; constant c;
+Select s with s.stmt# = c.value
+1,2,3
+5000
+2 - test evaluation of procName and varName (attrName), test with clause, test tuple results (pair)
+procedure p; variable v;
+Select <p,v> with p.procName = v.varName
+main x,x main,main main,x x
+5000

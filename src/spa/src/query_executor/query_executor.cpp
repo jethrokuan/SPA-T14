@@ -1,8 +1,8 @@
-#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
 #include <vector>
+#include "query_executor/query_executor.h"
 
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
@@ -29,12 +29,12 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // If no such-that and pattern clauses - run just the select
-  if (query->rel_cond->empty() && query->patternb->empty()) {
-    // TODO: no boolean handling yet
-    auto result_set = getSelect(
-        pkb, query->result->selected_declarations->at(0)->getDesignEntity());
-    return std::vector<std::string>(result_set.begin(), result_set.end());
-  }
+  // if (query->rel_cond->empty() && query->patternb->empty()) {
+  //   // TODO: no boolean handling yet
+  //   auto result_set = getSelect(
+  //       pkb, query->result->selected_declarations->at(0)->getDesignEntity());
+  //   return std::vector<std::string>(result_set.begin(), result_set.end());
+  // }
 
   QueryConstraints query_constraints;
 

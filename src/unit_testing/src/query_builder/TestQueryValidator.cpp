@@ -106,3 +106,10 @@ TEST_CASE ("Test pattern assignment first argument not-present Validate") {
   auto qe = QueryBuilder();
   REQUIRE_THROWS_AS(qe.makePqlQuery(query_string), PQLValidationException);
 }
+
+TEST_CASE ("Test selected synonym declared Validate") {
+  std::string query_string =
+      "assign a, a1; variable v; Select v1 pattern a(v, _)";
+  auto qe = QueryBuilder();
+  REQUIRE_THROWS_AS(qe.makePqlQuery(query_string), PQLValidationException);
+}

@@ -27,12 +27,10 @@ TEST_CASE ("Test Query Parser") {
                             QE::Synonym::construct("a1").value()),
                 Declaration(DesignEntity::PROCEDURE,
                             QE::Synonym::construct("p").value())});
-    REQUIRE(
-        *(query.result->selected_declarations->at(0)) ==
-        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
-    REQUIRE(*(query.result->selected_declarations->at(1)) ==
-            Declaration(DesignEntity::PROCEDURE,
-                        QE::Synonym::construct("p").value()));
+    REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
+            (QE::Synonym::construct("a").value()));
+    REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(1)) ==
+            (QE::Synonym::construct("p").value()));
     REQUIRE(*(query.rel_cond->at(0)) ==
             RelCond(Relation::Modifies, QE::Synonym::construct("a").value(),
                     QE::QuoteIdent("b"), query.declarations));
@@ -55,12 +53,10 @@ TEST_CASE ("Test Query Parser") {
                             QE::Synonym::construct("a1").value()),
                 Declaration(DesignEntity::PROCEDURE,
                             QE::Synonym::construct("p").value())});
-    REQUIRE(
-        *(query.result->selected_declarations->at(0)) ==
-        Declaration(DesignEntity::ASSIGN, QE::Synonym::construct("a").value()));
-    REQUIRE(*(query.result->selected_declarations->at(1)) ==
-            Declaration(DesignEntity::PROCEDURE,
-                        QE::Synonym::construct("p").value()));
+    REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
+            (QE::Synonym::construct("a").value()));
+    REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(1)) ==
+            (QE::Synonym::construct("p").value()));
     REQUIRE(*(query.rel_cond->at(0)) ==
             RelCond(Relation::Uses, QE::Synonym::construct("a").value(),
                     QE::QuoteIdent("b"), query.declarations));

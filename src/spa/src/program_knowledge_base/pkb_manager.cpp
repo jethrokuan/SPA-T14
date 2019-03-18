@@ -258,7 +258,7 @@ PKBManager::getCalleeProcedures(const ProcedureCaller procedure_caller) {
 }
 
 std::optional<std::unordered_set<ProcedureCaller>>
-PKBManager::getCallerProceduresT(const ProcedureCaller procedure_callee) {
+PKBManager::getCallerProcedures(const ProcedureCaller procedure_callee) {
   return getSetFromMap(pkb_storage->procedure_callee_procedure_caller_map,
                        procedure_callee);
 }
@@ -270,7 +270,7 @@ PKBManager::getCalleeProceduresT(const ProcedureCaller procedure_caller) {
 }
 
 std::optional<std::unordered_set<ProcedureCaller>>
-PKBManager::getCallerProcedures(const ProcedureCaller procedure_callee) {
+PKBManager::getCallerProceduresT(const ProcedureCaller procedure_callee) {
   return getSetFromMap(pkb_storage->procedure_callee_procedure_caller_map_t,
                        procedure_callee);
 }

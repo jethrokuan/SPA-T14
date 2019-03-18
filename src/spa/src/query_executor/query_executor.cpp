@@ -30,22 +30,21 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   QueryConstraints query_constraints;
 
+  // Executes each such-that clause one by one
   if (!query->rel_cond->empty()) {
-    // This is a more complex such-that query, pass to individual handlers
-    // This call also modifies the query_constraints
-    // So only need to check for no results
-    if (!handleSuchThat(query->declarations, query->rel_cond->at(0),
-                        query_constraints)) {
-      return std::vector<std::string>();
+    for (auto& rel_cond : *(query->rel_cond)) {
+      if (!handleSuchThat(query->declarations, rel_cond, query_constraints)) {
+        return std::vector<std::string>();
+      }
     }
   }
 
-  // Evaluate pattern results if they exist
+  // Executes each pattern clause one by one
   if (!query->patternb->empty()) {
-    // Same reasoning as such-that
-    if (!handlePattern(query->declarations, query->patternb->at(0),
-                       query_constraints)) {
-      return std::vector<std::string>();
+    for (auto& pattern : *(query->patternb)) {
+      if (!handlePattern(query->declarations, pattern, query_constraints)) {
+        return std::vector<std::string>();
+      }
     }
   }
 
@@ -163,13 +162,13 @@ bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
 void QueryExecutor::addAllValuesForVariableToConstraints(
     std::vector<Declaration>* declarations, PKBManager* pkb,
     const std::string& var_name, QueryConstraints& qc) {
-  // For optimizations's sake: if we spot the variable already in the constraint
-  // list - do not re-execute getSelect and re-constrain.
-  // If the variable is already in the list, we can assume that this function
-  // was already run.
-  // Because for a variable to be in the constraint list, it must have been
-  // either in a such-that clause or pattern clause (ignoring select).
-  // If it was in either of those clauses, this function would have run.
+  // For optimizations's sake: if we spot the variable already in the
+  // constraint list - do not re-execute getSelect and re-constrain. If the
+  // variable is already in the list, we can assume that this function was
+  // already run. Because for a variable to be in the constraint list, it must
+  // have been either in a such-that clause or pattern clause (ignoring
+  // select). If it was in either of those clauses, this function would have
+  // run.
   if (qc.isVarInAllPossibleValues(var_name)) return;
 
   auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);

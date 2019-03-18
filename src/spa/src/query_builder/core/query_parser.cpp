@@ -1,5 +1,5 @@
-#include "query_builder/core/exceptions.h"
 #include "query_builder/core/query_parser.h"
+#include "query_builder/core/exceptions.h"
 #include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
@@ -95,10 +95,36 @@ bool QueryParser::parseDeclarationClause() {
   return true;
 }
 
+ResultItem QueryParser::parseResultItem() {
+  auto synonym_str = advance();
+  auto synonym = Synonym::construct(synonym_str);
+  // No default constructor - needs some default value
+  std::variant<Synonym, SynAttr> result_item =
+      Synonym::construct("default").value();
+
+  if (!synonym) {
+    throw PQLParseException("Expected a synonym, got " + previous());
+  }
+
+  if (match(".")) {
+    AttrName name = attrNameFromString(advance());
+    auto syn_attr = SynAttr::construct(*synonym, name, query_->declarations);
+    if (!syn_attr) {
+      throw PQLParseException("Invalid synonym - attrName pair: (" +
+                              synonym->synonym + ", " + previous() + ")");
+    }
+    result_item = syn_attr.value();
+  } else {
+    result_item = synonym.value();
+  }
+
+  return result_item;
+}
+
 void QueryParser::parseResult() {
   std::vector<Synonym> synonyms;
   query_->result->T = ResultType::TUPLE;
-  query_->result->selected_declarations = new std::vector<Declaration*>();
+  query_->result->selected_declarations = new std::vector<ResultItem>();
 
   if (match("BOOLEAN")) {
     query_->result->T = ResultType::BOOLEAN;
@@ -106,23 +132,12 @@ void QueryParser::parseResult() {
   }
 
   if (!match("<")) {
-    auto synonym_str = advance();
-    auto synonym = Synonym::construct(synonym_str);
-
-    if (!synonym) {
-      throw PQLParseException("Expected a synonym, got " + previous());
-    }
-    synonyms.push_back(*synonym);
+    auto result_item = parseResultItem();
+    query_->result->selected_declarations->push_back(result_item);
   } else {
     while (!match(">")) {
-      auto synonym_str = advance();
-      auto synonym = Synonym::construct(synonym_str);
-
-      if (!synonym) {
-        throw PQLParseException("Expected a synonym, got " + previous());
-      }
-
-      synonyms.push_back(*synonym);
+      auto result_item = parseResultItem();
+      query_->result->selected_declarations->push_back(result_item);
 
       if (match(">")) {
         break;
@@ -130,10 +145,6 @@ void QueryParser::parseResult() {
         expect(",");
       }
     }
-  }
-
-  for (const auto synonym : synonyms) {
-    query_->result->selected_declarations->push_back(findDeclaration(synonym));
   }
 };
 

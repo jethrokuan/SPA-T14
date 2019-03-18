@@ -50,6 +50,7 @@ class QueryParser {
   // Returns false if not a declaration clause.
   Declaration* findDeclaration(const Synonym synonym);
   Expression parseExpression();
+  ResultItem parseResultItem();
   void parseResult();
   AttrRef parseAttrRef();
   void parseAttrCompare();

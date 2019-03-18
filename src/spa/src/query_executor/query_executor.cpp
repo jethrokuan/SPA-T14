@@ -28,14 +28,6 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 }
 
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
-  // If no such-that and pattern clauses - run just the select
-  if (query->rel_cond->empty() && query->patternb->empty()) {
-    // TODO: no boolean handling yet
-    auto result_set = getSelect(
-        pkb, query->result->selected_declarations->at(0)->getDesignEntity());
-    return std::vector<std::string>(result_set.begin(), result_set.end());
-  }
-
   QueryConstraints query_constraints;
 
   if (!query->rel_cond->empty()) {
@@ -62,17 +54,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // add all possible values for it to take in at the start
   // Case: Select v such that Follows(1, 2) [Follows(1, 2) == true]
   // Do this for all selected variables
-  for (const auto& select_var : *(query->result->selected_declarations)) {
-    // Add entire set of values for variable into the overall constraints
-    auto select_var_str = select_var->getSynonym().synonym;
-    addAllValuesForVariableToConstraints(query->declarations, pkb,
-                                         select_var_str, query_constraints);
-  }
-  auto select_var =
-      query->result->selected_declarations->at(0)->getSynonym().synonym;
-  // Add entire set of values for variable into the overall constraints
-  addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
-                                       query_constraints);
+  addAllSelectedVarsToConstraints(query, query_constraints);
 
   // Get vector of vector of results - one for each selected var
   auto result = ConstraintSolver::constrainAndSelect(
@@ -188,6 +170,24 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
 
   auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);
   qc.addToAllPossibleValues(var_name, all_de);
+}
+
+void QueryExecutor::addAllSelectedVarsToConstraints(Query* query,
+                                                    QueryConstraints& qc) {
+  for (const ResultItem& select_var : *(query->result->selected_declarations)) {
+    // Get the selected variable's string representation
+    std::string select_var_str;
+    if (auto syn = std::get_if<Synonym>(&select_var)) {
+      select_var_str = syn->synonym;
+    } else if (auto syn_attr = std::get_if<SynAttr>(&select_var)) {
+      select_var_str = syn_attr->synonym.synonym;
+    } else {
+      // Only these two types are expected
+      assert(false);
+    }
+    addAllValuesForVariableToConstraints(query->declarations, pkb,
+                                         select_var_str, qc);
+  }
 }
 
 std::unordered_set<std::string>

@@ -31,7 +31,13 @@ class QueryExecutor {
 
   //! Utility function to get all synonym strings from a list of selected vars
   std::vector<std::string> getSynonymsFromSelect(
-      std::vector<QE::Declaration*>* decls);
+      std::vector<QE::ResultItem>* resultItems);
+
+  //! Add all selected variables to the set of constraints
+  void addAllSelectedVarsToConstraints(Query* query, QueryConstraints& qc);
+
+  //! Convert Synonym/SynAttr to string based on synonym
+  std::string resultItemToString(const ResultItem& resultItem);
 
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};

@@ -20,12 +20,12 @@ bool SuchThatEvaluator::evaluate() {
   if (argLeftAsSynonym) {
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(
-        query->declarations, pkb, argLeftAsSynonym->synonym, qc);
+        declarations, pkb, argLeftAsSynonym->synonym, qc);
   }
   if (argRightAsSynonym) {
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(
-        query->declarations, pkb, argRightAsSynonym->synonym, qc);
+        declarations, pkb, argRightAsSynonym->synonym, qc);
   }
 
   return dispatch();
@@ -96,7 +96,7 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
   // Add those that have results to output
   // E.g. Follows*(3, _)? Follows*(4, _)?
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, argLeftAsSynonym->synonym);
+      declarations, pkb, argLeftAsSynonym->synonym);
 
   std::vector<std::string> results;
   for (auto de : lhs_designentities) {
@@ -115,7 +115,7 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
   // Add those that have results to output
   // E.g. Follows*(_, 3)? Follows*(, 4)?
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, argRightAsSynonym->synonym);
+      declarations, pkb, argRightAsSynonym->synonym);
   std::vector<std::string> results;
   for (auto de : rhs_designentities) {
     if (handleRightSynonymLeftUnderscore(de)) {
@@ -133,9 +133,9 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   // Add those that have results to output
   // E.g. Follows*(2, 3)? Follows*(2, 4)? Follows*(3, 3)? ...
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, argLeftAsSynonym->synonym);
+      declarations, pkb, argLeftAsSynonym->synonym);
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      query->declarations, pkb, argRightAsSynonym->synonym);
+      declarations, pkb, argRightAsSynonym->synonym);
 
   PairedConstraintSet results;
   for (auto lhs_de : lhs_designentities) {

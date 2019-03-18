@@ -34,7 +34,7 @@ set(headers ${headers}
   src/spa_manager/spa_manager.h
   )
 
-# Query Manager files
+# Query Executor files
 set(srcs ${srcs}
   src/query_executor/query_executor.cpp
   src/query_executor/query_executor_utils.cpp

@@ -30,20 +30,21 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   QueryConstraints query_constraints;
 
+  // Executes each such-that clause one by one
   if (!query->rel_cond->empty()) {
-    // This is a more complex such-that query, pass to individual handlers
-    // This call also modifies the query_constraints
-    // So only need to check for no results
-    if (!handleSuchThat(query, query_constraints)) {
-      return std::vector<std::string>();
+    for (auto& rel_cond : *(query->rel_cond)) {
+      if (!handleSuchThat(query->declarations, rel_cond, query_constraints)) {
+        return std::vector<std::string>();
+      }
     }
   }
 
-  // Evaluate pattern results if they exist
+  // Executes each pattern clause one by one
   if (!query->patternb->empty()) {
-    // Same reasoning as such-that
-    if (!handlePattern(query, query_constraints)) {
-      return std::vector<std::string>();
+    for (auto& pattern : *(query->patternb)) {
+      if (!handlePattern(query->declarations, pattern, query_constraints)) {
+        return std::vector<std::string>();
+      }
     }
   }
 
@@ -121,51 +122,53 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
   return {};
 }
 
-bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
-  switch (query->rel_cond->at(0)->relation) {
+bool QueryExecutor::handleSuchThat(std::vector<QE::Declaration>* decls,
+                                   QE::RelCond* relCond, QueryConstraints& qc) {
+  switch (relCond->relation) {
     case Relation::FollowsT:
-      return FollowsTEvaluator(query, pkb, qc).evaluate();
+      return FollowsTEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::ModifiesS:
-      return ModifiesSEvaluator(query, pkb, qc).evaluate();
+      return ModifiesSEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::UsesS:
-      return UsesSEvaluator(query, pkb, qc).evaluate();
+      return UsesSEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::ParentT:
-      return ParentTEvaluator(query, pkb, qc).evaluate();
+      return ParentTEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::Follows:
-      return FollowsEvaluator(query, pkb, qc).evaluate();
+      return FollowsEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::Parent:
-      return ParentEvaluator(query, pkb, qc).evaluate();
+      return ParentEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::Next:
-      return NextEvaluator(query, pkb, qc).evaluate();
+      return NextEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::NextT:
-      return NextTEvaluator(query, pkb, qc).evaluate();
+      return NextTEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::Calls:
-      return CallsEvaluator(query, pkb, qc).evaluate();
+      return CallsEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::CallsT:
-      return CallsTEvaluator(query, pkb, qc).evaluate();
+      return CallsTEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::ModifiesP:
-      return ModifiesPEvaluator(query, pkb, qc).evaluate();
+      return ModifiesPEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::UsesP:
-      return UsesPEvaluator(query, pkb, qc).evaluate();
+      return UsesPEvaluator(decls, relCond, pkb, qc).evaluate();
     default:
       assert(false);
   }
 }
 
-bool QueryExecutor::handlePattern(Query* query, QueryConstraints& qc) {
-  return PatternEvaluator(query, pkb, qc).evaluate();
+bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
+                                  QE::PatternB* pattern, QueryConstraints& qc) {
+  return PatternEvaluator(decls, pattern, pkb, qc).evaluate();
 }
 
 void QueryExecutor::addAllValuesForVariableToConstraints(
     std::vector<Declaration>* declarations, PKBManager* pkb,
     const std::string& var_name, QueryConstraints& qc) {
-  // For optimizations's sake: if we spot the variable already in the constraint
-  // list - do not re-execute getSelect and re-constrain.
-  // If the variable is already in the list, we can assume that this function
-  // was already run.
-  // Because for a variable to be in the constraint list, it must have been
-  // either in a such-that clause or pattern clause (ignoring select).
-  // If it was in either of those clauses, this function would have run.
+  // For optimizations's sake: if we spot the variable already in the
+  // constraint list - do not re-execute getSelect and re-constrain. If the
+  // variable is already in the list, we can assume that this function was
+  // already run. Because for a variable to be in the constraint list, it must
+  // have been either in a such-that clause or pattern clause (ignoring
+  // select). If it was in either of those clauses, this function would have
+  // run.
   if (qc.isVarInAllPossibleValues(var_name)) return;
 
   auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);

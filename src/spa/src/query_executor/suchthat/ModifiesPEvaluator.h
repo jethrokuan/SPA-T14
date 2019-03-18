@@ -14,8 +14,9 @@ using namespace QE;
 
 class ModifiesPEvaluator : public SuchThatEvaluator {
  public:
-  ModifiesPEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
-      : SuchThatEvaluator(query, pkb, qc){};
+  ModifiesPEvaluator(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
+                     PKBManager* pkb, QueryConstraints& qc)
+      : SuchThatEvaluator(decls, relCond, pkb, qc){};
 
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {

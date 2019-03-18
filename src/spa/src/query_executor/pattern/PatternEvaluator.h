@@ -12,7 +12,8 @@ using namespace QE;
 
 class PatternEvaluator {
  private:
-  const QE::Query* query;
+  std::vector<QE::Declaration>* declarations;
+  QE::PatternB* pattern;
   PKBManager* pkb;
   QueryConstraints& qc;
 
@@ -24,7 +25,8 @@ class PatternEvaluator {
                                const QE::Expression& pattern_rhs);
 
  public:
-  PatternEvaluator(const Query* query, PKBManager* pkb, QueryConstraints& qc)
-      : query(query), pkb(pkb), qc(qc){};
+  PatternEvaluator(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
+                   PKBManager* pkb, QueryConstraints& qc)
+      : declarations(decls), pattern(pattern), pkb(pkb), qc(qc){};
   bool evaluate();
 };

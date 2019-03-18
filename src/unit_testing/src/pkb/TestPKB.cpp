@@ -2050,6 +2050,73 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
 
     auto calls_test_31 = pkb.isProcedureCallsProcedureT("A", "G");
     REQUIRE(calls_test_31 == false);
+
+    auto calls_test_32 = pkb.getCallerProceduresT("A");
+    REQUIRE(calls_test_32 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_33_check;
+    calls_test_33_check.insert("A");
+    auto calls_test_33 = pkb.getCallerProceduresT("B");
+    REQUIRE(*calls_test_33 == calls_test_33_check);
+
+    std::unordered_set<std::string> calls_test_34_check;
+    calls_test_34_check.insert("A");
+    calls_test_34_check.insert("B");
+    auto calls_test_34 = pkb.getCallerProceduresT("C");
+    REQUIRE(*calls_test_34 == calls_test_34_check);
+
+    std::unordered_set<std::string> calls_test_35_check;
+    calls_test_35_check.insert("A");
+    calls_test_35_check.insert("B");
+    calls_test_35_check.insert("C");
+    auto calls_test_35 = pkb.getCallerProceduresT("D");
+    REQUIRE(*calls_test_35 == calls_test_35_check);
+
+    std::unordered_set<std::string> calls_test_36_check;
+    calls_test_36_check.insert("A");
+    calls_test_36_check.insert("B");
+    calls_test_36_check.insert("C");
+    auto calls_test_36 = pkb.getCallerProceduresT("E");
+    REQUIRE(*calls_test_36 == calls_test_36_check);
+
+    auto calls_test_37 = pkb.getCallerProceduresT("F");
+    REQUIRE(calls_test_37 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_38_check;
+    calls_test_38_check.insert("F");
+    auto calls_test_38 = pkb.getCallerProceduresT("G");
+    REQUIRE(*calls_test_38 == calls_test_38_check);
+
+    auto calls_test_39 = pkb.getCallerProcedures("A");
+    REQUIRE(calls_test_39 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_40_check;
+    calls_test_40_check.insert("A");
+    auto calls_test_40 = pkb.getCallerProcedures("B");
+    REQUIRE(*calls_test_40 == calls_test_40_check);
+
+    std::unordered_set<std::string> calls_test_41_check;
+    calls_test_41_check.insert("B");
+    auto calls_test_41 = pkb.getCallerProcedures("C");
+    REQUIRE(*calls_test_41 == calls_test_41_check);
+
+    std::unordered_set<std::string> calls_test_42_check;
+    calls_test_42_check.insert("C");
+    auto calls_test_42 = pkb.getCallerProcedures("D");
+    REQUIRE(*calls_test_42 == calls_test_42_check);
+
+    std::unordered_set<std::string> calls_test_43_check;
+    calls_test_43_check.insert("C");
+    auto calls_test_43 = pkb.getCallerProcedures("E");
+    REQUIRE(*calls_test_43 == calls_test_43_check);
+
+    auto calls_test_44 = pkb.getCallerProcedures("F");
+    REQUIRE(calls_test_44 == std::nullopt);
+
+    std::unordered_set<std::string> calls_test_45_check;
+    calls_test_45_check.insert("F");
+    auto calls_test_45 = pkb.getCallerProcedures("G");
+    REQUIRE(*calls_test_45 == calls_test_45_check);
   }
 
   SECTION ("uses relations") {

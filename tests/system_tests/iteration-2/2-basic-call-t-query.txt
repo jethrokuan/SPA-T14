@@ -1,17 +1,17 @@
 1 - Select procedures that calls* other procedure
 procedure p, q;
 Select p such that Calls*(p,q)
-main,sub,alt
+main,sub
 5000
 2 - Select procedures that are called by other procedure
 procedure p, q;
 Select q such that Calls*(p,q)
-sub,alt,alt2
+sub,alt
 5000
 3 - Select procedures that is called by sub
 procedure p, q;
 Select q such that Calls*("sub",q)
-alt,alt2
+alt
 5000
 4 - Select procedures that calls* alt
 procedure p, q;

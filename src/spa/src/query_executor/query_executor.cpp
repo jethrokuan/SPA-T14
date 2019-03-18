@@ -34,7 +34,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
     // This is a more complex such-that query, pass to individual handlers
     // This call also modifies the query_constraints
     // So only need to check for no results
-    if (!handleSuchThat(query, query_constraints)) {
+    if (!handleSuchThat(query->declarations, query->rel_cond->at(0),
+                        query_constraints)) {
       return std::vector<std::string>();
     }
   }
@@ -42,7 +43,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // Evaluate pattern results if they exist
   if (!query->patternb->empty()) {
     // Same reasoning as such-that
-    if (!handlePattern(query, query_constraints)) {
+    if (!handlePattern(query->declarations, query->patternb->at(0),
+                       query_constraints)) {
       return std::vector<std::string>();
     }
   }
@@ -121,39 +123,41 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
   return {};
 }
 
-bool QueryExecutor::handleSuchThat(Query* query, QueryConstraints& qc) {
-  switch (query->rel_cond->at(0)->relation) {
+bool QueryExecutor::handleSuchThat(std::vector<QE::Declaration>* decls,
+                                   QE::RelCond* relCond, QueryConstraints& qc) {
+  switch (relCond->relation) {
     case Relation::FollowsT:
-      return FollowsTEvaluator(query, pkb, qc).evaluate();
+      return FollowsTEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::ModifiesS:
-      return ModifiesSEvaluator(query, pkb, qc).evaluate();
+      return ModifiesSEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::UsesS:
-      return UsesSEvaluator(query, pkb, qc).evaluate();
+      return UsesSEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::ParentT:
-      return ParentTEvaluator(query, pkb, qc).evaluate();
+      return ParentTEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::Follows:
-      return FollowsEvaluator(query, pkb, qc).evaluate();
+      return FollowsEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::Parent:
-      return ParentEvaluator(query, pkb, qc).evaluate();
+      return ParentEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::Next:
-      return NextEvaluator(query, pkb, qc).evaluate();
+      return NextEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::NextT:
-      return NextTEvaluator(query, pkb, qc).evaluate();
+      return NextTEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::Calls:
-      return CallsEvaluator(query, pkb, qc).evaluate();
+      return CallsEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::CallsT:
-      return CallsTEvaluator(query, pkb, qc).evaluate();
+      return CallsTEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::ModifiesP:
-      return ModifiesPEvaluator(query, pkb, qc).evaluate();
+      return ModifiesPEvaluator(decls, relCond, pkb, qc).evaluate();
     case Relation::UsesP:
-      return UsesPEvaluator(query, pkb, qc).evaluate();
+      return UsesPEvaluator(decls, relCond, pkb, qc).evaluate();
     default:
       assert(false);
   }
 }
 
-bool QueryExecutor::handlePattern(Query* query, QueryConstraints& qc) {
-  return PatternEvaluator(query, pkb, qc).evaluate();
+bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
+                                  QE::PatternB* pattern, QueryConstraints& qc) {
+  return PatternEvaluator(decls, pattern, pkb, qc).evaluate();
 }
 
 void QueryExecutor::addAllValuesForVariableToConstraints(

@@ -7,14 +7,13 @@
 #include "query_executor/query_executor.h"
 
 bool PatternEvaluator::evaluate() {
-  auto pattern = query->patternb;
-  auto pattern_syn = pattern->at(0)->getSynonym();
-  auto pattern_lhs = pattern->at(0)->getFirstArg();
+  auto pattern_syn = pattern->getSynonym();
+  auto pattern_lhs = pattern->getFirstArg();
   // TODO: If/While has no value!
-  auto pattern_rhs = pattern->at(0)->getSecondArg().value();
+  auto pattern_rhs = pattern->getSecondArg().value();
 
   // Add entire set of values for the pattern synoynm
-  QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,
+  QueryExecutor::addAllValuesForVariableToConstraints(declarations, pkb,
                                                       pattern_syn.synonym, qc);
 
   // TODO: More cases for pattern in iteration 2
@@ -99,7 +98,7 @@ bool PatternEvaluator::handlePatternLHSSynonym(const Synonym& syn,
                                                const Synonym& lhs,
                                                const Expression& pattern_rhs) {
   // Add entire set of values for lhs pattern variable
-  QueryExecutor::addAllValuesForVariableToConstraints(query->declarations, pkb,
+  QueryExecutor::addAllValuesForVariableToConstraints(declarations, pkb,
                                                       lhs.synonym, qc);
   // pattern a (v, <...>)
   // Get all variables so that we can make this query

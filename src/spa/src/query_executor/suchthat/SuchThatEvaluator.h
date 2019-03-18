@@ -12,7 +12,8 @@ using namespace QE;
 
 class SuchThatEvaluator {
  protected:
-  Query* query;
+  std::vector<QE::Declaration>* declarations;
+  QE::RelCond* relCond;
   PKBManager* pkb;
   QueryConstraints& qc;
 
@@ -56,12 +57,14 @@ class SuchThatEvaluator {
   virtual bool handleBothArgsBasic(std::string&, std::string&) = 0;
 
  public:
-  SuchThatEvaluator(Query* query, PKBManager* pkb, QueryConstraints& qc)
-      : query(query),
+  SuchThatEvaluator(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
+                    PKBManager* pkb, QueryConstraints& qc)
+      : declarations(decls),
+        relCond(relCond),
         pkb(pkb),
         qc(qc),
-        argLeft(query->rel_cond->at(0)->arg1),
-        argRight(query->rel_cond->at(0)->arg2){};
+        argLeft(relCond->arg1),
+        argRight(relCond->arg2){};
 
   //! External API to run the such-that query on the given PKB instance
   bool evaluate();

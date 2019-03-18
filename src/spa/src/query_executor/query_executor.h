@@ -25,9 +25,11 @@ class QueryExecutor {
   std::vector<std::string> makeQueryUnsorted(QE::Query* query);
 
   //! Evaluates any SuchThat clause
-  bool handleSuchThat(QE::Query*, QueryConstraints&);
+  bool handleSuchThat(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
+                      QueryConstraints&);
   //! Evaluates any Pattern clause
-  bool handlePattern(QE::Query*, QueryConstraints&);
+  bool handlePattern(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
+                     QueryConstraints& qc);
 
   //! Utility function to get all synonym strings from a list of selected vars
   std::vector<std::string> getSynonymsFromSelect(

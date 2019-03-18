@@ -16,8 +16,7 @@ void QueryValidator::validateQuery(const Query& query) {
   validateSuchThatRefTypes(query);
   validatePatternRefTypes(query);
   validateSuchThatSynonymTypes(query);
-  validatePatternVariableAsAssign(query);
-  validatePatternFirstArgSynonymIsVariable(query);
+  // validatePatternFirstArgSynonymIsVariable(query);
   validateWithCondSameAttrType(query);
 }
 
@@ -35,25 +34,6 @@ void QueryValidator::validateSelectSynonymsAreDeclared(const Query& query) {
             "Cannot find a matching declaration for synonym " +
             synattr->synonym.synonym);
       }
-    }
-  }
-}
-
-void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
-  for (auto pattern : *(query.patternb)) {
-    // Search the available declarations for the pattern synonym
-    // The synonym must be an assignment synonym
-    auto found_declaration = std::find_if(
-        query.declarations->begin(), query.declarations->end(), [&](auto decl) {
-          return decl.getDesignEntity() == DesignEntity::ASSIGN &&
-                 decl.getSynonym().synonym == pattern->getSynonym().synonym;
-        });
-
-    if (found_declaration == query.declarations->end()) {
-      throw PQLValidationException(
-          "Semantic Error: cannot match synonym " +
-          pattern->getSynonym().synonym +
-          " to an assignment synonym in list of declarations");
     }
   }
 }
@@ -193,28 +173,28 @@ void QueryValidator::validateNoIdenticalSynonyms(const Query& query) {
   }
 }
 
-void QueryValidator::validatePatternFirstArgSynonymIsVariable(
-    const Query& query) {
-  for (auto pattern : *(query.patternb)) {
-    auto first_arg = pattern->getFirstArg();
-    if (auto first_arg_syn = std::get_if<Synonym>(&first_arg)) {
-      // Search the available declarations for the pattern synonym
-      // The synonym must be an assignment synonym
-      auto found_declaration = std::find_if(
-          query.declarations->begin(), query.declarations->end(),
-          [&](auto decl) {
-            return decl.getDesignEntity() == DesignEntity::VARIABLE &&
-                   decl.getSynonym().synonym == first_arg_syn->synonym;
-          });
+// void QueryValidator::validatePatternFirstArgSynonymIsVariable(
+//     const Query& query) {
+//   for (auto pattern : *(query.patternb)) {
+//     auto first_arg = pattern->getFirstArg();
+//     if (auto first_arg_syn = std::get_if<Synonym>(&first_arg)) {
+//       // Search the available declarations for the pattern synonym
+//       // The synonym must be an assignment synonym
+//       auto found_declaration = std::find_if(
+//           query.declarations->begin(), query.declarations->end(),
+//           [&](auto decl) {
+//             return decl.getDesignEntity() == DesignEntity::VARIABLE &&
+//                    decl.getSynonym().synonym == first_arg_syn->synonym;
+//           });
 
-      if (found_declaration == query.declarations->end()) {
-        throw PQLValidationException(
-            "Semantic Error: cannot match synonym " + first_arg_syn->synonym +
-            " to an variable synonym in list of declarations");
-      }
-    }
-  }
-}
+//       if (found_declaration == query.declarations->end()) {
+//         throw PQLValidationException(
+//             "Semantic Error: cannot match synonym " + first_arg_syn->synonym +
+//             " to an variable synonym in list of declarations");
+//       }
+//     }
+//   }
+// }
 
 void QueryValidator::validateWithCondSameAttrType(const Query& query) {
   for (const auto withcond : *(query.with_cond)) {

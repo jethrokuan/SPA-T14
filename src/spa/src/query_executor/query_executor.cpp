@@ -1,8 +1,8 @@
+#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
 #include <vector>
-#include "query_executor/query_executor.h"
 
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/PatternEvaluator.h"
@@ -28,14 +28,6 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 }
 
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
-  // If no such-that and pattern clauses - run just the select
-  // if (query->rel_cond->empty() && query->patternb->empty()) {
-  //   // TODO: no boolean handling yet
-  //   auto result_set = getSelect(
-  //       pkb, query->result->selected_declarations->at(0)->getDesignEntity());
-  //   return std::vector<std::string>(result_set.begin(), result_set.end());
-  // }
-
   QueryConstraints query_constraints;
 
   if (!query->rel_cond->empty()) {
@@ -68,11 +60,6 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
     addAllValuesForVariableToConstraints(query->declarations, pkb,
                                          select_var_str, query_constraints);
   }
-  auto select_var =
-      query->result->selected_declarations->at(0)->getSynonym().synonym;
-  // Add entire set of values for variable into the overall constraints
-  addAllValuesForVariableToConstraints(query->declarations, pkb, select_var,
-                                       query_constraints);
 
   // Get vector of vector of results - one for each selected var
   auto result = ConstraintSolver::constrainAndSelect(

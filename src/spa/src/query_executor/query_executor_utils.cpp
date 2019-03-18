@@ -36,10 +36,21 @@ std::optional<std::string> QueryExecutor::getRefAsBasic(Ref arg) {
 }
 
 std::vector<std::string> QueryExecutor::getSynonymsFromSelect(
-    std::vector<Declaration*>* decls) {
+    std::vector<ResultItem>* resultItems) {
   std::vector<std::string> result;
-  for (const auto& decl : *decls) {
-    result.push_back(decl->getSynonym().synonym);
+  for (const auto& resultItem : *resultItems) {
+    result.push_back(resultItemToString(resultItem));
   }
   return result;
+}
+
+std::string QueryExecutor::resultItemToString(const ResultItem& resultItem) {
+  if (auto syn = std::get_if<Synonym>(&resultItem)) {
+    return syn->synonym;
+  } else if (auto syn_attr = std::get_if<SynAttr>(&resultItem)) {
+    return syn_attr->synonym.synonym;
+  } else {
+    // Only these two types are expected
+    assert(false);
+  }
 }

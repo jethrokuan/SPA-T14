@@ -1,5 +1,5 @@
-#include "query_builder/core/exceptions.h"
 #include "query_builder/core/query_parser.h"
+#include "query_builder/core/exceptions.h"
 #include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
@@ -98,7 +98,9 @@ bool QueryParser::parseDeclarationClause() {
 ResultItem QueryParser::parseResultItem() {
   auto synonym_str = advance();
   auto synonym = Synonym::construct(synonym_str);
-  std::variant<Synonym, SynAttr> result_item;
+  // No default constructor - needs some default value
+  std::variant<Synonym, SynAttr> result_item =
+      Synonym::construct("default").value();
 
   if (!synonym) {
     throw PQLParseException("Expected a synonym, got " + previous());

@@ -1,5 +1,5 @@
-#include "query_builder/core/query_parser.h"
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_parser.h"
 #include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
@@ -97,6 +97,11 @@ bool QueryParser::parseDeclarationClause() {
 
 ResultItem QueryParser::parseResultItem() {
   auto synonym_str = advance();
+  if (synonym_str.compare("prog") == 0) {
+    expect("_");
+    expect("_line");
+    synonym_str = "prog_line";
+  }
   auto synonym = Synonym::construct(synonym_str);
   // No default constructor - needs some default value
   std::variant<Synonym, SynAttr> result_item =

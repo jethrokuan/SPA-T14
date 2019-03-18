@@ -13,7 +13,7 @@
 
 using namespace QE;
 
-TEST_CASE ("Test Query Manager FollowsT functionality - simple_1") {
+TEST_CASE ("Test Query Executor FollowsT functionality - simple_1") {
   auto ast = Simple::SimpleInterface::getAstFromFile(
       "tests/simple_source/simple_1.txt");
 

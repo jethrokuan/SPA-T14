@@ -32,7 +32,7 @@ class PKBManager {
   PKBManager(const AST ast);
   ~PKBManager();
 
-  // API exposed to Query Manager
+  // API exposed to Query Executor
 
   // is design entity set empty
   bool isVariableSetEmpty();

@@ -113,3 +113,10 @@ TEST_CASE ("Test selected synonym declared Validate") {
   auto qe = QueryBuilder();
   REQUIRE_THROWS_AS(qe.makePqlQuery(query_string), PQLValidationException);
 }
+
+TEST_CASE ("Test selected synonym (tupled) declared Validate") {
+  std::string query_string =
+      "assign a, a1; variable v; Select <v, v2> pattern a(v, _)";
+  auto qe = QueryBuilder();
+  REQUIRE_THROWS_AS(qe.makePqlQuery(query_string), PQLValidationException);
+}

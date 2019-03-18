@@ -62,15 +62,21 @@ bool QueryParser::parseDeclarationClause() {
   unsigned int save_loc = current_;
   std::vector<Synonym> synonyms;
   std::string de_str = advance();
-  std::string synonym_str = advance();
-  // TODO: Inheriting clunky code here, should fix someday
   DesignEntity de;
+  if (de_str.compare("prog") == 0) {
+    expect("_");
+    expect("_line");
+    de_str = "prog_line";
+  }
   try {
     de = getDesignEntity(de_str);
   } catch (const PQLParseException& e) {
     current_ = save_loc;
     return false;
   }
+  std::string synonym_str = advance();
+  // TODO: Inheriting clunky code here, should fix someday
+
   std::optional<Synonym> synonym = Synonym::construct(synonym_str);
   if (!synonym) {
     throw PQLParseException("Failed to parse synonym");
@@ -97,11 +103,6 @@ bool QueryParser::parseDeclarationClause() {
 
 ResultItem QueryParser::parseResultItem() {
   auto synonym_str = advance();
-  if (synonym_str.compare("prog") == 0) {
-    expect("_");
-    expect("_line");
-    synonym_str = "prog_line";
-  }
   auto synonym = Synonym::construct(synonym_str);
   // No default constructor - needs some default value
   std::variant<Synonym, SynAttr> result_item =

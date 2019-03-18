@@ -9,6 +9,7 @@ using namespace QE;
 void QueryValidator::validateQuery(const Query& query) {
   // Do not change the order of these calls - there are dependencies to reduce
   // double-checking of conditions
+  validateSelectSynonymsAreDeclared(query);
   validateNoIdenticalSynonyms(query);
   validateModifyUsesNoFirstArgUnderscore(query);
   validateSuchThatSynonymsAreDeclared(query);
@@ -19,6 +20,25 @@ void QueryValidator::validateQuery(const Query& query) {
   validatePatternFirstArgSynonymIsVariable(query);
   validateWithCondSameAttrType(query);
 }
+
+void QueryValidator::validateSelectSynonymsAreDeclared(const Query& query) {
+  for (auto result : *(query.result->selected_declarations)) {
+    if (auto syn = std::get_if<Synonym>(&result)) {
+      if (!Declaration::findDeclarationForSynonym(query.declarations, *syn)) {
+        throw PQLValidationException(
+            "Cannot find a matching declaration for synonym " + syn->synonym);
+      }
+    } else if (auto synattr = std::get_if<SynAttr>(&result)) {
+      if (!Declaration::findDeclarationForSynonym(query.declarations,
+                                                  synattr->synonym)) {
+        throw PQLValidationException(
+            "Cannot find a matching declaration for synonym " +
+            synattr->synonym.synonym);
+      }
+    }
+  }
+}
+
 void QueryValidator::validatePatternVariableAsAssign(const Query& query) {
   for (auto pattern : *(query.patternb)) {
     // Search the available declarations for the pattern synonym

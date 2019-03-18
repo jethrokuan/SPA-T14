@@ -10,6 +10,8 @@ namespace QE {
 //! Utility class for validating the semantics of Query objects after parsing
 class QueryValidator {
  private:
+  //! Checks that all synonyms in the Select are declared
+  void validateSelectSynonymsAreDeclared(const Query&);
   //! Checks that no two synonyms have the same name
   void validateNoIdenticalSynonyms(const Query&);
   //! Checks neither Modify nor Uses has _ as the first argument (ambiguous)

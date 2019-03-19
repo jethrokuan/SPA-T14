@@ -16,5 +16,5 @@ static RefTypeIndexSet stmtRefIndices = {0, 1, 2};
 // EntRef: {Synonym, Underscore, QuoteIdent}
 static RefTypeIndexSet entRefIndices = {0, 1, 3};
 // LineRef: {Synonym, Underscore, StatementNumber} - honestly same as StmtRef
-static RefTypeIndexSet lineRefIndices = {0, 1, 3};
+static RefTypeIndexSet lineRefIndices = {0, 1, 2};
 }  // namespace QE

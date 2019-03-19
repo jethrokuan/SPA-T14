@@ -10,7 +10,7 @@ TEST_CASE ("Test Constraint Solver with no constraints") {
   auto qc = QueryConstraints();
   REQUIRE_THROWS_AS(ConstraintSolver::constrainAndSelect(qc, "a") ==
                         std::vector<std::string>{},
-                    std::runtime_error);
+                    std::out_of_range);
 }
 
 TEST_CASE ("Test Constraint Solver with one single-var constraint") {

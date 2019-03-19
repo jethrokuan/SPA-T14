@@ -177,6 +177,9 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
 
 void QueryExecutor::addAllSelectedVarsToConstraints(Query* query,
                                                     QueryConstraints& qc) {
+  // No variables to constrain if this is a BOOLEAN query
+  if (query->result->T == ResultType::BOOLEAN) return;
+  // Otherwise add each variable's full set of values to constraints
   for (const ResultItem& select_var : *(query->result->selected_declarations)) {
     // Get the selected variable's string representation
     std::string select_var_str;

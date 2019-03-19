@@ -10,6 +10,7 @@ class Synonym {
   Synonym(std::string synonym);
   std::string synonym;
 
+  static bool isValidSynonym(std::string str);
   bool operator==(const Synonym& a2) const { return synonym == a2.synonym; }
   friend std::ostream& operator<<(std::ostream& os, Synonym const& syn) {
     os << syn.synonym;

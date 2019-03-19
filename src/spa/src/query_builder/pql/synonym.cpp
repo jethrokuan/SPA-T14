@@ -1,13 +1,16 @@
+#include <regex>
 #include "query_builder/core/exceptions.h"
 #include "query_builder/pql/synonym.h"
 #include "utils/utils.h"
 
 using namespace QE;
 
-Synonym::Synonym(std::string synonym_) {
-  if (!Utils::is_valid_synonym(synonym_)) {
+bool Synonym::isValidSynonym(std::string str) {
+  return std::regex_match(str, std::regex("[a-zA-Z](\\d|[a-zA-Z])*"));
+}
+
+Synonym::Synonym(std::string synonym_) : synonym(synonym_) {
+  if (!Synonym::isValidSynonym(synonym_)) {
     throw PQLParseException("Invalid synonym: " + synonym_);
   }
-
-  synonym = synonym_;
 }

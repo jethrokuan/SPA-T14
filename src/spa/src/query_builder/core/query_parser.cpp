@@ -148,7 +148,7 @@ Ref QueryParser::parseRef() {
     std::string ident = advance();
     expect("\"");
     return QuoteIdent(ident);
-  } else if (is_valid_synonym(peek())) {
+  } else if (Synonym::isValidSynonym(peek())) {
     std::string synonym_str = advance();
     auto synonym = Synonym(synonym_str);
     return synonym;
@@ -318,7 +318,7 @@ AttrRef QueryParser::parseAttrRef() {
     QuoteIdent ident_ = QuoteIdent(ident_str);
     expect("\"");
     attr_ref = AttrRef(ident_, query_->declarations);
-  } else if (is_valid_synonym(peek())) {
+  } else if (Synonym::isValidSynonym(peek())) {
     std::string synonym_str = advance();
     auto synonym = Synonym(synonym_str);
 

@@ -62,6 +62,20 @@ TEST_CASE (
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
   }
 
+  SECTION ("Test exact pattern match - only one result") {
+    auto querystr = std::string(
+        "assign a; variable v1, v2; Select a pattern a (v1, \"v1+v2\")");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"11"});
+  }
+
+  SECTION ("Test exact pattern match - no results") {
+    auto querystr = std::string(
+        "assign a; variable v1, v2; Select a pattern a (v1, \"v1+v3\")");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
+  }
+
   delete pkb;
   delete qm;
 }

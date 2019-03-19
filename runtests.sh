@@ -113,7 +113,7 @@ build/src/autotester/autotester tests/system_tests/src/4.txt tests/system_tests/
 # RUN TESTS FOR SIMPLE SOURCE 5: MULTIPLE PROCEDURES // NOT REQUIRED FOR ITERATION 1
 
 # Tests without patterns
-1 Synonym, 0 Clause
+# 1 Synonym, 0 Clause
 build/src/autotester/autotester tests/system_tests/src/5.txt tests/system_tests/query/5/5010.txt tests/system_tests/output/5010.xml
 # 1 Synonym, 1 Clause (such that)
 build/src/autotester/autotester tests/system_tests/src/5.txt tests/system_tests/query/5/5011-st.txt tests/system_tests/output/5011-st.xml

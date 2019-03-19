@@ -313,15 +313,15 @@ bool QueryParser::parsePattern() {
 }
 
 AttrRef QueryParser::parseAttrRef() {
-  std::optional<AttrRef> attr_ref = std::nullopt;
+  AttrRef attr_ref = AttrRef(QuoteIdent("default"), query_->declarations);
   if (has_only_digits(peek())) {
     unsigned int val = std::stoi(advance());
-    attr_ref = AttrRef::construct(val, query_->declarations);
+    attr_ref = AttrRef(val, query_->declarations);
   } else if (match("\"")) {
     std::string ident_str = advance();
     QuoteIdent ident_ = QuoteIdent(ident_str);
     expect("\"");
-    attr_ref = AttrRef::construct(ident_, query_->declarations);
+    attr_ref = AttrRef(ident_, query_->declarations);
   } else if (is_valid_synonym(peek())) {
     std::string synonym_str = advance();
     auto synonym = Synonym(synonym_str);
@@ -333,19 +333,15 @@ AttrRef QueryParser::parseAttrRef() {
         throw PQLParseException("Invalid synonym - attrName pair: (" +
                                 synonym.synonym + ", " + previous() + ")");
       }
-      attr_ref = AttrRef::construct(*syn_attr, query_->declarations);
+      attr_ref = AttrRef(*syn_attr, query_->declarations);
     } else {
-      attr_ref = AttrRef::construct(synonym, query_->declarations);
+      attr_ref = AttrRef(synonym, query_->declarations);
     }
   } else {
-    attr_ref = std::nullopt;
+    throw PQLParseException("Could not parse attr ref.");
   }
 
-  if (!attr_ref) {
-    throw PQLParseException("Couldn't parse attrref.");
-  }
-
-  return attr_ref.value();
+  return attr_ref;
 }
 
 void QueryParser::parseAttrCompare() {

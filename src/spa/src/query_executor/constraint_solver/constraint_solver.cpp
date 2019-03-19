@@ -11,6 +11,33 @@
 
 std::vector<std::vector<std::string>> ConstraintSolver::constrainAndSelect(
     QueryConstraints& qc, const std::vector<std::string> vars_to_select) {
+  // Perform constrain step to get final set of allowed values
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      end_one_synonym_constraints = constrain(qc);
+
+  // Get a result vector for each variable and return all
+  return selectNonBoolean(end_one_synonym_constraints, vars_to_select);
+}
+
+std::vector<std::string> ConstraintSolver::constrainAndSelect(
+    QueryConstraints& qc, const std::string toSelect) {
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      start_one_synonym_constraints, end_one_synonym_constraints;
+  return constrainAndSelect(qc, std::vector{toSelect}).at(0);
+}
+
+bool ConstraintSolver::constrainAndSelectBoolean(QueryConstraints& qc) {
+  // Perform constrain step to get final set of allowed values
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      end_one_synonym_constraints = constrain(qc);
+
+  // Check that all synonyms have at least one valid value
+  return selectBoolean(end_one_synonym_constraints);
+}
+
+//! Produces the final set of allowed values for each synonym
+std::unordered_map<std::string, std::unordered_set<std::string>>
+ConstraintSolver::constrain(QueryConstraints& qc) {
   std::unordered_map<std::string, std::unordered_set<std::string>>
       start_one_synonym_constraints, end_one_synonym_constraints;
   do {
@@ -34,25 +61,7 @@ std::vector<std::vector<std::string>> ConstraintSolver::constrainAndSelect(
         intersectSingleVarConstraints(qc.getSingleVariableConstraintMapRef(),
                                       qc.getPairedVariableConstraintMapRef());
   } while (start_one_synonym_constraints != end_one_synonym_constraints);
-
-  // Get a result vector for each variable and return all
-  std::vector<std::vector<std::string>> result;
-  for (const auto toSelect : vars_to_select) {
-    auto set_to_return = end_one_synonym_constraints[toSelect];
-    std::vector<std::string> result_onevar(set_to_return.begin(),
-                                           set_to_return.end());
-    std::sort(result_onevar.begin(), result_onevar.end());
-    result.push_back(result_onevar);
-  }
-
-  return result;
-}
-
-std::vector<std::string> ConstraintSolver::constrainAndSelect(
-    QueryConstraints& qc, const std::string toSelect) {
-  std::unordered_map<std::string, std::unordered_set<std::string>>
-      start_one_synonym_constraints, end_one_synonym_constraints;
-  return constrainAndSelect(qc, std::vector{toSelect}).at(0);
+  return end_one_synonym_constraints;
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>>
@@ -178,6 +187,36 @@ void ConstraintSolver::filterQueryConstraints(
   // Set these values back to the query constraints container
   qc.setSingleVariableConstraintMapRef(svcm);
   qc.setPairedVariableConstraintMapRef(pvcm);
+}
+
+std::vector<std::vector<std::string>> ConstraintSolver::selectNonBoolean(
+    const std::unordered_map<std::string, std::unordered_set<std::string>>&
+        constraints,
+    const std::vector<std::string> vars_to_select) {
+  // Get a result vector for each variable and return all
+  std::vector<std::vector<std::string>> result;
+  for (const auto toSelect : vars_to_select) {
+    auto set_to_return = constraints.at(toSelect);
+    std::vector<std::string> result_onevar(set_to_return.begin(),
+                                           set_to_return.end());
+    std::sort(result_onevar.begin(), result_onevar.end());
+    result.push_back(result_onevar);
+  }
+
+  return result;
+}
+
+bool ConstraintSolver::selectBoolean(
+    const std::unordered_map<std::string, std::unordered_set<std::string>>&
+        constraints) {
+  for (auto const& [synonym, constraint] : constraints) {
+    if (constraint.empty()) {
+      // No allowed values for this synonym - there does not
+      // exist a combination of synonyms to satisfy all clauses
+      return false;
+    }
+  }
+  return true;
 }
 
 void ConstraintSolver::printConstraints(

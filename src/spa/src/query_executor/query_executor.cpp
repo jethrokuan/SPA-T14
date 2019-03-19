@@ -34,7 +34,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   if (!query->rel_cond->empty()) {
     for (auto& rel_cond : *(query->rel_cond)) {
       if (!handleSuchThat(query->declarations, rel_cond, query_constraints)) {
-        return std::vector<std::string>();
+        return getNegativeResult(query->result->T);
       }
     }
   }
@@ -43,7 +43,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   if (!query->patternb->empty()) {
     for (auto& pattern : *(query->patternb)) {
       if (!handlePattern(query->declarations, pattern, query_constraints)) {
-        return std::vector<std::string>();
+        return getNegativeResult(query->result->T);
       }
     }
   }
@@ -57,12 +57,8 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // Do this for all selected variables
   addAllSelectedVarsToConstraints(query, query_constraints);
 
-  // Get vector of vector of results - one for each selected var
-  auto result = ConstraintSolver::constrainAndSelect(
-      query_constraints,
-      getSynonymsFromSelect(query->result->selected_declarations));
-
-  return Utils::cartesianProduct(result);
+  // Runs the correct constraint solver method (BOOLEAN vs non-BOOLEAN)
+  return runConstraintSolver(query->result, query_constraints);
 }
 
 std::vector<std::vector<std::string>> constrainAndSelect(
@@ -162,45 +158,25 @@ bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
   return PatternEvaluator(decls, pattern, pkb, qc).evaluate();
 }
 
-void QueryExecutor::addAllValuesForVariableToConstraints(
-    std::vector<Declaration>* declarations, PKBManager* pkb,
-    const std::string& var_name, QueryConstraints& qc) {
-  // For optimizations's sake: if we spot the variable already in the
-  // constraint list - do not re-execute getSelect and re-constrain. If the
-  // variable is already in the list, we can assume that this function was
-  // already run. Because for a variable to be in the constraint list, it must
-  // have been either in a such-that clause or pattern clause (ignoring
-  // select). If it was in either of those clauses, this function would have
-  // run.
-  if (qc.isVarInAllPossibleValues(var_name)) return;
-
-  auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);
-  qc.addToAllPossibleValues(var_name, all_de);
-}
-
-void QueryExecutor::addAllSelectedVarsToConstraints(Query* query,
-                                                    QueryConstraints& qc) {
-  for (const ResultItem& select_var : *(query->result->selected_declarations)) {
-    // Get the selected variable's string representation
-    std::string select_var_str;
-    if (auto syn = std::get_if<Synonym>(&select_var)) {
-      select_var_str = syn->synonym;
-    } else if (auto syn_attr = std::get_if<SynAttr>(&select_var)) {
-      select_var_str = syn_attr->synonym.synonym;
+//! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
+std::vector<std::string> QueryExecutor::runConstraintSolver(
+    Result* result, QueryConstraints& query_constraints) {
+  if (result->T == ResultType::TUPLE) {
+    // Get vector of vector of results - one for each selected var
+    auto results = ConstraintSolver::constrainAndSelect(
+        query_constraints,
+        getSynonymsFromSelect(result->selected_declarations));
+    return Utils::cartesianProduct(results);
+  } else if (result->T == ResultType::BOOLEAN) {
+    // Check truth/falsity instead of getting a vector of result values
+    if (bool select_is_true =
+            ConstraintSolver::constrainAndSelectBoolean(query_constraints)) {
+      return std::vector<std::string>{"TRUE"};
     } else {
-      // Only these two types are expected
-      assert(false);
+      return std::vector<std::string>{"FALSE"};
     }
-    addAllValuesForVariableToConstraints(query->declarations, pkb,
-                                         select_var_str, qc);
+  } else {
+    // No other result types allowed
+    assert(false);
   }
-}
-
-std::unordered_set<std::string>
-QueryExecutor::getAllDesignEntityValuesByVarName(
-    std::vector<Declaration>* declarations, PKBManager* pkb,
-    const std::string& var_name) {
-  auto var_de = Declaration::findDeclarationForString(declarations, var_name)
-                    ->getDesignEntity();
-  return QueryExecutor::getSelect(pkb, var_de);
 }

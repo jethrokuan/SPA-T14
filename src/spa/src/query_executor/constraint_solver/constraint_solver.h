@@ -31,6 +31,21 @@ class ConstraintSolver {
     return result;
   };
 
+  //! Produces the final set of allowed values for each synonym
+  static std::unordered_map<std::string, std::unordered_set<std::string>>
+  constrain(QueryConstraints& qc);
+
+  //! Returns the vectors of allowed values for each selected synonym
+  static std::vector<std::vector<std::string>> selectNonBoolean(
+      const std::unordered_map<std::string, std::unordered_set<std::string>>&
+          constraints,
+      const std::vector<std::string> vars_to_select);
+
+  //! Returns true if all synonyms have at least one valid value, else false
+  static bool selectBoolean(
+      const std::unordered_map<std::string, std::unordered_set<std::string>>&
+          constraints);
+
   //! Get a map of constraints from single variables to allowed values
   static std::unordered_map<std::string, std::unordered_set<std::string>>
   intersectSingleVarConstraints(SingleVariableConstraintMap& svcm,
@@ -63,6 +78,8 @@ class ConstraintSolver {
       const std::unordered_map<std::string, std::unordered_set<std::string>>);
 
  public:
+  //! Returns true if all synonyms have at least one valid value, else false
+  static bool constrainAndSelectBoolean(QueryConstraints& qc);
   //! Special case of constrainAndSelect - select only one variable
   static std::vector<std::string> constrainAndSelect(
       QueryConstraints& qc, const std::string toSelect);

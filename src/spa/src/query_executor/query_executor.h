@@ -41,6 +41,13 @@ class QueryExecutor {
   //! Convert Synonym/SynAttr to string based on synonym
   std::string resultItemToString(const ResultItem& resultItem);
 
+  //! Gets the appropriate result to return when the query is evaluted to false
+  std::vector<std::string> getNegativeResult(const ResultType& resultType);
+
+  //! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
+  std::vector<std::string> runConstraintSolver(
+      Result* result, QueryConstraints& query_constraints);
+
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};
 

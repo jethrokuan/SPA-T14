@@ -40,26 +40,19 @@ class SynAttr {
   Synonym synonym;
   AttrName attrName;
 
-  SynAttr(Synonym synonym_, AttrName attrName_)
-      : synonym(synonym_), attrName(attrName_){};
-
-  static std::optional<SynAttr> construct(Synonym synonym, AttrName name,
-                                          std::vector<Declaration>* decls);
+  SynAttr(Synonym synonym, AttrName name, std::vector<Declaration>* decls);
 
   bool operator==(const SynAttr& other) const;
 };
 
 class AttrRef {
  public:
-  AttrRef(std::variant<QuoteIdent, unsigned int, Synonym, SynAttr> attr_,
-          AttrType attrType_)
-      : attr(attr_), attrType(attrType_){};
   std::variant<QuoteIdent, unsigned int, Synonym, SynAttr> attr;
   AttrType attrType;
 
-  static std::optional<AttrRef> construct(
-      std::variant<QuoteIdent, unsigned int, Synonym, SynAttr> attr,
-      std::vector<Declaration>* decls);
+  // Constructors
+  AttrRef(std::variant<QuoteIdent, unsigned int, Synonym, SynAttr> attr_,
+          std::vector<Declaration>* decls);
 
   bool operator==(const AttrRef& other) const;
 };

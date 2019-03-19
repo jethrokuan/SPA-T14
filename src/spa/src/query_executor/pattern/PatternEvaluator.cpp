@@ -45,10 +45,6 @@ bool PatternEvaluator::handlePatternLHSUnderscore(
     // pattern a (_, _"x + y"_) --> partial match, no var constraint
     // TODO: Iter 2 check if matcher is partial!
     // Assume is true for now
-    // TODO: RETURNING FALSE TO PASS AUTOTESTER FOR ITER1 PARITY
-    if (!matcher->isPartial) {
-      return false;
-    }
     std::ostringstream stream;
     stream << matcher->expr;
 
@@ -85,10 +81,6 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(
     // pattern a ("x", _"x + y"_) --> partial match, no var constraint
     // TODO: Iter 2 check if matcher is partial!
     // Assume is true for now
-    // TODO: RETURNING FALSE TO PASS AUTOTESTER FOR ITER1 PARITY
-    if (!matcher->isPartial) {
-      return false;
-    }
     std::ostringstream rhs_partial;
     rhs_partial << matcher->expr;
 
@@ -133,10 +125,6 @@ bool PatternEvaluator::handlePatternLHSSynonym(const Synonym& syn,
     // pattern a (v, _"x + y"_) --> partial match, no var constraint
     std::ostringstream rhs_partial;
     rhs_partial << matcher->expr;
-    // TODO: RETURNING FALSE TO PASS AUTOTESTER FOR ITER1 PARITY
-    if (!matcher->isPartial) {
-      return false;
-    }
     // Select partial or complete match
     PairedConstraintSet allowed_values;
     if (matcher->isPartial) {

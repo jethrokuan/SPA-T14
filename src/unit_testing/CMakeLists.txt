@@ -25,7 +25,6 @@ set(srcs ${srcs}
 # Query Builder
 set(srcs ${srcs}
   src/query_builder/TestQueryValidator.cpp
-  src/query_builder/TestQuoteIdent.cpp
   src/query_builder/TestSynonym.cpp
   src/query_builder/TestQueryLexer.cpp
   src/query_builder/TestQueryParser.cpp

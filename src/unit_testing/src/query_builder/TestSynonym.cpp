@@ -1,93 +1,70 @@
 #include "catch.hpp"
 
+#include "query_builder/core/exceptions.h"
 #include "query_builder/pql/pql.h"
 
+using namespace QE;
+
 TEST_CASE ("Empty Synonym") {
-  auto d = QE::Synonym::construct("");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym(""), PQLParseException);
 }
 
-TEST_CASE ("Single letter Synonym") {
-  auto d = QE::Synonym::construct("p");
-  REQUIRE(d);
-}
+TEST_CASE ("Single letter Synonym") { REQUIRE_NOTHROW(Synonym("p")); }
 
 TEST_CASE ("Single number Synonym") {
-  auto d = QE::Synonym::construct("1");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("1"), PQLParseException);
 }
 
 TEST_CASE ("Single space Synonym") {
-  auto d = QE::Synonym::construct(" ");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym(" "), PQLParseException);
 }
 
 TEST_CASE ("Single underscore Synonym") {
-  auto d = QE::Synonym::construct("_");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("_"), PQLParseException);
 }
 
-TEST_CASE ("Multi-letter Synonym") {
-  auto d = QE::Synonym::construct("pn");
-  REQUIRE(d);
-}
+TEST_CASE ("Multi-letter Synonym") { REQUIRE_NOTHROW(Synonym("pn")); }
 
 TEST_CASE ("Multi-letter with trailing number Synonym") {
-  auto d = QE::Synonym::construct("pn1");
-  REQUIRE(d);
+  REQUIRE_NOTHROW(Synonym("pn1"));
 }
 
 TEST_CASE ("Interleaving letter and number Synonym") {
-  auto d = QE::Synonym::construct("pn1as");
-  REQUIRE(d);
+  REQUIRE_NOTHROW(Synonym("pn1as"));
 }
 
 TEST_CASE ("Single special character Synonym") {
-  auto d = QE::Synonym::construct("@");
-  REQUIRE(!d);
-}
-
-TEST_CASE ("Empty Synonym with quotes") {
-  auto d = QE::Synonym::construct("");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("@"), PQLParseException);
 }
 
 TEST_CASE ("Single letter Synonym with quotes") {
-  auto d = QE::Synonym::construct("\"p\"");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("\"p\""), PQLParseException);
 }
 
 TEST_CASE ("Single number Synonym with quotes") {
-  auto d = QE::Synonym::construct("\"1\"");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("\"1\""), PQLParseException);
 }
 
 TEST_CASE ("Single space Synonym with quotes") {
-  auto d = QE::Synonym::construct("\" \"");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("\" \""), PQLParseException);
 }
 
 TEST_CASE ("Single underscore Synonym with quotes") {
-  auto d = QE::Synonym::construct("\"_\"");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("\"_\""), PQLParseException);
 }
 
 TEST_CASE ("Multi-letter Synonym with quotes") {
-  auto d = QE::Synonym::construct("\"pn\"");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("\"pn\""), PQLParseException);
 }
 
 TEST_CASE ("Multi-letter with trailing number Synonym with quotes") {
-  auto d = QE::Synonym::construct("\"pn1\"");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("\"pn1\""), PQLParseException);
 }
 
 TEST_CASE ("Interleaving letter and number Synonym with quotes") {
-  auto d = QE::Synonym::construct("\"pn1as\"");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("\"p1nas\""), PQLParseException);
 }
 
 TEST_CASE ("Single special character Synonym with quotes") {
-  auto d = QE::Synonym::construct("\"@\"");
-  REQUIRE(!d);
+  REQUIRE_THROWS_AS(Synonym("\"@\""), PQLParseException);
 }

@@ -1,5 +1,5 @@
-#include "query_builder/core/query_parser.h"
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_parser.h"
 #include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
@@ -77,20 +77,14 @@ bool QueryParser::parseDeclarationClause() {
   std::string synonym_str = advance();
   // TODO: Inheriting clunky code here, should fix someday
 
-  std::optional<Synonym> synonym = Synonym::construct(synonym_str);
-  if (!synonym) {
-    throw PQLParseException("Failed to parse synonym");
-  }
-  synonyms.push_back(*synonym);
+  Synonym synonym = Synonym(synonym_str);
+  synonyms.push_back(synonym);
 
   while (!match(";")) {
     expect(",");
     synonym_str = advance();
-    synonym = Synonym::construct(synonym_str);
-    if (!synonym) {
-      throw PQLParseException("Failed to parse synonym");
-    }
-    synonyms.push_back(*synonym);
+    synonym = Synonym(synonym_str);
+    synonyms.push_back(synonym);
   }
 
   for (const Synonym syn : synonyms) {
@@ -103,25 +97,20 @@ bool QueryParser::parseDeclarationClause() {
 
 ResultItem QueryParser::parseResultItem() {
   auto synonym_str = advance();
-  auto synonym = Synonym::construct(synonym_str);
+  auto synonym = Synonym(synonym_str);
   // No default constructor - needs some default value
-  std::variant<Synonym, SynAttr> result_item =
-      Synonym::construct("default").value();
-
-  if (!synonym) {
-    throw PQLParseException("Expected a synonym, got " + previous());
-  }
+  std::variant<Synonym, SynAttr> result_item = Synonym("default");
 
   if (match(".")) {
     AttrName name = attrNameFromString(advance());
-    auto syn_attr = SynAttr::construct(*synonym, name, query_->declarations);
+    auto syn_attr = SynAttr::construct(synonym, name, query_->declarations);
     if (!syn_attr) {
       throw PQLParseException("Invalid synonym - attrName pair: (" +
-                              synonym->synonym + ", " + previous() + ")");
+                              synonym.synonym + ", " + previous() + ")");
     }
     result_item = syn_attr.value();
   } else {
-    result_item = synonym.value();
+    result_item = synonym;
   }
 
   return result_item;
@@ -165,8 +154,8 @@ Ref QueryParser::parseRef() {
     return QuoteIdent(ident);
   } else if (is_valid_synonym(peek())) {
     std::string synonym_str = advance();
-    auto synonym = Synonym::construct(synonym_str);
-    return synonym.value();
+    auto synonym = Synonym(synonym_str);
+    return synonym;
   } else {
     throw PQLParseException("Expecting a ref, got '" + peek() + "'.");
   }
@@ -273,13 +262,9 @@ bool QueryParser::parsePattern() {
   }
 
   auto synonym_str = advance();
-  auto synonym = Synonym::construct(synonym_str);
+  auto synonym = Synonym(synonym_str);
 
-  if (!synonym) {
-    throw PQLParseException("Expected a synonym, got " + previous());
-  }
-
-  auto decl = findDeclaration(synonym.value());
+  auto decl = findDeclaration(synonym);
 
   expect("(");
 
@@ -292,7 +277,7 @@ bool QueryParser::parsePattern() {
       ref = parseRef();
       expect(",");
       expr = parseExpression();
-      pattern = new PatternB(synonym.value(), ref, expr);
+      pattern = new PatternB(synonym, ref, expr);
       break;
     case DesignEntity::IF:
       ref = parseRef();
@@ -300,13 +285,13 @@ bool QueryParser::parsePattern() {
       expect("_");
       expect(",");
       expect("_");
-      pattern = new PatternB(synonym.value(), ref);
+      pattern = new PatternB(synonym, ref);
       break;
     case DesignEntity::WHILE:
       ref = parseRef();
       expect(",");
       expect("_");
-      pattern = new PatternB(synonym.value(), ref);
+      pattern = new PatternB(synonym, ref);
       break;
     case DesignEntity::READ:
     case DesignEntity::STMT:
@@ -339,18 +324,18 @@ AttrRef QueryParser::parseAttrRef() {
     attr_ref = AttrRef::construct(ident_, query_->declarations);
   } else if (is_valid_synonym(peek())) {
     std::string synonym_str = advance();
-    auto synonym = Synonym::construct(synonym_str);
+    auto synonym = Synonym(synonym_str);
 
     if (match(".")) {  // is SynAttr
       AttrName name = attrNameFromString(advance());
-      auto syn_attr = SynAttr::construct(*synonym, name, query_->declarations);
+      auto syn_attr = SynAttr::construct(synonym, name, query_->declarations);
       if (!syn_attr) {
         throw PQLParseException("Invalid synonym - attrName pair: (" +
-                                synonym->synonym + ", " + previous() + ")");
+                                synonym.synonym + ", " + previous() + ")");
       }
       attr_ref = AttrRef::construct(*syn_attr, query_->declarations);
     } else {
-      attr_ref = AttrRef::construct(*synonym, query_->declarations);
+      attr_ref = AttrRef::construct(synonym, query_->declarations);
     }
   } else {
     attr_ref = std::nullopt;

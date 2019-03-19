@@ -18,7 +18,6 @@ namespace PKB {
 class PKBManager {
  private:
   std::shared_ptr<PKBStorage> pkb_storage = std::make_shared<PKBStorage>();
-
   std::optional<std::unordered_set<std::string>> getSetFromMap(
       const std::unordered_map<std::string, std::unordered_set<std::string>> &,
       const std::string);
@@ -155,6 +154,9 @@ class PKBManager {
   std::optional<std::unordered_set<PreviousLine>> getPreviousLineT(
       const NextLine);
   std::optional<std::unordered_set<NextLine>> getNextLineT(const PreviousLine);
+
+  // CFG
+  std::unordered_map<std::string, std::unordered_set<std::string>> getCFG();
 
   // misc helpers
   std::optional<std::unordered_set<Line>> getLineForAssignVar(const Variable);

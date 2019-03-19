@@ -683,4 +683,9 @@ void PKBManager::getNextLineTH(
   }
 }
 
+std::unordered_map<std::string, std::unordered_set<std::string>>
+PKBManager::getCFG() {
+  return pkb_storage->line_previous_line_next_map;
+};
+
 }  // namespace PKB

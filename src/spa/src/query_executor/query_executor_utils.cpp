@@ -67,3 +67,49 @@ std::vector<std::string> QueryExecutor::getNegativeResult(
       assert(false);
   }
 }
+
+void QueryExecutor::addAllValuesForVariableToConstraints(
+    std::vector<Declaration>* declarations, PKBManager* pkb,
+    const std::string& var_name, QueryConstraints& qc) {
+  // For optimizations's sake: if we spot the variable already in the
+  // constraint list - do not re-execute getSelect and re-constrain. If the
+  // variable is already in the list, we can assume that this function was
+  // already run. Because for a variable to be in the constraint list, it must
+  // have been either in a such-that clause or pattern clause (ignoring
+  // select). If it was in either of those clauses, this function would have
+  // run.
+  if (qc.isVarInAllPossibleValues(var_name)) return;
+
+  auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);
+  qc.addToAllPossibleValues(var_name, all_de);
+}
+
+void QueryExecutor::addAllSelectedVarsToConstraints(Query* query,
+                                                    QueryConstraints& qc) {
+  // No variables to constrain if this is a BOOLEAN query
+  if (query->result->T == ResultType::BOOLEAN) return;
+  // Otherwise add each variable's full set of values to constraints
+  for (const ResultItem& select_var : *(query->result->selected_declarations)) {
+    // Get the selected variable's string representation
+    std::string select_var_str;
+    if (auto syn = std::get_if<Synonym>(&select_var)) {
+      select_var_str = syn->synonym;
+    } else if (auto syn_attr = std::get_if<SynAttr>(&select_var)) {
+      select_var_str = syn_attr->synonym.synonym;
+    } else {
+      // Only these two types are expected
+      assert(false);
+    }
+    addAllValuesForVariableToConstraints(query->declarations, pkb,
+                                         select_var_str, qc);
+  }
+}
+
+std::unordered_set<std::string>
+QueryExecutor::getAllDesignEntityValuesByVarName(
+    std::vector<Declaration>* declarations, PKBManager* pkb,
+    const std::string& var_name) {
+  auto var_de = Declaration::findDeclarationForString(declarations, var_name)
+                    ->getDesignEntity();
+  return QueryExecutor::getSelect(pkb, var_de);
+}

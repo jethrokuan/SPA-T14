@@ -28,11 +28,9 @@ int main(int argc, char** argv) {
 
   std::cout << "digraph cfg {" << std::endl;
   for (const auto& node : adj_list) {
-    std::cout << node.first;
     for (const auto& outward_node : node.second) {
-      std::cout << " -> " << outward_node;
+      std::cout << node.first << " -> " << outward_node << std::endl;
     }
-    std::cout << std::endl;
   }
   std::cout << "}";
 

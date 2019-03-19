@@ -34,7 +34,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   if (!query->rel_cond->empty()) {
     for (auto& rel_cond : *(query->rel_cond)) {
       if (!handleSuchThat(query->declarations, rel_cond, query_constraints)) {
-        return std::vector<std::string>();
+        return getNegativeResult(query->result->T);
       }
     }
   }
@@ -43,7 +43,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   if (!query->patternb->empty()) {
     for (auto& pattern : *(query->patternb)) {
       if (!handlePattern(query->declarations, pattern, query_constraints)) {
-        return std::vector<std::string>();
+        return getNegativeResult(query->result->T);
       }
     }
   }

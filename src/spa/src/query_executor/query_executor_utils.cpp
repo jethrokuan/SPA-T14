@@ -54,3 +54,16 @@ std::string QueryExecutor::resultItemToString(const ResultItem& resultItem) {
     assert(false);
   }
 }
+
+std::vector<std::string> QueryExecutor::getNegativeResult(
+    const ResultType& resultType) {
+  switch (resultType) {
+    case ResultType::TUPLE:
+      return std::vector<std::string>();
+    case ResultType::BOOLEAN:
+      return std::vector<std::string>{"FALSE"};
+    default:
+      // No other result types should be possible
+      assert(false);
+  }
+}

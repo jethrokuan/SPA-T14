@@ -1,5 +1,5 @@
-#include "query_builder/core/exceptions.h"
 #include "query_builder/core/query_parser.h"
+#include "query_builder/core/exceptions.h"
 #include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
@@ -65,7 +65,7 @@ bool QueryParser::parseDeclarationClause() {
   DesignEntity de;
   if (de_str.compare("prog") == 0) {
     expect("_");
-    expect("_line");
+    expect("line");
     de_str = "prog_line";
   }
   try {

@@ -22,9 +22,9 @@ enum class DesignEntity {
 // Utility definitions for different sets of design entities
 // Used in relation.cpp for relation synonym argument matching
 const auto ALL_STMT_DESIGN_ENTITIES = std::vector<DesignEntity>{
-    DesignEntity::ASSIGN, DesignEntity::READ,  DesignEntity::STMT,
-    DesignEntity::IF,     DesignEntity::WHILE, DesignEntity::PRINT,
-    DesignEntity::CALL};
+    DesignEntity::ASSIGN, DesignEntity::READ,     DesignEntity::STMT,
+    DesignEntity::IF,     DesignEntity::WHILE,    DesignEntity::PRINT,
+    DesignEntity::CALL,   DesignEntity::PROG_LINE};
 const auto ALL_STMT_DESIGN_ENTITIES_NO_PRINT = std::vector<DesignEntity>{
     DesignEntity::ASSIGN, DesignEntity::READ,  DesignEntity::STMT,
     DesignEntity::IF,     DesignEntity::WHILE, DesignEntity::CALL};
@@ -35,8 +35,6 @@ const auto PROCEDURE_DESIGN_ENTITY =
     std::vector<DesignEntity>{DesignEntity::PROCEDURE};
 const auto VARIABLE_DESIGN_ENTITY =
     std::vector<DesignEntity>{DesignEntity::VARIABLE};
-const auto PROG_LINE_DESIGN_ENTITY =
-    std::vector<DesignEntity>{DesignEntity::PROG_LINE};
 const auto ASSIGN_DESIGN_ENTITY =
     std::vector<DesignEntity>{DesignEntity::ASSIGN};
 // wordMap is declared in the .cpp file

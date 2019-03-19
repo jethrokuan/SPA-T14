@@ -103,12 +103,8 @@ ResultItem QueryParser::parseResultItem() {
 
   if (match(".")) {
     AttrName name = attrNameFromString(advance());
-    auto syn_attr = SynAttr::construct(synonym, name, query_->declarations);
-    if (!syn_attr) {
-      throw PQLParseException("Invalid synonym - attrName pair: (" +
-                              synonym.synonym + ", " + previous() + ")");
-    }
-    result_item = syn_attr.value();
+    auto syn_attr = SynAttr(synonym, name, query_->declarations);
+    result_item = syn_attr;
   } else {
     result_item = synonym;
   }
@@ -328,12 +324,8 @@ AttrRef QueryParser::parseAttrRef() {
 
     if (match(".")) {  // is SynAttr
       AttrName name = attrNameFromString(advance());
-      auto syn_attr = SynAttr::construct(synonym, name, query_->declarations);
-      if (!syn_attr) {
-        throw PQLParseException("Invalid synonym - attrName pair: (" +
-                                synonym.synonym + ", " + previous() + ")");
-      }
-      attr_ref = AttrRef(*syn_attr, query_->declarations);
+      auto syn_attr = SynAttr(synonym, name, query_->declarations);
+      attr_ref = AttrRef(syn_attr, query_->declarations);
     } else {
       attr_ref = AttrRef(synonym, query_->declarations);
     }

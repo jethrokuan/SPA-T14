@@ -61,9 +61,10 @@ TEST_CASE ("Test Query Parser") {
                                                  QE::QuoteIdent("x"),
                                                  Matcher(true, "1")));
     REQUIRE(*(query.with_cond->at(0)) ==
-            QE::WithCond(QE::AttrRef(QE::SynAttr(QE::Synonym("a"),
-                                                 QE::AttrName::STMT_NO),
-                                     query.declarations),
-                         QE::AttrRef(1, query.declarations)));
+            QE::WithCond(
+                QE::AttrRef(QE::SynAttr(QE::Synonym("a"), QE::AttrName::STMT_NO,
+                                        query.declarations),
+                            query.declarations),
+                QE::AttrRef(1, query.declarations)));
   }
 }

@@ -40,11 +40,7 @@ class SynAttr {
   Synonym synonym;
   AttrName attrName;
 
-  SynAttr(Synonym synonym_, AttrName attrName_)
-      : synonym(synonym_), attrName(attrName_){};
-
-  static std::optional<SynAttr> construct(Synonym synonym, AttrName name,
-                                          std::vector<Declaration>* decls);
+  SynAttr(Synonym synonym, AttrName name, std::vector<Declaration>* decls);
 
   bool operator==(const SynAttr& other) const;
 };

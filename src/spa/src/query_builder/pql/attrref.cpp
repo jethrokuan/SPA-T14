@@ -82,18 +82,19 @@ bool AttrRef::operator==(const AttrRef& other) const {
   return attr == other.attr && attrType == other.attrType;
 }
 
-std::optional<SynAttr> SynAttr::construct(Synonym synonym, AttrName attrName,
-                                          std::vector<Declaration>* decls) {
+SynAttr::SynAttr(Synonym synonym, AttrName attrName,
+                 std::vector<Declaration>* decls)
+    : synonym(synonym), attrName(attrName) {
   auto decl = Declaration::findDeclarationForSynonym(decls, synonym);
   if (!decl) {
     throw PQLParseException("No such synonym declared.");
   }
-  AttrSet valid_attr_names = getAttrSet(decl->getDesignEntity());
-  if (valid_attr_names.find(attrName) == valid_attr_names.end()) {
-    return std::nullopt;
-  }
 
-  return SynAttr(synonym, attrName);
+  AttrSet valid_attr_names = getAttrSet(decl->getDesignEntity());
+
+  if (valid_attr_names.find(attrName) == valid_attr_names.end()) {
+    throw PQLParseException("Invalid attribute name.");
+  }
 }
 
 bool SynAttr::operator==(const SynAttr& other) const {

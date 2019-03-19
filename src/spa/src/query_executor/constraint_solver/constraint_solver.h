@@ -78,6 +78,8 @@ class ConstraintSolver {
       const std::unordered_map<std::string, std::unordered_set<std::string>>);
 
  public:
+  //! Returns true if all synonyms have at least one valid value, else false
+  static bool constrainAndSelectBoolean(QueryConstraints& qc);
   //! Special case of constrainAndSelect - select only one variable
   static std::vector<std::string> constrainAndSelect(
       QueryConstraints& qc, const std::string toSelect);

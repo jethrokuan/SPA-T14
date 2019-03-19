@@ -26,6 +26,15 @@ std::vector<std::string> ConstraintSolver::constrainAndSelect(
   return constrainAndSelect(qc, std::vector{toSelect}).at(0);
 }
 
+bool ConstraintSolver::constrainAndSelectBoolean(QueryConstraints& qc) {
+  // Perform constrain step to get final set of allowed values
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      end_one_synonym_constraints = constrain(qc);
+
+  // Check that all synonyms have at least one valid value
+  return selectBoolean(end_one_synonym_constraints);
+}
+
 //! Produces the final set of allowed values for each synonym
 std::unordered_map<std::string, std::unordered_set<std::string>>
 ConstraintSolver::constrain(QueryConstraints& qc) {
@@ -180,7 +189,6 @@ void ConstraintSolver::filterQueryConstraints(
   qc.setPairedVariableConstraintMapRef(pvcm);
 }
 
-//! Returns the vectors of allowed values for each selected synonym
 std::vector<std::vector<std::string>> ConstraintSolver::selectNonBoolean(
     const std::unordered_map<std::string, std::unordered_set<std::string>>&
         constraints,
@@ -196,6 +204,19 @@ std::vector<std::vector<std::string>> ConstraintSolver::selectNonBoolean(
   }
 
   return result;
+}
+
+bool ConstraintSolver::selectBoolean(
+    const std::unordered_map<std::string, std::unordered_set<std::string>>&
+        constraints) {
+  for (auto const& [synonym, constraint] : constraints) {
+    if (constraint.empty()) {
+      // No allowed values for this synonym - there does not
+      // exist a combination of synonyms to satisfy all clauses
+      return false;
+    }
+  }
+  return true;
 }
 
 void ConstraintSolver::printConstraints(

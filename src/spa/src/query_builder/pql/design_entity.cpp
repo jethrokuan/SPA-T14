@@ -1,5 +1,5 @@
-#include "query_builder/pql/design_entity.h"
 #include "query_builder/core/exceptions.h"
+#include "query_builder/pql/design_entity.h"
 #include "utils/utils.h"
 
 #include <stdexcept>
@@ -22,6 +22,7 @@ std::unordered_map<DesignEntity, std::string> designEntityToStringMap({
     {DesignEntity::VARIABLE, "variable"},
     {DesignEntity::CONSTANT, "constant"},
     {DesignEntity::PROCEDURE, "procedure"},
+    {DesignEntity::PROG_LINE, "prog_line"},
 });
 
 auto stringToDesignEntityMap =

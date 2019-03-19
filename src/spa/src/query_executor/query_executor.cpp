@@ -98,6 +98,10 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
       // std::cout << "procedure: ";
       return pkb->getProcedureSet();
       break;
+    case DesignEntity::PROG_LINE:
+      // std::cout << "prog_line: ";
+      return pkb->getStatementSet();
+      break;
     case DesignEntity::READ:
       // std::cout << "read";
       return pkb->getReadSet();
@@ -115,7 +119,6 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
       return pkb->getWhileSet();
       break;
     default:
-      break;
       // This should never happen - we should have handled all cases
       assert(false);
   }

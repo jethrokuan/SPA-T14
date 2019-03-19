@@ -8,8 +8,9 @@
 
 TEST_CASE ("Test Constraint Solver with no constraints") {
   auto qc = QueryConstraints();
-  REQUIRE(ConstraintSolver::constrainAndSelect(qc, "a") ==
-          std::vector<std::string>{});
+  REQUIRE_THROWS_AS(ConstraintSolver::constrainAndSelect(qc, "a") ==
+                        std::vector<std::string>{},
+                    std::runtime_error);
 }
 
 TEST_CASE ("Test Constraint Solver with one single-var constraint") {

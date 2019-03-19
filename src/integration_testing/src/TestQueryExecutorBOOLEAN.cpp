@@ -73,6 +73,6 @@ TEST_CASE ("Test Query Executor on BOOLEAN queries") {
     auto querystr =
         std::string("stmt s, s1; Select BOOLEAN such that Next(1, 1)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"FALSE1"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"FALSE"});
   }
 }

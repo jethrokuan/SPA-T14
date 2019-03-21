@@ -192,7 +192,7 @@ void PKBStorage::storeLineProcedureRelation(const Line line,
 
 // pattern
 
-void PKBStorage::storePatternAssign(const Variable var, const ExprStr expr_str,
+void PKBStorage::storeAssignPattern(const Variable var, const ExprStr expr_str,
                                     const Line line) {
   addToSetMap(var_line_expr_str_map, var,
               std::pair<Line, ExprStr>(line, expr_str));

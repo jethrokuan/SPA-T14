@@ -1,5 +1,5 @@
-#include "query_builder/core/exceptions.h"
 #include "query_builder/pql/design_entity.h"
+#include "query_builder/core/exceptions.h"
 #include "utils/utils.h"
 
 #include <stdexcept>

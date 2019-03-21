@@ -131,18 +131,20 @@ class PKBManager {
   std::optional<std::unordered_set<Line>> getLineUsesVar(const Variable);
 
   // pattern
-  std::optional<std::unordered_set<Line>> getCompleteMatchLinesWithVar(
-      const Variable, const Pattern);
-  std::optional<std::unordered_set<Line>> getPartialMatchLinesWithVar(
-      const Variable, const Pattern);
-  std::optional<std::unordered_set<Line>> getCompleteMatchLines(const Pattern);
-  std::optional<std::unordered_set<Line>> getPartialMatchLines(const Pattern);
+  std::optional<std::unordered_set<Line>>
+  getAssignPatternCompleteMatchLinesWithVar(const Variable, const Pattern);
+  std::optional<std::unordered_set<Line>>
+  getAssignPatternPartialMatchLinesWithVar(const Variable, const Pattern);
+  std::optional<std::unordered_set<Line>> getAssignPatternCompleteMatchLines(
+      const Pattern);
+  std::optional<std::unordered_set<Line>> getAssignPatternPartialMatchLines(
+      const Pattern);
   std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
-  getCompleteMatchLinesAndVars(const Pattern);
+  getAssignPatternCompleteMatchLinesAndVars(const Pattern);
   std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
-  getPartialMatchLinesAndVars(const Pattern);
+  getAssignPatternPartialMatchLinesAndVars(const Pattern);
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
-  getAllPatternLinesAndVars();
+  getAllAssignPatternLinesAndVars();
   bool isPatternExists(const Pattern);
 
   // next

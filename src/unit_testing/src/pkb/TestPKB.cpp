@@ -42,32 +42,33 @@ TEST_CASE ("Test PKB for assign.txt") {
   // test pattern
   std::unordered_set<std::string> pattern_test_1_check;
   pattern_test_1_check.insert("1");
-  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("i", "2+5");
+  auto pattern_test_1 =
+      pkb.getAssignPatternCompleteMatchLinesWithVar("i", "2+5");
   REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   std::unordered_set<std::string> pattern_test_2_check;
   pattern_test_2_check.insert("1");
-  auto pattern_test_2 = pkb.getPartialMatchLinesWithVar("i", "2");
+  auto pattern_test_2 = pkb.getAssignPatternPartialMatchLinesWithVar("i", "2");
   REQUIRE(*pattern_test_2 == pattern_test_2_check);
 
   std::unordered_set<std::string> pattern_test_3_check;
   pattern_test_3_check.insert("1");
-  auto pattern_test_3 = pkb.getPartialMatchLinesWithVar("i", "5");
+  auto pattern_test_3 = pkb.getAssignPatternPartialMatchLinesWithVar("i", "5");
   REQUIRE(*pattern_test_3 == pattern_test_3_check);
 
-  auto pattern_test_4 = pkb.getPartialMatchLinesWithVar("x", "x");
+  auto pattern_test_4 = pkb.getAssignPatternPartialMatchLinesWithVar("x", "x");
   REQUIRE(pattern_test_4 == std::nullopt);
 
-  auto pattern_test_5 = pkb.getPartialMatchLines("x");
+  auto pattern_test_5 = pkb.getAssignPatternPartialMatchLines("x");
   REQUIRE(pattern_test_5 == std::nullopt);
 
-  auto pattern_test_6 = pkb.getCompleteMatchLines("x");
+  auto pattern_test_6 = pkb.getAssignPatternCompleteMatchLines("x");
   std::unordered_set<PKB::Variable> pattern_test_6_set;
   REQUIRE(pattern_test_6 == std::nullopt);
 
   std::unordered_set<std::string> pattern_test_7_check;
   pattern_test_7_check.insert("1");
-  auto pattern_test_7 = pkb.getCompleteMatchLines("2+5");
+  auto pattern_test_7 = pkb.getAssignPatternCompleteMatchLines("2+5");
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   // next
@@ -278,7 +279,7 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   // test pattern
   std::unordered_set<PKB::Line> pattern_test_1_check;
   pattern_test_1_check.insert("1");
-  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("i", "5");
+  auto pattern_test_1 = pkb.getAssignPatternCompleteMatchLinesWithVar("i", "5");
   REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   // CFG
@@ -805,19 +806,22 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_1_check.insert("8");
   pattern_test_1_check.insert("12");
   pattern_test_1_check.insert("17");
-  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("y", "y+1");
+  auto pattern_test_1 =
+      pkb.getAssignPatternCompleteMatchLinesWithVar("y", "y+1");
   REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   std::unordered_set<std::string> pattern_test_2_check;
   pattern_test_2_check.insert("10");
   pattern_test_2_check.insert("14");
   pattern_test_2_check.insert("19");
-  auto pattern_test_2 = pkb.getCompleteMatchLinesWithVar("z", "z+2");
+  auto pattern_test_2 =
+      pkb.getAssignPatternCompleteMatchLinesWithVar("z", "z+2");
   REQUIRE(*pattern_test_2 == pattern_test_2_check);
 
   std::unordered_set<std::string> pattern_test_3_check;
   pattern_test_3_check.insert("21");
-  auto pattern_test_3 = pkb.getCompleteMatchLinesWithVar("z", "z+4");
+  auto pattern_test_3 =
+      pkb.getAssignPatternCompleteMatchLinesWithVar("z", "z+4");
   REQUIRE(*pattern_test_3 == pattern_test_3_check);
 
   std::unordered_set<std::string> pattern_test_4_check;
@@ -831,12 +835,12 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_4_check.insert("19");
   pattern_test_4_check.insert("20");
   pattern_test_4_check.insert("21");
-  auto pattern_test_4 = pkb.getPartialMatchLinesWithVar("z", "z");
+  auto pattern_test_4 = pkb.getAssignPatternPartialMatchLinesWithVar("z", "z");
   REQUIRE(*pattern_test_4 == pattern_test_4_check);
 
   std::unordered_set<std::string> pattern_test_5_check;
   pattern_test_5_check.insert("21");
-  auto pattern_test_5 = pkb.getCompleteMatchLines("z+4");
+  auto pattern_test_5 = pkb.getAssignPatternCompleteMatchLines("z+4");
   REQUIRE(*pattern_test_5 == pattern_test_5_check);
 
   std::unordered_set<std::string> pattern_test_6_check;
@@ -850,7 +854,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_6_check.insert("19");
   pattern_test_6_check.insert("20");
   pattern_test_6_check.insert("21");
-  auto pattern_test_6 = pkb.getPartialMatchLines("z");
+  auto pattern_test_6 = pkb.getAssignPatternPartialMatchLines("z");
   REQUIRE(*pattern_test_6 == pattern_test_6_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
@@ -859,7 +863,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("9", "z"));
   pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("13", "z"));
   pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("18", "z"));
-  auto pattern_test_7 = pkb.getCompleteMatchLinesAndVars("z + 1");
+  auto pattern_test_7 = pkb.getAssignPatternCompleteMatchLinesAndVars("z + 1");
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
@@ -874,7 +878,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("19", "z"));
   pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("20", "z"));
   pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("21", "z"));
-  auto pattern_test_8 = pkb.getPartialMatchLinesAndVars("z");
+  auto pattern_test_8 = pkb.getAssignPatternPartialMatchLinesAndVars("z");
   REQUIRE(*pattern_test_8 == pattern_test_8_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
@@ -897,7 +901,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("20", "z"));
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("21", "z"));
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("22", "x"));
-  auto pattern_test_9 = pkb.getAllPatternLinesAndVars();
+  auto pattern_test_9 = pkb.getAllAssignPatternLinesAndVars();
   REQUIRE(pattern_test_9 == pattern_test_9_check);
 
   std::unordered_set<std::string> pattern_test_10_check;

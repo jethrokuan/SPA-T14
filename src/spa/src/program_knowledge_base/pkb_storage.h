@@ -165,7 +165,9 @@ class PKBStorage {
   void storeProcedure(const Procedure);
   void storeCall(const Line, const Procedure);
 
-  void storePatternAssign(const Variable, const ExprStr, const Line);
+  void storeAssignPattern(const Variable, const ExprStr, const Line);
+  void storeIfPattern();
+  void storeWhilePattern();
 
   // helper
   void storeLineProcedureRelation(const Line, const Procedure);

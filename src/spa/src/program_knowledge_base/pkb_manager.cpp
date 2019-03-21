@@ -369,8 +369,8 @@ std::optional<std::unordered_set<Line>> PKBManager::getLineModifiesVar(
 
 // TODO tidy this up
 std::optional<std::unordered_set<Line>>
-PKBManager::getCompleteMatchLinesWithVar(const Variable var,
-                                         const Pattern pattern) {
+PKBManager::getAssignPatternCompleteMatchLinesWithVar(const Variable var,
+                                                      const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
@@ -405,8 +405,9 @@ PKBManager::getCompleteMatchLinesWithVar(const Variable var,
   }
 }
 
-std::optional<std::unordered_set<Line>> PKBManager::getPartialMatchLinesWithVar(
-    const Variable var, const Pattern pattern) {
+std::optional<std::unordered_set<Line>>
+PKBManager::getAssignPatternPartialMatchLinesWithVar(const Variable var,
+                                                     const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
@@ -434,8 +435,8 @@ std::optional<std::unordered_set<Line>> PKBManager::getPartialMatchLinesWithVar(
   }
 }
 
-std::optional<std::unordered_set<Line>> PKBManager::getCompleteMatchLines(
-    const Pattern pattern) {
+std::optional<std::unordered_set<Line>>
+PKBManager::getAssignPatternCompleteMatchLines(const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
@@ -464,8 +465,8 @@ std::optional<std::unordered_set<Line>> PKBManager::getCompleteMatchLines(
   }
 }
 
-std::optional<std::unordered_set<Line>> PKBManager::getPartialMatchLines(
-    const Pattern pattern) {
+std::optional<std::unordered_set<Line>>
+PKBManager::getAssignPatternPartialMatchLines(const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
@@ -488,7 +489,7 @@ std::optional<std::unordered_set<Line>> PKBManager::getPartialMatchLines(
 }
 
 std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
-PKBManager::getCompleteMatchLinesAndVars(const Pattern pattern) {
+PKBManager::getAssignPatternCompleteMatchLinesAndVars(const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
@@ -504,7 +505,7 @@ PKBManager::getCompleteMatchLinesAndVars(const Pattern pattern) {
 // TODO check for possible errors
 // check if it always returns properly
 std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
-PKBManager::getPartialMatchLinesAndVars(const Pattern pattern) {
+PKBManager::getAssignPatternPartialMatchLinesAndVars(const Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
@@ -536,7 +537,7 @@ PKBManager::getPartialMatchLinesAndVars(const Pattern pattern) {
 }
 
 std::unordered_set<std::pair<Line, Variable>, pair_hash>
-PKBManager::getAllPatternLinesAndVars() {
+PKBManager::getAllAssignPatternLinesAndVars() {
   return pkb_storage->assign_line_var_set;
 }
 

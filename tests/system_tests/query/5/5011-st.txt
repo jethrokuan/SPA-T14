@@ -29,26 +29,32 @@ Select s such that Follows(1,s)
 2
 5000
 7 - valid query 
+stmt s;
 Select s such that Follows(2,s)
 none
 5000
 8 - valid query 
+stmt s;
 Select s such that Follows(3,s)
 4
 5000
 9 - valid query 
+stmt s;
 Select s such that Follows(3,s)
 4
 5000
 10 - valid query 
+stmt s;
 Select s such that Follows(4,s)
 5
 5000
 11 - valid query 
+stmt s;
 Select s such that Follows(23,s)
 none
 5000
 12 - valid query 
+stmt s;
 Select s such that Follows(24,s)
 25
 5000
@@ -94,10 +100,11 @@ none
 5000
 21 - valid query
 stmt s;
-Select s such that Parents(4,s)
+Select s such that Parent(4,s)
 none
+5000
 22 - valid query (look for parent)
-stmt s:
+stmt s;
 Select s such that Parent(s,5)
 2
 5000
@@ -108,17 +115,17 @@ Select s such that Parent(s,8)
 5000
 24 - valid query
 stmt s;
-Select s such that Parents*(s, 20)
+Select s such that Parent*(s, 20)
 4, 7, 11, 16
 5000
 25 - valid query (find parent of specific design entities)
 while w;
-Select w such that Parents*(w, 20)
+Select w such that Parent*(w, 20)
 none
 5000
 26 - valid query 
 if i;
-Select i such that Parents*(i, 20)
+Select i such that Parent*(i, 20)
 none
 5000
 27 - valid query (START OF USES SELECT CLAUSES)

@@ -72,6 +72,7 @@ Select a such that Parent*(i,a)
 variable v; while w;
 Select v such that Uses(w,v)
 numInserts
+5000
 16 - valid query (uses)
 print p; variable v;
 Select v such that Uses(p,v)
@@ -110,7 +111,7 @@ Select r such that Modifies(r,v)
 23 - valid query
 if i; variable v;
 Select v such that Modifies(i,v)
-cellPriority, cellDEtails, cellStatus
+cellPriority, cellDetails, cellStatus
 5000
 24 - valid query
 if i; variable v;
@@ -121,3 +122,4 @@ Select i such that Modifies(i,v)
 procedure p; variable v;
 Select p such that Modifies(p,v)
 main, insertCell, retrieveCellStatus
+5000

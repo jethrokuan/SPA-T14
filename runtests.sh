@@ -135,8 +135,8 @@ build/src/autotester/autotester tests/system_tests/iteration-2/4-nest-while-next
 build/src/autotester/autotester tests/system_tests/iteration-2/5-nest-if-next.txt tests/system_tests/iteration-2/5-nest-if-next-queries.txt tests/system_tests/output/5-next.xml
 build/src/autotester/autotester tests/system_tests/iteration-2/5-nest-if-next.txt tests/system_tests/iteration-2/5-nest-if-next-t-queries.txt tests/system_tests/output/5-next-t.xml
 
-build/src/autotester/autotester tests/system_tests/iteration-2/6-nest-if-balanced-next.txt tests/system_tests/iteration-2/6-nest-if-balanced-next-queries.txt tests/system_tests/output/6-next.xml
-build/src/autotester/autotester tests/system_tests/iteration-2/6-nest-if-balanced-next.txt tests/system_tests/iteration-2/6-nest-if-balanced-next-t-queries.txt tests/system_tests/output/6-next-t.xml
+build/src/autotester/autotester tests/system_tests/iteration-2/6-nest-if-next-balanced.txt tests/system_tests/iteration-2/6-nest-if-balanced-next-queries.txt tests/system_tests/output/6-next.xml
+build/src/autotester/autotester tests/system_tests/iteration-2/6-nest-if-next-balanced.txt tests/system_tests/iteration-2/6-nest-if-balanced-next-t-queries.txt tests/system_tests/output/6-next-t.xml
 
 build/src/autotester/autotester tests/system_tests/iteration-2/7-mixed-nest-next.txt tests/system_tests/iteration-2/7-mixed-nest-next-queries.txt tests/system_tests/output/7-next.xml
 build/src/autotester/autotester tests/system_tests/iteration-2/7-mixed-nest-next.txt tests/system_tests/iteration-2/7-mixed-nest-next-t-queries.txt tests/system_tests/output/7-next-t.xml

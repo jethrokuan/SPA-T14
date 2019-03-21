@@ -6,7 +6,7 @@ main, insertCell, retrieveCellStatus
 2 - valid syntax (no clauses)
 variable v;
 Select v
-numInserts, cellIndex, retrieveNumCells, newcellValue, cellPriority, cellDetails, cellStatus, high, low, none
+numInserts, cellIndex, retrieveNumCells, cellPriority, cellDetails, cellStatus, high, low, none, cellValue, newCellValue
 5000
 3 - valid syntax (no clauses)
 stmt s;

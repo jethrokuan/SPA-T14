@@ -18,13 +18,13 @@ build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/
 
 # Tests with patterns
 # 1 Synonym, 1 Clause (patterns)
-build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/1011-p.txt tests/system_tests/output/1011-p.xml
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1011-p.txt tests/system_tests/output/1011-p.xml
 # 2 Synonym, 1 Clause (patterns)
-build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/1021-p.txt tests/system_tests/output/1021-p.xml
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1021-p.txt tests/system_tests/output/1021-p.xml
 # 1 Synonym, 2 Clause (such that and patterns)
-build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/1012-p.txt tests/system_tests/output/1012.xml
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1012.txt tests/system_tests/output/1012.xml
 # 2 Synonym, 2 Clause (such that and patterns)
-build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/1022-p.txt tests/system_tests/output/1022.xml
+build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1022.txt tests/system_tests/output/1022.xml
 
 # Temp tests with patterns
 # 1 Synonym, 1 Clause (patterns)
@@ -36,7 +36,7 @@ build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/
 build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1012.txt tests/system_tests/output/1012.xml
 # 2 Synonym, 2 Clause (such that and patterns)
 build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1022.txt tests/system_tests/output/1022.xml
-# 2 Synonym, 2 Clause (such that and patterns), With increased complexity - test associative patterns 
+# 2 Synonym, 2 Clause (su1ch that and patterns), With increased complexity - test associative patterns 
 build/src/autotester/autotester tests/system_tests/src/1.txt tests/system_tests/query/1/patterns/1022-new.txt tests/system_tests/output/1022-increasedComplexity.xml
 
 # RUN TESTS FOR SIMPLE SOURCE 2: DEEP NESTING
@@ -135,13 +135,12 @@ build/src/autotester/autotester tests/system_tests/iteration-2/4-nest-while-next
 build/src/autotester/autotester tests/system_tests/iteration-2/5-nest-if-next.txt tests/system_tests/iteration-2/5-nest-if-next-queries.txt tests/system_tests/output/5-next.xml
 build/src/autotester/autotester tests/system_tests/iteration-2/5-nest-if-next.txt tests/system_tests/iteration-2/5-nest-if-next-t-queries.txt tests/system_tests/output/5-next-t.xml
 
-build/src/autotester/autotester tests/system_tests/iteration-2/6-nest-if-balanced-next-queries.txt tests/system_tests/iteration-2/6-nest-if-balanced-next-queries.txt tests/system_tests/output/6-next.xml
-build/src/autotester/autotester tests/system_tests/iteration-2/6-nest-if-balanced-next-queries.txt tests/system_tests/iteration-2/6-nest-if-balanced-next-t-queries.txt tests/system_tests/output/6-next-t.xml
+build/src/autotester/autotester tests/system_tests/iteration-2/6-nest-if-next-balanced.txt tests/system_tests/iteration-2/6-nest-if-balanced-next-queries.txt tests/system_tests/output/6-next.xml
+build/src/autotester/autotester tests/system_tests/iteration-2/6-nest-if-next-balanced.txt tests/system_tests/iteration-2/6-nest-if-balanced-next-t-queries.txt tests/system_tests/output/6-next-t.xml
 
 build/src/autotester/autotester tests/system_tests/iteration-2/7-mixed-nest-next.txt tests/system_tests/iteration-2/7-mixed-nest-next-queries.txt tests/system_tests/output/7-next.xml
 build/src/autotester/autotester tests/system_tests/iteration-2/7-mixed-nest-next.txt tests/system_tests/iteration-2/7-mixed-nest-next-t-queries.txt tests/system_tests/output/7-next-t.xml
 
 build/src/autotester/autotester tests/system_tests/iteration-2/8-basic-uses-modifies.txt tests/system_tests/iteration-2/8-basic-uses-modifies-queries.txt tests/system_tests/output/8.xml
 
-build/src/autotester/autotester tests/system_tests/iteration-2/9-basic-with-clause.txt tests/system_tests/iteration-2/9-basic-with-clause-queries.txt tests/system_tests/output/9.xml
 build/src/autotester/autotester tests/system_tests/iteration-2/10-basic-pattern.txt tests/system_tests/iteration-2/10-basic-pattern-queries.txt tests/system_tests/output/10.xml

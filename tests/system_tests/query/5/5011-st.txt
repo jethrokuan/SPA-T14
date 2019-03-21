@@ -133,10 +133,10 @@ variable v;
 Select v such that Uses(5,v)
 numInserts
 5000
-28 - valid query 
+28 - valid query - but cannot use a constant
 constant c;
 Select c such that Uses(5,c)
-1
+none
 5000
 29 - valid query
 print p;
@@ -156,5 +156,5 @@ none
 32 - invalid query (START OF MODIFIES SELECT CLAUSE) / Semantic Error
 variable v;
 Select v such that Modifies(_,v)
-invalid
+none
 5000

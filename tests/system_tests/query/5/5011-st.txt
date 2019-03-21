@@ -31,7 +31,7 @@ Select s such that Follows(1,s)
 7 - valid query 
 stmt s;
 Select s such that Follows(2,s)
-none
+6
 5000
 8 - valid query 
 stmt s;
@@ -86,7 +86,7 @@ none
 18 - valid query
 stmt s;
 Select s such that Parent(7,s)
-none
+8
 5000
 19 - valid query
 stmt s;
@@ -116,7 +116,7 @@ Select s such that Parent(s,8)
 24 - valid query
 stmt s;
 Select s such that Parent*(s, 20)
-4, 7, 11, 16
+none
 5000
 25 - valid query (find parent of specific design entities)
 while w;

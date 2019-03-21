@@ -71,7 +71,7 @@ Select a such that Parent*(i,a)
 15 - valid query (Uses; select variables within while container, does not consider call statements)
 variable v; while w;
 Select v such that Uses(w,v)
-numInserts, 
+numInserts
 16 - valid query (uses)
 print p; variable v;
 Select v such that Uses(p,v)

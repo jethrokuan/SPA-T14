@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "query_builder/core/exceptions.h"
 #include "query_builder/core/query_lexer.h"
 #include "query_builder/core/query_parser.h"
 #include "query_builder/pql/query.h"
@@ -133,64 +134,121 @@ TEST_CASE ("Test QueryParser Declarations") {
   SECTION ("FAILURE: Syntax errors") {
     SECTION ("SUCCESS: assign a1, stmt s1; Select a1") {
       std::string input = "assign a1, stmt s1; Select a1";
-      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected, ',', got 's1'.");
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ',', got 's1'.");
+    }
+  }
+}
+
+TEST_CASE ("Test QueryParser Result Clause") {
+  SECTION ("SUCCESS: Select BOOLEAN") {
+    std::string input = "Select BOOLEAN";
+    auto query = qe.makePqlQuery(input);
+    REQUIRE(query.result->selected_declarations->empty());
+    REQUIRE(query.result->T == ResultType::BOOLEAN);
+  }
+
+  SECTION ("FAILURE: Select boolean") {
+    std::string input = "Select boolean";
+    REQUIRE_THROWS_WITH(
+        qe.makePqlQuery(input),
+        "Cannot find a matching declaration for synonym boolean");
+  }
+
+  SECTION ("SUCCESS: Single items") {
+    SECTION ("synonym") {
+      std::string input = "stmt p; Select p";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
+              Synonym("p"));
+      REQUIRE(query.result->T == ResultType::TUPLE);
+    }
+
+    SECTION ("attrref") {
+      std::string input = "stmt p; Select p.stmt#";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.result->selected_declarations->size() == 1);
+      REQUIRE(std::get<SynAttr>(query.result->selected_declarations->at(0)) ==
+              SynAttr(Synonym("p"), AttrName::STMT_NO, query.declarations));
+      REQUIRE(query.result->T == ResultType::TUPLE);
     }
   }
 
-  SECTION ("Test one assign one select query") {
-    std::string input =
-        "assign a, a1; procedure p; Select <a, p> such that Modifies (a, "
-        "\"b\")";
-    QueryLexer lexer = QueryLexer(input);
-    lexer.lex();
-    QueryParser parser = QueryParser(lexer.Tokens);
-    Query query = parser.parse();
-    REQUIRE(*query.declarations ==
-            std::vector<Declaration>{
-                Declaration(DesignEntity::ASSIGN, QE::Synonym("a")),
-                Declaration(DesignEntity::ASSIGN, QE::Synonym("a1")),
-                Declaration(DesignEntity::PROCEDURE, QE::Synonym("p"))});
-    REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
-            (QE::Synonym("a")));
-    REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(1)) ==
-            (QE::Synonym("p")));
-    REQUIRE(*(query.rel_cond->at(0)) ==
-            RelCond(Relation::Modifies, QE::Synonym("a"), QE::QuoteIdent("b"),
-                    query.declarations));
+  SECTION ("FAILURE: Single Items") {
+    SECTION ("Invalid attr name on synonym") {
+      std::string input = "stmt p; Select p.procName";
+      REQUIRE_THROWS_AS(qe.makePqlQuery(input), PQLParseException);
+    }
   }
 
-  SECTION ("Test one assign one select query") {
-    std::string input =
-        "assign a, a1; procedure p; Select <a, p> such that Uses (a, "
-        "\"b\") and Modifies(a, \"b\") pattern a (\"x\", _\"1\"_) with a.stmt# "
-        "= 1";
-    QueryLexer lexer = QueryLexer(input);
-    lexer.lex();
-    QueryParser parser = QueryParser(lexer.Tokens);
-    Query query = parser.parse();
-    REQUIRE(*query.declarations ==
-            std::vector<Declaration>{
-                Declaration(DesignEntity::ASSIGN, QE::Synonym("a")),
-                Declaration(DesignEntity::ASSIGN, QE::Synonym("a1")),
-                Declaration(DesignEntity::PROCEDURE, QE::Synonym("p"))});
-    REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
-            (QE::Synonym("a")));
-    REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(1)) ==
-            (QE::Synonym("p")));
-    REQUIRE(*(query.rel_cond->at(0)) ==
-            RelCond(Relation::Uses, QE::Synonym("a"), QE::QuoteIdent("b"),
-                    query.declarations));
-    REQUIRE(*(query.rel_cond->at(1)) ==
-            RelCond(Relation::Modifies, QE::Synonym("a"), QE::QuoteIdent("b"),
-                    query.declarations));
-    REQUIRE(*(query.patternb->at(0)) == PatternB(QE::Synonym("a"),
-                                                 QE::QuoteIdent("x"),
-                                                 Matcher(true, "1")));
-    REQUIRE(*(query.with_cond->at(0)) ==
-            QE::WithCond(
-                QE::AttrRef(QE::SynAttr(QE::Synonym("a"), QE::AttrName::STMT_NO,
-                                        query.declarations),
-                            query.declarations),
-                QE::AttrRef(1, query.declarations)));
+  SECTION ("SUCCESS: Tuple") {
+    SECTION ("one synonym") {
+      std::string input = "stmt p, p1; Select <p>";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.result->selected_declarations->size() == 1);
+      REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
+              Synonym("p"));
+      REQUIRE(query.result->T == ResultType::TUPLE);
+    }
+
+    SECTION ("one attrref") {
+      std::string input = "stmt p, p1; Select <p.stmt#>";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.result->selected_declarations->size() == 1);
+      REQUIRE(std::get<SynAttr>(query.result->selected_declarations->at(0)) ==
+              SynAttr(Synonym("p"), AttrName::STMT_NO, query.declarations));
+      REQUIRE(query.result->T == ResultType::TUPLE);
+    }
+
+    SECTION ("multiple synonyms") {
+      std::string input = "stmt p, p1; Select <p, p1>";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.result->selected_declarations->size() == 2);
+      REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
+              Synonym("p"));
+      REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(1)) ==
+              Synonym("p1"));
+      REQUIRE(query.result->T == ResultType::TUPLE);
+    }
+
+    SECTION ("multiple synattr") {
+      std::string input = "read r; Select <r.stmt#, r.varName>";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.result->selected_declarations->size() == 2);
+      REQUIRE(std::get<SynAttr>(query.result->selected_declarations->at(0)) ==
+              SynAttr(Synonym("r"), AttrName::STMT_NO, query.declarations));
+      REQUIRE(std::get<SynAttr>(query.result->selected_declarations->at(1)) ==
+              SynAttr(Synonym("r"), AttrName::VAR_NAME, query.declarations));
+      REQUIRE(query.result->T == ResultType::TUPLE);
+    }
+
+    SECTION ("mixed synonyms and synattr") {
+      std::string input = "read r; Select <r.stmt#, r>";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.result->selected_declarations->size() == 2);
+      REQUIRE(std::get<SynAttr>(query.result->selected_declarations->at(0)) ==
+              SynAttr(Synonym("r"), AttrName::STMT_NO, query.declarations));
+      REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(1)) ==
+              Synonym("r"));
+      REQUIRE(query.result->T == ResultType::TUPLE);
+    }
+  }
+
+  SECTION ("FAILURE: syntax errors") {
+    SECTION ("Tuple missing brackets") {
+      std::string input = "read r; Select r.stmt#, r";
+      REQUIRE_THROWS_WITH(
+          qe.makePqlQuery(input),
+          "Expecting a such-that, pattern or with clause., got ,");
+    }
+
+    SECTION ("Tuple missing closing bracket") {
+      std::string input = "read r; Select <r.stmt#, r";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ',', got ''.");
+    }
+
+    SECTION ("Tuple missing comma") {
+      std::string input = "read r; Select <r.stmt# r>";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ',', got 'r'.");
+    }
   }
 }

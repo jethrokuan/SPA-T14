@@ -1,0 +1,18 @@
+procedure main {
+  if ((a == b) || ((c == d) || (e == f))) then {
+    if (a != z) then {
+      while (((i == j) && (j < k)) || (j == h)) {
+        while ((((a == b) && (a == c)) && (c == d)) && (e == f)) {
+          x = 3733;
+        }
+        while ((a == b) || ((c == d) || ((e == f) || (a == f)))) {
+          x = 34120;
+        }
+      }
+    } else {
+      a = b + 1;
+    }
+  } else {
+    a = c;
+  }
+}

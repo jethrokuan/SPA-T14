@@ -252,11 +252,7 @@ Expression QueryParser::parseExpression() {
   return Matcher(isPartial, expr);
 }
 
-bool QueryParser::parsePattern() {
-  if (!match("pattern")) {
-    return false;
-  }
-
+void QueryParser::parsePatternClause() {
   auto synonym_str = advance();
   auto synonym = Synonym(synonym_str);
 
@@ -304,6 +300,18 @@ bool QueryParser::parsePattern() {
   expect(")");
 
   query_->patternb->push_back(pattern);
+}
+
+bool QueryParser::parsePattern() {
+  if (!match("pattern")) {
+    return false;
+  }
+
+  parsePatternClause();
+
+  while (match("and")) {
+    parsePatternClause();
+  }
 
   return true;
 }

@@ -355,3 +355,127 @@ TEST_CASE ("Test RelCond clause") {
     }
   }
 }
+
+TEST_CASE ("Test QueryParser pattern clause") {
+  SECTION ("If Pattern") {
+    SECTION ("SUCCESS") {
+      std::string input = "if i; Select i pattern i(\"a\", _, _)";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.patternb->size() == 1);
+      REQUIRE(*query.patternb->at(0) ==
+              PatternB(Synonym("i"), QuoteIdent("a")));
+    }
+    SECTION ("FAILURE") {
+      SECTION ("Incorrect # of args") {
+        std::string input = "if i; Select i pattern i(\"a\", _)";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ',', got ')'.");
+
+        input = "if i; Select i pattern i(\"a\", _, _, _)";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ')', got ','.");
+      }
+
+      SECTION ("Non-underscore in latter args") {
+        std::string input = "if i; Select i pattern i(\"a\", _, \"b\")";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected '_', got '\"'.");
+      }
+    }
+  }
+
+  SECTION ("While Pattern") {
+    SECTION ("SUCCESS") {
+      std::string input = "while w; Select w pattern w(\"a\", _)";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.patternb->size() == 1);
+      REQUIRE(*query.patternb->at(0) ==
+              PatternB(Synonym("w"), QuoteIdent("a")));
+    }
+    SECTION ("FAILURE") {
+      SECTION ("Incorrect # of args") {
+        std::string input = "while w; Select w pattern w(\"a\")";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ',', got ')'.");
+        input = "while w; Select w pattern w(\"a\",_,_)";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ')', got ','.");
+      }
+
+      SECTION ("Non-underscore in latter args") {
+        std::string input = "while w; Select w pattern w(\"a\", \"b\")";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected '_', got '\"'.");
+      }
+    }
+  }
+
+  SECTION ("Assignment Pattern") {
+    SECTION ("SUCCESS") {
+      SECTION ("underscore") {
+        std::string input = "assign a; Select a pattern a(\"a\", _)";
+        auto query = qe.makePqlQuery(input);
+        REQUIRE(query.patternb->size() == 1);
+        REQUIRE(*query.patternb->at(0) ==
+                PatternB(Synonym("a"), QuoteIdent("a"), Underscore()));
+      }
+
+      SECTION ("partial matching") {
+        std::string input = "assign a; Select a pattern a(\"a\", _\"abc\"_)";
+        auto query = qe.makePqlQuery(input);
+        REQUIRE(query.patternb->size() == 1);
+        REQUIRE(*query.patternb->at(0) ==
+                PatternB(Synonym("a"), QuoteIdent("a"), Matcher(true, "abc")));
+      }
+
+      SECTION ("exact matching") {
+        std::string input = "assign a; Select a pattern a(\"a\", \"abc\")";
+        auto query = qe.makePqlQuery(input);
+        REQUIRE(query.patternb->size() == 1);
+        REQUIRE(*query.patternb->at(0) ==
+                PatternB(Synonym("a"), QuoteIdent("a"), Matcher(false, "abc")));
+      }
+    }
+    SECTION ("FAILURE") {
+      SECTION ("Incorrect # of args") {
+        std::string input = "assign a; Select a pattern a(\"a\")";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ',', got ')'.");
+        input = "assign a; Select a pattern a(\"a\", _, _)";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected '\"', got ','.");
+      }
+
+      SECTION ("invalid second arg") {
+        std::string input = "assign a; Select a pattern a(\"a\", _\"b\")";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected '_', got ')'.");
+      }
+    }
+  }
+
+  SECTION ("SUCCESS: multiple pattern") {
+    SECTION ("SUCCESS: And") {
+      std::string input =
+          "assign a; if i; Select a pattern a(\"a\", _) and i(\"a\", "
+          "_, _)";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.patternb->size() == 2);
+      REQUIRE(*query.patternb->at(0) ==
+              PatternB(Synonym("a"), QuoteIdent("a"), Underscore()));
+      REQUIRE(*query.patternb->at(1) ==
+              PatternB(Synonym("i"), QuoteIdent("a")));
+    }
+
+    SECTION ("SUCCESS: pattern") {
+      std::string input =
+          "assign a; if i; Select a pattern a(\"a\", _) pattern i(\"a\", "
+          "_, _)";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.patternb->size() == 2);
+      REQUIRE(*query.patternb->at(0) ==
+              PatternB(Synonym("a"), QuoteIdent("a"), Underscore()));
+      REQUIRE(*query.patternb->at(1) ==
+              PatternB(Synonym("i"), QuoteIdent("a")));
+    }
+  }
+
+  SECTION ("FAILURES") {
+    SECTION ("Invalid synonym type") {
+      std::string input = "read r; Select r pattern r(\"a\", _)";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input),
+                          "pattern clause not supported for read");
+    }
+  }
+}

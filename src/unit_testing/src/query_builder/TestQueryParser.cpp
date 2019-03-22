@@ -252,3 +252,106 @@ TEST_CASE ("Test QueryParser Result Clause") {
     }
   }
 }
+
+TEST_CASE ("Test RelCond clause") {
+  SECTION ("Single RelConds") {
+    SECTION ("SUCCESS: Uses") {
+      std::string input = "stmt p; Select p such that Uses(p, \"a\")";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.rel_cond->size() == 1);
+      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::Uses, Synonym("p"),
+                                                QuoteIdent("a"),
+                                                query.declarations));
+    }
+
+    SECTION ("SUCCESS: Modifies") {
+      std::string input = "stmt p; Select p such that Modifies(p, \"a\")";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.rel_cond->size() == 1);
+      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::Modifies,
+                                                Synonym("p"), QuoteIdent("a"),
+                                                query.declarations));
+    }
+
+    SECTION ("SUCCESS: Follows*") {
+      std::string input = "stmt p, p1; Select p such that Follows*(p, p1)";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.rel_cond->size() == 1);
+      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::FollowsT,
+                                                Synonym("p"), Synonym("p1"),
+                                                query.declarations));
+    }
+  }
+
+  SECTION ("Multiple Relconds") {
+    SECTION ("SUCCESS: And") {
+      std::string input =
+          "stmt p, p1; Select p such that Follows*(p, p1) and Modifies(p, "
+          "\"b\")";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.rel_cond->size() == 2);
+      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::FollowsT,
+                                                Synonym("p"), Synonym("p1"),
+                                                query.declarations));
+      REQUIRE(*query.rel_cond->at(1) == RelCond(Relation::Modifies,
+                                                Synonym("p"), QuoteIdent("b"),
+                                                query.declarations));
+    }
+
+    SECTION ("SUCCESS: such that") {
+      std::string input =
+          "stmt p, p1; Select p such that Follows*(p,p1) such that Modifies(p, "
+          "\"b\")";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.rel_cond->size() == 2);
+      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::FollowsT,
+                                                Synonym("p"), Synonym("p1"),
+                                                query.declarations));
+      REQUIRE(*query.rel_cond->at(1) == RelCond(Relation::Modifies,
+                                                Synonym("p"), QuoteIdent("b"),
+                                                query.declarations));
+    }
+
+    SECTION ("FAILURE: missing connector") {
+      std::string input =
+          "stmt p, p1; Select p such that Follows*(p,p1) Modifies(p, "
+          "\"b\")";
+      REQUIRE_THROWS_WITH(
+          qe.makePqlQuery(input),
+          "Expecting a such-that, pattern or with clause., got Modifies");
+    }
+  }
+
+  SECTION ("FAILURE: syntax errors") {
+    SECTION ("missing 'that'") {
+      std::string input = "stmt p; Select p such Uses(p, \"a\")";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input),
+                          "Expected 'that', got 'Uses'.");
+    }
+
+    SECTION ("invalid relation") {
+      std::string input = "stmt p; Select p such that Foo(p, \"a\")";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Unknown relation: Foo");
+    }
+
+    SECTION ("missing bracket") {
+      std::string input = "stmt p; Select p such that Uses p, \"a\")";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected '(', got 'p'.");
+    }
+
+    SECTION ("missing comma") {
+      std::string input = "stmt p; Select p such that Uses (p \"a\")";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ',', got '\"'.");
+    }
+
+    SECTION ("missing ref 1") {
+      std::string input = "stmt p; Select p such that Uses (p)";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected ',', got ')'.");
+    }
+
+    SECTION ("missing ref 2") {
+      std::string input = "stmt p; Select p such that Uses (p, )";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expecting a ref, got ')'.");
+    }
+  }
+}

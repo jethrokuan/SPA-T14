@@ -929,6 +929,17 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   REQUIRE(pattern_test_14 == false);
   auto pattern_test_15 = pkb.isPatternExists("z + 20 * 3");
   REQUIRE(pattern_test_15 == false);
+
+  SECTION ("while pattern") {
+    std::unordered_set<PKB::Line> while_pattern_test_1_check = {"4", "7", "11",
+                                                                "16"};
+    auto while_pattern_test_1 = pkb.getWhilePatternLine("x");
+    REQUIRE(*while_pattern_test_1 == while_pattern_test_1_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_2_check = {"x"};
+    auto while_pattern_test_2 = pkb.getWhilePatternVariable("4");
+    REQUIRE(*while_pattern_test_2 == while_pattern_test_2_check);
+  }
 }
 
 TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
@@ -1560,6 +1571,22 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_36_check.insert("2");
     auto next_test_36 = pkb.getPreviousLineT("9");
     REQUIRE(*next_test_36 == next_test_36_check);
+  }
+
+  SECTION ("if pattern") {
+    std::unordered_set<PKB::Line> if_pattern_test_1_check = {"2", "4"};
+    auto if_pattern_test_1 = pkb.getIfPatternLine("i");
+    REQUIRE(*if_pattern_test_1 == if_pattern_test_1_check);
+  }
+
+  SECTION ("while pattern") {
+    std::unordered_set<PKB::Line> while_pattern_test_1_check = {"3"};
+    auto while_pattern_test_1 = pkb.getWhilePatternLine("i");
+    REQUIRE(*while_pattern_test_1 == while_pattern_test_1_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_2_check = {"i"};
+    auto while_pattern_test_2 = pkb.getWhilePatternVariable("3");
+    REQUIRE(*while_pattern_test_2 == while_pattern_test_2_check);
   }
 }
 

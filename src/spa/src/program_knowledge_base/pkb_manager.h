@@ -130,7 +130,7 @@ class PKBManager {
       const Variable);
   std::optional<std::unordered_set<Line>> getLineUsesVar(const Variable);
 
-  // pattern
+  // assign pattern
   std::optional<std::unordered_set<Line>>
   getAssignPatternCompleteMatchLinesWithVar(const Variable, const Pattern);
   std::optional<std::unordered_set<Line>>
@@ -146,6 +146,15 @@ class PKBManager {
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
   getAllAssignPatternLinesAndVars();
   bool isPatternExists(const Pattern);
+
+  // if pattern
+  std::optional<std::unordered_set<Line>> getIfPatternLine(const Variable);
+  std::optional<std::unordered_set<Variable>> getIfPatternVariable(const Line);
+
+  // while pattern
+  std::optional<std::unordered_set<Line>> getWhilePatternLine(const Variable);
+  std::optional<std::unordered_set<Variable>> getWhilePatternVariable(
+      const Line);
 
   // next
   bool isLineNextLine(const PreviousLine, const NextLine);

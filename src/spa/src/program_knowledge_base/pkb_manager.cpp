@@ -382,13 +382,13 @@ PKBManager::getAssignPatternCompleteMatchLinesWithVar(const Variable var,
 
   // TODO check if this is even necessary?
   // check if pattern exists
-  if (pkb_storage->expr_str_set.find(pattern_expr) ==
-      pkb_storage->expr_str_set.end()) {
+  if (pkb_storage->assign_pattern_expr_str_set.find(pattern_expr) ==
+      pkb_storage->assign_pattern_expr_str_set.end()) {
     return std::nullopt;
   }
 
   // retrieve list of patterns for the variable
-  auto ys = pkb_storage->var_line_expr_str_map.at(var);
+  auto ys = pkb_storage->assign_pattern_var_line_expr_str_map.at(var);
   std::unordered_set<Line> matching_lines;
   for (const auto &elem : ys) {
     auto line = elem.first;
@@ -418,7 +418,7 @@ PKBManager::getAssignPatternPartialMatchLinesWithVar(const Variable var,
   }
 
   // retrieve list of patterns for the variable
-  auto ys = pkb_storage->var_line_expr_str_map.at(var);
+  auto ys = pkb_storage->assign_pattern_var_line_expr_str_map.at(var);
   std::unordered_set<Line> matching_lines;
   for (const auto &elem : ys) {
     auto line = elem.first;
@@ -443,13 +443,13 @@ PKBManager::getAssignPatternCompleteMatchLines(const Pattern pattern) {
 
   // TODO check if this is even necessary?
   // check if pattern exists
-  if (pkb_storage->expr_str_set.find(pattern_expr) ==
-      pkb_storage->expr_str_set.end()) {
+  if (pkb_storage->assign_pattern_expr_str_set.find(pattern_expr) ==
+      pkb_storage->assign_pattern_expr_str_set.end()) {
     return std::nullopt;
   }
 
   std::unordered_set<Line> matching_lines;
-  for (const auto &elem : pkb_storage->line_expr_str_set) {
+  for (const auto &elem : pkb_storage->assign_pattern_line_expr_str_set) {
     auto line = elem.first;
     auto elem_pattern_expr = elem.second;
     // substring
@@ -472,7 +472,7 @@ PKBManager::getAssignPatternPartialMatchLines(const Pattern pattern) {
       std::visit([](const auto &s) { return s->to_str(); }, expr);
 
   std::unordered_set<Line> matching_lines;
-  for (const auto &elem : pkb_storage->line_expr_str_set) {
+  for (const auto &elem : pkb_storage->assign_pattern_line_expr_str_set) {
     auto line = elem.first;
     auto elem_pattern_expr = elem.second;
     // substring
@@ -494,12 +494,14 @@ PKBManager::getAssignPatternCompleteMatchLinesAndVars(const Pattern pattern) {
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
 
-  return (pkb_storage->expr_str_line_var_map.find(pattern_expr) ==
-          pkb_storage->expr_str_line_var_map.end())
+  return (pkb_storage->assign_pattern_expr_str_line_var_map.find(
+              pattern_expr) ==
+          pkb_storage->assign_pattern_expr_str_line_var_map.end())
              ? std::nullopt
              : std::make_optional<
                    std::unordered_set<std::pair<Line, Variable>, pair_hash>>(
-                   pkb_storage->expr_str_line_var_map.at(pattern_expr));
+                   pkb_storage->assign_pattern_expr_str_line_var_map.at(
+                       pattern_expr));
 }
 
 // TODO check for possible errors
@@ -511,7 +513,7 @@ PKBManager::getAssignPatternPartialMatchLinesAndVars(const Pattern pattern) {
       std::visit([](const auto &s) { return s->to_str(); }, expr);
 
   std::unordered_set<ExprStr> matching_expr_str;
-  for (const auto &elem : pkb_storage->expr_str_set) {
+  for (const auto &elem : pkb_storage->assign_pattern_expr_str_set) {
     // find the expr_str that matches partially
     if (elem.find(pattern_expr) != std::string::npos) {
       matching_expr_str.insert(elem);
@@ -521,7 +523,7 @@ PKBManager::getAssignPatternPartialMatchLinesAndVars(const Pattern pattern) {
   std::unordered_set<std::pair<Line, Variable>, pair_hash> matching_line_var;
   for (const auto &elem : matching_expr_str) {
     // pattern must be in the map already at this point
-    auto xs = pkb_storage->expr_str_line_var_map.at(elem);
+    auto xs = pkb_storage->assign_pattern_expr_str_line_var_map.at(elem);
     for (const auto &x : (xs)) {
       matching_line_var.insert(x);
     }
@@ -546,8 +548,30 @@ bool PKBManager::isPatternExists(Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
-  return pkb_storage->expr_str_set.find(pattern_expr) !=
-         pkb_storage->expr_str_set.end();
+  return pkb_storage->assign_pattern_expr_str_set.find(pattern_expr) !=
+         pkb_storage->assign_pattern_expr_str_set.end();
+}
+
+std::optional<std::unordered_set<Line>> PKBManager::getIfPatternLine(
+    const Variable var) {
+  return getSetFromMap(pkb_storage->if_pattern_control_variable_line_map, var);
+}
+
+std::optional<std::unordered_set<Variable>> PKBManager::getIfPatternVariable(
+    const Line line) {
+  return getSetFromMap(pkb_storage->if_pattern_line_control_variable_map, line);
+}
+
+std::optional<std::unordered_set<Line>> PKBManager::getWhilePatternLine(
+    const Variable var) {
+  return getSetFromMap(pkb_storage->while_pattern_control_variable_line_map,
+                       var);
+}
+
+std::optional<std::unordered_set<Variable>> PKBManager::getWhilePatternVariable(
+    const Line line) {
+  return getSetFromMap(pkb_storage->while_pattern_line_control_variable_map,
+                       line);
 }
 
 std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(

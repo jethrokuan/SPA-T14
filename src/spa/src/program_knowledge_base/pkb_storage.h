@@ -122,16 +122,35 @@ class PKBStorage {
   std::unordered_set<Procedure> procedure_set;
   std::unordered_set<Line> call_set;
 
-  // pattern
+  // assign pattern
   std::unordered_map<Variable,
                      std::unordered_set<std::pair<Line, ExprStr>, pair_hash>>
-      var_line_expr_str_map;
+      assign_pattern_var_line_expr_str_map;
   std::unordered_map<ExprStr,
                      std::unordered_set<std::pair<Line, Variable>, pair_hash>>
-      expr_str_line_var_map;
-  std::unordered_set<std::pair<Variable, ExprStr>, pair_hash> var_expr_str_set;
-  std::unordered_set<std::pair<Line, ExprStr>, pair_hash> line_expr_str_set;
-  std::unordered_set<ExprStr> expr_str_set;
+      assign_pattern_expr_str_line_var_map;
+  std::unordered_set<std::pair<Variable, ExprStr>, pair_hash>
+      assign_pattern_var_expr_str_set;
+  std::unordered_set<std::pair<Line, ExprStr>, pair_hash>
+      assign_pattern_line_expr_str_set;
+  std::unordered_set<ExprStr> assign_pattern_expr_str_set;
+
+  // if pattern
+  // consider that one statement can only either have an if or while statement
+  // map a line to a set of control variables
+  std::unordered_map<Line, std::unordered_set<Variable>>
+      if_pattern_line_control_variable_map;
+  // map a control variable to a line
+  std::unordered_map<Variable, std::unordered_set<Line>>
+      if_pattern_control_variable_line_map;
+
+  // while pattern
+  // map a line to a set of control variables
+  std::unordered_map<Line, std::unordered_set<Variable>>
+      while_pattern_line_control_variable_map;
+  // map a control variable to a line
+  std::unordered_map<Variable, std::unordered_set<Line>>
+      while_pattern_control_variable_line_map;
 
   // misc helpers
   // only assign, does not include read, so not all modifies fulfill this
@@ -166,8 +185,8 @@ class PKBStorage {
   void storeCall(const Line, const Procedure);
 
   void storeAssignPattern(const Variable, const ExprStr, const Line);
-  void storeIfPattern();
-  void storeWhilePattern();
+  void storeIfPattern(const Variable, const Line);
+  void storeWhilePattern(const Variable, const Line);
 
   // helper
   void storeLineProcedureRelation(const Line, const Procedure);

@@ -765,12 +765,14 @@ void PKBPreprocessor::setPattern(const std::shared_ptr<AssignNode> node) {
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<IfNode> node) {
   // TODO
+  setPatternH(node->CondExpr, node);
   setPatternIterator(node->StmtListThen);
   setPatternIterator(node->StmtListElse);
 }
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<WhileNode> node) {
   // TODO
+  setPatternH(node->CondExpr, node);
   setPatternIterator(node->StmtList);
 }
 
@@ -780,35 +782,60 @@ void PKBPreprocessor::setPattern(const std::shared_ptr<CallNode>) {}
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<PrintNode>) {}
 
-void PKBPreprocessor::setPattern(const Expr node) {
-  std::visit([this](const auto &n) { setPattern(n); }, node);
+void PKBPreprocessor::setPatternH(const Expr node, const StmtNode parent_node) {
+  std::visit(
+      [this, parent_node](const auto &n) { setPatternH(n, parent_node); },
+      node);
 }
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<BinOpNode> node) {
-  setPattern(node->Left);
-  setPattern(node->Right);
+void PKBPreprocessor::setPatternH(const std::shared_ptr<BinOpNode> node,
+                                  const StmtNode parent_node) {
+  setPatternH(node->Left, parent_node);
+  setPatternH(node->Right, parent_node);
 }
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<CondExprNode> node) {
+void PKBPreprocessor::setPatternH(const std::shared_ptr<CondExprNode> node,
+                                  const StmtNode parent_node) {
   if (node == nullptr) {
     return;
   }
-  setPattern(node->RelExpr);
-  setPattern(node->CondLHS);
-  setPattern(node->CondRHS);
+  setPatternH(node->RelExpr, parent_node);
+  setPatternH(node->CondLHS, parent_node);
+  setPatternH(node->CondRHS, parent_node);
 }
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<RelExprNode> node) {
+void PKBPreprocessor::setPatternH(const std::shared_ptr<RelExprNode> node,
+                                  const StmtNode parent_node) {
   if (node == nullptr) {
     return;
   }
-  setPattern(node->LHS);
-  setPattern(node->RHS);
+  setPatternH(node->LHS, parent_node);
+  setPatternH(node->RHS, parent_node);
 }
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<NumberNode> node) {}
+void PKBPreprocessor::setPatternH(const std::shared_ptr<NumberNode>,
+                                  const StmtNode) {}
 
-void PKBPreprocessor::setPattern(const std::shared_ptr<VariableNode> node) {}
+void PKBPreprocessor::setPatternH(const std::shared_ptr<VariableNode> node,
+                                  const StmtNode parent_node) {
+  const Line line =
+      std::visit([this](const auto &s) { return storage->getLineFromNode(s); },
+                 parent_node);
+  const Variable var = node->Name;
+
+  std::visit(
+      [this, line, var](const auto &s) mutable {
+        using T = std::decay_t<decltype(s)>;
+        if constexpr (std::is_same_v<T, std::shared_ptr<IfNode>>) {
+          storage->storeIfPattern(var, line);
+        } else if constexpr (std::is_same_v<T, std::shared_ptr<WhileNode>>) {
+          storage->storeWhilePattern(var, line);
+        } else {
+          assert(false);
+        }
+      },
+      parent_node);
+}
 
 void PKBPreprocessor::setPatternIterator(const std::vector<StmtNode> stmt_lst) {
   for (const auto &stmt : stmt_lst) {

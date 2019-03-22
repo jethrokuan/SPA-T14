@@ -145,16 +145,22 @@ class PKBManager {
   getAssignPatternPartialMatchLinesAndVars(const Pattern);
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
   getAllAssignPatternLinesAndVars();
-  bool isPatternExists(const Pattern);
+  bool isAssignPatternExists(const Pattern);
 
   // if pattern
   std::optional<std::unordered_set<Line>> getIfPatternLine(const Variable);
   std::optional<std::unordered_set<Variable>> getIfPatternVariable(const Line);
+  std::unordered_set<std::pair<Line, Variable>, pair_hash>
+  getAllIfPatternLinesAndVars();
+  bool isIfPatternExists(const Line, const Variable);
 
   // while pattern
   std::optional<std::unordered_set<Line>> getWhilePatternLine(const Variable);
   std::optional<std::unordered_set<Variable>> getWhilePatternVariable(
       const Line);
+  std::unordered_set<std::pair<Line, Variable>, pair_hash>
+  getAllWhilePatternLinesAndVars();
+  bool isWhilePatternExists(const Line, const Variable);
 
   // next
   bool isLineNextLine(const PreviousLine, const NextLine);

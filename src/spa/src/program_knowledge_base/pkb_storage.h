@@ -134,15 +134,20 @@ class PKBStorage {
   std::unordered_set<std::pair<Line, ExprStr>, pair_hash>
       assign_pattern_line_expr_str_set;
   std::unordered_set<ExprStr> assign_pattern_expr_str_set;
+  std::unordered_set<std::pair<Line, Variable>, pair_hash>
+      assign_pattern_line_var_set;
+  std::unordered_map<Variable, std::unordered_set<Line>>
+      assign_pattern_var_line_map;
 
   // if pattern
-  // consider that one statement can only either have an if or while statement
   // map a line to a set of control variables
   std::unordered_map<Line, std::unordered_set<Variable>>
       if_pattern_line_control_variable_map;
   // map a control variable to a line
   std::unordered_map<Variable, std::unordered_set<Line>>
       if_pattern_control_variable_line_map;
+  std::unordered_set<std::pair<Line, Variable>, pair_hash>
+      if_pattern_line_var_set;
 
   // while pattern
   // map a line to a set of control variables
@@ -151,11 +156,8 @@ class PKBStorage {
   // map a control variable to a line
   std::unordered_map<Variable, std::unordered_set<Line>>
       while_pattern_control_variable_line_map;
-
-  // misc helpers
-  // only assign, does not include read, so not all modifies fulfill this
-  std::unordered_set<std::pair<Line, Variable>, pair_hash> assign_line_var_set;
-  std::unordered_map<Variable, std::unordered_set<Line>> assign_var_line_map;
+  std::unordered_set<std::pair<Line, Variable>, pair_hash>
+      while_pattern_line_var_set;
 
   // setters
   void storeAST(const AST);
@@ -174,7 +176,7 @@ class PKBStorage {
   void storeLineModifiesVarRelation(const Line, const Variable);
 
   void storeVariable(const Variable);
-  void storeAssign(const Line, const Variable);
+  void storeAssign(const Line);
   void storeStatement(const Line);
   void storePrint(const Line);
   void storeRead(const Line);

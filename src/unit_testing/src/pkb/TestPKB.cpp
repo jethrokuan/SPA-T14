@@ -919,15 +919,15 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   auto pattern_test_10 = pkb.getLineForAssignVar("z");
   REQUIRE(*pattern_test_10 == pattern_test_10_check);
 
-  auto pattern_test_11 = pkb.isPatternExists("z+1");
+  auto pattern_test_11 = pkb.isAssignPatternExists("z+1");
   REQUIRE(pattern_test_11 == true);
-  auto pattern_test_12 = pkb.isPatternExists("z + 2");
+  auto pattern_test_12 = pkb.isAssignPatternExists("z + 2");
   REQUIRE(pattern_test_12 == true);
-  auto pattern_test_13 = pkb.isPatternExists("x-1");
+  auto pattern_test_13 = pkb.isAssignPatternExists("x-1");
   REQUIRE(pattern_test_13 == true);
-  auto pattern_test_14 = pkb.isPatternExists("x+1");
+  auto pattern_test_14 = pkb.isAssignPatternExists("x+1");
   REQUIRE(pattern_test_14 == false);
-  auto pattern_test_15 = pkb.isPatternExists("z + 20 * 3");
+  auto pattern_test_15 = pkb.isAssignPatternExists("z + 20 * 3");
   REQUIRE(pattern_test_15 == false);
 
   SECTION ("while pattern") {

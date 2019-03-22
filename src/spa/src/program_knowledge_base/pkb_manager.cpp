@@ -540,11 +540,11 @@ PKBManager::getAssignPatternPartialMatchLinesAndVars(const Pattern pattern) {
 
 std::unordered_set<std::pair<Line, Variable>, pair_hash>
 PKBManager::getAllAssignPatternLinesAndVars() {
-  return pkb_storage->assign_line_var_set;
+  return pkb_storage->assign_pattern_line_var_set;
 }
 
 // TODO use this in the other pattern methods
-bool PKBManager::isPatternExists(Pattern pattern) {
+bool PKBManager::isAssignPatternExists(Pattern pattern) {
   Expr expr = SimpleInterface::parseExpression(pattern);
   ExprStr pattern_expr =
       std::visit([](const auto &s) { return s->to_str(); }, expr);
@@ -562,6 +562,18 @@ std::optional<std::unordered_set<Variable>> PKBManager::getIfPatternVariable(
   return getSetFromMap(pkb_storage->if_pattern_line_control_variable_map, line);
 }
 
+std::unordered_set<std::pair<Line, Variable>, pair_hash>
+PKBManager::getAllIfPatternLinesAndVars() {
+  return pkb_storage->if_pattern_line_var_set;
+}
+
+bool PKBManager::isIfPatternExists(const Line line, const Variable var) {
+  const std::pair<Line, Variable> pattern =
+      std::pair<Line, Variable>(line, var);
+  return pkb_storage->if_pattern_line_var_set.find(pattern) !=
+         pkb_storage->if_pattern_line_var_set.end();
+}
+
 std::optional<std::unordered_set<Line>> PKBManager::getWhilePatternLine(
     const Variable var) {
   return getSetFromMap(pkb_storage->while_pattern_control_variable_line_map,
@@ -574,9 +586,21 @@ std::optional<std::unordered_set<Variable>> PKBManager::getWhilePatternVariable(
                        line);
 }
 
+std::unordered_set<std::pair<Line, Variable>, pair_hash>
+PKBManager::getAllWhilePatternLinesAndVars() {
+  return pkb_storage->while_pattern_line_var_set;
+}
+
+bool PKBManager::isWhilePatternExists(const Line line, const Variable var) {
+  const std::pair<Line, Variable> pattern =
+      std::pair<Line, Variable>(line, var);
+  return pkb_storage->while_pattern_line_var_set.find(pattern) !=
+         pkb_storage->while_pattern_line_var_set.end();
+}
+
 std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(
     const Variable var) {
-  return getSetFromMap(pkb_storage->assign_var_line_map, var);
+  return getSetFromMap(pkb_storage->assign_pattern_var_line_map, var);
 }
 
 bool PKBManager::isLineNextLine(const PreviousLine previous_line,

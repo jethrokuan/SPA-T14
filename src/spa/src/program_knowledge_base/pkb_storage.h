@@ -44,9 +44,6 @@ class PKBStorage {
   std::unordered_map<std::string, std::unordered_set<std::string>>
       line_next_line_previous_map;  // reversed adjacaency list
 
-  Line getLineFromNode(const std::shared_ptr<Node> node);
-  std::optional<std::shared_ptr<Node>> getNodeFromLine(const Line line);
-
   // calls
   std::unordered_set<std::pair<Line, Procedure>, pair_hash>
       line_calls_procedure_set;
@@ -159,7 +156,7 @@ class PKBStorage {
 
   // setters
   void storeAST(const AST);
-  Line storeLine(const std::shared_ptr<Node> node);
+  Line storeLine(const StmtNode node);
   void storeCFGEdge(const Line, const Line);
 
   void storeCallsRelation(const ProcedureCaller, const ProcedureCallee);
@@ -190,7 +187,11 @@ class PKBStorage {
 
   // helper
   void storeLineProcedureRelation(const Line, const Procedure);
+
+  // getters
   Procedure getProcedureFromLine(const Line);
+  Line getLineFromNode(const std::shared_ptr<Node> node);
+  std::optional<std::shared_ptr<Node>> getNodeFromLine(const Line line);
 };
 
 }  // namespace PKB

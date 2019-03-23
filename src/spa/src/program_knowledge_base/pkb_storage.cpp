@@ -9,11 +9,15 @@ PKBStorage::~PKBStorage(){};
 
 void PKBStorage::storeAST(const AST ast_node) { ast = ast_node; };
 
-Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
+Line PKBStorage::storeLine(const StmtNode node) {
   const Line cur_line_num = getCurLineNumber();
   incrementCurLineNumber();
-  line_node_map[cur_line_num] = node;
-  node_line_map[node] = cur_line_num;
+  std::visit(
+      [this, cur_line_num](const auto &s) {
+        line_node_map[cur_line_num] = s;
+        node_line_map[s] = cur_line_num;
+      },
+      node);
 
   return cur_line_num;
 }

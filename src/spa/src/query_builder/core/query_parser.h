@@ -57,6 +57,7 @@ class QueryParser {
   void parseAttrCond();
   bool parseWith();
   bool parseSuchThat();
+  void parsePatternClause();
   bool parsePattern();
   void parseRelRef();
   void parseRelCond();

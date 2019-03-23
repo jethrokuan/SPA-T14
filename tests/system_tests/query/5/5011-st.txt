@@ -29,35 +29,41 @@ Select s such that Follows(1,s)
 2
 5000
 7 - valid query 
+stmt s;
 Select s such that Follows(2,s)
-none
+6
 5000
 8 - valid query 
+stmt s;
 Select s such that Follows(3,s)
 4
 5000
 9 - valid query 
+stmt s;
 Select s such that Follows(3,s)
 4
 5000
 10 - valid query 
+stmt s;
 Select s such that Follows(4,s)
 5
 5000
 11 - valid query 
+stmt s;
 Select s such that Follows(23,s)
 none
 5000
 12 - valid query 
+stmt s;
 Select s such that Follows(24,s)
 25
 5000
-13 - valid query (testing usage of "_")
+13 - valid query (testing usage of '_')
 stmt s;
 Select s such that Follows(_,_)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28
 5000
-14 - valid query (testing usage of "_")
+14 - valid query (testing usage of '_')
 stmt s;
 Select s such that Follows*(_,_)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28
@@ -80,7 +86,7 @@ none
 18 - valid query
 stmt s;
 Select s such that Parent(7,s)
-none
+8
 5000
 19 - valid query
 stmt s;
@@ -94,10 +100,11 @@ none
 5000
 21 - valid query
 stmt s;
-Select s such that Parents(4,s)
+Select s such that Parent(4,s)
 none
+5000
 22 - valid query (look for parent)
-stmt s:
+stmt s;
 Select s such that Parent(s,5)
 2
 5000
@@ -108,17 +115,17 @@ Select s such that Parent(s,8)
 5000
 24 - valid query
 stmt s;
-Select s such that Parents*(s, 20)
-4, 7, 11, 16
+Select s such that Parent*(s, 20)
+none
 5000
 25 - valid query (find parent of specific design entities)
 while w;
-Select w such that Parents*(w, 20)
+Select w such that Parent*(w, 20)
 none
 5000
 26 - valid query 
 if i;
-Select i such that Parents*(i, 20)
+Select i such that Parent*(i, 20)
 none
 5000
 27 - valid query (START OF USES SELECT CLAUSES)
@@ -126,10 +133,10 @@ variable v;
 Select v such that Uses(5,v)
 numInserts
 5000
-28 - valid query 
+28 - valid query - but cannot use a constant
 constant c;
 Select c such that Uses(5,c)
-1
+none
 5000
 29 - valid query
 print p;
@@ -149,5 +156,5 @@ none
 32 - invalid query (START OF MODIFIES SELECT CLAUSE) / Semantic Error
 variable v;
 Select v such that Modifies(_,v)
-invalid
+none
 5000

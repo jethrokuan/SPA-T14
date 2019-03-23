@@ -21,15 +21,15 @@ procedure insertCell {
 		read cellDetails;
 
 		if(cellPriority > 75) then{
-			cellStatus = 2
+			cellStatus = 2;
 		} else {
-			cellStatus = 1
+			cellStatus = 1;
 		}
 
 	} else {
-		cellPriority = 0
-		cellDetails = 0
-		cellStatus = 0
+		cellPriority = 0;
+		cellDetails = 0;
+		cellStatus = 0;
 	}
 }
 

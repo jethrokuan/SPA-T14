@@ -49,45 +49,52 @@ AttrName QE::attrNameFromString(std::string s) {
   return name;
 }
 
-std::optional<AttrRef> AttrRef::construct(
-    std::variant<QuoteIdent, unsigned int, Synonym, SynAttr> attr,
-    std::vector<Declaration>* decls) {
-  return std::visit(
+AttrRef::AttrRef(std::variant<QuoteIdent, unsigned int, Synonym, SynAttr> attr_,
+                 std::vector<Declaration>* decls)
+    : attr(attr_), attrType(AttrType::NAME) {
+  AttrType attr_type_ = AttrType::NAME;
+  std::visit(
       Utils::overload{
-          [](QuoteIdent qi) { return AttrRef(qi, AttrType::NAME); },
-          [](unsigned int i) { return AttrRef(i, AttrType::INTEGER); },
-          [decls](Synonym syn) {  // Has to be of prog_line type
+          [&attr_type_](QuoteIdent) { attr_type_ = AttrType::NAME; },
+          [&attr_type_](unsigned int) { attr_type_ = AttrType::INTEGER; },
+          [&attr_type_, decls](Synonym syn) {  // Has to be of prog_line type
             auto decl = Declaration::findDeclarationForSynonym(decls, syn);
+
+            if (!decl) {
+              throw PQLParseException("Undeclared synonym " + syn.synonym);
+            }
 
             if (decl->getDesignEntity() != DesignEntity::PROG_LINE) {
               throw PQLParseException(
                   "Synonym in attr ref needs to be of type prog_line.");
             }
-            return AttrRef(syn, AttrType::INTEGER);
+
+            attr_type_ = AttrType::INTEGER;
           },
-          [](SynAttr synAttr) {
-            AttrType attrType_ = getAttrType(synAttr.attrName);
-            return AttrRef(synAttr, attrType_);
+          [&attr_type_](SynAttr synAttr) {
+            attr_type_ = getAttrType(synAttr.attrName);
           }},
       attr);
+  attrType = attr_type_;
 };
 
 bool AttrRef::operator==(const AttrRef& other) const {
   return attr == other.attr && attrType == other.attrType;
 }
 
-std::optional<SynAttr> SynAttr::construct(Synonym synonym, AttrName attrName,
-                                          std::vector<Declaration>* decls) {
+SynAttr::SynAttr(Synonym synonym, AttrName attrName,
+                 std::vector<Declaration>* decls)
+    : synonym(synonym), attrName(attrName) {
   auto decl = Declaration::findDeclarationForSynonym(decls, synonym);
   if (!decl) {
     throw PQLParseException("No such synonym declared.");
   }
-  AttrSet valid_attr_names = getAttrSet(decl->getDesignEntity());
-  if (valid_attr_names.find(attrName) == valid_attr_names.end()) {
-    return std::nullopt;
-  }
 
-  return SynAttr(synonym, attrName);
+  AttrSet valid_attr_names = getAttrSet(decl->getDesignEntity());
+
+  if (valid_attr_names.find(attrName) == valid_attr_names.end()) {
+    throw PQLParseException("Invalid attribute name.");
+  }
 }
 
 bool SynAttr::operator==(const SynAttr& other) const {

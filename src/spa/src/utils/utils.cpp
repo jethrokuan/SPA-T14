@@ -1,5 +1,5 @@
-#include "utils/utils.h"
 #include <regex>
+#include "utils/utils.h"
 
 namespace Utils {
 
@@ -8,10 +8,6 @@ bool has_only_digits(const std::string s) {
 }
 
 bool is_valid_name(const std::string s) {
-  return std::regex_match(s, std::regex("[a-zA-Z](\\d|[a-zA-Z])*"));
-}
-
-bool is_valid_synonym(const std::string s) {
   return std::regex_match(s, std::regex("[a-zA-Z](\\d|[a-zA-Z])*"));
 }
 

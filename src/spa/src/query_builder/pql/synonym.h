@@ -6,20 +6,11 @@
 namespace QE {
 //! Represents a PQL synonym (LETTER (LETTER | DIGIT), e.g. x2002y)
 class Synonym {
- private:
-  // Spec: LETTER (LETTER | DIGIT)*
-  static const std::regex synonym_regex;
-
-  // Make constructors private
-  Synonym() {}
-  Synonym(std::string& synonym) : synonym(synonym) {}
-
  public:
+  Synonym(std::string synonym);
   std::string synonym;
-  // Constructs a guaranteed valid Synonym
-  static std::optional<Synonym> construct(std::string&);
-  static std::optional<Synonym> construct(const char*);
 
+  static bool isValidSynonym(std::string str);
   bool operator==(const Synonym& a2) const { return synonym == a2.synonym; }
   friend std::ostream& operator<<(std::ostream& os, Synonym const& syn) {
     os << syn.synonym;

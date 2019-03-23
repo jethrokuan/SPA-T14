@@ -51,10 +51,10 @@ bool PatternEvaluator::handlePatternLHSUnderscore(
     // Select partial or complete match
     SingleConstraintSet matching_assigns;
     if (matcher->isPartial) {
-      matching_assigns = pkb->getPartialMatchLines(stream.str())
+      matching_assigns = pkb->getAssignPatternPartialMatchLines(stream.str())
                              .value_or(std::unordered_set<std::string>());
     } else {
-      matching_assigns = pkb->getCompleteMatchLines(stream.str())
+      matching_assigns = pkb->getAssignPatternCompleteMatchLines(stream.str())
                              .value_or(std::unordered_set<std::string>());
     }
 
@@ -88,11 +88,11 @@ bool PatternEvaluator::handlePatternLHSQuoteIdent(
     SingleConstraintSet matching_assigns;
     if (matcher->isPartial) {
       matching_assigns =
-          pkb->getPartialMatchLinesWithVar(lhs, rhs_partial.str())
+          pkb->getAssignPatternPartialMatchLinesWithVar(lhs, rhs_partial.str())
               .value_or(SingleConstraintSet());
     } else {
       matching_assigns =
-          pkb->getCompleteMatchLinesWithVar(lhs, rhs_partial.str())
+          pkb->getAssignPatternCompleteMatchLinesWithVar(lhs, rhs_partial.str())
               .value_or(SingleConstraintSet());
     }
 
@@ -115,7 +115,7 @@ bool PatternEvaluator::handlePatternLHSSynonym(const Synonym& syn,
   // Get all variables so that we can make this query
   if (std::get_if<Underscore>(&pattern_rhs)) {
     // pattern a (v, _) --> all assignments
-    auto allowed_values = pkb->getAllPatternLinesAndVars();
+    auto allowed_values = pkb->getAllAssignPatternLinesAndVars();
     if (allowed_values.empty()) return false;  // Empty clause
     PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
     qc.addToPairedVariableConstraints(syn.synonym, lhs.synonym, avs);
@@ -125,16 +125,17 @@ bool PatternEvaluator::handlePatternLHSSynonym(const Synonym& syn,
     // pattern a (v, _"x + y"_) --> partial match, no var constraint
     std::ostringstream rhs_partial;
     rhs_partial << matcher->expr;
+    
     // Select partial or complete match
     PairedConstraintSet allowed_values;
     if (matcher->isPartial) {
-      allowed_values = pkb->getPartialMatchLinesAndVars(rhs_partial.str())
+      allowed_values = pkb->getAssignPatternPartialMatchLinesAndVars(rhs_partial.str())
                            .value_or(PairedConstraintSet());
     } else {
-      allowed_values = pkb->getCompleteMatchLinesAndVars(rhs_partial.str())
+      allowed_values = pkb->getAssignPatternCompleteMatchLinesAndVars(rhs_partial.str())
                            .value_or(PairedConstraintSet());
     }
-
+    
     if (allowed_values.empty()) return false;  // Empty clause
     PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
     qc.addToPairedVariableConstraints(syn.synonym, lhs.synonym, avs);

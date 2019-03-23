@@ -124,6 +124,17 @@ class PKBPreprocessor {
   void setPattern(const std::shared_ptr<WhileNode> node);
   void setPattern(const std::shared_ptr<ReadNode>);
   void setPattern(const std::shared_ptr<PrintNode>);
+  void setPatternH(const Expr node, const StmtNode parent_node);
+  void setPatternH(const std::shared_ptr<BinOpNode> node,
+                   const StmtNode parent_node);
+  void setPatternH(const std::shared_ptr<CondExprNode> node,
+                   const StmtNode parent_node);
+  void setPatternH(const std::shared_ptr<RelExprNode> node,
+                   const StmtNode parent_node);
+  void setPatternH(const std::shared_ptr<NumberNode> node,
+                   const StmtNode parent_node);
+  void setPatternH(const std::shared_ptr<VariableNode> node,
+                   const StmtNode parent_node);
   void setPatternIterator(const std::vector<StmtNode> stmt_lst);
 
  public:

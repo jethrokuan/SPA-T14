@@ -42,32 +42,33 @@ TEST_CASE ("Test PKB for assign.txt") {
   // test pattern
   std::unordered_set<std::string> pattern_test_1_check;
   pattern_test_1_check.insert("1");
-  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("i", "2+5");
+  auto pattern_test_1 =
+      pkb.getAssignPatternCompleteMatchLinesWithVar("i", "2+5");
   REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   std::unordered_set<std::string> pattern_test_2_check;
   pattern_test_2_check.insert("1");
-  auto pattern_test_2 = pkb.getPartialMatchLinesWithVar("i", "2");
+  auto pattern_test_2 = pkb.getAssignPatternPartialMatchLinesWithVar("i", "2");
   REQUIRE(*pattern_test_2 == pattern_test_2_check);
 
   std::unordered_set<std::string> pattern_test_3_check;
   pattern_test_3_check.insert("1");
-  auto pattern_test_3 = pkb.getPartialMatchLinesWithVar("i", "5");
+  auto pattern_test_3 = pkb.getAssignPatternPartialMatchLinesWithVar("i", "5");
   REQUIRE(*pattern_test_3 == pattern_test_3_check);
 
-  auto pattern_test_4 = pkb.getPartialMatchLinesWithVar("x", "x");
+  auto pattern_test_4 = pkb.getAssignPatternPartialMatchLinesWithVar("x", "x");
   REQUIRE(pattern_test_4 == std::nullopt);
 
-  auto pattern_test_5 = pkb.getPartialMatchLines("x");
+  auto pattern_test_5 = pkb.getAssignPatternPartialMatchLines("x");
   REQUIRE(pattern_test_5 == std::nullopt);
 
-  auto pattern_test_6 = pkb.getCompleteMatchLines("x");
+  auto pattern_test_6 = pkb.getAssignPatternCompleteMatchLines("x");
   std::unordered_set<PKB::Variable> pattern_test_6_set;
   REQUIRE(pattern_test_6 == std::nullopt);
 
   std::unordered_set<std::string> pattern_test_7_check;
   pattern_test_7_check.insert("1");
-  auto pattern_test_7 = pkb.getCompleteMatchLines("2+5");
+  auto pattern_test_7 = pkb.getAssignPatternCompleteMatchLines("2+5");
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   // next
@@ -278,7 +279,7 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   // test pattern
   std::unordered_set<PKB::Line> pattern_test_1_check;
   pattern_test_1_check.insert("1");
-  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("i", "5");
+  auto pattern_test_1 = pkb.getAssignPatternCompleteMatchLinesWithVar("i", "5");
   REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   // CFG
@@ -805,19 +806,22 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_1_check.insert("8");
   pattern_test_1_check.insert("12");
   pattern_test_1_check.insert("17");
-  auto pattern_test_1 = pkb.getCompleteMatchLinesWithVar("y", "y+1");
+  auto pattern_test_1 =
+      pkb.getAssignPatternCompleteMatchLinesWithVar("y", "y+1");
   REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   std::unordered_set<std::string> pattern_test_2_check;
   pattern_test_2_check.insert("10");
   pattern_test_2_check.insert("14");
   pattern_test_2_check.insert("19");
-  auto pattern_test_2 = pkb.getCompleteMatchLinesWithVar("z", "z+2");
+  auto pattern_test_2 =
+      pkb.getAssignPatternCompleteMatchLinesWithVar("z", "z+2");
   REQUIRE(*pattern_test_2 == pattern_test_2_check);
 
   std::unordered_set<std::string> pattern_test_3_check;
   pattern_test_3_check.insert("21");
-  auto pattern_test_3 = pkb.getCompleteMatchLinesWithVar("z", "z+4");
+  auto pattern_test_3 =
+      pkb.getAssignPatternCompleteMatchLinesWithVar("z", "z+4");
   REQUIRE(*pattern_test_3 == pattern_test_3_check);
 
   std::unordered_set<std::string> pattern_test_4_check;
@@ -831,12 +835,12 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_4_check.insert("19");
   pattern_test_4_check.insert("20");
   pattern_test_4_check.insert("21");
-  auto pattern_test_4 = pkb.getPartialMatchLinesWithVar("z", "z");
+  auto pattern_test_4 = pkb.getAssignPatternPartialMatchLinesWithVar("z", "z");
   REQUIRE(*pattern_test_4 == pattern_test_4_check);
 
   std::unordered_set<std::string> pattern_test_5_check;
   pattern_test_5_check.insert("21");
-  auto pattern_test_5 = pkb.getCompleteMatchLines("z+4");
+  auto pattern_test_5 = pkb.getAssignPatternCompleteMatchLines("z+4");
   REQUIRE(*pattern_test_5 == pattern_test_5_check);
 
   std::unordered_set<std::string> pattern_test_6_check;
@@ -850,7 +854,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_6_check.insert("19");
   pattern_test_6_check.insert("20");
   pattern_test_6_check.insert("21");
-  auto pattern_test_6 = pkb.getPartialMatchLines("z");
+  auto pattern_test_6 = pkb.getAssignPatternPartialMatchLines("z");
   REQUIRE(*pattern_test_6 == pattern_test_6_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
@@ -859,7 +863,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("9", "z"));
   pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("13", "z"));
   pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("18", "z"));
-  auto pattern_test_7 = pkb.getCompleteMatchLinesAndVars("z + 1");
+  auto pattern_test_7 = pkb.getAssignPatternCompleteMatchLinesAndVars("z + 1");
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
@@ -874,7 +878,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("19", "z"));
   pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("20", "z"));
   pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("21", "z"));
-  auto pattern_test_8 = pkb.getPartialMatchLinesAndVars("z");
+  auto pattern_test_8 = pkb.getAssignPatternPartialMatchLinesAndVars("z");
   REQUIRE(*pattern_test_8 == pattern_test_8_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
@@ -897,7 +901,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("20", "z"));
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("21", "z"));
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("22", "x"));
-  auto pattern_test_9 = pkb.getAllPatternLinesAndVars();
+  auto pattern_test_9 = pkb.getAllAssignPatternLinesAndVars();
   REQUIRE(pattern_test_9 == pattern_test_9_check);
 
   std::unordered_set<std::string> pattern_test_10_check;
@@ -915,16 +919,27 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   auto pattern_test_10 = pkb.getLineForAssignVar("z");
   REQUIRE(*pattern_test_10 == pattern_test_10_check);
 
-  auto pattern_test_11 = pkb.isPatternExists("z+1");
+  auto pattern_test_11 = pkb.isAssignPatternExists("z+1");
   REQUIRE(pattern_test_11 == true);
-  auto pattern_test_12 = pkb.isPatternExists("z + 2");
+  auto pattern_test_12 = pkb.isAssignPatternExists("z + 2");
   REQUIRE(pattern_test_12 == true);
-  auto pattern_test_13 = pkb.isPatternExists("x-1");
+  auto pattern_test_13 = pkb.isAssignPatternExists("x-1");
   REQUIRE(pattern_test_13 == true);
-  auto pattern_test_14 = pkb.isPatternExists("x+1");
+  auto pattern_test_14 = pkb.isAssignPatternExists("x+1");
   REQUIRE(pattern_test_14 == false);
-  auto pattern_test_15 = pkb.isPatternExists("z + 20 * 3");
+  auto pattern_test_15 = pkb.isAssignPatternExists("z + 20 * 3");
   REQUIRE(pattern_test_15 == false);
+
+  SECTION ("while pattern") {
+    std::unordered_set<PKB::Line> while_pattern_test_1_check = {"4", "7", "11",
+                                                                "16"};
+    auto while_pattern_test_1 = pkb.getWhilePatternLine("x");
+    REQUIRE(*while_pattern_test_1 == while_pattern_test_1_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_2_check = {"x"};
+    auto while_pattern_test_2 = pkb.getWhilePatternVariable("4");
+    REQUIRE(*while_pattern_test_2 == while_pattern_test_2_check);
+  }
 }
 
 TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
@@ -1556,6 +1571,22 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     next_test_36_check.insert("2");
     auto next_test_36 = pkb.getPreviousLineT("9");
     REQUIRE(*next_test_36 == next_test_36_check);
+  }
+
+  SECTION ("if pattern") {
+    std::unordered_set<PKB::Line> if_pattern_test_1_check = {"2", "4"};
+    auto if_pattern_test_1 = pkb.getIfPatternLine("i");
+    REQUIRE(*if_pattern_test_1 == if_pattern_test_1_check);
+  }
+
+  SECTION ("while pattern") {
+    std::unordered_set<PKB::Line> while_pattern_test_1_check = {"3"};
+    auto while_pattern_test_1 = pkb.getWhilePatternLine("i");
+    REQUIRE(*while_pattern_test_1 == while_pattern_test_1_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_2_check = {"i"};
+    auto while_pattern_test_2 = pkb.getWhilePatternVariable("3");
+    REQUIRE(*while_pattern_test_2 == while_pattern_test_2_check);
   }
 }
 
@@ -2375,6 +2406,418 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     modifies_test_23_check.insert("g");
     auto modifies_test_23 = pkb.getVarModifiedByLine("16");
     REQUIRE(*modifies_test_23 == modifies_test_23_check);
+  }
+}
+
+TEST_CASE ("Test PKB for if_while_double_control_variable.txt") {
+  auto ast = SimpleInterface::getAstFromFile(
+      "tests/simple_source/pattern/if_while_double_control_variable.txt");
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
+
+  SECTION ("if pattern") {
+    std::unordered_set<std::pair<PKB::Line, PKB::Variable>, Utils::pair_hash>
+        if_pattern_test_1_check;
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("1", "a"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("6", "a"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("6", "b"));
+    auto if_pattern_test_1 = pkb.getAllIfPatternLinesAndVars();
+    REQUIRE(if_pattern_test_1 == if_pattern_test_1_check);
+
+    auto if_pattern_test_2 = pkb.isIfPatternExists("1", "a");
+    REQUIRE(if_pattern_test_2 == true);
+
+    auto if_pattern_test_3 = pkb.isIfPatternExists("6", "a");
+    REQUIRE(if_pattern_test_3 == true);
+
+    auto if_pattern_test_4 = pkb.isIfPatternExists("6", "b");
+    REQUIRE(if_pattern_test_4 == true);
+
+    std::unordered_set<PKB::Line> if_pattern_test_5_check;
+    if_pattern_test_5_check.insert("1");
+    if_pattern_test_5_check.insert("6");
+    auto if_pattern_test_5 = pkb.getIfPatternLine("a");
+    REQUIRE(*if_pattern_test_5 == if_pattern_test_5_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_6_check;
+    if_pattern_test_6_check.insert("6");
+    auto if_pattern_test_6 = pkb.getIfPatternLine("b");
+    REQUIRE(*if_pattern_test_6 == if_pattern_test_6_check);
+
+    auto if_pattern_test_7 = pkb.getIfPatternLine("c");
+    REQUIRE(if_pattern_test_7 == std::nullopt);
+
+    std::unordered_set<PKB::Line> if_pattern_test_8_check;
+    if_pattern_test_8_check.insert("a");
+    auto if_pattern_test_8 = pkb.getIfPatternVariable("1");
+    REQUIRE(*if_pattern_test_8 == if_pattern_test_8_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_9_check;
+    if_pattern_test_9_check.insert("a");
+    if_pattern_test_9_check.insert("b");
+    auto if_pattern_test_9 = pkb.getIfPatternVariable("6");
+    REQUIRE(*if_pattern_test_9 == if_pattern_test_9_check);
+
+    auto if_pattern_test_10 = pkb.getIfPatternVariable("2");
+    REQUIRE(if_pattern_test_10 == std::nullopt);
+
+    auto if_pattern_test_11 = pkb.getIfPatternVariable("3733");
+    REQUIRE(if_pattern_test_11 == std::nullopt);
+  }
+
+  SECTION ("while pattern") {
+    std::unordered_set<std::pair<PKB::Line, PKB::Variable>, Utils::pair_hash>
+        while_pattern_test_1_check;
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("2", "b"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("4", "b"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("7", "a"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("7", "c"));
+    auto while_pattern_test_1 = pkb.getAllWhilePatternLinesAndVars();
+    REQUIRE(while_pattern_test_1 == while_pattern_test_1_check);
+
+    auto while_pattern_test_2 = pkb.isWhilePatternExists("2", "b");
+    REQUIRE(while_pattern_test_2 == true);
+
+    auto while_pattern_test_3 = pkb.isWhilePatternExists("4", "b");
+    REQUIRE(while_pattern_test_3 == true);
+
+    auto while_pattern_test_4 = pkb.isWhilePatternExists("7", "a");
+    REQUIRE(while_pattern_test_4 == true);
+
+    auto while_pattern_test_5 = pkb.isWhilePatternExists("7", "c");
+    REQUIRE(while_pattern_test_5 == true);
+
+    std::unordered_set<PKB::Line> while_pattern_test_6_check;
+    while_pattern_test_6_check.insert("7");
+    auto while_pattern_test_6 = pkb.getWhilePatternLine("a");
+    REQUIRE(*while_pattern_test_6 == while_pattern_test_6_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_7_check;
+    while_pattern_test_7_check.insert("2");
+    while_pattern_test_7_check.insert("4");
+    auto while_pattern_test_7 = pkb.getWhilePatternLine("b");
+    REQUIRE(*while_pattern_test_7 == while_pattern_test_7_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_8_check;
+    while_pattern_test_8_check.insert("7");
+    auto while_pattern_test_8 = pkb.getWhilePatternLine("c");
+    REQUIRE(*while_pattern_test_8 == while_pattern_test_8_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_9_check;
+    while_pattern_test_9_check.insert("b");
+    auto while_pattern_test_9 = pkb.getWhilePatternVariable("2");
+    REQUIRE(*while_pattern_test_9 == while_pattern_test_9_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_10_check;
+    while_pattern_test_10_check.insert("b");
+    auto while_pattern_test_10 = pkb.getWhilePatternVariable("4");
+    REQUIRE(*while_pattern_test_10 == while_pattern_test_10_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_11_check;
+    while_pattern_test_11_check.insert("a");
+    while_pattern_test_11_check.insert("c");
+    auto while_pattern_test_11 = pkb.getWhilePatternVariable("7");
+    REQUIRE(*while_pattern_test_11 == while_pattern_test_11_check);
+
+    auto while_pattern_test_12 = pkb.getWhilePatternVariable("1");
+    REQUIRE(while_pattern_test_12 == std::nullopt);
+
+    auto while_pattern_test_13 = pkb.getWhilePatternVariable("-21");
+    REQUIRE(while_pattern_test_13 == std::nullopt);
+
+    auto while_pattern_test_14 = pkb.getWhilePatternVariable("34120");
+    REQUIRE(while_pattern_test_14 == std::nullopt);
+  }
+}
+
+TEST_CASE ("Test PKB for if_while_multiple_control_variable.txt") {
+  auto ast = SimpleInterface::getAstFromFile(
+      "tests/simple_source/pattern/if_while_multiple_control_variable.txt");
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
+
+  SECTION ("if pattern") {
+    std::unordered_set<std::pair<PKB::Line, PKB::Variable>, Utils::pair_hash>
+        if_pattern_test_1_check;
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("1", "a"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("1", "b"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("1", "c"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("1", "d"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("1", "e"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("1", "f"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("2", "a"));
+    if_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("2", "z"));
+    auto if_pattern_test_1 = pkb.getAllIfPatternLinesAndVars();
+    REQUIRE(if_pattern_test_1 == if_pattern_test_1_check);
+
+    auto if_pattern_test_2 = pkb.isIfPatternExists("1", "a");
+    REQUIRE(if_pattern_test_2 == true);
+
+    auto if_pattern_test_3 = pkb.isIfPatternExists("1", "b");
+    REQUIRE(if_pattern_test_3 == true);
+
+    auto if_pattern_test_4 = pkb.isIfPatternExists("1", "c");
+    REQUIRE(if_pattern_test_4 == true);
+
+    auto if_pattern_test_5 = pkb.isIfPatternExists("1", "d");
+    REQUIRE(if_pattern_test_5 == true);
+
+    auto if_pattern_test_6 = pkb.isIfPatternExists("1", "e");
+    REQUIRE(if_pattern_test_6 == true);
+
+    auto if_pattern_test_7 = pkb.isIfPatternExists("1", "f");
+    REQUIRE(if_pattern_test_7 == true);
+
+    auto if_pattern_test_8 = pkb.isIfPatternExists("2", "a");
+    REQUIRE(if_pattern_test_8 == true);
+
+    auto if_pattern_test_9 = pkb.isIfPatternExists("2", "z");
+    REQUIRE(if_pattern_test_9 == true);
+
+    std::unordered_set<PKB::Line> if_pattern_test_10_check;
+    if_pattern_test_10_check.insert("1");
+    if_pattern_test_10_check.insert("2");
+    auto if_pattern_test_10 = pkb.getIfPatternLine("a");
+    REQUIRE(*if_pattern_test_10 == if_pattern_test_10_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_11_check;
+    if_pattern_test_11_check.insert("1");
+    auto if_pattern_test_11 = pkb.getIfPatternLine("b");
+    REQUIRE(*if_pattern_test_11 == if_pattern_test_11_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_12_check;
+    if_pattern_test_12_check.insert("1");
+    auto if_pattern_test_12 = pkb.getIfPatternLine("c");
+    REQUIRE(*if_pattern_test_12 == if_pattern_test_12_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_13_check;
+    if_pattern_test_13_check.insert("1");
+    auto if_pattern_test_13 = pkb.getIfPatternLine("d");
+    REQUIRE(*if_pattern_test_13 == if_pattern_test_13_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_14_check;
+    if_pattern_test_14_check.insert("1");
+    auto if_pattern_test_14 = pkb.getIfPatternLine("e");
+    REQUIRE(*if_pattern_test_14 == if_pattern_test_14_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_15_check;
+    if_pattern_test_15_check.insert("1");
+    auto if_pattern_test_15 = pkb.getIfPatternLine("f");
+    REQUIRE(*if_pattern_test_15 == if_pattern_test_15_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_16_check;
+    if_pattern_test_16_check.insert("2");
+    auto if_pattern_test_16 = pkb.getIfPatternLine("z");
+    REQUIRE(*if_pattern_test_16 == if_pattern_test_16_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_17_check;
+    if_pattern_test_17_check.insert("a");
+    if_pattern_test_17_check.insert("b");
+    if_pattern_test_17_check.insert("c");
+    if_pattern_test_17_check.insert("d");
+    if_pattern_test_17_check.insert("e");
+    if_pattern_test_17_check.insert("f");
+    auto if_pattern_test_17 = pkb.getIfPatternVariable("1");
+    REQUIRE(*if_pattern_test_17 == if_pattern_test_17_check);
+
+    std::unordered_set<PKB::Line> if_pattern_test_18_check;
+    if_pattern_test_18_check.insert("a");
+    if_pattern_test_18_check.insert("z");
+    auto if_pattern_test_18 = pkb.getIfPatternVariable("2");
+    REQUIRE(*if_pattern_test_18 == if_pattern_test_18_check);
+  }
+
+  SECTION ("while pattern") {
+    std::unordered_set<std::pair<PKB::Line, PKB::Variable>, Utils::pair_hash>
+        while_pattern_test_1_check;
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("3", "h"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("3", "i"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("3", "j"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("3", "k"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("4", "a"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("4", "b"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("4", "c"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("4", "d"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("4", "e"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("4", "f"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("6", "a"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("6", "b"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("6", "c"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("6", "d"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("6", "e"));
+    while_pattern_test_1_check.insert(
+        std::pair<PKB::Line, PKB::Variable>("6", "f"));
+    auto while_pattern_test_1 = pkb.getAllWhilePatternLinesAndVars();
+    REQUIRE(while_pattern_test_1 == while_pattern_test_1_check);
+
+    auto while_pattern_test_2 = pkb.isWhilePatternExists("3", "h");
+    REQUIRE(while_pattern_test_2 == true);
+
+    auto while_pattern_test_3 = pkb.isWhilePatternExists("3", "i");
+    REQUIRE(while_pattern_test_3 == true);
+
+    auto while_pattern_test_4 = pkb.isWhilePatternExists("3", "j");
+    REQUIRE(while_pattern_test_4 == true);
+
+    auto while_pattern_test_5 = pkb.isWhilePatternExists("3", "k");
+    REQUIRE(while_pattern_test_5 == true);
+
+    auto while_pattern_test_6 = pkb.isWhilePatternExists("4", "a");
+    REQUIRE(while_pattern_test_6 == true);
+
+    auto while_pattern_test_7 = pkb.isWhilePatternExists("4", "b");
+    REQUIRE(while_pattern_test_7 == true);
+
+    auto while_pattern_test_8 = pkb.isWhilePatternExists("4", "c");
+    REQUIRE(while_pattern_test_8 == true);
+
+    auto while_pattern_test_9 = pkb.isWhilePatternExists("4", "d");
+    REQUIRE(while_pattern_test_9 == true);
+
+    auto while_pattern_test_10 = pkb.isWhilePatternExists("4", "e");
+    REQUIRE(while_pattern_test_10 == true);
+
+    auto while_pattern_test_11 = pkb.isWhilePatternExists("4", "f");
+    REQUIRE(while_pattern_test_11 == true);
+
+    auto while_pattern_test_12 = pkb.isWhilePatternExists("6", "a");
+    REQUIRE(while_pattern_test_12 == true);
+
+    auto while_pattern_test_13 = pkb.isWhilePatternExists("6", "b");
+    REQUIRE(while_pattern_test_13 == true);
+
+    auto while_pattern_test_14 = pkb.isWhilePatternExists("6", "c");
+    REQUIRE(while_pattern_test_14 == true);
+
+    auto while_pattern_test_15 = pkb.isWhilePatternExists("6", "d");
+    REQUIRE(while_pattern_test_15 == true);
+
+    auto while_pattern_test_16 = pkb.isWhilePatternExists("6", "e");
+    REQUIRE(while_pattern_test_16 == true);
+
+    auto while_pattern_test_17 = pkb.isWhilePatternExists("6", "f");
+    REQUIRE(while_pattern_test_17 == true);
+
+    std::unordered_set<PKB::Line> while_pattern_test_18_check;
+    while_pattern_test_18_check.insert("4");
+    while_pattern_test_18_check.insert("6");
+    auto while_pattern_test_18 = pkb.getWhilePatternLine("a");
+    REQUIRE(*while_pattern_test_18 == while_pattern_test_18_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_19_check;
+    while_pattern_test_19_check.insert("4");
+    while_pattern_test_19_check.insert("6");
+    auto while_pattern_test_19 = pkb.getWhilePatternLine("b");
+    REQUIRE(*while_pattern_test_19 == while_pattern_test_19_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_20_check;
+    while_pattern_test_20_check.insert("4");
+    while_pattern_test_20_check.insert("6");
+    auto while_pattern_test_20 = pkb.getWhilePatternLine("c");
+    REQUIRE(*while_pattern_test_20 == while_pattern_test_20_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_21_check;
+    while_pattern_test_21_check.insert("4");
+    while_pattern_test_21_check.insert("6");
+    auto while_pattern_test_21 = pkb.getWhilePatternLine("d");
+    REQUIRE(*while_pattern_test_21 == while_pattern_test_21_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_22_check;
+    while_pattern_test_22_check.insert("4");
+    while_pattern_test_22_check.insert("6");
+    auto while_pattern_test_22 = pkb.getWhilePatternLine("e");
+    REQUIRE(*while_pattern_test_22 == while_pattern_test_22_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_23_check;
+    while_pattern_test_23_check.insert("4");
+    while_pattern_test_23_check.insert("6");
+    auto while_pattern_test_23 = pkb.getWhilePatternLine("f");
+    REQUIRE(*while_pattern_test_23 == while_pattern_test_23_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_24_check;
+    while_pattern_test_24_check.insert("3");
+    auto while_pattern_test_24 = pkb.getWhilePatternLine("h");
+    REQUIRE(*while_pattern_test_24 == while_pattern_test_24_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_25_check;
+    while_pattern_test_25_check.insert("3");
+    auto while_pattern_test_25 = pkb.getWhilePatternLine("i");
+    REQUIRE(*while_pattern_test_25 == while_pattern_test_25_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_26_check;
+    while_pattern_test_26_check.insert("3");
+    auto while_pattern_test_26 = pkb.getWhilePatternLine("j");
+    REQUIRE(*while_pattern_test_26 == while_pattern_test_26_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_27_check;
+    while_pattern_test_27_check.insert("3");
+    auto while_pattern_test_27 = pkb.getWhilePatternLine("k");
+    REQUIRE(*while_pattern_test_27 == while_pattern_test_27_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_28_check;
+    while_pattern_test_28_check.insert("h");
+    while_pattern_test_28_check.insert("i");
+    while_pattern_test_28_check.insert("j");
+    while_pattern_test_28_check.insert("k");
+    auto while_pattern_test_28 = pkb.getWhilePatternVariable("3");
+    REQUIRE(*while_pattern_test_28 == while_pattern_test_28_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_29_check;
+    while_pattern_test_29_check.insert("a");
+    while_pattern_test_29_check.insert("b");
+    while_pattern_test_29_check.insert("c");
+    while_pattern_test_29_check.insert("d");
+    while_pattern_test_29_check.insert("e");
+    while_pattern_test_29_check.insert("f");
+    auto while_pattern_test_29 = pkb.getWhilePatternVariable("4");
+    REQUIRE(*while_pattern_test_29 == while_pattern_test_29_check);
+
+    std::unordered_set<PKB::Line> while_pattern_test_30_check;
+    while_pattern_test_30_check.insert("a");
+    while_pattern_test_30_check.insert("b");
+    while_pattern_test_30_check.insert("c");
+    while_pattern_test_30_check.insert("d");
+    while_pattern_test_30_check.insert("e");
+    while_pattern_test_30_check.insert("f");
+    auto while_pattern_test_30 = pkb.getWhilePatternVariable("6");
+    REQUIRE(*while_pattern_test_30 == while_pattern_test_30_check);
+
+    auto while_pattern_test_31 = pkb.isWhilePatternExists("1", "z");
+    REQUIRE(while_pattern_test_31 == false);
+
+    auto while_pattern_test_32 = pkb.isWhilePatternExists("-21", "zzz");
+    REQUIRE(while_pattern_test_32 == false);
+
+    auto while_pattern_test_33 = pkb.isWhilePatternExists("-21", "-1");
+    REQUIRE(while_pattern_test_33 == false);
   }
 }
 

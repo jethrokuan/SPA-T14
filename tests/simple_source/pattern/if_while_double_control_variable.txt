@@ -1,0 +1,19 @@
+procedure main {
+  if (a == 1) then {
+    while (b > 1) {
+      b = b - 1;
+    }
+  } else {
+    while (b < 100) {
+      b = b + 1;
+    }
+    if (a == b) then {
+      while (a < c) {
+        c = c - 1;
+      }
+    } else {
+      x = 0;
+    }
+    x = 2;
+  }
+}

@@ -130,20 +130,37 @@ class PKBManager {
       const Variable);
   std::optional<std::unordered_set<Line>> getLineUsesVar(const Variable);
 
-  // pattern
-  std::optional<std::unordered_set<Line>> getCompleteMatchLinesWithVar(
-      const Variable, const Pattern);
-  std::optional<std::unordered_set<Line>> getPartialMatchLinesWithVar(
-      const Variable, const Pattern);
-  std::optional<std::unordered_set<Line>> getCompleteMatchLines(const Pattern);
-  std::optional<std::unordered_set<Line>> getPartialMatchLines(const Pattern);
+  // assign pattern
+  std::optional<std::unordered_set<Line>>
+  getAssignPatternCompleteMatchLinesWithVar(const Variable, const Pattern);
+  std::optional<std::unordered_set<Line>>
+  getAssignPatternPartialMatchLinesWithVar(const Variable, const Pattern);
+  std::optional<std::unordered_set<Line>> getAssignPatternCompleteMatchLines(
+      const Pattern);
+  std::optional<std::unordered_set<Line>> getAssignPatternPartialMatchLines(
+      const Pattern);
   std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
-  getCompleteMatchLinesAndVars(const Pattern);
+  getAssignPatternCompleteMatchLinesAndVars(const Pattern);
   std::optional<std::unordered_set<std::pair<Line, Variable>, pair_hash>>
-  getPartialMatchLinesAndVars(const Pattern);
+  getAssignPatternPartialMatchLinesAndVars(const Pattern);
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
-  getAllPatternLinesAndVars();
-  bool isPatternExists(const Pattern);
+  getAllAssignPatternLinesAndVars();
+  bool isAssignPatternExists(const Pattern);
+
+  // if pattern
+  std::optional<std::unordered_set<Line>> getIfPatternLine(const Variable);
+  std::optional<std::unordered_set<Variable>> getIfPatternVariable(const Line);
+  std::unordered_set<std::pair<Line, Variable>, pair_hash>
+  getAllIfPatternLinesAndVars();
+  bool isIfPatternExists(const Line, const Variable);
+
+  // while pattern
+  std::optional<std::unordered_set<Line>> getWhilePatternLine(const Variable);
+  std::optional<std::unordered_set<Variable>> getWhilePatternVariable(
+      const Line);
+  std::unordered_set<std::pair<Line, Variable>, pair_hash>
+  getAllWhilePatternLinesAndVars();
+  bool isWhilePatternExists(const Line, const Variable);
 
   // next
   bool isLineNextLine(const PreviousLine, const NextLine);

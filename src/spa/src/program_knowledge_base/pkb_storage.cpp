@@ -142,11 +142,7 @@ void PKBStorage::storeVariable(const Variable var) {
   var_set.insert(var);
 }
 
-void PKBStorage::storeAssign(const Line line, const Variable var) {
-  assign_set.insert(line);
-  assign_line_var_set.insert(std::pair<Line, Variable>(line, var));
-  addToSetMap(assign_var_line_map, var, line);
-}
+void PKBStorage::storeAssign(const Line line) { assign_set.insert(line); }
 
 void PKBStorage::storeStatement(const Line line) { statement_set.insert(line); }
 
@@ -192,17 +188,38 @@ void PKBStorage::storeLineProcedureRelation(const Line line,
 
 // pattern
 
-void PKBStorage::storePatternAssign(const Variable var, const ExprStr expr_str,
+void PKBStorage::storeAssignPattern(const Variable var, const ExprStr expr_str,
                                     const Line line) {
-  addToSetMap(var_line_expr_str_map, var,
+  assign_pattern_line_var_set.insert(std::pair<Line, Variable>(line, var));
+  addToSetMap(assign_pattern_var_line_map, var, line);
+
+  addToSetMap(assign_pattern_var_line_expr_str_map, var,
               std::pair<Line, ExprStr>(line, expr_str));
-  addToSetMap(expr_str_line_var_map, expr_str,
+  addToSetMap(assign_pattern_expr_str_line_var_map, expr_str,
               std::pair<Line, Variable>(line, var));
   // std::cout << var + " at line " + line + " maps to " + expr_str <<
   // std::endl;
-  var_expr_str_set.insert(std::pair<Variable, ExprStr>(var, expr_str));
-  line_expr_str_set.insert(std::pair<Line, ExprStr>(line, expr_str));
-  expr_str_set.insert(expr_str);
+  assign_pattern_var_expr_str_set.insert(
+      std::pair<Variable, ExprStr>(var, expr_str));
+  assign_pattern_line_expr_str_set.insert(
+      std::pair<Line, ExprStr>(line, expr_str));
+  assign_pattern_expr_str_set.insert(expr_str);
+}
+
+void PKBStorage::storeIfPattern(const Variable var, const Line line) {
+  // std::cout << "if " + var + " at line " + line << std::endl;
+  if_pattern_line_var_set.insert(std::pair<Line, Variable>(line, var));
+  // addToSetMap(if_pattern_var_line_map, var, line);
+  addToSetMap(if_pattern_line_control_variable_map, line, var);
+  addToSetMap(if_pattern_control_variable_line_map, var, line);
+}
+
+void PKBStorage::storeWhilePattern(const Variable var, const Line line) {
+  // std::cout << "while " + var + " at line " + line << std::endl;
+  while_pattern_line_var_set.insert(std::pair<Line, Variable>(line, var));
+  // addToSetMap(while_pattern_var_line_map, var, line);
+  addToSetMap(while_pattern_line_control_variable_map, line, var);
+  addToSetMap(while_pattern_control_variable_line_map, var, line);
 }
 
 Procedure PKBStorage::getProcedureFromLine(const Line line) {

@@ -11,7 +11,7 @@ using namespace PKB;
 using namespace QE;
 
 class PatternEvaluator {
- private:
+ protected:
   std::vector<QE::Declaration>* declarations;
   QE::PatternB* pattern;
   PKBManager* pkb;
@@ -47,31 +47,39 @@ class PatternEvaluator {
   bool dispatchPatternLHSUnderscoreRHSUnderscore();
   bool dispatchPatternLHSQuoteIdentRHSUnderscore();
   bool dispatchPatternLHSSynonymRHSUnderscore();
-  bool dispatchPatternLHSUnderscoreRHSNull();
-  bool dispatchPatternLHSQuoteIdentRHSNull();
-  bool dispatchPatternLHSSynonymRHSNull();
   bool dispatchPatternLHSUnderscoreRHSPartialMatch();
   bool dispatchPatternLHSQuoteIdentRHSPartialMatch();
   bool dispatchPatternLHSSynonymRHSPartialMatch();
   bool dispatchPatternLHSUnderscoreRHSCompleteMatch();
   bool dispatchPatternLHSQuoteIdentRHSCompleteMatch();
   bool dispatchPatternLHSSynonymRHSCompleteMatch();
+  bool dispatchPatternLHSUnderscoreRHSNull();
+  bool dispatchPatternLHSQuoteIdentRHSNull();
+  bool dispatchPatternLHSSynonymRHSNull();
 
-  bool handlePatternLHSUnderscoreRHSUnderscore();
-  bool handlePatternLHSQuoteIdentRHSUnderscore();
-  bool handlePatternLHSSynonymRHSUnderscore();
-
-  bool handlePatternLHSUnderscoreRHSPartialMatch();
-  bool handlePatternLHSQuoteIdentRHSPartialMatch();
-  bool handlePatternLHSSynonymRHSPartialMatch();
-
-  bool handlePatternLHSUnderscoreRHSCompleteMatch();
-  bool handlePatternLHSQuoteIdentRHSCompleteMatch();
-  bool handlePatternLHSSynonymRHSCompleteMatch();
-
-  bool handlePatternLHSUnderscoreRHSNull();
-  bool handlePatternLHSQuoteIdentRHSNull();
-  bool handlePatternLHSSynonymRHSNull();
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSUnderscoreRHSUnderscore() = 0;
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSQuoteIdentRHSUnderscore() = 0;
+  virtual PairedConstraintSet handlePatternLHSSynonymRHSUnderscore() = 0;
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSUnderscoreRHSPartialMatch() = 0;
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSQuoteIdentRHSPartialMatch() = 0;
+  virtual std::optional<PairedConstraintSet>
+  handlePatternLHSSynonymRHSPartialMatch() = 0;
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSUnderscoreRHSCompleteMatch() = 0;
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSQuoteIdentRHSCompleteMatch() = 0;
+  virtual std::optional<PairedConstraintSet>
+  handlePatternLHSSynonymRHSCompleteMatch() = 0;
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSUnderscoreRHSNull() = 0;
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSQuoteIdentRHSNull() = 0;
+  virtual std::optional<SingleConstraintSet>
+  handlePatternLHSSynonymRHSNull() = 0;
 
  public:
   PatternEvaluator(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,

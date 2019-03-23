@@ -41,8 +41,6 @@ std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(
 
 void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
   // std::cout << source + " " + dest << std::endl;
-  // add to edge list
-  line_previous_line_next_set.insert(std::pair(source, dest));
   // add to adjacency list
   addToSetMap(line_previous_line_next_map, source, dest);
   addToSetMap(line_next_line_previous_map, dest, source);

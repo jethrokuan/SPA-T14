@@ -132,7 +132,7 @@ std::unordered_set<Procedure> PKBManager::getCallSet() {
 
 // is relationship set empty
 bool PKBManager::isLineNextLineSetEmpty() {
-  return pkb_storage->line_previous_line_next_set.empty();
+  return pkb_storage->line_previous_line_next_map.empty();
 }
 
 bool PKBManager::isProcedureCallProcedureSetEmpty() {
@@ -597,9 +597,13 @@ std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(
 
 bool PKBManager::isLineNextLine(const PreviousLine previous_line,
                                 const NextLine next_line) {
-  return pkb_storage->line_previous_line_next_set.find(
-             std::pair<PreviousLine, NextLine>(previous_line, next_line)) !=
-         pkb_storage->line_previous_line_next_set.end();
+  if (pkb_storage->line_previous_line_next_map.find(previous_line) != 
+  pkb_storage->line_previous_line_next_map.end()) {
+    return pkb_storage->line_previous_line_next_map.at(previous_line).find(next_line)
+    != pkb_storage->line_previous_line_next_map.at(previous_line).end();
+  } else {
+    return false;
+  }
 }
 
 bool PKBManager::isLineNextLineT(const PreviousLine previous_line,

@@ -39,8 +39,6 @@ class PKBStorage {
   // attributes
   AST ast;
   // CFG
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      line_previous_line_next_set;  // edge list
   std::unordered_map<std::string, std::unordered_set<std::string>>
       line_previous_line_next_map;  // adjacency list
   std::unordered_map<std::string, std::unordered_set<std::string>>

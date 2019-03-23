@@ -26,12 +26,16 @@ Line PKBStorage::getCurLineNumber() { return std::to_string(num_lines); }
 
 void PKBStorage::incrementCurLineNumber() { num_lines = num_lines + 1; }
 
-Line PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
-  if (node_line_map.find(node) != node_line_map.end()) {
-    return node_line_map.at(node);
-  } else {
-    assert(false);
-  }
+Line PKBStorage::getLineFromNode(const StmtNode node) {
+  return std::visit(
+      [this](const auto &s) {
+        if (node_line_map.find(s) != node_line_map.end()) {
+          return node_line_map.at(s);
+        } else {
+          assert(false);
+        }
+      },
+      node);
 }
 
 std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(

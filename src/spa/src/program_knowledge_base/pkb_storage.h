@@ -190,7 +190,7 @@ class PKBStorage {
 
   // getters
   Procedure getProcedureFromLine(const Line);
-  Line getLineFromNode(const std::shared_ptr<Node> node);
+  Line getLineFromNode(const StmtNode node);
   std::optional<std::shared_ptr<Node>> getNodeFromLine(const Line line);
 };
 

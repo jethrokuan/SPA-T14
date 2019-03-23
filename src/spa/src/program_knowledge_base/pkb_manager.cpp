@@ -31,10 +31,6 @@ bool PKBManager::isVariableSetEmpty() { return pkb_storage->var_set.empty(); }
 
 bool PKBManager::isAssignSetEmpty() { return pkb_storage->assign_set.empty(); }
 
-bool PKBManager::isStatementSetEmpty() {
-  return pkb_storage->statement_set.empty();
-}
-
 bool PKBManager::isPrintSetEmpty() { return pkb_storage->print_set.empty(); }
 
 bool PKBManager::isReadSetEmpty() { return pkb_storage->read_set.empty(); }
@@ -45,10 +41,6 @@ bool PKBManager::isIfSetEmpty() { return pkb_storage->if_set.empty(); }
 
 bool PKBManager::isConstantSetEmpty() {
   return pkb_storage->constant_set.empty();
-}
-
-bool PKBManager::isProcedureSetEmpty() {
-  return pkb_storage->procedure_set.empty();
 }
 
 bool PKBManager::isCallSetEmpty() { return pkb_storage->call_set.empty(); }

@@ -213,13 +213,13 @@ void PKBPreprocessor::setDesignEntities(const std::shared_ptr<WhileNode> node) {
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<ReadNode> node) {
   storage->storeStatement(storage->getLineFromNode(node));
-  storage->storeRead(storage->getLineFromNode(node));
+  storage->storeRead(storage->getLineFromNode(node), node->Var->Name);
   setDesignEntities(node->Var);
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<PrintNode> node) {
   storage->storeStatement(storage->getLineFromNode(node));
-  storage->storePrint(storage->getLineFromNode(node));
+  storage->storePrint(storage->getLineFromNode(node), node->Var->Name);
   setDesignEntities(node->Var);
 }
 

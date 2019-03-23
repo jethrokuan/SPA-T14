@@ -1,6 +1,6 @@
+#include "query_builder/pql/synonym.h"
 #include <regex>
 #include "query_builder/core/exceptions.h"
-#include "query_builder/pql/synonym.h"
 #include "utils/utils.h"
 
 using namespace QE;

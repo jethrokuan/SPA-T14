@@ -597,10 +597,11 @@ std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(
 
 bool PKBManager::isLineNextLine(const PreviousLine previous_line,
                                 const NextLine next_line) {
-  if (pkb_storage->line_previous_line_next_map.find(previous_line) != 
-  pkb_storage->line_previous_line_next_map.end()) {
-    return pkb_storage->line_previous_line_next_map.at(previous_line).find(next_line)
-    != pkb_storage->line_previous_line_next_map.at(previous_line).end();
+  if (pkb_storage->line_previous_line_next_map.find(previous_line) !=
+      pkb_storage->line_previous_line_next_map.end()) {
+    return pkb_storage->line_previous_line_next_map.at(previous_line)
+               .find(next_line) !=
+           pkb_storage->line_previous_line_next_map.at(previous_line).end();
   } else {
     return false;
   }

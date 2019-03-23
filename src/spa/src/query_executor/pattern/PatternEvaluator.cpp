@@ -125,17 +125,19 @@ bool PatternEvaluator::handlePatternLHSSynonym(const Synonym& syn,
     // pattern a (v, _"x + y"_) --> partial match, no var constraint
     std::ostringstream rhs_partial;
     rhs_partial << matcher->expr;
-    
+
     // Select partial or complete match
     PairedConstraintSet allowed_values;
     if (matcher->isPartial) {
-      allowed_values = pkb->getAssignPatternPartialMatchLinesAndVars(rhs_partial.str())
-                           .value_or(PairedConstraintSet());
+      allowed_values =
+          pkb->getAssignPatternPartialMatchLinesAndVars(rhs_partial.str())
+              .value_or(PairedConstraintSet());
     } else {
-      allowed_values = pkb->getAssignPatternCompleteMatchLinesAndVars(rhs_partial.str())
-                           .value_or(PairedConstraintSet());
+      allowed_values =
+          pkb->getAssignPatternCompleteMatchLinesAndVars(rhs_partial.str())
+              .value_or(PairedConstraintSet());
     }
-    
+
     if (allowed_values.empty()) return false;  // Empty clause
     PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
     qc.addToPairedVariableConstraints(syn.synonym, lhs.synonym, avs);

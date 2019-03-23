@@ -33,12 +33,8 @@ void PKBPreprocessor::setLineNumbers(
 
 void PKBPreprocessor::setLineNumbers(const StmtNode node,
                                      const Procedure proc) {
-  std::visit(
-      [this, proc](const auto &s) {
-        const Line line_number = storage->storeLine(s);
-        storage->storeLineProcedureRelation(line_number, proc);
-      },
-      node);
+  const Line line_number = storage->storeLine(node);
+  storage->storeLineProcedureRelation(line_number, proc);
   std::visit(
       [this, proc](const auto &s) {
         using T = std::decay_t<decltype(s)>;
@@ -56,7 +52,7 @@ void PKBPreprocessor::setLineNumbersIterator(
     const std::vector<StmtNode> stmt_lst, const Procedure proc) {
   // iterate through AST via DFS
   for (const auto &stmt : stmt_lst) {
-    std::visit([this, proc](const auto &s) { setLineNumbers(s, proc); }, stmt);
+    setLineNumbers(stmt, proc);
   }
 }
 

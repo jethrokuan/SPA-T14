@@ -33,6 +33,7 @@ class WithEvaluator {
 
   bool handleBothArgsQuoteIdent();
   bool handleBothArgsNumber();
+  bool handleBothArgsSynonym();
 
  public:
   WithEvaluator(std::vector<QE::Declaration>* decls, QE::WithCond* withCond,

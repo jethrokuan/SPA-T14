@@ -23,15 +23,37 @@ bool WithEvaluator::dispatch() {
     return handleBothArgsQuoteIdent();
   } else if (argLeftAsNumber && argRightAsNumber) {
     return handleBothArgsNumber();
+  } else if (argLeftAsSynonym && argRightAsSynonym) {
+    return handleBothArgsSynonym();
   } else {
     return false;
   }
 }
 
 bool WithEvaluator::handleBothArgsQuoteIdent() {
+  // with "asdf" = "asdf"
   return (*argLeftAsQuoteIdent == *argRightAsQuoteIdent);
 }
 
 bool WithEvaluator::handleBothArgsNumber() {
+  // with 2 = 3
   return (*argLeftAsNumber == *argRightAsNumber);
+}
+
+bool WithEvaluator::handleBothArgsSynonym() {
+  // with n1 = n2, where both n1, n2 are prog_line
+  // prog_line n1, n2; Select <n1, n2> with n1 = n2
+  // Only allow values of n1 and n2 where n1 = n2
+  // Our simplified case: {(n', n') | n' in prog_line}
+  auto all_prog_lines = QueryExecutor::getSelect(pkb, DesignEntity::PROG_LINE);
+  if (all_prog_lines.empty()) return false;
+
+  // [1,2,3,4] --> {(1,1), (2,2), (3,3), (4,4)}
+  PairedConstraintSet pcs;
+  for (const auto& prog_line : all_prog_lines) {
+    pcs.insert({prog_line, prog_line});
+  }
+  qc.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
+                                    argRightAsSynonym->synonym, pcs);
+  return true;
 }

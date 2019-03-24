@@ -14,7 +14,7 @@
 using namespace QE;
 
 TEST_CASE (
-    "Test Query Executor FollowsT functionality - system_tests/src/1.txt") {
+    "Test Query Executor Pattern functionality - system_tests/src/1.txt") {
   auto ast =
       Simple::SimpleInterface::getAstFromFile("tests/system_tests/src/1.txt");
 
@@ -74,6 +74,58 @@ TEST_CASE (
         "assign a; variable v1, v2; Select a pattern a (v1, \"v1+v3\")");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
+  }
+
+  SECTION ("Test if pattern match on multiple control vars") {
+    auto querystr = std::string(
+        "if ifs; variable v1; Select ifs pattern ifs (\"v2\", _, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"32", "35"});
+  }
+
+  SECTION ("Test if pattern match on multiple control vars and single vars") {
+    auto querystr = std::string(
+        "if ifs; variable v1; Select ifs pattern ifs (\"v1\", _, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"17", "20", "23", "26", "29", "32", "35"});
+  }
+
+  SECTION ("Test pattern match - select all if control vars") {
+    auto querystr =
+        std::string("if ifs; variable v; Select v pattern ifs (v, _, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"v1", "v2"});
+  }
+
+  SECTION ("Test pattern match - select all if stmts") {
+    auto querystr =
+        std::string("if ifs; variable v; Select ifs pattern ifs (_, _, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"17", "20", "23", "26", "29", "32", "35"});
+  }
+
+  SECTION (
+      "Test while pattern match on multiple control vars and single vars") {
+    auto querystr =
+        std::string("while w; variable v1; Select w pattern w (\"v1\", _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"9"});
+  }
+
+  SECTION ("Test pattern match - select all while control vars") {
+    auto querystr =
+        std::string("while w; variable v1; Select v1 pattern w (v1, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"v1"});
+  }
+
+  SECTION ("Test pattern match - select all while stmts") {
+    auto querystr =
+        std::string("while w; variable v1; Select w pattern w (v1, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"9"});
   }
 
   delete pkb;

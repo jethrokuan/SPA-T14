@@ -5,7 +5,9 @@
 #include <vector>
 
 #include "query_executor/constraint_solver/query_constraints.h"
-#include "query_executor/pattern/PatternEvaluator.h"
+#include "query_executor/pattern/AssignPatternEvaluator.h"
+#include "query_executor/pattern/IfPatternEvaluator.h"
+#include "query_executor/pattern/WhilePatternEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
 #include "query_executor/suchthat/CallsTEvaluator.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
@@ -155,7 +157,20 @@ bool QueryExecutor::handleSuchThat(std::vector<QE::Declaration>* decls,
 
 bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
                                   QE::PatternB* pattern, QueryConstraints& qc) {
-  return PatternEvaluator(decls, pattern, pkb, qc).evaluate();
+  auto pattern_syn = pattern->getSynonym();
+  auto pattern_de = Declaration::findDeclarationForSynonym(decls, pattern_syn)
+                        ->getDesignEntity();
+  switch (pattern_de) {
+    case DesignEntity::ASSIGN:
+      return AssignPatternEvaluator(decls, pattern, pkb, qc).evaluate();
+    case DesignEntity::IF:
+      return IfPatternEvaluator(decls, pattern, pkb, qc).evaluate();
+    case DesignEntity::WHILE:
+      return WhilePatternEvaluator(decls, pattern, pkb, qc).evaluate();
+    default:
+      std::cout << "No design entity matches for pattern!\n";
+      assert(false);
+  }
 }
 
 //! Runs the correct ConstraintSolver methods for non/BOOLEAN selects

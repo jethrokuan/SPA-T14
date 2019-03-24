@@ -106,6 +106,28 @@ TEST_CASE (
             std::vector<std::string>{"17", "20", "23", "26", "29", "32", "35"});
   }
 
+  SECTION (
+      "Test while pattern match on multiple control vars and single vars") {
+    auto querystr =
+        std::string("while w; variable v1; Select w pattern w (\"v1\", _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"9"});
+  }
+
+  SECTION ("Test pattern match - select all while control vars") {
+    auto querystr =
+        std::string("while w; variable v1; Select v1 pattern w (v1, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"v1"});
+  }
+
+  SECTION ("Test pattern match - select all while stmts") {
+    auto querystr =
+        std::string("while w; variable v1; Select w pattern w (v1, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"9"});
+  }
+
   delete pkb;
   delete qm;
 }

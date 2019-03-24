@@ -7,6 +7,7 @@
 #include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/AssignPatternEvaluator.h"
 #include "query_executor/pattern/IfPatternEvaluator.h"
+#include "query_executor/pattern/WhilePatternEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
 #include "query_executor/suchthat/CallsTEvaluator.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
@@ -165,7 +166,7 @@ bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
     case DesignEntity::IF:
       return IfPatternEvaluator(decls, pattern, pkb, qc).evaluate();
     case DesignEntity::WHILE:
-      return false;
+      return WhilePatternEvaluator(decls, pattern, pkb, qc).evaluate();
     default:
       std::cout << "No design entity matches for pattern!\n";
       assert(false);

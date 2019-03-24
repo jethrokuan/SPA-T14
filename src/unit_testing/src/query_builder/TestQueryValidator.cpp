@@ -36,13 +36,13 @@ TEST_CASE ("Test such that with Follows firstArg underscore Validate (ok)") {
 }
 
 TEST_CASE ("Test such that with Follows secondArg quoteIdent") {
-  std::string query_string = "assign a; Select a such that Follows(_, \"2\")";
+  std::string query_string = "assign a; Select a such that Follows(_, \"a2\")";
   auto qe = QueryBuilder();
   REQUIRE_THROWS_AS(qe.makePqlQuery(query_string), PQLValidationException);
 }
 
 TEST_CASE ("Test such that with Parent firstArg quoteIdent") {
-  std::string query_string = "assign a; Select a such that Parent(\"2\", _)";
+  std::string query_string = "assign a; Select a such that Parent(\"a2\", _)";
   auto qe = QueryBuilder();
   REQUIRE_THROWS_AS(qe.makePqlQuery(query_string), PQLValidationException);
 }

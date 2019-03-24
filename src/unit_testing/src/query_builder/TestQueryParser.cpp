@@ -311,15 +311,15 @@ TEST_CASE ("Test RelCond clause") {
                                                 Synonym("p"), QuoteIdent("b"),
                                                 query.declarations));
     }
+  }
 
-    SECTION ("FAILURE: missing connector") {
-      std::string input =
-          "stmt p, p1; Select p such that Follows*(p,p1) Modifies(p, "
-          "\"b\")";
-      REQUIRE_THROWS_WITH(
-          qe.makePqlQuery(input),
-          "Expecting a such-that, pattern or with clause., got Modifies");
-    }
+  SECTION ("FAILURE: missing connector") {
+    std::string input =
+        "stmt p, p1; Select p such that Follows*(p,p1) Modifies(p, "
+        "\"b\")";
+    REQUIRE_THROWS_WITH(
+        qe.makePqlQuery(input),
+        "Expecting a such-that, pattern or with clause., got Modifies");
   }
 
   SECTION ("FAILURE: syntax errors") {
@@ -353,6 +353,11 @@ TEST_CASE ("Test RelCond clause") {
       std::string input = "stmt p; Select p such that Uses (p, )";
       REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expecting a ref, got ')'.");
     }
+
+    SECTION ("invalid quote ident") {
+      std::string input = "stmt p; Select p such that Uses (p, \"2\")";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Invalid QuoteIdent: 2");
+    }
   }
 }
 
@@ -377,6 +382,12 @@ TEST_CASE ("Test QueryParser pattern clause") {
       SECTION ("Non-underscore in latter args") {
         std::string input = "if i; Select i pattern i(\"a\", _, \"b\")";
         REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected '_', got '\"'.");
+      }
+
+      SECTION ("Invalid expression spec: 1 +") {
+        std::string input = "assign a; Select a pattern a(\"a\", _\"1+\"_)";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input),
+                            "'1+' does not fit expression spec.");
       }
     }
   }
@@ -476,6 +487,149 @@ TEST_CASE ("Test QueryParser pattern clause") {
       std::string input = "read r; Select r pattern r(\"a\", _)";
       REQUIRE_THROWS_WITH(qe.makePqlQuery(input),
                           "pattern clause not supported for read");
+    }
+  }
+}
+
+TEST_CASE ("Test QueryParser WithCond") {
+  SECTION ("SUCCESS: Synonym, integer") {
+    std::string input = "prog_line p; Select p with p = 1";
+    auto query = qe.makePqlQuery(input);
+
+    REQUIRE(query.with_cond->size() == 1);
+    REQUIRE(*query.with_cond->at(0) ==
+            WithCond(AttrRef(Synonym("p"), query.declarations),
+                     AttrRef(1, query.declarations)));
+  }
+
+  SECTION ("SUCCESS: SynAttr, int") {
+    std::string input = "assign a; Select a with a.stmt# = 1";
+    auto query = qe.makePqlQuery(input);
+
+    REQUIRE(query.with_cond->size() == 1);
+    REQUIRE(*query.with_cond->at(0) ==
+            WithCond(AttrRef(SynAttr(Synonym("a"), AttrName::STMT_NO,
+                                     query.declarations),
+                             query.declarations),
+                     AttrRef(1, query.declarations)));
+  }
+
+  SECTION ("SUCCESS: int, int") {
+    std::string input = "prog_line p; Select p with 2 = 1";
+    auto query = qe.makePqlQuery(input);
+
+    REQUIRE(query.with_cond->size() == 1);
+    REQUIRE(*query.with_cond->at(0) ==
+            WithCond(AttrRef(2, query.declarations),
+                     AttrRef(1, query.declarations)));
+  }
+
+  SECTION ("SUCCESS: SynAttr(int), SynAttr(int)") {
+    std::string input = "assign a, b; Select a with a.stmt# = b.stmt#";
+    auto query = qe.makePqlQuery(input);
+
+    REQUIRE(query.with_cond->size() == 1);
+    REQUIRE(*query.with_cond->at(0) ==
+            WithCond(AttrRef(SynAttr(Synonym("a"), AttrName::STMT_NO,
+                                     query.declarations),
+                             query.declarations),
+                     AttrRef(SynAttr(Synonym("b"), AttrName::STMT_NO,
+                                     query.declarations),
+                             query.declarations)));
+  }
+
+  SECTION ("SUCCESS: SynAttr(string), SynAttr(string)") {
+    std::string input = "assign a, b; Select a with a.stmt# = b.stmt#";
+    auto query = qe.makePqlQuery(input);
+
+    REQUIRE(query.with_cond->size() == 1);
+    REQUIRE(*query.with_cond->at(0) ==
+            WithCond(AttrRef(SynAttr(Synonym("a"), AttrName::STMT_NO,
+                                     query.declarations),
+                             query.declarations),
+                     AttrRef(SynAttr(Synonym("b"), AttrName::STMT_NO,
+                                     query.declarations),
+                             query.declarations)));
+  }
+
+  SECTION ("SUCCESS: Synonym, int") {
+    std::string input = "prog_line p; Select p with p = 1";
+    auto query = qe.makePqlQuery(input);
+
+    REQUIRE(query.with_cond->size() == 1);
+    REQUIRE(*query.with_cond->at(0) ==
+            WithCond(AttrRef(Synonym("p"), query.declarations),
+                     AttrRef(1, query.declarations)));
+  }
+
+  SECTION ("SUCCESS: multiple clauses") {
+    SECTION ("and connector") {
+      std::string input = "prog_line p; Select p with p = 1 and 1 = 2";
+      auto query = qe.makePqlQuery(input);
+
+      REQUIRE(query.with_cond->size() == 2);
+      REQUIRE(*query.with_cond->at(0) ==
+              WithCond(AttrRef(Synonym("p"), query.declarations),
+                       AttrRef(1, query.declarations)));
+      REQUIRE(*query.with_cond->at(1) ==
+              WithCond(AttrRef(1, query.declarations),
+                       AttrRef(2, query.declarations)));
+    }
+    SECTION ("with connector") {
+      std::string input = "prog_line p; Select p with p = 1 with 1 = 2";
+      auto query = qe.makePqlQuery(input);
+
+      REQUIRE(query.with_cond->size() == 2);
+      REQUIRE(*query.with_cond->at(0) ==
+              WithCond(AttrRef(Synonym("p"), query.declarations),
+                       AttrRef(1, query.declarations)));
+      REQUIRE(*query.with_cond->at(1) ==
+              WithCond(AttrRef(1, query.declarations),
+                       AttrRef(2, query.declarations)));
+    }
+  }
+
+  SECTION ("FAILURES") {
+    SECTION ("Matching wrong synonym attr type: int, string") {
+      std::string input = "prog_line p; Select p with p = \"abc\"";
+      REQUIRE_THROWS_WITH(qe.makePqlQuery(input),
+                          "Cannot compare attribute refs of differing types.");
+    }
+
+    SECTION ("Invalid attribute names") {
+      SECTION ("prog_line.stmt#") {
+        std::string input = "prog_line p; Select p with \"abc\" = p.stmt#";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Invalid attribute name.");
+      }
+
+      SECTION ("assign.procName") {
+        std::string input = "assign a; Select a with a.procName = \"main\"";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Invalid attribute name.");
+      }
+
+      SECTION ("procedure.value") {
+        std::string input = "prog_line p; Select p with \"abc\" = p.value";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Invalid attribute name.");
+      }
+
+      SECTION ("procedure.stmt") {
+        std::string input = "prog_line p; Select p with \"abc\" = p.stmt";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input),
+                            "Expected a valid attrName, got stmt");
+      }
+    }
+
+    SECTION ("Syntactic errors") {
+      SECTION ("Missing =") {
+        std::string input = "procedure p; Select p with 1 p";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input), "Expected '=', got 'p'.");
+      }
+
+      SECTION ("Missing attr ref") {
+        std::string input = "procedure p; Select p with  = p";
+        REQUIRE_THROWS_WITH(qe.makePqlQuery(input),
+                            "Could not parse attr ref.");
+      }
     }
   }
 }

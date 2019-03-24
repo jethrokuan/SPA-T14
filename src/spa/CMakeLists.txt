@@ -76,6 +76,7 @@ set(srcs ${srcs}
   src/query_builder/pql/relation.cpp
   src/query_builder/pql/synonym.cpp
   src/query_builder/pql/attrref.cpp
+  src/query_builder/pql/withcond.cpp
   )
 set(headers ${headers}
   src/query_builder/query_builder.h

@@ -2,9 +2,12 @@
 #include <iostream>
 #include <optional>
 
+#include "query_builder/core/exceptions.h"
 #include "query_builder/pql/ref.h"
 #include "query_builder/pql/synonym.h"
 #include "query_builder/pql/underscore.h"
+#include "simple_parser/exceptions.h"
+#include "simple_parser/interface.h"
 #include "utils/utils.h"
 
 using namespace Utils;
@@ -18,7 +21,13 @@ class Matcher {
   std::string expr;
 
   Matcher(bool isPartial_, std::string expr_)
-      : isPartial(isPartial_), expr(expr_){};
+      : isPartial(isPartial_), expr(expr_) {
+    try {
+      Simple::SimpleInterface::parseExpression(expr_);
+    } catch (Simple::SimpleParseException e) {
+      throw PQLParseException("'" + expr_ + "' does not fit expression spec.");
+    }
+  };
 
   bool operator==(const Matcher& other) const {
     return isPartial == other.isPartial && expr.compare(other.expr) == 0;

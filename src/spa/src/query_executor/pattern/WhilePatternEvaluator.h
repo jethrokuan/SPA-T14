@@ -8,61 +8,61 @@ class WhilePatternEvaluator : public PatternEvaluator {
  private:
   std::optional<SingleConstraintSet> handlePatternLHSUnderscoreRHSUnderscore()
       override {
-    std::cout << "LHS Pattern RHS underscore not valid for assign-pattern\n";
+    std::cout << "LHS Pattern RHS underscore not valid for assign-while\n";
     assert(false);
   }
   std::optional<SingleConstraintSet> handlePatternLHSQuoteIdentRHSUnderscore()
       override {
-    std::cout << "LHS QuoteIdent RHS underscore not valid for assign-pattern\n";
+    std::cout << "LHS QuoteIdent RHS underscore not valid for assign-while\n";
     assert(false);
   }
   PairedConstraintSet handlePatternLHSSynonymRHSUnderscore() override {
-    std::cout << "LHS Underscore RHS underscore not valid for assign-pattern\n";
+    std::cout << "LHS Underscore RHS underscore not valid for assign-while\n";
     assert(false);
   }
 
   std::optional<SingleConstraintSet> handlePatternLHSUnderscoreRHSPartialMatch()
       override {
-    std::cout << "LHS Underscore RHS partial not valid for assign-pattern\n";
+    std::cout << "LHS Underscore RHS partial not valid for assign-while\n";
     assert(false);
   }
   std::optional<SingleConstraintSet> handlePatternLHSQuoteIdentRHSPartialMatch()
       override {
-    std::cout << "LHS QuoteIdent RHS partial not valid for assign-pattern\n";
+    std::cout << "LHS QuoteIdent RHS partial not valid for assign-while\n";
     assert(false);
   }
   std::optional<PairedConstraintSet> handlePatternLHSSynonymRHSPartialMatch()
       override {
-    std::cout << "LHS Synonym RHS partial not valid for assign-pattern\n";
+    std::cout << "LHS Synonym RHS partial not valid for assign-while\n";
     assert(false);
   }
   std::optional<SingleConstraintSet>
   handlePatternLHSUnderscoreRHSCompleteMatch() override {
-    std::cout << "LHS Underscore RHS complete not valid for assign-pattern\n";
+    std::cout << "LHS Underscore RHS complete not valid for assign-while\n";
     assert(false);
   }
   std::optional<SingleConstraintSet>
   handlePatternLHSQuoteIdentRHSCompleteMatch() override {
-    std::cout << "LHS QuoteIdent RHS complete not valid for assign-pattern\n";
+    std::cout << "LHS QuoteIdent RHS complete not valid for assign-while\n";
     assert(false);
   }
   std::optional<PairedConstraintSet> handlePatternLHSSynonymRHSCompleteMatch()
       override {
-    std::cout << "LHS Synonym RHS complete not valid for assign-pattern\n";
+    std::cout << "LHS Synonym RHS complete not valid for assign-while\n";
     assert(false);
   }
   std::optional<SingleConstraintSet> handlePatternLHSUnderscoreRHSNull()
       override {
-    // pattern ifs (_, _, _)
+    // pattern w (_, _, _)
     return QueryExecutor::getSelect(pkb, DesignEntity::WHILE);
   }
   std::optional<SingleConstraintSet> handlePatternLHSQuoteIdentRHSNull()
       override {
-    // pattern ifs ("x", _, _)
+    // pattern w ("x", _, _)
     return pkb->getWhilePatternLine(*argLeftAsBasic);
   }
   std::optional<PairedConstraintSet> handlePatternLHSSynonymRHSNull() override {
-    // pattern ifs ("x", _, _)
+    // pattern w (v, _, _)
     return pkb->getAllWhilePatternLinesAndVars();
   }
 

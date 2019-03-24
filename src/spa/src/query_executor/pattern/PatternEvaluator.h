@@ -78,7 +78,7 @@ class PatternEvaluator {
   handlePatternLHSUnderscoreRHSNull() = 0;
   virtual std::optional<SingleConstraintSet>
   handlePatternLHSQuoteIdentRHSNull() = 0;
-  virtual std::optional<SingleConstraintSet>
+  virtual std::optional<PairedConstraintSet>
   handlePatternLHSSynonymRHSNull() = 0;
 
  public:

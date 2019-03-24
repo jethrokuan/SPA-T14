@@ -76,6 +76,7 @@ bool PatternEvaluator::dispatch() {
   } else {
     assert(false);
   }
+  assert(false);
 }
 
 bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSUnderscore() {
@@ -166,6 +167,30 @@ bool PatternEvaluator::dispatchPatternLHSSynonymRHSCompleteMatch() {
   return true;
 }
 
-bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSNull() {}
-bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSNull() {}
-bool PatternEvaluator::dispatchPatternLHSSynonymRHSNull() {}
+bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSNull() {
+  // pattern if/while (_, _..) --> all if/while
+  auto all_assigns = handlePatternLHSUnderscoreRHSNull().value_or(
+      std::unordered_set<std::string>());
+  if (all_assigns.empty()) return false;  // Empty clause
+  qc.addToSingleVariableConstraints(synonym, all_assigns);
+  return true;
+}
+bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSNull() {
+  // pattern ifs/while ("x", _,..)
+  auto allowed_lines = handlePatternLHSQuoteIdentRHSNull().value_or(
+      std::unordered_set<std::string>());
+  if (allowed_lines.empty()) return false;  // Empty clause
+  qc.addToSingleVariableConstraints(synonym, allowed_lines);
+  return true;
+}
+bool PatternEvaluator::dispatchPatternLHSSynonymRHSNull() {
+  // pattern ifs/while (v, _,...) --> complete match
+  PairedConstraintSet allowed_values;
+  allowed_values =
+      handlePatternLHSSynonymRHSNull().value_or(PairedConstraintSet());
+
+  if (allowed_values.empty()) return false;  // Empty clause
+  PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
+  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
+  return true;
+}

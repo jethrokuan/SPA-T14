@@ -63,9 +63,6 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   return runConstraintSolver(query->result, query_constraints);
 }
 
-std::vector<std::vector<std::string>> constrainAndSelect(
-    QueryConstraints& qc, const std::vector<std::string> vars_to_select);
-
 std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
                                                          DesignEntity de) {
   // All possible return types from select all PKB calls are vector<string>

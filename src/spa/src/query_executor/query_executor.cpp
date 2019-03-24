@@ -20,6 +20,7 @@
 #include "query_executor/suchthat/ParentTEvaluator.h"
 #include "query_executor/suchthat/UsesPEvaluator.h"
 #include "query_executor/suchthat/UsesSEvaluator.h"
+#include "query_executor/with/WithEvaluator.h"
 
 using namespace QE;
 
@@ -45,6 +46,15 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   if (!query->patternb->empty()) {
     for (auto& pattern : *(query->patternb)) {
       if (!handlePattern(query->declarations, pattern, query_constraints)) {
+        return getNegativeResult(query->result->T);
+      }
+    }
+  }
+
+  // Executes each pattern clause one by one
+  if (!query->with_cond->empty()) {
+    for (auto& with_cond : *(query->with_cond)) {
+      if (!handleWithCond(query->declarations, with_cond, query_constraints)) {
         return getNegativeResult(query->result->T);
       }
     }
@@ -168,6 +178,12 @@ bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
       std::cout << "No design entity matches for pattern!\n";
       assert(false);
   }
+}
+
+bool QueryExecutor::handleWithCond(std::vector<QE::Declaration>* decls,
+                                   QE::WithCond* withcond,
+                                   QueryConstraints& qc) {
+  return WithEvaluator(decls, withcond, pkb, qc).evaluate();
 }
 
 //! Runs the correct ConstraintSolver methods for non/BOOLEAN selects

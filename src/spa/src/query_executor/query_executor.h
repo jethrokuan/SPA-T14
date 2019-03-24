@@ -31,7 +31,12 @@ class QueryExecutor {
   bool handlePattern(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
                      QueryConstraints& qc);
 
-  //! Utility function to get all synonym strings from a list of selected vars
+  //! Evaluates any With clauses
+  bool handleWithCond(std::vector<QE::Declaration>* decls,
+                      QE::WithCond* withcond, QueryConstraints& qc);
+
+  //! Utility function to get all synonym strings from a list of selected
+  //! vars
   std::vector<std::string> getSynonymsFromSelect(
       std::vector<QE::ResultItem>* resultItems);
 

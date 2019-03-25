@@ -1,7 +1,7 @@
+#include "query_builder/pql/quoteident.h"
 #include <regex>
 #include <string>
 #include "query_builder/core/exceptions.h"
-#include "query_builder/pql/quoteident.h"
 using namespace QE;
 
 // Definitions for QuoteIdent

@@ -1,0 +1,130 @@
+1 - Calls*
+procedure p1, p2;
+Select p1 such that Calls*(p1,p2)
+main,loops
+5000
+2 - Calls*
+0
+Select p1 such that Calls*(p1,_)
+main,loops
+5000
+3 - Calls*
+0
+Select p1 such that Calls*(p1,"main")
+none
+5000
+4 - Calls*
+0
+Select p1 such that Calls*(p1,"loops")
+main
+5000
+5 - Calls*
+0
+Select p1 such that Calls*(p1,"addABC")
+main, loops
+5000
+6 - Calls*
+procedure p1, p2;
+Select p2 such that Calls*(_,p2)
+main,loops,addABC
+5000
+7 - Calls*
+0
+Select BOOLEAN such that Calls*(_,_)
+TRUE
+5000
+8 - Calls*
+0
+Select BOOLEAN such that Calls*(_,"main")
+FALSE
+5000
+9 - Calls*
+0
+Select BOOLEAN such that Calls*(_,"loops")
+TRUE
+5000
+10 - Calls*
+0
+Select BOOLEAN such that Calls*(_,"addABC")
+TRUE
+5000
+11 - Calls*
+procedure p1, p2;
+Select p2 such that Calls*("main",p2)
+loops, addABC
+5000
+12 - Calls*
+0
+Select BOOLEAN such that Calls*("main",_)
+TRUE
+5000
+13 - Calls*
+0
+Select BOOLEAN such that Calls*("main","main")
+FALSE
+5000
+14 - Calls*
+0
+Select BOOLEAN such that Calls*("main","loops")
+TRUE
+5000
+15 - Calls*
+0
+Select BOOLEAN such that Calls*("main","addABC")
+TRUE
+5000
+16 - Calls*
+procedure p1, p2;
+Select p2 such that Calls*("loops",p2)
+addABC
+5000
+17 - Calls*
+0
+Select BOOLEAN such that Calls*("loops",_)
+TRUE
+5000
+18 - Calls*
+0
+Select BOOLEAN such that Calls*("loops","main")
+FALSE
+5000
+19 - Calls*
+0
+Select BOOLEAN such that Calls*("loops","loops")
+FALSE
+5000
+20 - Calls*
+0
+Select BOOLEAN such that Calls*("loops","addABC")
+TRUE
+5000
+21 - Calls*
+procedure p1, p2;
+Select p2 such that Calls*("addABC",p2)
+none
+5000
+22 - Calls*
+0
+Select BOOLEAN such that Calls*("addABC",_)
+FALSE
+5000
+23 - Calls*
+0
+Select BOOLEAN such that Calls*("addABC","main")
+FALSE
+5000
+24 - Calls*
+0
+Select BOOLEAN such that Calls*("addABC","loops")
+FALSE
+5000
+25 - Calls*
+0
+Select BOOLEAN such that Calls*("addABC","addABC")
+FALSE
+5000
+26 - Calls*
+procedure p1, p2;
+Select <p1,p2> such that Calls*(p1,p2)
+main loops, main addABC, loops addABC
+5000

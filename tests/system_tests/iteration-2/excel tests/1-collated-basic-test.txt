@@ -1,0 +1,2580 @@
+1	-	 Calls
+procedure p1, p2;		
+Select p1 such that Calls(p1,p2)		
+main,loops		
+5000		
+2	-	 Calls
+0		
+Select p1 such that Calls(p1,_)		
+main,loops		
+5000		
+3	-	 Calls
+0		
+Select p1 such that Calls(p1,"main")		
+none		
+5000		
+4	-	 Calls
+0		
+Select p1 such that Calls(p1,"loops")		
+main		
+5000		
+5	-	 Calls
+0		
+Select p1 such that Calls(p1,"addABC")		
+loops		
+5000		
+6	-	 Calls
+procedure p1, p2;		
+Select p2 such that Calls(_,p2)		
+main,loops,addABC,handlePrint		
+5000		
+7	-	 Calls
+0		
+Select BOOLEAN such that Calls(_,_)		
+TRUE		
+5000		
+8	-	 Calls
+0		
+Select BOOLEAN such that Calls(_,"main")		
+FALSE		
+5000		
+9	-	 Calls
+0		
+Select BOOLEAN such that Calls(_,"loops")		
+TRUE		
+5000		
+10	-	 Calls
+0		
+Select BOOLEAN such that Calls(_,"addABC")		
+TRUE		
+5000		
+11	-	 Calls
+procedure p1, p2;		
+Select p2 such that Calls("main",p2)		
+loops		
+5000		
+12	-	 Calls
+0		
+Select BOOLEAN such that Calls("main",_)		
+TRUE		
+5000		
+13	-	 Calls
+0		
+Select BOOLEAN such that Calls("main","main")		
+FALSE		
+5000		
+14	-	 Calls
+0		
+Select BOOLEAN such that Calls("main","loops")		
+TRUE		
+5000		
+15	-	 Calls
+0		
+Select BOOLEAN such that Calls("main","addABC")		
+FALSE		
+5000		
+16	-	 Calls
+procedure p1, p2;		
+Select p2 such that Calls("loops",p2)		
+addABC, handlePrint		
+5000		
+17	-	 Calls
+0		
+Select BOOLEAN such that Calls("loops",_)		
+TRUE		
+5000		
+18	-	 Calls
+0		
+Select BOOLEAN such that Calls("loops","main")		
+FALSE		
+5000		
+19	-	 Calls
+0		
+Select BOOLEAN such that Calls("loops","loops")		
+FALSE		
+5000		
+20	-	 Calls
+0		
+Select BOOLEAN such that Calls("loops","addABC")		
+TRUE		
+5000		
+21	-	 Calls
+procedure p1, p2;		
+Select p2 such that Calls("addABC",p2)		
+none		
+5000		
+22	-	 Calls
+0		
+Select BOOLEAN such that Calls("addABC",_)		
+FALSE		
+5000		
+23	-	 Calls
+0		
+Select BOOLEAN such that Calls("addABC","main")		
+FALSE		
+5000		
+24	-	 Calls
+0		
+Select BOOLEAN such that Calls("addABC","loops")		
+FALSE		
+5000		
+25	-	 Calls
+0		
+Select BOOLEAN such that Calls("addABC","addABC")		
+FALSE		
+5000		
+26	-	 Calls
+procedure p1, p2;		
+Select <p1,p2> such that Calls(p1,p2)		
+main loops, loops addABC, loops handlePrint		
+5000		
+27	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(s1,s1)		
+none		
+5000		
+28	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(r1,s1)		
+2,3,4		
+5000		
+29	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(p1,s1)		
+22,23,24,25,26		
+5000		
+30	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(c1,s1)		
+11		
+5000		
+31	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(w1,s1)		
+none		
+5000		
+32	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(i1,s1)		
+12		
+5000		
+33	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(a1,s1)		
+7,10,14,15,18,20		
+5000		
+34	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(n1,s1)		
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26		
+5000		
+35	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(_,s1)		
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26		
+5000		
+36	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(1,s1)		
+2		
+5000		
+37	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(s1,r1)		
+2,3		
+5000		
+38	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(r1,r1)		
+none		
+5000		
+39	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(p1,r1)		
+none		
+5000		
+40	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(c1,r1)		
+none		
+5000		
+41	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(w1,r1)		
+none		
+5000		
+42	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(i1,r1)		
+none		
+5000		
+43	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(a1,r1)		
+none		
+5000		
+44	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(n1,r1)		
+2,3		
+5000		
+45	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(_,r1)		
+2,3		
+5000		
+46	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(1,r1)		
+2		
+5000		
+47	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(s1,p1)		
+22,23,24,25,26		
+5000		
+48	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(r1,p1)		
+none		
+5000		
+49	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(p1,p1)		
+none		
+5000		
+50	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(c1,p1)		
+none		
+5000		
+51	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(w1,p1)		
+none		
+5000		
+52	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(i1,p1)		
+none		
+5000		
+53	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(a1,p1)		
+none		
+5000		
+54	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(n1,p1)		
+22,23,24,25,26		
+5000		
+55	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(_,p1)		
+22,23,24,25,26		
+5000		
+56	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(1,p1)		
+none		
+5000		
+57	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(s1,c1)		
+4,10,12		
+5000		
+58	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(r1,c1)		
+4		
+5000		
+59	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(p1,c1)		
+none		
+5000		
+60	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(c1,c1)		
+none		
+5000		
+61	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(w1,c1)		
+none		
+5000		
+62	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(i1,c1)		
+12		
+5000		
+63	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(a1,c1)		
+10		
+5000		
+64	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(n1,c1)		
+4,10,12		
+5000		
+65	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(_,c1)		
+4,10,12		
+5000		
+66	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(1,c1)		
+none		
+5000		
+67	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(s1,w1)		
+none		
+5000		
+68	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(r1,w1)		
+none		
+5000		
+69	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(p1,w1)		
+none		
+5000		
+70	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(c1,w1)		
+none		
+5000		
+71	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(w1,w1)		
+none		
+5000		
+72	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(i1,w1)		
+none		
+5000		
+73	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(a1,w1)		
+none		
+5000		
+74	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(n1,w1)		
+none		
+5000		
+75	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(_,w1)		
+none		
+5000		
+76	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(1,w1)		
+none		
+5000		
+77	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(s1,i1)		
+16		
+5000		
+78	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(r1,i1)		
+none		
+5000		
+79	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(p1,i1)		
+none		
+5000		
+80	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(c1,i1)		
+none		
+5000		
+81	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(w1,i1)		
+none		
+5000		
+82	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(i1,i1)		
+none		
+5000		
+83	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(a1,i1)		
+16		
+5000		
+84	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(n1,i1)		
+16		
+5000		
+85	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(_,i1)		
+16		
+5000		
+86	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(1,i1)		
+none		
+5000		
+87	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(s1,a1)		
+7,11,14,15,18,20		
+5000		
+88	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(r1,a1)		
+none		
+5000		
+89	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(p1,a1)		
+none		
+5000		
+90	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(c1,a1)		
+11		
+5000		
+91	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(w1,a1)		
+none		
+5000		
+92	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(i1,a1)		
+none		
+5000		
+93	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(a1,a1)		
+none		
+5000		
+94	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(n1,a1)		
+7,11,14,15,18,20		
+5000		
+95	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(_,a1)		
+7,11,14,15,18,20		
+5000		
+96	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(1,a1)		
+none		
+5000		
+97	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(s1,n1)		
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26		
+5000		
+98	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(r1,n1)		
+4		
+5000		
+99	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(p1,n1)		
+22,23,24,25,26		
+5000		
+100	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(c1,n1)		
+11		
+5000		
+101	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(w1,n1)		
+none		
+5000		
+102	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(i1,n1)		
+12		
+5000		
+103	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(a1,n1)		
+7,10,14,15,18,20		
+5000		
+104	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(n1,n1)		
+none		
+5000		
+105	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(_,n1)		
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26		
+5000		
+106	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(1,n1)		
+2		
+5000		
+107	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(s1,_)		
+1,2,3,5,6,9,10,13,14,15,17,19,21,22,23,24,25		
+5000		
+108	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows(r1,_)		
+1,2,3		
+5000		
+109	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows(p1,_)		
+21,22,23,24,25		
+5000		
+110	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows(c1,_)		
+10		
+5000		
+111	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows(w1,_)		
+none		
+5000		
+112	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows(i1,_)		
+none		
+5000		
+113	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows(a1,_)		
+6,9,13,14,17,19		
+5000		
+114	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows(n1,_)		
+1,2,3,5,6,9,10,13,14,15,17,19,21,22,23,24,25		
+5000		
+115	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(_,_)		
+1,2,3,5,6,9,10,13,14,15,17,19,21,22,23,24,25		
+5000		
+116	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(1,_)		
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26		
+5000		
+117	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(s1,1)		
+none		
+5000		
+118	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(r1,1)		
+none		
+5000		
+119	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(p1,1)		
+none		
+5000		
+120	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(c1,1)		
+none		
+5000		
+121	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(w1,1)		
+none		
+5000		
+122	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(i1,1)		
+none		
+5000		
+123	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(a1,1)		
+none		
+5000		
+124	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(n1,1)		
+none		
+5000		
+125	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(_,1)		
+none		
+5000		
+126	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows(1,1)		
+none		
+5000		
+127	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(s1,s1)		
+none		
+5000		
+128	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(r1,s1)		
+2,3,4		
+5000		
+129	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(p1,s1)		
+22,23,24,25,26		
+5000		
+130	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(c1,s1)		
+11		
+5000		
+131	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(w1,s1)		
+none		
+5000		
+132	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(i1,s1)		
+12		
+5000		
+133	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(a1,s1)		
+7,10,14,15,18,20,11		
+5000		
+134	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(n1,s1)		
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26		
+5000		
+135	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(_,s1)		
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26		
+5000		
+136	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(1,s1)		
+2,3,4		
+5000		
+137	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(s1,r1)		
+2,3		
+5000		
+138	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(r1,r1)		
+none		
+5000		
+139	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(p1,r1)		
+none		
+5000		
+140	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(c1,r1)		
+none		
+5000		
+141	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(w1,r1)		
+none		
+5000		
+142	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(i1,r1)		
+none		
+5000		
+143	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(a1,r1)		
+none		
+5000		
+144	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(n1,r1)		
+2,3		
+5000		
+145	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(_,r1)		
+2,3		
+5000		
+146	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(1,r1)		
+2,3		
+5000		
+147	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(s1,p1)		
+22,23,24,25,26		
+5000		
+148	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(r1,p1)		
+none		
+5000		
+149	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(p1,p1)		
+none		
+5000		
+150	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(c1,p1)		
+none		
+5000		
+151	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(w1,p1)		
+none		
+5000		
+152	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(i1,p1)		
+none		
+5000		
+153	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(a1,p1)		
+none		
+5000		
+154	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(n1,p1)		
+22,23,24,25,26		
+5000		
+155	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(_,p1)		
+22,23,24,25,26		
+5000		
+156	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(1,p1)		
+none		
+5000		
+157	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(s1,c1)		
+4,10,12		
+5000		
+158	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(r1,c1)		
+4		
+5000		
+159	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(p1,c1)		
+none		
+5000		
+160	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(c1,c1)		
+none		
+5000		
+161	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(w1,c1)		
+none		
+5000		
+162	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(i1,c1)		
+12		
+5000		
+163	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(a1,c1)		
+10		
+5000		
+164	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(n1,c1)		
+4,10,12		
+5000		
+165	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(_,c1)		
+4,10,12		
+5000		
+166	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(1,c1)		
+none		
+5000		
+167	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(s1,w1)		
+none		
+5000		
+168	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(r1,w1)		
+none		
+5000		
+169	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(p1,w1)		
+none		
+5000		
+170	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(c1,w1)		
+none		
+5000		
+171	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(w1,w1)		
+none		
+5000		
+172	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(i1,w1)		
+none		
+5000		
+173	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(a1,w1)		
+none		
+5000		
+174	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(n1,w1)		
+none		
+5000		
+175	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(_,w1)		
+none		
+5000		
+176	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(1,w1)		
+none		
+5000		
+177	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(s1,i1)		
+16		
+5000		
+178	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(r1,i1)		
+none		
+5000		
+179	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(p1,i1)		
+none		
+5000		
+180	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(c1,i1)		
+none		
+5000		
+181	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(w1,i1)		
+none		
+5000		
+182	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(i1,i1)		
+none		
+5000		
+183	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(a1,i1)		
+16		
+5000		
+184	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(n1,i1)		
+16		
+5000		
+185	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(_,i1)		
+16		
+5000		
+186	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(1,i1)		
+none		
+5000		
+187	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(s1,a1)		
+7,11,14,15,18,20		
+5000		
+188	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(r1,a1)		
+none		
+5000		
+189	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(p1,a1)		
+none		
+5000		
+190	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(c1,a1)		
+11		
+5000		
+191	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(w1,a1)		
+none		
+5000		
+192	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(i1,a1)		
+none		
+5000		
+193	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(a1,a1)		
+none		
+5000		
+194	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(n1,a1)		
+7,11,14,15,18,20		
+5000		
+195	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(_,a1)		
+7,11,14,15,18,20		
+5000		
+196	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(1,a1)		
+none		
+5000		
+197	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(s1,n1)		
+none		
+5000		
+198	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(r1,n1)		
+2,3,4		
+5000		
+199	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(p1,n1)		
+22,23,24,25,26		
+5000		
+200	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(c1,n1)		
+11		
+5000		
+201	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(w1,n1)		
+none		
+5000		
+202	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(i1,n1)		
+12		
+5000		
+203	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(a1,n1)		
+7,10,14,15,18,20,11		
+5000		
+204	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(n1,n1)		
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26		
+5000		
+205	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(_,n1)		
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26		
+5000		
+206	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(1,n1)		
+2,3,4		
+5000		
+207	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(s1,_)		
+1,2,3,5,6,9,10,13,14,15,17,19,21,22,23,24,25		
+5000		
+208	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r1 such that Follows*(r1,_)		
+1,2,3		
+5000		
+209	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p1 such that Follows*(p1,_)		
+21,22,23,24,25		
+5000		
+210	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c1 such that Follows*(c1,_)		
+10		
+5000		
+211	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w1 such that Follows*(w1,_)		
+none		
+5000		
+212	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i1 such that Follows*(i1,_)		
+none		
+5000		
+213	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a1 such that Follows*(a1,_)		
+6,9,13,14,17,19		
+5000		
+214	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n1 such that Follows*(n1,_)		
+1,2,3,5,6,9,10,13,14,15,17,19,21,22,23,24,25		
+5000		
+215	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(_,_)		
+1,2,3,5,6,9,10,13,14,15,17,19,21,22,23,24,25		
+5000		
+216	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(1,_)		
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26		
+5000		
+217	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(s1,1)		
+none		
+5000		
+218	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(r1,1)		
+none		
+5000		
+219	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(p1,1)		
+none		
+5000		
+220	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(c1,1)		
+none		
+5000		
+221	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(w1,1)		
+none		
+5000		
+222	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(i1,1)		
+none		
+5000		
+223	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(a1,1)		
+none		
+5000		
+224	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(n1,1)		
+none		
+5000		
+225	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(_,1)		
+none		
+5000		
+226	-	 Follows
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s1 such that Follows*(1,1)		
+none		
+5000		
+227	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Modifies(a1,_)		
+6,7,9,11,13,14,15,17,18,19,20		
+5000		
+228	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Modifies(a1,"x")		
+7,11		
+5000		
+229	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Modifies(a1,"y")		
+6		
+5000		
+230	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Modifies(a1,"z")		
+9		
+5000		
+231	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Modifies(a1,v1)		
+6,7,9,11,13,14,15,17,18,19,20		
+5000		
+232	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select r1 such that Modifies(r1,_)		
+1,2,3		
+5000		
+233	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select r1 such that Modifies(r1,"x")		
+1,2,3		
+5000		
+234	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select r1 such that Modifies(r1,"y")		
+2		
+5000		
+235	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select r1 such that Modifies(r1,"z")		
+3		
+5000		
+236	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select r1 such that Modifies(r1,v1)		
+1,2,3		
+5000		
+237	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Modifies(i1,_)		
+5,16		
+5000		
+238	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Modifies(i1,"x")		
+5		
+5000		
+239	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Modifies(i1,"y")		
+5		
+5000		
+240	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Modifies(i1,"z")		
+5		
+5000		
+241	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Modifies(i1,v1)		
+5,16		
+5000		
+242	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Modifies(w1,_)		
+8		
+5000		
+243	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Modifies(w1,"x")		
+8		
+5000		
+244	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Modifies(w1,"y")		
+none		
+5000		
+245	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Modifies(w1,"z")		
+8		
+5000		
+246	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Modifies(w1,v1)		
+8		
+5000		
+247	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Modifies(p1,_)		
+main,loops,addABC		
+5000		
+248	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Modifies(p1,"x")		
+main,loops		
+5000		
+249	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Modifies(p1,"y")		
+main,loops		
+5000		
+250	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Modifies(p1,"z")		
+main,loops		
+5000		
+251	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Modifies(p1,v1)		
+main,loops,addABC		
+5000		
+252	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Modifies(c1,_)		
+4,10		
+5000		
+253	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Modifies(c1,"x")		
+4		
+5000		
+254	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Modifies(c1,"y")		
+4		
+5000		
+255	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Modifies(c1,"z")		
+4		
+5000		
+256	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Modifies(c1,v1)		
+4,10		
+5000		
+257	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select v1 such that Modifies(1,v1)		
+x		
+5000		
+258	-	 Modifies
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select v1 such that Modifies"main",v1)		
+x,y,z,a,b,c		
+5000		
+259	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Uses(a1,_)		
+6,7,9,11,13,14,15,17,18,19,20		
+5000		
+260	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Uses(a1,"x")		
+7,11		
+5000		
+261	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Uses(a1,"y")		
+6		
+5000		
+262	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Uses(a1,"z")		
+9		
+5000		
+263	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select a1 such that Uses(a1,v1)		
+6,7,9,11,13,14,15,17,18,19,20		
+5000		
+264	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select pn1 such that Uses(pn1,_)		
+21,22,23,24,25,26		
+5000		
+265	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select pn1 such that Uses(pn1,"x")		
+21		
+5000		
+266	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select pn1 such that Uses(pn1,"y")		
+22		
+5000		
+267	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select pn1 such that Uses(pn1,"z")		
+23		
+5000		
+268	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select pn1 such that Uses(pn1,v1)		
+21,22,23,24,25,26		
+5000		
+269	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Uses(i1,_)		
+5,16		
+5000		
+270	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Uses(i1,"x")		
+5		
+5000		
+271	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Uses(i1,"y")		
+5		
+5000		
+272	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Uses(i1,"z")		
+5		
+5000		
+273	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select i1 such that Uses(i1,v1)		
+5,16		
+5000		
+274	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Uses(w1,_)		
+8		
+5000		
+275	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Uses(w1,"x")		
+8		
+5000		
+276	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Uses(w1,"y")		
+8		
+5000		
+277	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Uses(w1,"z")		
+8		
+5000		
+278	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select w1 such that Uses(w1,v1)		
+8		
+5000		
+279	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Uses(p1,_)		
+main,loops.addABC		
+5000		
+280	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Uses(p1,"x")		
+main,loops		
+5000		
+281	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Uses(p1,"y")		
+main,loops		
+5000		
+282	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Uses(p1,"z")		
+main,loops		
+5000		
+283	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select p1 such that Uses(p1,v1)		
+main,loops.addABC		
+5000		
+284	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Uses(c1,_)		
+4,10,12		
+5000		
+285	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Uses(c1,"x")		
+4,12		
+5000		
+286	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Uses(c1,"y")		
+4,12		
+5000		
+287	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Uses(c1,"z")		
+4,12		
+5000		
+288	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select c1 such that Uses(c1,v1)		
+4,10,12		
+5000		
+289	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select v1 such that Uses(1,v1)		
+x		
+5000		
+290	-	 Uses
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;		
+Select v1 such that Modifies"main",v1)		
+x,y,z,a,b,c		
+5000		
+291	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent(i1,s2)		
+6,7,8,17,18,19,20		
+5000		
+292	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent(w1,s2)		
+9,10,11		
+5000		
+293	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent(n1,s2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+294	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent(s1,s2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+295	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent(_,s2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+296	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent(5,s2)		
+6,7,8		
+5000		
+297	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent(8,s2)		
+9,10,11		
+5000		
+298	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent(16,s2)		
+17,18,19,20		
+5000		
+299	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent(i1,r2)		
+none		
+5000		
+300	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent(w1,r2)		
+none		
+5000		
+301	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent(n1,r2)		
+none		
+5000		
+302	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent(s1,r2)		
+none		
+5000		
+303	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent(_,r2)		
+none		
+5000		
+304	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent(5,r2)		
+none		
+5000		
+305	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent(8,r2)		
+none		
+5000		
+306	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent(16,r2)		
+none		
+5000		
+307	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent(i1,p2)		
+none		
+5000		
+308	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent(w1,p2)		
+none		
+5000		
+309	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent(n1,p2)		
+none		
+5000		
+310	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent(s1,p2)		
+none		
+5000		
+311	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent(_,p2)		
+none		
+5000		
+312	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent(5,p2)		
+none		
+5000		
+313	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent(8,p2)		
+none		
+5000		
+314	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent(16,p2)		
+none		
+5000		
+315	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent(i1,c2)		
+none		
+5000		
+316	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent(w1,c2)		
+10		
+5000		
+317	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent(n1,c2)		
+10		
+5000		
+318	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent(s1,c2)		
+10		
+5000		
+319	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent(_,c2)		
+10		
+5000		
+320	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent(5,c2)		
+none		
+5000		
+321	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent(8,c2)		
+10		
+5000		
+322	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent(16,c2)		
+none		
+5000		
+323	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent(i1,w2)		
+8		
+5000		
+324	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent(w1,w2)		
+none		
+5000		
+325	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent(n1,w2)		
+8		
+5000		
+326	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent(s1,w2)		
+8		
+5000		
+327	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent(_,w2)		
+8		
+5000		
+328	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent(5,w2)		
+8		
+5000		
+329	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent(8,w2)		
+none		
+5000		
+330	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent(16,w2)		
+none		
+5000		
+331	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent(i1,i2)		
+none		
+5000		
+332	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent(w1,i2)		
+none		
+5000		
+333	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent(n1,i2)		
+none		
+5000		
+334	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent(s1,i2)		
+none		
+5000		
+335	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent(_,i2)		
+none		
+5000		
+336	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent(5,i2)		
+none		
+5000		
+337	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent(8,i2)		
+none		
+5000		
+338	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent(16,i2)		
+none		
+5000		
+339	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent(i1,a2)		
+6,7,17,18,19,20		
+5000		
+340	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent(w1,a2)		
+9,11		
+5000		
+341	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent(n1,a2)		
+6,7,9,11,17,18,19,20		
+5000		
+342	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent(s1,a2)		
+6,7,9,11,17,18,19,20		
+5000		
+343	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent(_,a2)		
+6,7,9,11,17,18,19,20		
+5000		
+344	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent(5,a2)		
+6,7		
+5000		
+345	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent(8,a2)		
+9,11		
+5000		
+346	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent(16,a2)		
+17,18,19,20		
+5000		
+347	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent(i1,n2)		
+6,7,8,17,18,19,20		
+5000		
+348	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent(w1,n2)		
+9,10,11		
+5000		
+349	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent(n1,n2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+350	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent(s1,n2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+351	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent(_,n2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+352	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent(5,n2)		
+6,7,8		
+5000		
+353	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent(8,n2)		
+9,10,11		
+5000		
+354	-	 Parent
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent(16,n2)		
+17,18,19,20		
+5000		
+355	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent*(i1,s2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+356	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent*(w1,s2)		
+9,10,11		
+5000		
+357	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent*(n1,s2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+358	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent*(s1,s2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+359	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent*(_,s2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+360	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent*(5,s2)		
+6,7,8,9,10,11		
+5000		
+361	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent*(8,s2)		
+9,10,11		
+5000		
+362	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select s2 such that Parent*(16,s2)		
+17,18,19,20		
+5000		
+363	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent*(i1,r2)		
+none		
+5000		
+364	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent*(w1,r2)		
+none		
+5000		
+365	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent*(n1,r2)		
+none		
+5000		
+366	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent*(s1,r2)		
+none		
+5000		
+367	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent*(_,r2)		
+none		
+5000		
+368	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent*(5,r2)		
+none		
+5000		
+369	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent*(8,r2)		
+none		
+5000		
+370	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select r2 such that Parent*(16,r2)		
+none		
+5000		
+371	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent*(i1,p2)		
+none		
+5000		
+372	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent*(w1,p2)		
+none		
+5000		
+373	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent*(n1,p2)		
+none		
+5000		
+374	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent*(s1,p2)		
+none		
+5000		
+375	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent*(_,p2)		
+none		
+5000		
+376	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent*(5,p2)		
+none		
+5000		
+377	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent*(8,p2)		
+none		
+5000		
+378	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select p2 such that Parent*(16,p2)		
+none		
+5000		
+379	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent*(i1,c2)		
+10		
+5000		
+380	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent*(w1,c2)		
+10		
+5000		
+381	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent*(n1,c2)		
+10		
+5000		
+382	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent*(s1,c2)		
+10		
+5000		
+383	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent*(_,c2)		
+10		
+5000		
+384	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent*(5,c2)		
+10		
+5000		
+385	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent*(8,c2)		
+10		
+5000		
+386	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select c2 such that Parent*(16,c2)		
+none		
+5000		
+387	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent*(i1,w2)		
+8		
+5000		
+388	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent*(w1,w2)		
+none		
+5000		
+389	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent*(n1,w2)		
+8		
+5000		
+390	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent*(s1,w2)		
+8		
+5000		
+391	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent*(_,w2)		
+8		
+5000		
+392	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent*(5,w2)		
+8		
+5000		
+393	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent*(8,w2)		
+none		
+5000		
+394	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select w2 such that Parent*(16,w2)		
+none		
+5000		
+395	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent*(i1,i2)		
+none		
+5000		
+396	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent*(w1,i2)		
+none		
+5000		
+397	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent*(n1,i2)		
+none		
+5000		
+398	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent*(s1,i2)		
+none		
+5000		
+399	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent*(_,i2)		
+none		
+5000		
+400	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent*(5,i2)		
+none		
+5000		
+401	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent*(8,i2)		
+none		
+5000		
+402	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select i2 such that Parent*(16,i2)		
+none		
+5000		
+403	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent*(i1,a2)		
+6,7,9,11,17,18,19,20		
+5000		
+404	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent*(w1,a2)		
+9,11		
+5000		
+405	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent*(n1,a2)		
+6,7,9,11,17,18,19,20		
+5000		
+406	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent*(s1,a2)		
+6,7,9,11,17,18,19,20		
+5000		
+407	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent*(_,a2)		
+6,7,9,11,17,18,19,20		
+5000		
+408	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent*(5,a2)		
+6,7,9,11		
+5000		
+409	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent*(8,a2)		
+9,11		
+5000		
+410	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select a2 such that Parent*(16,a2)		
+17,18,19,20		
+5000		
+411	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent*(i1,n2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+412	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent*(w1,n2)		
+9,10,11		
+5000		
+413	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent*(n1,n2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+414	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent*(s1,n2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+415	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent*(_,n2)		
+6,7,8,9,10,11,17,18,19,20		
+5000		
+416	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent*(5,n2)		
+6,7,8,9,10,11		
+5000		
+417	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent*(8,n2)		
+9,10,11		
+5000		
+418	-	 Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;		
+Select n2 such that Parent*(16,n2)		
+17,18,19,20		
+5000		
+419	-	 Calls
+procedure p1, p2;		
+Select p1 such that Calls(p1,p2)		
+main,loops		
+5000		
+420	-	 Follows
+0		
+Select p1 such that Calls(p1,_)		
+main,loops		
+5000		
+421	-	 Follows
+0		
+Select p1 such that Calls(p1,"main")		
+none		
+5000		
+422	-	 Follows
+0		
+Select p1 such that Calls(p1,"loops")		
+main		
+5000		
+423	-	 Follows
+0		
+Select p1 such that Calls(p1,"addABC")		
+loops		
+5000		
+424	-	 Calls
+procedure p1, p2;		
+Select p2 such that Calls(_,p2)		
+main,loops,addABC		
+5000		
+425	-	 Follows
+0		
+Select BOOLEAN such that Calls(_,_)		
+TRUE		
+5000		
+426	-	 Follows
+0		
+Select BOOLEAN such that Calls(_,"main")		
+TRUE		
+5000		
+427	-	 Follows
+0		
+Select BOOLEAN such that Calls(_,"loops")		
+TRUE		
+5000		
+428	-	 Follows
+0		
+Select BOOLEAN such that Calls(_,"addABC")		
+TRUE		
+5000		
+429	-	 Calls
+procedure p1, p2;		
+Select p2 such that Calls("main",p2)		
+loops		
+5000		
+430	-	 Follows
+0		
+Select BOOLEAN such that Calls("main",_)		
+TRUE		
+5000		
+431	-	 Follows
+0		
+Select BOOLEAN such that Calls("main","main")		
+FALSE		
+5000		
+432	-	 Follows
+0		
+Select BOOLEAN such that Calls("main","loops")		
+TRUE		
+5000		
+433	-	 Follows
+0		
+Select BOOLEAN such that Calls("main","addABC")		
+FALSE		
+5000		
+434	-	 Calls
+procedure p1, p2;		
+Select p2 such that Calls("loops",p2)		
+addABC		
+5000		
+435	-	 Follows
+0		
+Select BOOLEAN such that Calls("loops",_)		
+TRUE		
+5000		
+436	-	 Follows
+0		
+Select BOOLEAN such that Calls("loops","main")		
+FALSE		
+5000		
+437	-	 Follows
+0		
+Select BOOLEAN such that Calls("loops","loops")		
+FALSE		
+5000		
+438	-	 Follows
+0		
+Select BOOLEAN such that Calls("loops","addABC")		
+TRUE		
+5000		
+439	-	 Calls
+procedure p1, p2;		
+Select p2 such that Calls("addABC",p2)		
+none		
+5000		
+440	-	 Follows
+0		
+Select BOOLEAN such that Calls("addABC",_)		
+none		
+5000		
+441	-	 Follows
+0		
+Select BOOLEAN such that Calls("addABC","main")		
+none		
+5000		
+442	-	 Follows
+0		
+Select BOOLEAN such that Calls("addABC","loops")		
+none		
+5000		
+443	-	 Follows
+0		
+Select BOOLEAN such that Calls("addABC","addABC")		
+none		
+5000		
+444	-	 Calls
+procedure p1, p2;		
+Select <p1,p2> such that Calls(p1,p2)		
+main loops, loops addABC		
+5000		
+445	-	 Calls*
+procedure p1, p2;		
+Select p1 such that Calls*(p1,p2)		
+main,loops		
+5000		
+446	-	 Calls*
+0		
+Select p1 such that Calls*(p1,_)		
+main,loops		
+5000		
+447	-	 Calls*
+0		
+Select p1 such that Calls*(p1,"main")		
+none		
+5000		
+448	-	 Calls*
+0		
+Select p1 such that Calls*(p1,"loops")		
+main		
+5000		
+449	-	 Calls*
+0		
+Select p1 such that Calls*(p1,"addABC")		
+main, loops		
+5000		
+450	-	 Calls*
+procedure p1, p2;		
+Select p2 such that Calls*(_,p2)		
+main,loops,addABC		
+5000		
+451	-	 Calls*
+0		
+Select BOOLEAN such that Calls*(_,_)		
+TRUE		
+5000		
+452	-	 Calls*
+0		
+Select BOOLEAN such that Calls*(_,"main")		
+FALSE		
+5000		
+453	-	 Calls*
+0		
+Select BOOLEAN such that Calls*(_,"loops")		
+TRUE		
+5000		
+454	-	 Calls*
+0		
+Select BOOLEAN such that Calls*(_,"addABC")		
+TRUE		
+5000		
+455	-	 Calls*
+procedure p1, p2;		
+Select p2 such that Calls*("main",p2)		
+loops, addABC		
+5000		
+456	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("main",_)		
+TRUE		
+5000		
+457	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("main","main")		
+FALSE		
+5000		
+458	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("main","loops")		
+TRUE		
+5000		
+459	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("main","addABC")		
+TRUE		
+5000		
+460	-	 Calls*
+procedure p1, p2;		
+Select p2 such that Calls*("loops",p2)		
+addABC		
+5000		
+461	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("loops",_)		
+TRUE		
+5000		
+462	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("loops","main")		
+FALSE		
+5000		
+463	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("loops","loops")		
+FALSE		
+5000		
+464	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("loops","addABC")		
+TRUE		
+5000		
+465	-	 Calls*
+procedure p1, p2;		
+Select p2 such that Calls*("addABC",p2)		
+none		
+5000		
+466	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("addABC",_)		
+FALSE		
+5000		
+467	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("addABC","main")		
+FALSE		
+5000		
+468	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("addABC","loops")		
+FALSE		
+5000		
+469	-	 Calls*
+0		
+Select BOOLEAN such that Calls*("addABC","addABC")		
+FALSE		
+5000		
+470	-	 Calls*
+procedure p1, p2;		
+Select <p1,p2> such that Calls*(p1,p2)		
+main loops, main addABC, loops addABC		
+5000		
+471	-	 Next
+prog_line n1, n2;		
+Select <n1,n2> such that Next(n1,n2)		
+1 2,2 3,3 4,5 6,5 8,6 7,7 12, 8 9, 9 10, 10 11, 11 8, 8 12,13 14, 14 15, 15 16, 16 17, 17 18, 16 19, 19 20, 21 22, 22 23, 23 24, 24 25, 25 26		
+5000		
+472	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(_,n2)		
+2,3,4,6,7,8,9,10,11,12,14,15,16,17,18,19,20,22,23,24,25,26		
+5000		
+473	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(1,n2)		
+2		
+5000		
+474	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(5,n2)		
+6,8		
+5000		
+475	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(13,n2)		
+14		
+5000		
+476	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(21,n2)		
+22		
+5000		
+477	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(6,n2)		
+7		
+5000		
+478	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(7,n2)		
+12		
+5000		
+479	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(8,n2)		
+9		
+5000		
+480	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(9,n2)		
+10		
+5000		
+481	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(11,n2)		
+8		
+5000		
+482	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,n2)		
+1,2,3,5,6,7,8,9,10,11,13,14,15,16,17,19,21,22,23,24,25		
+5000		
+483	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,_)		
+1,2,3,5,6,7,8,9,10,11,13,14,15,16,17,19,21,22,23,24,25		
+5000		
+484	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,1)		
+none		
+5000		
+485	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,5)		
+none		
+5000		
+486	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,13)		
+none		
+5000		
+487	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,21)		
+none		
+5000		
+488	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,6)		
+5		
+5000		
+489	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,7)		
+6		
+5000		
+490	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,8)		
+5		
+5000		
+491	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,9)		
+8		
+5000		
+492	-	 Next
+prog_line n1, n2;		
+Select n1 such that Next(n1,11)		
+10		
+5000		
+493	-	 Next
+prog_line n1, n2;		
+Select n2 such that Next(n1,n2)		
+2,3,4,6,7,8,9,10,11,12,14,15,16,17,18,19,20,22,23,24,25,26		
+5000		
+494	-	 Next*
+prog_line n1, n2;		
+Select <n1,n2> such that Next*(n1,n2)		
+1 2, 1 3, 1 4, 2 3, 2 4, 3 4, 5 6, 5 7, 5 8, 5 9, 5 10, 5 11, 5 12, 6 7, 6 12, 8 9, 8 10, 8 11, 8 12, 13 14, 13 15, 13 16,13 17, 13 18, 13 19, 13 20, 14 15, 14 16, 14 17, 14 18, 14 19, 14 20, 15 16, 15 17, 15 18, 15 19, 15 20, 16 17, 16 18, 16 19, 16 20, 17 18, 19 20, 21 22, 21 23, 21 24, 21 25, 21 26, 22 23, 22 24, 22 25, 22 26, 23 24, 23 25, 23 26, 24 25, 24 26		
+5000		
+495	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(_,n2)		
+2,3,4,6,7,8,9,10,11,12,14,15,16,17,18,19,20,22,23,24,25,26		
+5000		
+496	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(1,n2)		
+2,3,4		
+5000		
+497	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(5,n2)		
+6,7,8,9,10,11,12		
+5000		
+498	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(13,n2)		
+14,15,16,17,18,19,20		
+5000		
+499	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(21,n2)		
+22,23,24,25,26		
+5000		
+500	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(6,n2)		
+7,12		
+5000		
+501	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(7,n2)		
+12		
+5000		
+502	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(8,n2)		
+9,10,11,8,12		
+5000		
+503	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(9,n2)		
+10,11,8,9,12		
+5000		
+504	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(11,n2)		
+8,9,10,11,12		
+5000		
+505	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,n2)		
+1,2,3,5,6,7,8,9,10,11,13,14,15,16,17,19,21,22,23,24,25		
+5000		
+506	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,_)		
+1,2,3,5,6,7,8,9,10,11,13,14,15,16,17,19,21,22,23,24,25		
+5000		
+507	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,1)		
+none		
+5000		
+508	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,5)		
+none		
+5000		
+509	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,13)		
+none		
+5000		
+510	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,21)		
+none		
+5000		
+511	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,6)		
+5		
+5000		
+512	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,7)		
+5,6		
+5000		
+513	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,8)		
+5		
+5000		
+514	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,9)		
+8,9,10,11		
+5000		
+515	-	 Next*
+prog_line n1, n2;		
+Select n1 such that Next*(n1,11)		
+8,9,10,11		
+5000		
+516	-	 Next*
+prog_line n1, n2;		
+Select n2 such that Next*(n1,n2)		
+2,3,4,6,7,8,9,10,11,12,14,15,16,17,18,19,20,22,23,24,25,26		
+5000		

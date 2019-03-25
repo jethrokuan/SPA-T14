@@ -276,6 +276,17 @@ TEST_CASE ("Test Query Executor With functionality - system_tests/src/1.txt") {
     REQUIRE(qm->makeQuery(&query) == proglines);
   }
 
+  SECTION (
+      "Test complex with: variable.varName = read.varName, Next*(r, w) - only "
+      "variables that are read before a while loop") {
+    auto querystr = std::string(
+        "variable v; print pn; while w; Select pn such that Next*(pn, w) with "
+        "v.varName = pn.varName");
+    std::vector<std::string> proglines = {"7", "8"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
   delete pkb;
   delete qm;
 }

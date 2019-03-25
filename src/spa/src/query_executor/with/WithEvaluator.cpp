@@ -26,6 +26,8 @@ bool WithEvaluator::dispatch() {
     return handleBothArgsNumber();
   } else if (argLeftAsSynonym && argRightAsSynonym) {
     return handleBothArgsSynonym();
+  } else if (argLeftAsSynAttr && argRightAsSynAttr) {
+    return handleBothArgsSynAttr();
   } else if (argLeftAsNumber && argRightAsSynonym) {
     return handleNumberSynonym(*argLeftAsNumber, *argRightAsSynonym);
   } else if (argRightAsNumber && argLeftAsSynonym) {
@@ -70,6 +72,40 @@ bool WithEvaluator::handleBothArgsSynonym() {
   }
   qc.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
                                     argRightAsSynonym->synonym, pcs);
+  return true;
+}
+
+bool WithEvaluator::handleBothArgsSynAttr() {
+  // Get all possible values for both synonyms involved
+  auto synAttr1 = *argLeftAsSynAttr;
+  auto synAttr2 = *argRightAsSynAttr;
+  auto found_declaration_1 =
+      Declaration::findDeclarationForSynonym(declarations, synAttr1.synonym)
+          .value();
+  auto found_declaration_2 =
+      Declaration::findDeclarationForSynonym(declarations, synAttr2.synonym)
+          .value();
+
+  auto design_entity_type_1 = found_declaration_1.getDesignEntity();
+  auto design_entity_type_2 = found_declaration_2.getDesignEntity();
+  auto all_des_1 = QueryExecutor::getSelect(pkb, design_entity_type_1);
+  auto all_des_2 = QueryExecutor::getSelect(pkb, design_entity_type_2);
+
+  PairedConstraintSet equal_values;
+  for (const auto& de1 : all_des_1) {
+    for (const auto& de2 : all_des_2) {
+      auto de1_applied_attrname = applyAttrToDesignEntityValue(
+          design_entity_type_1, de1, synAttr1.attrName);
+      auto de2_applied_attrname = applyAttrToDesignEntityValue(
+          design_entity_type_2, de2, synAttr2.attrName);
+      if (de1_applied_attrname == de2_applied_attrname) {
+        equal_values.insert({de1, de2});
+      }
+    }
+  }
+
+  qc.addToPairedVariableConstraints(synAttr1.synonym.synonym,
+                                    synAttr2.synonym.synonym, equal_values);
   return true;
 }
 
@@ -140,9 +176,21 @@ bool WithEvaluator::handleSynonymSynAttr(Synonym& synonym, SynAttr& synAttr) {
 }
 
 std::string WithEvaluator::applyAttrToDesignEntityValue(
+    const DesignEntity& de_type, const std::string& de,
+    const AttrName& attrName) {
+  // Only take this seriously  if we're asking for proc name or var name
+  // Rest are no-ops for sure
+  if (attrName == AttrName::PROC_NAME || attrName == AttrName::VAR_NAME) {
+    return applyAttrToDesignEntityValue(de_type, de);
+  } else {
+    return de;
+  }
+}
+
+std::string WithEvaluator::applyAttrToDesignEntityValue(
     const DesignEntity& de_type, const std::string& de) {
   // This function does not check for the attribute name since there is no
-  // ambiguity
+  // ambiguity - should be of type NAME, so only one possibility
   switch (de_type) {
     case DesignEntity::CALL:
       return pkb->getCallProcedureFromLine(de).value();
@@ -150,6 +198,12 @@ std::string WithEvaluator::applyAttrToDesignEntityValue(
       return pkb->getReadVariableFromLine(de).value();
     case DesignEntity::PRINT:
       return pkb->getPrintVariableFromLine(de).value();
+    case DesignEntity::VARIABLE:
+      // no-op
+      return de;
+    case DesignEntity::PROCEDURE:
+      // no-op
+      return de;
     default:
       std::cerr
           << "Received unexpected design entity type to apply attrName to\n";

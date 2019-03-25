@@ -34,6 +34,7 @@ class WithEvaluator {
   bool handleBothArgsQuoteIdent();
   bool handleBothArgsNumber();
   bool handleBothArgsSynonym();
+  bool handleBothArgsSynAttr();
   bool handleNumberSynonym(unsigned int, QE::Synonym&);
   bool handleNumberSynAttr(unsigned int, QE::SynAttr&);
   bool handleQuoteIdentSynAttr(QE::QuoteIdent&, QE::SynAttr&);
@@ -44,6 +45,10 @@ class WithEvaluator {
   //! E.g. for type print and value 3, we check 3.varName
   std::string applyAttrToDesignEntityValue(const DesignEntity& de_type,
                                            const std::string& val);
+  //! Convenience when we don't know it's a NAME type
+  std::string applyAttrToDesignEntityValue(const DesignEntity& de_type,
+                                           const std::string& val,
+                                           const AttrName& attrName);
 
  public:
   WithEvaluator(std::vector<QE::Declaration>* decls, QE::WithCond* withCond,

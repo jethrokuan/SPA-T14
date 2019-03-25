@@ -1,6 +1,7 @@
 #include "query_executor/with/WithEvaluator.h"
 #include <cassert>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include "query_executor/query_executor.h"
@@ -25,6 +26,10 @@ bool WithEvaluator::dispatch() {
     return handleBothArgsNumber();
   } else if (argLeftAsSynonym && argRightAsSynonym) {
     return handleBothArgsSynonym();
+  } else if (argLeftAsNumber && argRightAsSynonym) {
+    return handleNumberSynonym(*argLeftAsNumber, *argRightAsSynonym);
+  } else if (argRightAsNumber && argLeftAsSynonym) {
+    return handleNumberSynonym(*argRightAsNumber, *argLeftAsSynonym);
   } else {
     return false;
   }
@@ -55,5 +60,12 @@ bool WithEvaluator::handleBothArgsSynonym() {
   }
   qc.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
                                     argRightAsSynonym->synonym, pcs);
+  return true;
+}
+
+bool WithEvaluator::handleNumberSynonym(unsigned int num,
+                                        QE::Synonym& synonym) {
+  qc.addToSingleVariableConstraints(
+      synonym.synonym, std::unordered_set<std::string>{std::to_string(num)});
   return true;
 }

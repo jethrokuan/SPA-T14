@@ -101,6 +101,34 @@ TEST_CASE ("Test Query Executor With functionality - system_tests/src/1.txt") {
     REQUIRE(qm->makeQuery(&query) == proglines);
   }
 
+  SECTION ("Test basic with: n1 = 1") {
+    auto querystr = std::string("prog_line n1, n2; Select n1 with n1 = 1");
+    std::vector<std::string> proglines = {"1"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test basic with: 1 = n1") {
+    auto querystr = std::string("prog_line n1, n2; Select n1 with 1 = n1");
+    std::vector<std::string> proglines = {"1"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test no-result basic with: n1 = 50") {
+    auto querystr = std::string("prog_line n1, n2; Select n1 with n1 = 50");
+    std::vector<std::string> proglines = {};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test no-result basic with: 50 = n1") {
+    auto querystr = std::string("prog_line n1, n2; Select n1 with 50 = n1");
+    std::vector<std::string> proglines = {};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
   delete pkb;
   delete qm;
 }

@@ -26,7 +26,7 @@ loops
 6 - Calls
 procedure p1, p2;
 Select p2 such that Calls(_,p2)
-main,loops,addABC
+main,loops,addABC,handlePrint
 5000
 7 - Calls
 0
@@ -76,7 +76,7 @@ FALSE
 16 - Calls
 procedure p1, p2;
 Select p2 such that Calls("loops",p2)
-addABC
+addABC, handlePrint
 5000
 17 - Calls
 0
@@ -126,5 +126,5 @@ FALSE
 26 - Calls
 procedure p1, p2;
 Select <p1,p2> such that Calls(p1,p2)
-main loops, loops addABC
+main loops, loops addABC, loops handlePrint
 5000

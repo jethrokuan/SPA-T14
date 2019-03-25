@@ -38,6 +38,10 @@ bool WithEvaluator::dispatch() {
     return handleQuoteIdentSynAttr(*argLeftAsQuoteIdent, *argRightAsSynAttr);
   } else if (argRightAsQuoteIdent && argLeftAsSynAttr) {
     return handleQuoteIdentSynAttr(*argRightAsQuoteIdent, *argLeftAsSynAttr);
+  } else if (argLeftAsSynonym && argRightAsSynAttr) {
+    return handleSynonymSynAttr(*argLeftAsSynonym, *argRightAsSynAttr);
+  } else if (argRightAsSynonym && argLeftAsSynAttr) {
+    return handleSynonymSynAttr(*argRightAsSynonym, *argLeftAsSynAttr);
   } else {
     return false;
   }
@@ -59,8 +63,6 @@ bool WithEvaluator::handleBothArgsSynonym() {
   // Only allow values of n1 and n2 where n1 = n2
   // Our simplified case: {(n', n') | n' in prog_line}
   auto all_prog_lines = QueryExecutor::getSelect(pkb, DesignEntity::PROG_LINE);
-  if (all_prog_lines.empty()) return false;
-
   // [1,2,3,4] --> {(1,1), (2,2), (3,3), (4,4)}
   PairedConstraintSet pcs;
   for (const auto& prog_line : all_prog_lines) {
@@ -114,6 +116,26 @@ bool WithEvaluator::handleQuoteIdentSynAttr(QuoteIdent& quoteIdent,
                  });
     qc.addToSingleVariableConstraints(synAttr.synonym.synonym, filtered_des);
   }
+  return true;
+}
+
+bool WithEvaluator::handleSynonymSynAttr(Synonym& synonym, SynAttr& synAttr) {
+  // General algorithm: get all design entities for this synonym
+  // Then, filter by a generic operation that applies the Attr on the synonym
+  // and checks it against the quoteIdent passed in
+  auto found_declaration =
+      Declaration::findDeclarationForSynonym(declarations, synAttr.synonym)
+          .value();
+  auto design_entity_type = found_declaration.getDesignEntity();
+  auto all_prog_lines = QueryExecutor::getSelect(pkb, DesignEntity::PROG_LINE);
+  auto all_des = QueryExecutor::getSelect(pkb, design_entity_type);
+  if (all_des.empty()) return false;
+
+  // Perform set intersection and duplicate all resultant values
+  // E.g. (1, 2) INT (2, 3) ==> {(2, 2)}
+  qc.addToPairedVariableConstraints(
+      synonym.synonym, synAttr.synonym.synonym,
+      Utils::unorderedSetIntersectionToPairedSet(all_prog_lines, all_des));
   return true;
 }
 

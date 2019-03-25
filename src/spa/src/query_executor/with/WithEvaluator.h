@@ -37,6 +37,7 @@ class WithEvaluator {
   bool handleNumberSynonym(unsigned int, QE::Synonym&);
   bool handleNumberSynAttr(unsigned int, QE::SynAttr&);
   bool handleQuoteIdentSynAttr(QE::QuoteIdent&, QE::SynAttr&);
+  bool handleSynonymSynAttr(QE::Synonym&, QE::SynAttr&);
 
   //! /brief Convenience method to get an attribute value from a design entity
   //! value.

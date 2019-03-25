@@ -234,6 +234,48 @@ TEST_CASE ("Test Query Executor With functionality - system_tests/src/1.txt") {
     REQUIRE(qm->makeQuery(&query) == proglines);
   }
 
+  SECTION ("Test with: s.stmt# = n (all statements)") {
+    auto querystr =
+        std::string("stmt s; prog_line n; Select s with s.stmt# = n");
+    std::vector<std::string> proglines = {
+        "1", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+        "2", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+        "3", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+        "4", "40", "41", "42", "43", "5",  "6",  "7",  "8",  "9"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: n = s.stmt# (all statements)") {
+    auto querystr =
+        std::string("stmt s; prog_line n; Select s with n = s.stmt#");
+    std::vector<std::string> proglines = {
+        "1", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+        "2", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+        "3", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+        "4", "40", "41", "42", "43", "5",  "6",  "7",  "8",  "9"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test complex with: n = s.stmt#, Next(1, n) - return 2") {
+    auto querystr = std::string(
+        "stmt s; prog_line n; Select s with n = s.stmt# such that Next(1, n)");
+    std::vector<std::string> proglines = {"2"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION (
+      "Test complex with: n = c.value - all constants that have same val as a "
+      "line no.") {
+    auto querystr =
+        std::string("constant c; prog_line n; Select c with c.value = n");
+    std::vector<std::string> proglines = {"1"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
   delete pkb;
   delete qm;
 }

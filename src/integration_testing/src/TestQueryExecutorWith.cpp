@@ -129,6 +129,61 @@ TEST_CASE ("Test Query Executor With functionality - system_tests/src/1.txt") {
     REQUIRE(qm->makeQuery(&query) == proglines);
   }
 
+  SECTION ("Test with: s.stmt# = 1") {
+    auto querystr = std::string("stmt s; Select s with s.stmt# = 1");
+    std::vector<std::string> proglines = {"1"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: 1 = s.stmt#") {
+    auto querystr = std::string("stmt s; Select s with 1 = s.stmt#");
+    std::vector<std::string> proglines = {"1"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: r.stmt# = 6") {
+    auto querystr = std::string("read r; Select r with r.stmt# = 6");
+    std::vector<std::string> proglines = {"6"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: pn.stmt# = 18") {
+    auto querystr = std::string("print pn; Select pn with pn.stmt# = 18");
+    std::vector<std::string> proglines = {"18"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: w.stmt# = 9") {
+    auto querystr = std::string("while w; Select w with w.stmt# = 9");
+    std::vector<std::string> proglines = {"9"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: ifs.stmt# = 17") {
+    auto querystr = std::string("if ifs; Select ifs with ifs.stmt# = 17");
+    std::vector<std::string> proglines = {"17"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: a.stmt# = 10") {
+    auto querystr = std::string("assign a; Select a with a.stmt# = 10");
+    std::vector<std::string> proglines = {"10"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: c.value = 100") {
+    auto querystr = std::string("constant c; Select c with c.value = 100");
+    std::vector<std::string> proglines = {"100"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
   delete pkb;
   delete qm;
 }

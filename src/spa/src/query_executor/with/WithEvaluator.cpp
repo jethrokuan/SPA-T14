@@ -30,6 +30,10 @@ bool WithEvaluator::dispatch() {
     return handleNumberSynonym(*argLeftAsNumber, *argRightAsSynonym);
   } else if (argRightAsNumber && argLeftAsSynonym) {
     return handleNumberSynonym(*argRightAsNumber, *argLeftAsSynonym);
+  } else if (argLeftAsNumber && argRightAsSynAttr) {
+    return handleNumberSynAttr(*argLeftAsNumber, *argRightAsSynAttr);
+  } else if (argRightAsNumber && argLeftAsSynAttr) {
+    return handleNumberSynAttr(*argRightAsNumber, *argLeftAsSynAttr);
   } else {
     return false;
   }
@@ -67,5 +71,21 @@ bool WithEvaluator::handleNumberSynonym(unsigned int num,
                                         QE::Synonym& synonym) {
   qc.addToSingleVariableConstraints(
       synonym.synonym, std::unordered_set<std::string>{std::to_string(num)});
+  return true;
+}
+
+bool WithEvaluator::handleNumberSynAttr(unsigned int num,
+                                        QE::SynAttr& synattr) {
+  // General algorithm: get all design entities for this synonym
+  // Then, filter by a generic operation that applies the Attr on the synonym
+  // and checks it against the
+
+  // For all Number <-> SynAttr constraints: we don't need to do any extra work
+  // All the attribute applications are no-ops
+  // We MUST have accessed constant.value / <stmttype>.stmt# - no work to do
+  // Can just add constraint: (c) -> (10) for e.g.
+  qc.addToSingleVariableConstraints(
+      synattr.synonym.synonym,
+      std::unordered_set<std::string>{std::to_string(num)});
   return true;
 }

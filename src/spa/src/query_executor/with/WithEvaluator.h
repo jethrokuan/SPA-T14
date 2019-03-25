@@ -35,6 +35,7 @@ class WithEvaluator {
   bool handleBothArgsNumber();
   bool handleBothArgsSynonym();
   bool handleNumberSynonym(unsigned int, QE::Synonym&);
+  bool handleNumberSynAttr(unsigned int, QE::SynAttr&);
 
  public:
   WithEvaluator(std::vector<QE::Declaration>* decls, QE::WithCond* withCond,

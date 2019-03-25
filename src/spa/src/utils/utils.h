@@ -85,6 +85,22 @@ std::unordered_set<T, H> unorderedSetIntersection(
   return m_out;
 };
 
+// Generic template for finding a set intersection for unordered sets
+template <class T>
+std::unordered_set<std::pair<T, T>, pair_hash>
+unorderedSetIntersectionToPairedSet(const std::unordered_set<T> m1,
+                                    const std::unordered_set<T> m2) {
+  // Keep invariant that first set is smaller than second
+  if (m1.size() > m2.size()) return unorderedSetIntersectionToPairedSet(m2, m1);
+  std::unordered_set<std::pair<T, T>, pair_hash> m_out;
+  for (auto&& item : m1) {
+    if (m2.find(item) != m2.end()) {
+      m_out.insert({item, item});
+    }
+  }
+  return m_out;
+};
+
 bool has_only_digits(const std::string);
 bool is_valid_name(const std::string);
 

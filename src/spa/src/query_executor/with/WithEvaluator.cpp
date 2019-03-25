@@ -34,6 +34,10 @@ bool WithEvaluator::dispatch() {
     return handleNumberSynAttr(*argLeftAsNumber, *argRightAsSynAttr);
   } else if (argRightAsNumber && argLeftAsSynAttr) {
     return handleNumberSynAttr(*argRightAsNumber, *argLeftAsSynAttr);
+  } else if (argLeftAsQuoteIdent && argRightAsSynAttr) {
+    return handleQuoteIdentSynAttr(*argLeftAsQuoteIdent, *argRightAsSynAttr);
+  } else if (argRightAsQuoteIdent && argLeftAsSynAttr) {
+    return handleQuoteIdentSynAttr(*argRightAsQuoteIdent, *argLeftAsSynAttr);
   } else {
     return false;
   }
@@ -67,25 +71,66 @@ bool WithEvaluator::handleBothArgsSynonym() {
   return true;
 }
 
-bool WithEvaluator::handleNumberSynonym(unsigned int num,
-                                        QE::Synonym& synonym) {
-  qc.addToSingleVariableConstraints(
-      synonym.synonym, std::unordered_set<std::string>{std::to_string(num)});
+bool WithEvaluator::handleNumberSynonym(unsigned int num, Synonym& synonym) {
+  qc.addToSingleVariableConstraints(synonym.synonym,
+                                    SingleConstraintSet{std::to_string(num)});
   return true;
 }
 
-bool WithEvaluator::handleNumberSynAttr(unsigned int num,
-                                        QE::SynAttr& synattr) {
-  // General algorithm: get all design entities for this synonym
-  // Then, filter by a generic operation that applies the Attr on the synonym
-  // and checks it against the
-
+bool WithEvaluator::handleNumberSynAttr(unsigned int num, SynAttr& synAttr) {
   // For all Number <-> SynAttr constraints: we don't need to do any extra work
   // All the attribute applications are no-ops
   // We MUST have accessed constant.value / <stmttype>.stmt# - no work to do
   // Can just add constraint: (c) -> (10) for e.g.
-  qc.addToSingleVariableConstraints(
-      synattr.synonym.synonym,
-      std::unordered_set<std::string>{std::to_string(num)});
+  qc.addToSingleVariableConstraints(synAttr.synonym.synonym,
+                                    SingleConstraintSet{std::to_string(num)});
   return true;
+}
+
+bool WithEvaluator::handleQuoteIdentSynAttr(QuoteIdent& quoteIdent,
+                                            SynAttr& synAttr) {
+  // General algorithm: get all design entities for this synonym
+  // Then, filter by a generic operation that applies the Attr on the synonym
+  // and checks it against the quoteIdent passed in
+  auto found_declaration =
+      Declaration::findDeclarationForSynonym(declarations, synAttr.synonym)
+          .value();
+  auto design_entity_type = found_declaration.getDesignEntity();
+  // If we have a variable or procedure: no - op, just constrain directly
+  if (design_entity_type == DesignEntity::PROCEDURE ||
+      design_entity_type == DesignEntity::VARIABLE) {
+    qc.addToSingleVariableConstraints(
+        synAttr.synonym.synonym, SingleConstraintSet{quoteIdent.quote_ident});
+  } else {
+    auto all_des = QueryExecutor::getSelect(pkb, design_entity_type);
+    // Filter out values that don't match call to .procName/.varName for
+    // call/read/print
+    SingleConstraintSet filtered_des;
+    std::copy_if(all_des.begin(), all_des.end(),
+                 std::inserter(filtered_des, filtered_des.end()),
+                 [&, this](const std::string de) {
+                   return this->applyAttrToDesignEntityValue(
+                              design_entity_type, de) == quoteIdent.quote_ident;
+                 });
+    qc.addToSingleVariableConstraints(synAttr.synonym.synonym, filtered_des);
+  }
+  return true;
+}
+
+std::string WithEvaluator::applyAttrToDesignEntityValue(
+    const DesignEntity& de_type, const std::string& de) {
+  // This function does not check for the attribute name since there is no
+  // ambiguity
+  switch (de_type) {
+    case DesignEntity::CALL:
+      return pkb->getCallProcedureFromLine(de).value();
+    case DesignEntity::READ:
+      return pkb->getReadVariableFromLine(de).value();
+    case DesignEntity::PRINT:
+      return pkb->getPrintVariableFromLine(de).value();
+    default:
+      std::cerr
+          << "Received unexpected design entity type to apply attrName to\n";
+      assert(false);
+  }
 }

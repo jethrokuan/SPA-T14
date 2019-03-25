@@ -36,6 +36,13 @@ class WithEvaluator {
   bool handleBothArgsSynonym();
   bool handleNumberSynonym(unsigned int, QE::Synonym&);
   bool handleNumberSynAttr(unsigned int, QE::SynAttr&);
+  bool handleQuoteIdentSynAttr(QE::QuoteIdent&, QE::SynAttr&);
+
+  //! /brief Convenience method to get an attribute value from a design entity
+  //! value.
+  //! E.g. for type print and value 3, we check 3.varName
+  std::string applyAttrToDesignEntityValue(const DesignEntity& de_type,
+                                           const std::string& val);
 
  public:
   WithEvaluator(std::vector<QE::Declaration>* decls, QE::WithCond* withCond,

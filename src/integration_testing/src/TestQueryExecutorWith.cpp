@@ -184,6 +184,56 @@ TEST_CASE ("Test Query Executor With functionality - system_tests/src/1.txt") {
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == proglines);
   }
+
+  SECTION ("Test with: p.procName = \"main\"") {
+    auto querystr =
+        std::string("procedure p; Select p with p.procName = \"main\"");
+    std::vector<std::string> proglines = {"main"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: \"main\" = p.procName") {
+    auto querystr =
+        std::string("procedure p; Select p with \"main\" = p.procName");
+    std::vector<std::string> proglines = {"main"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: v.varName = \"v1\"") {
+    auto querystr = std::string("variable v; Select v with v.varName = \"v1\"");
+    std::vector<std::string> proglines = {"v1"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION (
+      "Test complex with (all statements where 'v' is used): Select s such "
+      "that Uses(s, v) with v.varName = \"v\"") {
+    auto querystr = std::string(
+        "stmt s; variable v; Select s such that Uses(s, v) with v.varName = "
+        "\"v\"");
+    std::vector<std::string> proglines = {"10", "26", "27", "38", "9"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: read.varName = \"v1\"") {
+    auto querystr = std::string("read r; Select r with r.varName = \"v1\"");
+    std::vector<std::string> proglines = {"2"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
+  SECTION ("Test with: pn.varName = \"v1\"") {
+    auto querystr = std::string("print pn; Select pn with pn.varName = \"v1\"");
+    std::vector<std::string> proglines = {"18", "24", "30", "33",
+                                          "36", "39", "7"};
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == proglines);
+  }
+
   delete pkb;
   delete qm;
 }

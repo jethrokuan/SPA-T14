@@ -1,0 +1,18 @@
+procedure A {
+  read a;
+  read b;
+  sum = a + b;
+  print sum;
+  minus1 = a - b;
+  minus2 = b - a;
+  if (minus1 == minus2) then {
+    sum = sum + minus1;
+  } else {
+    minus1 = minus1 / minus2;
+  }
+  minus2 = sum - 2 * minus2;
+  while (sum > minus2) {
+    sum = sum - 1;
+  }
+  print sum;
+} 

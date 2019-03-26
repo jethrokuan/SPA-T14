@@ -4,21 +4,17 @@ Select pr such that Uses (pr, "e")
 none
 5000
 2 - invalid query (dependent synonym, entRef1 = procName, entRef2 = v)
-variable v; 
+variable v;
 Select v such that Uses ("procedure", v)
 none
 5000
 3 - invalid query (dependent synonym, entRef1 = procName, entRef2 = v)
-variable v; 
+variable v;
 Select <v> such that Uses ("procedure", v)
 none
 5000
 4 - invalid query (dependent synonym, entRef1 = procName, entRef2 = v)
-variable v; 
+variable v;
 Select BOOLEAN such that Uses ("procedure", v)
-false
-5000
-5 - invalid query (entRef = stmt#, entRef2 = varName)
-Select BOOLEAN such that (16, "o")
-false
+FALSE
 5000

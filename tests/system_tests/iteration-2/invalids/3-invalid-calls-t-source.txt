@@ -1,37 +1,37 @@
 procedure a {
-    if (a == A) then {      
-        call b;            
+    if (a == A) then {
+        call b;
     } else {
-        call d;           
+        call d;
     }
 }
 
 procedure b {
-    call c;                
+    call c;
 }
 
 procedure c {
-    while (c != d) {       
-        call d; 
-    }           
-    call procedure;        
+    while (c != d) {
+        call d;
+    }
+    call procedure;
 }
 
 procedure d {
-    read a;                 
-    b = a + 5;            
-    print e;              
+    read a;
+    b = a + 5;
+    print e;
 }
 
 procedure procedure {
-    read a;                 
+    read a;
 }
 
 procedure procName {
-    call procedure;         
-    call procedure;         
+    call procedure;
+    call procedure;
 }
 
 procedure B {
-    print procedure;        
+    print procedure;
 }

@@ -133,12 +133,6 @@ void PKBStorage::storeLineModifiesVarRelation(const Line line,
 }
 
 void PKBStorage::storeVariable(const Variable var) {
-  if (procedure_set.find(var) != procedure_set.end()) {
-    // Throw an error if there's a procedure with the same name as
-    // the variable
-    throw PkbAstSemanticException(
-        "Found procedure and variable with the same name: '" + var + "'.");
-  }
   var_set.insert(var);
 }
 
@@ -163,17 +157,12 @@ void PKBStorage::storeIf(const Line line) { if_set.insert(line); }
 void PKBStorage::storeConstant(const Constant num) { constant_set.insert(num); }
 
 void PKBStorage::storeProcedure(const Procedure proc) {
-  if (var_set.find(proc) != var_set.end()) {
-    // Throw an error if there's a procedure with the same name as
-    // the variable
-    throw PkbAstSemanticException(
-        "Found procedure and variable with the same name: '" + proc + "'.");
-  } else if (procedure_set.find(proc) != procedure_set.end()) {
+  if (procedure_set.find(proc) != procedure_set.end()) {
     throw PkbAstSemanticException(
         "Found multiple procedures with the same name: '" + proc + "'.");
-  } else {
-    procedure_set.insert(proc);
   }
+
+  procedure_set.insert(proc);
 }
 
 void PKBStorage::storeCall(const Line line, const Procedure proc) {

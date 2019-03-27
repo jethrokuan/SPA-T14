@@ -59,8 +59,9 @@ void ConstraintTable::filterBy(const string& var1_name, const string& var2_name,
 }
 
 //! Filter an existing table based on an incoming paired-var constraint
-bool ConstraintTable::joinBy(const string& var_to_join, const string& other_var,
-                             const unordered_map<string, string>& pair_map) {
+bool ConstraintTable::joinWithSetBy(
+    const string& var_to_join, const string& other_var,
+    const unordered_map<string, string>& pair_map) {
   /*
     Table
 
@@ -112,4 +113,33 @@ bool ConstraintTable::joinBy(const string& var_to_join, const string& other_var,
     // should do something??
     return true;
   }
+}
+
+//! Filter an existing table based on an incoming paired-var constraint
+bool ConstraintTable::joinWithTableBy(const string& var_to_join,
+                                      const ConstraintTable& other_table) {
+  /*
+    Existing Table
+
+    a | v | x
+    ---------
+    1   2   3
+    3   4   5
+
+    Incoming table
+    v | s | y
+    ---------
+    1   2   3
+    2   4   5
+
+    Hash-Join algorithm:
+    1. Create a hashmap of v from value to row index: 2 -> 1, 4 -> 2 for
+    existing table
+    2. For each v in incoming table (larger), check if v exists in hashmap
+    3. If no match, both rows are no longer considered
+    4. If match, merge both rows (append incoming to existing without the common
+    col)
+    5. Update the column index for the existing table
+
+  */
 }

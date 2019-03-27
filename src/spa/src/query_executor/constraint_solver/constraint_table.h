@@ -28,10 +28,12 @@ class ConstraintTable {
  private:
   //! Each vector is a ROW in the table
   vector<vector<string>> table;
-  //! Given a synonym, which column index is it in?
-  unordered_map<string, size_t> name_column_map;
+  ;
 
  public:
+  //! Given a synonym, which column index is it in? Public needed for deletion
+  unordered_map<string, size_t> name_column_map;
+
   //! Get a single column of values from the table based on the column name
   vector<string> getColumnByName(const string& name);
   //! Initializes the table with a single variable's constraints
@@ -50,8 +52,14 @@ class ConstraintTable {
                 const PairedConstraintSet& constraint_values);
 
   //! Join an existing table and an incoming constraint set on a variable
-  bool joinBy(const string& var_to_join, const string& other_var,
-              const unordered_map<string, string>& pair_map);
+  bool joinWithSetBy(const string& var_to_join, const string& other_var,
+                     const unordered_map<string, string>& pair_map);
+
+  //! Join an existing table with another table on a variable
+  bool joinWithTableBy(const string& var_to_join,
+                       const ConstraintTable& other_table);
+
+  inline size_t size() const { return table.size(); }
 
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintTable const& ctable) {

@@ -36,6 +36,9 @@ class ConstraintDatabase {
   //! Given a synonym, which table is it in?
   unordered_map<string, size_t> name_table_map;
 
+  //! Temporary variable to hold a (variable -> idx) mapping during hash joins
+  std::optional<pair<string, size_t>> tempMapping = std::nullopt;
+
   //! Get a reference to the table that contains this var already
   std::optional<size_t> getTableIdxForVar(const string& var_name);
 
@@ -51,9 +54,20 @@ class ConstraintDatabase {
                       const std::string& var2_name,
                       const PairedConstraintSet& constraint_values);
 
-  void doJoin(const size_t table_idx, const std::string& var1_name,
-              const std::string& var2_name,
-              const PairedConstraintSet& constraint_values, bool join_on_var1);
+  void doTableSetJoin(const size_t table_idx, const std::string& var1_name,
+                      const std::string& var2_name,
+                      const PairedConstraintSet& constraint_values,
+                      bool join_on_var1);
+
+  void doTableTableJoin(const size_t table1_idx, const size_t table2_idx,
+                        const string& var_to_join);
+
+  void removeTableFromDatabase(size_t table_idx);
+
+  //! Associate a variable name with a table index. If the variable name already
+  //! exists, this is likely going to be a hash-join, so we need to save the
+  //! variable we were going to add
+  void addVariableToTableMap(const string var_name, size_t table_idx);
 
  public:
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}

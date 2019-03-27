@@ -39,7 +39,7 @@ void ConstraintDatabase::addToPairedVariableConstraints(
     if (matching_table_iterators->first != name_table_map.end()) {
       // Join required on var1_name
       size_t table_idx = matching_table_iterators->first->second;
-      doJoin(table_idx, var1_name, var2_name, constraint_values, true);
+      doTableSetJoin(table_idx, var1_name, var2_name, constraint_values, true);
       have_done_table_set_join = true;
     }
 
@@ -47,12 +47,16 @@ void ConstraintDatabase::addToPairedVariableConstraints(
       // Join required on var2_name
       if (!have_done_table_set_join) {
         size_t table_idx = matching_table_iterators->second->second;
-        doJoin(table_idx, var1_name, var2_name, constraint_values, false);
+        doTableSetJoin(table_idx, var1_name, var2_name, constraint_values,
+                       false);
       } else {
         // The first join happened, so we have a newly joined table (1)
         // We now need to join (1) with the table we found for this
         // second variable
+        size_t table1_idx = matching_table_iterators->first->second;
+        size_t table2_idx = matching_table_iterators->second->second;
         assert(false);
+        // doTableTableJoin(table1_idx, table2_idx, var2_name);
       }
     }
   }
@@ -90,7 +94,7 @@ void ConstraintDatabase::createNewTable(
   table.initWithSingleVariable(var_name, constraint_values);
   size_t new_table_index = tables.size();
   tables.push_back(table);
-  name_table_map.insert({var_name, new_table_index});
+  addVariableToTableMap(var_name, new_table_index);
 }
 
 void ConstraintDatabase::createNewTable(
@@ -100,31 +104,74 @@ void ConstraintDatabase::createNewTable(
   table.initWithPairedVariables(var1_name, var2_name, constraint_values);
   size_t new_table_index = tables.size();
   tables.push_back(table);
-  name_table_map.insert({var1_name, new_table_index});
-  name_table_map.insert({var2_name, new_table_index});
+  addVariableToTableMap(var1_name, new_table_index);
+  addVariableToTableMap(var2_name, new_table_index);
 }
 
-void ConstraintDatabase::doJoin(const size_t table_idx, const string& var1_name,
-                                const string& var2_name,
-                                const PairedConstraintSet& constraint_values,
-                                bool join_on_var1) {
+void ConstraintDatabase::doTableSetJoin(
+    const size_t table_idx, const string& var1_name, const string& var2_name,
+    const PairedConstraintSet& constraint_values, bool join_on_var1) {
   bool join_at_least_one = false;
 
   if (join_on_var1) {
-    join_at_least_one = tables[table_idx].joinBy(
+    join_at_least_one = tables[table_idx].joinWithSetBy(
         var1_name, var2_name,
         Utils::getMapFromPairSet(constraint_values,
                                  Utils::MapFromPairSetting::MAP_LEFT_TO_RIGHT));
     if (join_at_least_one) {
-      name_table_map.insert({var2_name, table_idx});
+      addVariableToTableMap(var2_name, table_idx);
     }
   } else {
-    join_at_least_one = tables[table_idx].joinBy(
+    join_at_least_one = tables[table_idx].joinWithSetBy(
         var2_name, var1_name,
         Utils::getMapFromPairSet(constraint_values,
                                  Utils::MapFromPairSetting::MAP_RIGHT_TO_LEFT));
     if (join_at_least_one) {
-      name_table_map.insert({var1_name, table_idx});
+      addVariableToTableMap(var1_name, table_idx);
     }
+  }
+}
+
+void ConstraintDatabase::doTableTableJoin(const size_t table1_idx,
+                                          const size_t table2_idx,
+                                          const string& var_to_join) {
+  auto& table1 = tables[table1_idx];
+  auto& table2 = tables[table2_idx];
+
+  // Check which table is smaller
+  if (table1.size() < table2.size()) {
+    table1.joinWithTableBy(var_to_join, table2);
+    removeTableFromDatabase(table2_idx);
+  } else {
+    table2.joinWithTableBy(var_to_join, table1);
+    removeTableFromDatabase(table1_idx);
+  }
+}
+
+void ConstraintDatabase::addVariableToTableMap(const string var_name,
+                                               size_t table_idx) {
+  auto insert_result = name_table_map.insert({var_name, table_idx});
+  auto successful_insert = insert_result.second;
+  if (!successful_insert) {
+    if (tempMapping != std::nullopt) {
+      std::cerr << "Potentially > 2 keys with the same name!";
+      std::cerr << this;
+      assert(false);
+    }
+    tempMapping = {var_name, table_idx};
+  }
+}
+
+void ConstraintDatabase::removeTableFromDatabase(size_t table_idx) {
+  // Remove all variables that are associated with this table
+  ConstraintTable& ctable = tables[table_idx];
+  for (const auto& [var_name, idx] : ctable.name_column_map) {
+    name_table_map.erase(var_name);
+  }
+
+  // Insert the temp mapping that might have been stored during merging
+  if (tempMapping) {
+    addVariableToTableMap(tempMapping->first, tempMapping->second);
+    tempMapping = std::nullopt;
   }
 }

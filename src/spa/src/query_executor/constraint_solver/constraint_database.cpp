@@ -20,7 +20,6 @@ void ConstraintDatabase::addToPairedVariableConstraints(
     const PairedConstraintSet& constraint_values) {
   // Is an instance of this variable already stored?
   auto matching_table_iterators = getTableIdxForVars(var1_name, var2_name);
-
   // If no table, create one (disjoint, so needs new table)
   if (!matching_table_iterators) {
     createNewTable(var1_name, var2_name, constraint_values);
@@ -29,10 +28,8 @@ void ConstraintDatabase::addToPairedVariableConstraints(
              matching_table_iterators->first->second ==
                  matching_table_iterators->second->second) {
     // Exact match to same table, filter only
-    // -> first gets the matched iterator for first var, ->second gets the value
-    // (size_t index)
-    tables[matching_table_iterators->first->second].filterBy(
-        var1_name, var2_name, constraint_values);
+    size_t table_idx = matching_table_iterators->first->second;
+    tables[table_idx].filterBy(var1_name, var2_name, constraint_values);
   } else {
     // 2 possibilities
     //  1. Only one variable is found, so only one join needs to be done

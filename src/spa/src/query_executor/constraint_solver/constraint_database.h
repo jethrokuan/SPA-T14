@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <iostream>
+#include <iterator>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -9,6 +10,7 @@
 #include "query_executor/constraint_solver/constraint_table.h"
 #include "utils/utils.h"
 
+using std::pair;
 using std::string;
 using std::unordered_map;
 using std::vector;
@@ -38,8 +40,9 @@ class ConstraintDatabase {
   std::optional<size_t> getTableIdxForVar(const string& var_name);
 
   //! Get a reference to the table that contains these two vars already
-  std::optional<size_t> getTableIdxForVars(const string& var1_name,
-                                           const string& var2_name);
+  std::optional<pair<std::unordered_map<string, size_t>::iterator,
+                     std::unordered_map<string, size_t>::iterator>>
+  getTableIdxForVars(const string& var1_name, const string& var2_name);
 
  public:
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}

@@ -68,29 +68,7 @@ class ConstraintTable {
 
   //! Cartesian product of two tables: t1.size() x t2.size() rows as output
   static ConstraintTable cartesianProduct(ConstraintTable& t1,
-                                          ConstraintTable& t2) {
-    if (t1.size() == 0) return t2;
-    if (t2.size() == 0) return t1;
-    ConstraintTable out_table;
-    // Construct new column headers
-    for (auto& [name, col_idx] : t1.name_column_map) {
-      out_table.addNewColumnName(name);
-    }
-    for (auto& [name, col_idx] : t2.name_column_map) {
-      out_table.addNewColumnName(name);
-    }
-
-    // Cartesia product of rows in both tables
-    for (auto row1 : t1.table) {
-      for (auto row2 : t2.table) {
-        vector<string> new_row;
-        new_row.insert(new_row.end(), row1.begin(), row1.end());
-        new_row.insert(new_row.end(), row2.begin(), row2.end());
-        out_table.table.push_back(new_row);
-      }
-    }
-    return out_table;
-  }
+                                          ConstraintTable& t2);
 
   inline size_t size() const { return table.size(); }
 

@@ -37,6 +37,9 @@ class ConstraintTable {
   //!
   void addVariable(const std::string& var_name,
                    const SingleConstraintSet& constraint_values);
+  void addPairedVariables(const std::string& var1_name,
+                          const std::string& var2_name,
+                          const PairedConstraintSet& constraint_values);
   //! Check if this table can be merged with another, else they are disjoint
   //! i.e. they have synonyms in common
   bool canMergeWith(ConstraintTable& constraintTable);
@@ -54,7 +57,7 @@ class ConstraintTable {
     // Print out the table headers
     for (const auto& row : ctable.table) {
       for (const auto& val : row) {
-        os << val;
+        os << val << "\t"s;
       }
       os << "\n"s;
     }
@@ -72,6 +75,10 @@ class ConstraintDatabase {
 
   //! Get a reference to the table that contains this var already
   std::optional<size_t> getTableIdxForVar(const string& var_name);
+
+  //! Get a reference to the table that contains these two vars already
+  std::optional<size_t> getTableIdxForVars(const string& var1_name,
+                                           const string& var2_name);
 
  public:
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}

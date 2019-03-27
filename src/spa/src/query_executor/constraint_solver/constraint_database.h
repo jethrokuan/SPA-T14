@@ -90,7 +90,7 @@ class ConstraintDatabase {
   //! Returns the column containing the variable of interest
   vector<string> selectOne(const std::string var_to_select);
   //! Returns all columns containing the variables of interests in order
-  vector<vector<string>> selectMultiple(const vector<string> vars_to_select);
+  vector<string> selectMultiple(const vector<string> vars_to_select);
 
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintDatabase const& db) {

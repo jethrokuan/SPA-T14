@@ -1,5 +1,10 @@
 #include "query_executor/constraint_solver/constraint_table.h"
 #include <algorithm>
+//! Adds a new column-name association to the table
+void ConstraintTable::addNewColumnName(const string& column_name) {
+  name_column_map.insert({column_name, next_column_idx});
+  next_column_idx++;
+}
 
 //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
 void ConstraintTable::initWithSingleVariable(
@@ -7,7 +12,7 @@ void ConstraintTable::initWithSingleVariable(
   assert(table.size() == 0);  // invariant - initializer
   // We need to add a column of values
   // Update tracking data structure
-  name_column_map.insert({var_name, 0});
+  addNewColumnName(var_name);
   for (const auto& value : constraint_values) {
     table.push_back(vector{value});
   }
@@ -20,8 +25,8 @@ void ConstraintTable::initWithPairedVariables(
   assert(table.size() == 0);  // invariant - initializer
   // We need to add a column of values
   // Update tracking data structure
-  name_column_map.insert({var1_name, 0});
-  name_column_map.insert({var2_name, 1});
+  addNewColumnName(var1_name);
+  addNewColumnName(var2_name);
   for (const auto& value : constraint_values) {
     table.push_back(vector{value.first, value.second});
   }
@@ -108,8 +113,7 @@ bool ConstraintTable::joinWithSetBy(
 
   // We added a new columns ==> need to update table index mapping
   if (added_new_col) {
-    size_t new_col_idx = table[0].size() - 1;
-    name_column_map.insert({other_var, new_col_idx});
+    addNewColumnName(other_var);
     return true;
   } else {
     // TODO
@@ -156,4 +160,27 @@ vector<string> ConstraintTable::getColumnByName(const string& name) {
     out_column.push_back(row[col_idx]);
   }
   return out_column;
+}
+
+ConstraintTable ConstraintTable::getSubTable(
+    const vector<string>& vars_to_select) {
+  vector<string> vars_to_select_in_table;
+  ConstraintTable out_table;
+  for (const auto& var_to_select : vars_to_select) {
+    // Which vars need to be selected?
+    if (name_column_map.find(var_to_select) != name_column_map.end()) {
+      vars_to_select_in_table.push_back(var_to_select);
+      out_table.addNewColumnName(var_to_select);
+    }
+  }
+  if (vars_to_select.empty()) return out_table;  // no vars to select
+  for (auto& row : table) {
+    vector<string> out_row;
+    for (const auto& var_to_select : vars_to_select_in_table) {
+      size_t to_select_idx = name_column_map[var_to_select];
+      out_row.push_back(row[to_select_idx]);
+    }
+    out_table.table.push_back(out_row);
+  }
+  return out_table;
 }

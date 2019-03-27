@@ -198,3 +198,35 @@ vector<string> ConstraintDatabase::selectOneColumn(
   ConstraintTable& ctable = tables[table_idx];
   return ctable.getColumnByName(var_to_select);
 }
+
+vector<string> ConstraintDatabase::selectMultiple(
+    const vector<string> vars_to_select) {
+  // Go through each table and get a filtered version of each depending on the
+  // columns selected inside - try to select all variables
+  ConstraintTable existing_table;
+  for (auto& table : tables) {
+    ConstraintTable new_table = table.getSubTable(vars_to_select);
+    if (new_table.size() == 0) continue;
+
+    // Cross product with existing columns
+    existing_table =
+        ConstraintTable::cartesianProduct(existing_table, new_table);
+  }
+
+  // Get only the variables we want (in order) from final table
+  vector<string> out_values;
+  for (auto& row : existing_table.table) {
+    string out_row_string;
+    for (auto& var : vars_to_select) {
+      size_t var_idx = existing_table.name_column_map[var];
+      out_row_string += row[var_idx] + " ";
+    }
+    // Remove trailing space
+    out_row_string.erase(out_row_string.end() - 1);
+    out_values.push_back(out_row_string);
+  }
+
+  // Force uniqueness on results
+  unordered_set<string> unique_values(out_values.begin(), out_values.end());
+  return vector<string>(unique_values.begin(), unique_values.end());
+}

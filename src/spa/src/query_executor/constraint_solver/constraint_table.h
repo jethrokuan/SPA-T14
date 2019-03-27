@@ -26,11 +26,13 @@ using PairedConstraintSet =
 
 class ConstraintTable {
  private:
-  //! Each vector is a ROW in the table
-  vector<vector<string>> table;
+  size_t next_column_idx = 0;
 
  public:
-  //! Given a synonym, which column index is it in? Public needed for deletion
+  //! Each vector is a ROW in the table. Public needed for iteration for select
+  vector<vector<string>> table;
+  //! Given a synonym, which column index is it in? Public needed for
+  //! deletion
   unordered_map<string, size_t> name_column_map;
 
   //! Get a single column of values from the table based on the column name
@@ -57,6 +59,38 @@ class ConstraintTable {
   //! Join an existing table with another table on a variable
   bool joinWithTableBy(const string& var_to_join,
                        const ConstraintTable& other_table);
+
+  //! Adds a new column-name association to the table
+  void addNewColumnName(const string& column_name);
+
+  //! Each vector is one row from this table that has been selected
+  ConstraintTable getSubTable(const vector<string>& vars_to_select);
+
+  //! Cartesian product of two tables: t1.size() x t2.size() rows as output
+  static ConstraintTable cartesianProduct(ConstraintTable& t1,
+                                          ConstraintTable& t2) {
+    if (t1.size() == 0) return t2;
+    if (t2.size() == 0) return t1;
+    ConstraintTable out_table;
+    // Construct new column headers
+    for (auto& [name, col_idx] : t1.name_column_map) {
+      out_table.addNewColumnName(name);
+    }
+    for (auto& [name, col_idx] : t2.name_column_map) {
+      out_table.addNewColumnName(name);
+    }
+
+    // Cartesia product of rows in both tables
+    for (auto row1 : t1.table) {
+      for (auto row2 : t2.table) {
+        vector<string> new_row;
+        new_row.insert(new_row.end(), row1.begin(), row1.end());
+        new_row.insert(new_row.end(), row2.begin(), row2.end());
+        out_table.table.push_back(new_row);
+      }
+    }
+    return out_table;
+  }
 
   inline size_t size() const { return table.size(); }
 

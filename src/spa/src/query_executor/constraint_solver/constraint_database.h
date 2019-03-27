@@ -15,11 +15,11 @@ using namespace std::string_literals;  // for "asdasd"s: const char* -->
                                        // std::string
 
 //! Part of a constraint set for a variable, e.g. ("x")
-using SingleConstraint = std::string;
+using SingleConstraint = string;
 //! Set of possible values a variable can take
 using SingleConstraintSet = std::unordered_set<SingleConstraint>;
 //! Part of a constraint set for a pair of variable, e.g.(1, "x")
-using PairedConstraint = std::pair<std::string, std::string>;
+using PairedConstraint = std::pair<string, string>;
 //! Set of possible values a pair of variables can take
 using PairedConstraintSet =
     std::unordered_set<PairedConstraint, Utils::pair_hash>;
@@ -35,15 +35,19 @@ class ConstraintTable {
   //! Get a single column of values from the table based on the column name
   vector<string> getColumnByName(const string& name);
   //! Initializes the table with a single variable's constraints
-  void initWithSingleVariable(const std::string& var_name,
+  void initWithSingleVariable(const string& var_name,
                               const SingleConstraintSet& constraint_values);
   //! Initializes the table with a paired variable constraint set
-  void initWithPairedVariables(const std::string& var1_name,
-                               const std::string& var2_name,
+  void initWithPairedVariables(const string& var1_name, const string& var2_name,
                                const PairedConstraintSet& constraint_values);
   //! Check if this table can be merged with another, else they are disjoint
   //! i.e. they have synonyms in common
   bool canMergeWith(ConstraintTable& constraintTable);
+
+  //! var_name is a column in this table. Filter the table by these constraint
+  //! values
+  void filterBy(const string& var_name,
+                const SingleConstraintSet& constraint_values);
 
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintTable const& ctable) {
@@ -66,6 +70,18 @@ class ConstraintTable {
     return os;
   }
 };
+
+/*
+ *
+ *  ConstraintDatabase invariants:
+ *  1. Each synoynm can only be in ONE table at a time
+ *  2. This is enforced by joining every time new variables are introduced
+ *
+ *  What this allows:
+ *  1. We don't have to do joins until no more joins are possible at the end
+ *  2. No need to map dependencies
+ *
+ */
 
 class ConstraintDatabase {
  private:

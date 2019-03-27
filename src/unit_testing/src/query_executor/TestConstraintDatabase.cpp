@@ -17,3 +17,10 @@ TEST_CASE ("Test Constraint Database paired variable add functionality") {
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
   std::cout << db;
 }
+
+TEST_CASE ("Test Constraint Database same variable constraint x 2") {
+  auto db = ConstraintDatabase();
+  db.addToSingleVariableConstraints("x", {"1", "2", "3"});
+  db.addToSingleVariableConstraints("x", {"1", "2"});
+  std::cout << db;
+}

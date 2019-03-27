@@ -1,4 +1,5 @@
 #include "query_executor/constraint_solver/constraint_database.h"
+#include <algorithm>
 
 /***
  *
@@ -12,6 +13,7 @@
 //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
 void ConstraintTable::initWithSingleVariable(
     const string& var_name, const SingleConstraintSet& constraint_values) {
+  assert(table.size() == 0);  // invariant - initializer
   // We need to add a column of values
   // Update tracking data structure
   name_column_map.insert({var_name, 0});
@@ -24,6 +26,7 @@ void ConstraintTable::initWithSingleVariable(
 void ConstraintTable::initWithPairedVariables(
     const string& var1_name, const string& var2_name,
     const PairedConstraintSet& constraint_values) {
+  assert(table.size() == 0);  // invariant - initializer
   // We need to add a column of values
   // Update tracking data structure
   name_column_map.insert({var1_name, 0});
@@ -31,6 +34,20 @@ void ConstraintTable::initWithPairedVariables(
   for (const auto& value : constraint_values) {
     table.push_back(vector{value.first, value.second});
   }
+}
+
+//! Add the constraints for a single variable, e.g. a = {2, 3, 4}
+void ConstraintTable::filterBy(const string& var_name,
+                               const SingleConstraintSet& constraint_values) {
+  size_t column_idx = name_column_map[var_name];
+  table.erase(std::remove_if(table.begin(), table.end(),
+                             [&](vector<string>& row) {
+                               string& val = row[column_idx];
+                               // Remove if it's not in the incoming constraints
+                               return constraint_values.find(val) ==
+                                      constraint_values.end();
+                             }),
+              table.end());
 }
 
 /***
@@ -57,7 +74,8 @@ void ConstraintDatabase::addToSingleVariableConstraints(
     tables.push_back(table);
     name_table_map.insert({var_name, new_table_index});
   } else {
-    assert(false);
+    // FILTER algorithm: filter existing table by this constraint set
+    tables[*matching_table_idx].filterBy(var_name, constraint_values);
   }
 }
 

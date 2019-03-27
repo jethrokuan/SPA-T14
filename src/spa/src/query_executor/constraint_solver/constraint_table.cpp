@@ -111,16 +111,10 @@ bool ConstraintTable::joinWithSetBy(
   // In-place modification is too tedious
   table = new_table;
 
-  // We added a new columns ==> need to update table index mapping
-  if (added_new_col) {
-    addNewColumnName(other_var);
-    return true;
-  } else {
-    // TODO
-    // join failed - no results should be left in table??
-    // should do something??
-    return true;
-  }
+  // We added a new column ==> need to update table index mapping
+  addNewColumnName(other_var);
+  // If size is 0 - no results
+  return table.size() > 0;
 }
 
 //! Filter an existing table based on an incoming paired-var constraint
@@ -133,6 +127,7 @@ bool ConstraintTable::joinWithTableBy(const string& var_to_join,
     ---------
     1   2   3
     3   4   5
+    3   4   6
 
     Incoming table
     v | s | y
@@ -141,15 +136,56 @@ bool ConstraintTable::joinWithTableBy(const string& var_to_join,
     2   4   5
 
     Hash-Join algorithm:
-    1. Create a hashmap of v from value to row index: 2 -> 1, 4 -> 2 for
+    1. Create a hashmap of v from value to row indexes: (2 -> (0), 4 -> (1, 2))
     existing table
     2. For each v in incoming table (larger), check if v exists in hashmap
     3. If no match, both rows are no longer considered
     4. If match, merge both rows (append incoming to existing without the common
     col)
     5. Update the column index for the existing table
-
   */
+  unordered_map<string, vector<size_t>> col_hash = hashColumn(var_to_join);
+  vector<vector<string>> out_table;
+  size_t other_table_join_var_idx = other_table.name_column_map.at(var_to_join);
+
+  for (auto row : other_table.table) {
+    auto join_val_other_table = row[other_table_join_var_idx];
+    if (col_hash.find(join_val_other_table) == col_hash.end()) continue;
+    // Found it - "cross product" this row with the rows in original table
+    row.erase(row.begin() + other_table_join_var_idx);  // remove join col
+    auto matching_row_idxs = col_hash[join_val_other_table];
+    for (auto row_idx : matching_row_idxs) {
+      vector<string> original_row = table[row_idx];
+      original_row.insert(original_row.end(), row.begin(), row.end());
+      out_table.push_back(original_row);  // inserts joined row
+    }
+  }
+
+  // Update column names from joined table
+  for (auto [name, idx] : other_table.name_column_map) {
+    if (name != var_to_join) addNewColumnName(name);
+  }
+  // If size is 0 - no results
+  return table.size() > 0;
+}
+
+//! Filter an existing table based on an incoming paired-var constraint
+unordered_map<string, vector<size_t>> ConstraintTable::hashColumn(
+    const string& var_to_join) {
+  size_t var_idx = name_column_map[var_to_join];
+  unordered_map<string, vector<size_t>> out_map;
+  size_t idx = 0;
+  for (auto& row : table) {
+    auto join_val = row[var_idx];
+    if (out_map.find(join_val) == out_map.end()) {
+      out_map.insert({join_val, {idx}});
+    } else {
+      out_map[join_val].push_back(idx);
+    }
+    idx++;
+  }
+
+  return out_map;
 }
 
 //! Cartesian product of two tables: t1.size() x t2.size() rows as output

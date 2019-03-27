@@ -60,6 +60,9 @@ class ConstraintTable {
   bool joinWithTableBy(const string& var_to_join,
                        const ConstraintTable& other_table);
 
+  //! Hashing step of Hash-Join algorithm (hash a column's values to its idxs)
+  unordered_map<string, vector<size_t>> hashColumn(const string& var_to_join);
+
   //! Adds a new column-name association to the table
   void addNewColumnName(const string& column_name);
 

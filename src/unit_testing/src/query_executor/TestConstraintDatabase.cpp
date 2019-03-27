@@ -10,7 +10,7 @@ TEST_CASE ("Test Constraint Database single variable add functionality") {
   std::cout << "======> SINGLE VAR ADD: \n";
   auto db = ConstraintDatabase();
   db.addToSingleVariableConstraints("x", {"1", "2", "3"});
-  std::cout << db;
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"3", "2", "1"});
 }
 
 TEST_CASE ("Test Constraint Database paired variable add functionality") {
@@ -26,7 +26,7 @@ TEST_CASE (
   auto db = ConstraintDatabase();
   db.addToSingleVariableConstraints("x", {"1", "2", "3"});
   db.addToSingleVariableConstraints("x", {"1", "2", "4"});
-  std::cout << db;
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"2", "1"});
 }
 
 TEST_CASE (
@@ -89,6 +89,18 @@ TEST_CASE (
   std::cout << "======> JOINED 1-1: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
+  db.addToPairedVariableConstraints(
+      "x", "z", {{"1", "100"}, {"2", "700"}, {"2", "500"}, {"777", "777"}});
+  std::cout << db;
+}
+
+TEST_CASE (
+    "Test Constraint Database join paired variable constraint x 2 (join on "
+    "first var for both) - duplicate values on both paired sets") {
+  std::cout << "======> JOINED 1-1: \n";
+  auto db = ConstraintDatabase();
+  db.addToPairedVariableConstraints("x", "y",
+                                    {{"1", "2"}, {"1", "500"}, {"2", "3"}});
   db.addToPairedVariableConstraints(
       "x", "z", {{"1", "100"}, {"2", "700"}, {"2", "500"}, {"777", "777"}});
   std::cout << db;

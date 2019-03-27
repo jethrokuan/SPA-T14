@@ -54,11 +54,13 @@ class ConstraintDatabase {
                       const std::string& var2_name,
                       const PairedConstraintSet& constraint_values);
 
+  //! Essentially Hash-Join where the incoming hashmap is easy to compute
   void doTableSetJoin(const size_t table_idx, const std::string& var1_name,
                       const std::string& var2_name,
                       const PairedConstraintSet& constraint_values,
                       bool join_on_var1);
 
+  //! Hash-Join algorithm to join two tables along a key
   void doTableTableJoin(const size_t table1_idx, const size_t table2_idx,
                         const string& var_to_join);
 
@@ -69,6 +71,9 @@ class ConstraintDatabase {
   //! variable we were going to add
   void addVariableToTableMap(const string var_name, size_t table_idx);
 
+  //! Returns the column containing the variable of interest
+  vector<string> selectOneColumn(const std::string var_to_select);
+
  public:
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
   void addToSingleVariableConstraints(
@@ -78,6 +83,13 @@ class ConstraintDatabase {
   void addToPairedVariableConstraints(
       const std::string& var1_name, const std::string& var2_name,
       const PairedConstraintSet& constraint_values);
+
+  //! Returns true if all synonyms have at least one valid value, else false
+  bool selectBoolean();
+  //! Returns the column containing the variable of interest
+  vector<string> selectOne(const std::string var_to_select);
+  //! Returns all columns containing the variables of interests in order
+  vector<vector<string>> selectMultiple(const vector<string> vars_to_select);
 
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintDatabase const& db) {

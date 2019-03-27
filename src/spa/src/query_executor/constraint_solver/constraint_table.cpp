@@ -147,3 +147,13 @@ bool ConstraintTable::joinWithTableBy(const string& var_to_join,
 
   */
 }
+
+//! Get a single column of values from the table based on the column name
+vector<string> ConstraintTable::getColumnByName(const string& name) {
+  size_t col_idx = name_column_map[name];
+  vector<string> out_column;
+  for (auto& row : table) {
+    out_column.push_back(row[col_idx]);
+  }
+  return out_column;
+}

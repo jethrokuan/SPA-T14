@@ -175,3 +175,14 @@ void ConstraintDatabase::removeTableFromDatabase(size_t table_idx) {
     tempMapping = std::nullopt;
   }
 }
+
+vector<string> ConstraintDatabase::selectOne(const std::string var_to_select) {
+  return selectOneColumn(var_to_select);
+}
+
+vector<string> ConstraintDatabase::selectOneColumn(
+    const std::string var_to_select) {
+  size_t table_idx = name_table_map[var_to_select];
+  ConstraintTable& ctable = tables[table_idx];
+  return ctable.getColumnByName(var_to_select);
+}

@@ -28,7 +28,6 @@ class ConstraintTable {
  private:
   //! Each vector is a ROW in the table
   vector<vector<string>> table;
-  ;
 
  public:
   //! Given a synonym, which column index is it in? Public needed for deletion

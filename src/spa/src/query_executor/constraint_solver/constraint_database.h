@@ -49,6 +49,9 @@ class ConstraintTable {
   void filterBy(const string& var_name,
                 const SingleConstraintSet& constraint_values);
 
+  void filterBy(const string& var1_name, const string& var2_name,
+                const PairedConstraintSet& constraint_values);
+
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintTable const& ctable) {
     // Print out the table headers

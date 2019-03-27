@@ -36,7 +36,7 @@ void ConstraintTable::initWithPairedVariables(
   }
 }
 
-//! Add the constraints for a single variable, e.g. a = {2, 3, 4}
+//! Filter an existing table based on an incoming single-var constraint
 void ConstraintTable::filterBy(const string& var_name,
                                const SingleConstraintSet& constraint_values) {
   size_t column_idx = name_column_map[var_name];
@@ -45,6 +45,23 @@ void ConstraintTable::filterBy(const string& var_name,
                                string& val = row[column_idx];
                                // Remove if it's not in the incoming constraints
                                return constraint_values.find(val) ==
+                                      constraint_values.end();
+                             }),
+              table.end());
+}
+
+//! Filter an existing table based on an incoming paired-var constraint
+void ConstraintTable::filterBy(const string& var1_name, const string& var2_name,
+                               const PairedConstraintSet& constraint_values) {
+  size_t column1_idx = name_column_map[var1_name];
+  size_t column2_idx = name_column_map[var2_name];
+  table.erase(std::remove_if(table.begin(), table.end(),
+                             [&](vector<string>& row) {
+                               string& val1 = row[column1_idx];
+                               string& val2 = row[column2_idx];
+                               // Remove if it's not in the incoming
+                               // constraints
+                               return constraint_values.find({val1, val2}) ==
                                       constraint_values.end();
                              }),
               table.end());
@@ -95,7 +112,8 @@ void ConstraintDatabase::addToPairedVariableConstraints(
     name_table_map.insert({var1_name, new_table_index});
     name_table_map.insert({var2_name, new_table_index});
   } else {
-    assert(false);
+    tables[*matching_table_idx].filterBy(var1_name, var2_name,
+                                         constraint_values);
   }
 }
 

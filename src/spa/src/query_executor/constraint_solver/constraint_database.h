@@ -44,6 +44,17 @@ class ConstraintDatabase {
                      std::unordered_map<string, size_t>::iterator>>
   getTableIdxForVars(const string& var1_name, const string& var2_name);
 
+  void createNewTable(const std::string& var_name,
+                      const SingleConstraintSet& constraint_values);
+
+  void createNewTable(const std::string& var1_name,
+                      const std::string& var2_name,
+                      const PairedConstraintSet& constraint_values);
+
+  void doJoin(const size_t table_idx, const std::string& var1_name,
+              const std::string& var2_name,
+              const PairedConstraintSet& constraint_values, bool join_on_var1);
+
  public:
   //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
   void addToSingleVariableConstraints(

@@ -101,6 +101,24 @@ unorderedSetIntersectionToPairedSet(const std::unordered_set<T> m1,
   return m_out;
 };
 
+enum class MapFromPairSetting { MAP_LEFT_TO_RIGHT, MAP_RIGHT_TO_LEFT };
+// Transform a set of pairs into a map of one side to the other
+template <class T>
+std::unordered_map<T, T> getMapFromPairSet(
+    const std::unordered_set<std::pair<T, T>, pair_hash>& in_set,
+    MapFromPairSetting setting) {
+  std::unordered_map<T, T> out_map;
+  for (const auto& [left, right] : in_set) {
+    if (setting == MapFromPairSetting::MAP_LEFT_TO_RIGHT) {
+      out_map.insert({left, right});
+    } else {
+      out_map.insert({right, left});
+    }
+  }
+
+  return out_map;
+};
+
 bool has_only_digits(const std::string);
 bool is_valid_name(const std::string);
 

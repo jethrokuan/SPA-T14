@@ -57,3 +57,59 @@ void ConstraintTable::filterBy(const string& var1_name, const string& var2_name,
                              }),
               table.end());
 }
+
+//! Filter an existing table based on an incoming paired-var constraint
+bool ConstraintTable::joinBy(const string& var_to_join, const string& other_var,
+                             const unordered_map<string, string>& pair_map) {
+  /*
+    Table
+
+    a | v | x
+    ---------
+    1   2   3
+    3   4   5
+
+    Incoming paired constraint
+    a | z
+    -----
+    1   17
+    4   9
+
+    Remove rows that don't match the column we're supposed to match on
+
+  */
+  size_t column_to_join_idx = name_column_map[var_to_join];
+  bool added_new_col = false;
+  table.erase(std::remove_if(table.begin(), table.end(),
+                             [&](vector<string>& row) {
+                               string& val_join = row[column_to_join_idx];
+
+                               bool must_delete =
+                                   pair_map.find(val_join) == pair_map.end();
+
+                               // THIS IS SUPER SKETCHY - modifying row if no
+                               // delete, since this is a reference
+                               // Is this even possible?
+                               // But this removes needs for copying/2x iter
+                               if (!must_delete) {
+                                 row.push_back(pair_map.at(val_join));
+                                 added_new_col = true;
+                               }
+
+                               // Remove if it's not in the incoming
+                               // constraints
+                               return must_delete;
+                             }),
+              table.end());
+  // We added a new columns ==> need to update table index mapping
+  if (added_new_col) {
+    size_t new_col_idx = table[0].size() - 1;
+    name_column_map.insert({other_var, new_col_idx});
+    return true;
+  } else {
+    // TODO
+    // join failed - no results should be left in table??
+    // should do something??
+    return true;
+  }
+}

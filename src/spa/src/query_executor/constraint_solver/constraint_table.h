@@ -40,9 +40,6 @@ class ConstraintTable {
   //! Initializes the table with a paired variable constraint set
   void initWithPairedVariables(const string& var1_name, const string& var2_name,
                                const PairedConstraintSet& constraint_values);
-  //! Check if this table can be merged with another, else they are disjoint
-  //! i.e. they have synonyms in common
-  bool canMergeWith(ConstraintTable& constraintTable);
 
   //! var_name is a column in this table. Filter the table by these constraint
   //! values
@@ -51,6 +48,10 @@ class ConstraintTable {
 
   void filterBy(const string& var1_name, const string& var2_name,
                 const PairedConstraintSet& constraint_values);
+
+  //! Join an existing table and an incoming constraint set on a variable
+  bool joinBy(const string& var_to_join, const string& other_var,
+              const unordered_map<string, string>& pair_map);
 
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintTable const& ctable) {

@@ -34,6 +34,51 @@ TEST_CASE (
   std::cout << "======> PAIRED x 2: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
-  db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"4", "5"}});
+  db.addToPairedVariableConstraints("x", "y",
+                                    {{"1", "2"}, {"4", "5"}, {"777", "777"}});
+  std::cout << db;
+}
+
+TEST_CASE (
+    "Test Constraint Database join paired variable constraint x 2 (join on "
+    "first var for both)") {
+  std::cout << "======> JOINED 1-1: \n";
+  auto db = ConstraintDatabase();
+  db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
+  db.addToPairedVariableConstraints(
+      "x", "z", {{"1", "100"}, {"2", "200"}, {"777", "777"}});
+  std::cout << db;
+}
+
+TEST_CASE (
+    "Test Constraint Database join paired variable constraint x 2 (join on "
+    "second var for existing, first var for incoming)") {
+  std::cout << "======> JOINED 2-1: \n";
+  auto db = ConstraintDatabase();
+  db.addToPairedVariableConstraints("y", "x", {{"2", "1"}, {"3", "2"}});
+  db.addToPairedVariableConstraints(
+      "x", "z", {{"1", "100"}, {"2", "200"}, {"777", "777"}});
+  std::cout << db;
+}
+
+TEST_CASE (
+    "Test Constraint Database join paired variable constraint x 2 (join on "
+    "second var for both)") {
+  std::cout << "======> JOINED 2-2: \n";
+  auto db = ConstraintDatabase();
+  db.addToPairedVariableConstraints("y", "x", {{"2", "1"}, {"3", "2"}});
+  db.addToPairedVariableConstraints(
+      "z", "x", {{"100", "1"}, {"200", "2"}, {"777", "777"}});
+  std::cout << db;
+}
+
+TEST_CASE (
+    "Test Constraint Database join paired variable constraint x 2 (join on "
+    "first var for existing, second var for incoming)") {
+  std::cout << "======> JOINED 1-2: \n";
+  auto db = ConstraintDatabase();
+  db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
+  db.addToPairedVariableConstraints(
+  "z", "x", {{"100", "1"}, {"200", "2"}, {"777", "777"}});
   std::cout << db;
 }

@@ -7,101 +7,132 @@
 #include "query_executor/constraint_solver/constraint_database.h"
 
 TEST_CASE ("Test Constraint Database single variable add functionality") {
-  std::cout << "======> SINGLE VAR ADD: \n";
   auto db = ConstraintDatabase();
   db.addToSingleVariableConstraints("x", {"1", "2", "3"});
-  REQUIRE(db.selectOne("x") == std::vector<std::string>{"3", "2", "1"});
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2", "3"});
+  REQUIRE(db.selectBoolean() == true);
 }
 
 TEST_CASE ("Test Constraint Database paired variable add functionality") {
-  std::cout << "======> PAIRED VAR ADD: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
-  std::cout << db;
+  REQUIRE(db.selectBoolean() == true);
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "3"});
 }
 
 TEST_CASE (
     "Test Constraint Database intersect single variable constraint x 2") {
-  std::cout << "======> SINGLE x 2: \n";
   auto db = ConstraintDatabase();
   db.addToSingleVariableConstraints("x", {"1", "2", "3"});
   db.addToSingleVariableConstraints("x", {"1", "2", "4"});
-  REQUIRE(db.selectOne("x") == std::vector<std::string>{"2", "1"});
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
+  REQUIRE(db.selectBoolean() == true);
+}
+
+TEST_CASE (
+    "Test Constraint Database intersect disjoint single variable constraint x "
+    "2") {
+  auto db = ConstraintDatabase();
+  db.addToSingleVariableConstraints("x", {"1", "2", "3"});
+  db.addToSingleVariableConstraints("x", {"7", "8", "9"});
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{});
+  REQUIRE(db.selectBoolean() == false);
 }
 
 TEST_CASE (
     "Test Constraint Database intersect paired variable constraint x 2") {
-  std::cout << "======> PAIRED x 2: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
   db.addToPairedVariableConstraints("x", "y",
                                     {{"1", "2"}, {"4", "5"}, {"777", "777"}});
-  std::cout << db;
+  REQUIRE(db.selectBoolean() == true);
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2"});
+}
+
+TEST_CASE (
+    "Test Constraint Database intersect disjoint paired variable constraint x "
+    "2") {
+  auto db = ConstraintDatabase();
+  db.addToPairedVariableConstraints("x", "y", {{"7", "0"}, {"88", "111"}});
+  db.addToPairedVariableConstraints("x", "y",
+                                    {{"1", "2"}, {"4", "5"}, {"777", "777"}});
+  REQUIRE(db.selectBoolean() == false);
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{});
 }
 
 TEST_CASE (
     "Test Constraint Database join paired variable constraint x 2 (join on "
     "first var for both)") {
-  std::cout << "======> JOINED 1-1: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
   db.addToPairedVariableConstraints(
       "x", "z", {{"1", "100"}, {"2", "200"}, {"777", "777"}});
-  std::cout << db;
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "3"});
+  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "200"});
 }
 
 TEST_CASE (
     "Test Constraint Database join paired variable constraint x 2 (join on "
     "second var for existing, first var for incoming)") {
-  std::cout << "======> JOINED 2-1: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("y", "x", {{"2", "1"}, {"3", "2"}});
   db.addToPairedVariableConstraints(
       "x", "z", {{"1", "100"}, {"2", "200"}, {"777", "777"}});
-  std::cout << db;
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "3"});
+  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "200"});
 }
 
 TEST_CASE (
     "Test Constraint Database join paired variable constraint x 2 (join on "
     "second var for both)") {
-  std::cout << "======> JOINED 2-2: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("y", "x", {{"2", "1"}, {"3", "2"}});
   db.addToPairedVariableConstraints(
       "z", "x", {{"100", "1"}, {"200", "2"}, {"777", "777"}});
-  std::cout << db;
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "3"});
+  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "200"});
 }
 
 TEST_CASE (
     "Test Constraint Database join paired variable constraint x 2 (join on "
     "first var for existing, second var for incoming)") {
-  std::cout << "======> JOINED 1-2: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
   db.addToPairedVariableConstraints(
       "z", "x", {{"100", "1"}, {"200", "2"}, {"777", "777"}});
-  std::cout << db;
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "3"});
+  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "200"});
 }
 
 TEST_CASE (
     "Test Constraint Database join paired variable constraint x 2 (join on "
     "first var for both) - duplicate values on second paired set") {
-  std::cout << "======> JOINED 1-1: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
   db.addToPairedVariableConstraints(
       "x", "z", {{"1", "100"}, {"2", "700"}, {"2", "500"}, {"777", "777"}});
-  std::cout << db;
+  // TODO: Add a multi-select here
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "3"});
+  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "700", "500"});
 }
 
 TEST_CASE (
     "Test Constraint Database join paired variable constraint x 2 (join on "
     "first var for both) - duplicate values on both paired sets") {
-  std::cout << "======> JOINED 1-1: \n";
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y",
                                     {{"1", "2"}, {"1", "500"}, {"2", "3"}});
   db.addToPairedVariableConstraints(
       "x", "z", {{"1", "100"}, {"2", "700"}, {"2", "500"}, {"777", "777"}});
-  std::cout << db;
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "500", "3"});
+  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "700", "500"});
 }

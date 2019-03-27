@@ -176,8 +176,20 @@ void ConstraintDatabase::removeTableFromDatabase(size_t table_idx) {
   }
 }
 
+//! Returns true if all synonyms have at least one valid value, else false
+bool ConstraintDatabase::selectBoolean() {
+  // Look through all tables: all must have at least 1 row
+  for (const auto& table : tables) {
+    if (table.size() == 0) return false;
+  }
+  return true;
+}
+
 vector<string> ConstraintDatabase::selectOne(const std::string var_to_select) {
-  return selectOneColumn(var_to_select);
+  // Unique-ify the column and return only unique results
+  auto one_column = selectOneColumn(var_to_select);
+  unordered_set<string> unique_values(one_column.begin(), one_column.end());
+  return vector<string>(unique_values.begin(), unique_values.end());
 }
 
 vector<string> ConstraintDatabase::selectOneColumn(

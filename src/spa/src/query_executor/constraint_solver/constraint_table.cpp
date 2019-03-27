@@ -61,7 +61,7 @@ void ConstraintTable::filterBy(const string& var1_name, const string& var2_name,
 //! Filter an existing table based on an incoming paired-var constraint
 bool ConstraintTable::joinWithSetBy(
     const string& var_to_join, const string& other_var,
-    const unordered_map<string, string>& pair_map) {
+    const unordered_map<string, vector<string>>& pair_map) {
   /*
     Table
 
@@ -74,34 +74,38 @@ bool ConstraintTable::joinWithSetBy(
     a | z
     -----
     1   17
-    4   9
+    1   9
+    4   100
 
-    Remove rows that don't match the column we're supposed to match on
+    Remove rows that don't match the column we're supposed to match on.
+    If there are duplicates - (a = 1) on LHS, (a = 1, a = 1) on RHS,
+    we need to make sure we get both rows
 
   */
   size_t column_to_join_idx = name_column_map[var_to_join];
   bool added_new_col = false;
-  table.erase(std::remove_if(table.begin(), table.end(),
-                             [&](vector<string>& row) {
-                               string& val_join = row[column_to_join_idx];
 
-                               bool must_delete =
-                                   pair_map.find(val_join) == pair_map.end();
+  vector<vector<string>> new_table;
+  for (vector<string> row : table) {
+    // Check if this value is present in the incoming set
+    string& val_join = row[column_to_join_idx];
+    bool must_delete = pair_map.find(val_join) == pair_map.end();
+    if (must_delete) continue;
 
-                               // THIS IS SUPER SKETCHY - modifying row if no
-                               // delete, since this is a reference
-                               // Is this even possible?
-                               // But this removes needs for copying/2x iter
-                               if (!must_delete) {
-                                 row.push_back(pair_map.at(val_join));
-                                 added_new_col = true;
-                               }
+    // If we found the join value in the map, insert all other values
+    auto values_to_append_for_this_key = pair_map.at(val_join);
+    for (auto& value_to_insert : values_to_append_for_this_key) {
+      vector<string> new_row = row;
+      new_row.push_back(value_to_insert);
+      new_table.push_back(new_row);
+    }
+    added_new_col = true;
+  }
 
-                               // Remove if it's not in the incoming
-                               // constraints
-                               return must_delete;
-                             }),
-              table.end());
+  // Replace the current table with the newly computed table
+  // In-place modification is too tedious
+  table = new_table;
+
   // We added a new columns ==> need to update table index mapping
   if (added_new_col) {
     size_t new_col_idx = table[0].size() - 1;

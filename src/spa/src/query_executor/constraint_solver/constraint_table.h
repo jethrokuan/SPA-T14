@@ -53,7 +53,7 @@ class ConstraintTable {
 
   //! Join an existing table and an incoming constraint set on a variable
   bool joinWithSetBy(const string& var_to_join, const string& other_var,
-                     const unordered_map<string, string>& pair_map);
+                     const unordered_map<string, vector<string>>& pair_map);
 
   //! Join an existing table with another table on a variable
   bool joinWithTableBy(const string& var_to_join,

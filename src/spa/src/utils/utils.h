@@ -103,16 +103,28 @@ unorderedSetIntersectionToPairedSet(const std::unordered_set<T> m1,
 
 enum class MapFromPairSetting { MAP_LEFT_TO_RIGHT, MAP_RIGHT_TO_LEFT };
 // Transform a set of pairs into a map of one side to the other
+// Can have a vector as the result since may have duplicate keys
+// (this was a paired hash)
 template <class T>
-std::unordered_map<T, T> getMapFromPairSet(
+std::unordered_map<T, std::vector<T>> getMapFromPairSet(
     const std::unordered_set<std::pair<T, T>, pair_hash>& in_set,
     MapFromPairSetting setting) {
-  std::unordered_map<T, T> out_map;
+  std::unordered_map<T, std::vector<T>> out_map;
   for (const auto& [left, right] : in_set) {
+    std::string key, value;
     if (setting == MapFromPairSetting::MAP_LEFT_TO_RIGHT) {
-      out_map.insert({left, right});
+      key = left;
+      value = right;
     } else {
-      out_map.insert({right, left});
+      key = right;
+      value = left;
+    }
+
+    // Either create new vector for this key, or add to it
+    if (out_map.find(key) == out_map.end()) {
+      out_map.insert({key, {value}});
+    } else {
+      out_map[key].push_back(value);
     }
   }
 

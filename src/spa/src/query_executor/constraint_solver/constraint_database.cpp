@@ -10,7 +10,7 @@
  *
  ***/
 //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
-void ConstraintTable::addVariable(
+void ConstraintTable::initWithSingleVariable(
     const string& var_name, const SingleConstraintSet& constraint_values) {
   // We need to add a column of values
   // Update tracking data structure
@@ -21,7 +21,7 @@ void ConstraintTable::addVariable(
 }
 
 //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
-void ConstraintTable::addPairedVariables(
+void ConstraintTable::initWithPairedVariables(
     const string& var1_name, const string& var2_name,
     const PairedConstraintSet& constraint_values) {
   // We need to add a column of values
@@ -52,7 +52,7 @@ void ConstraintDatabase::addToSingleVariableConstraints(
   // If no table, create one (disjoint, so needs new table)
   if (!matching_table_idx) {
     ConstraintTable table;
-    table.addVariable(var_name, constraint_values);
+    table.initWithSingleVariable(var_name, constraint_values);
     size_t new_table_index = tables.size();
     tables.push_back(table);
     name_table_map.insert({var_name, new_table_index});
@@ -71,7 +71,7 @@ void ConstraintDatabase::addToPairedVariableConstraints(
   // If no table, create one (disjoint, so needs new table)
   if (!matching_table_idx) {
     ConstraintTable table;
-    table.addPairedVariables(var1_name, var2_name, constraint_values);
+    table.initWithPairedVariables(var1_name, var2_name, constraint_values);
     size_t new_table_index = tables.size();
     tables.push_back(table);
     name_table_map.insert({var1_name, new_table_index});

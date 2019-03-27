@@ -34,12 +34,13 @@ class ConstraintTable {
  public:
   //! Get a single column of values from the table based on the column name
   vector<string> getColumnByName(const string& name);
-  //!
-  void addVariable(const std::string& var_name,
-                   const SingleConstraintSet& constraint_values);
-  void addPairedVariables(const std::string& var1_name,
-                          const std::string& var2_name,
-                          const PairedConstraintSet& constraint_values);
+  //! Initializes the table with a single variable's constraints
+  void initWithSingleVariable(const std::string& var_name,
+                              const SingleConstraintSet& constraint_values);
+  //! Initializes the table with a paired variable constraint set
+  void initWithPairedVariables(const std::string& var1_name,
+                               const std::string& var2_name,
+                               const PairedConstraintSet& constraint_values);
   //! Check if this table can be merged with another, else they are disjoint
   //! i.e. they have synonyms in common
   bool canMergeWith(ConstraintTable& constraintTable);

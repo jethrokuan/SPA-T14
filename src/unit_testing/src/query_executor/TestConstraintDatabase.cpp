@@ -79,6 +79,17 @@ TEST_CASE (
   auto db = ConstraintDatabase();
   db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
   db.addToPairedVariableConstraints(
-  "z", "x", {{"100", "1"}, {"200", "2"}, {"777", "777"}});
+      "z", "x", {{"100", "1"}, {"200", "2"}, {"777", "777"}});
+  std::cout << db;
+}
+
+TEST_CASE (
+    "Test Constraint Database join paired variable constraint x 2 (join on "
+    "first var for both) - duplicate values on second paired set") {
+  std::cout << "======> JOINED 1-1: \n";
+  auto db = ConstraintDatabase();
+  db.addToPairedVariableConstraints("x", "y", {{"1", "2"}, {"2", "3"}});
+  db.addToPairedVariableConstraints(
+      "x", "z", {{"1", "100"}, {"2", "700"}, {"2", "500"}, {"777", "777"}});
   std::cout << db;
 }

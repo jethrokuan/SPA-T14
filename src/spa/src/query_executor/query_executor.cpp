@@ -64,7 +64,7 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   addAllSelectedVarsToConstraints(query, db);
 
   // Runs the correct constraint solver method (BOOLEAN vs non-BOOLEAN)
-  return selectFromDB(query->result, db);
+  return selectFromDB(query->declarations, query->result, db);
 }
 
 std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
@@ -183,12 +183,24 @@ bool QueryExecutor::handleWithCond(std::vector<QE::Declaration>* decls,
 }
 
 //! Asks the DB for the result type corresponding to the Select clause
-std::vector<std::string> QueryExecutor::selectFromDB(Result* result,
-                                                     ConstraintDatabase& db) {
+std::vector<std::string> QueryExecutor::selectFromDB(
+    std::vector<QE::Declaration>* decls, Result* result,
+    ConstraintDatabase& db) {
   if (result->T == ResultType::TUPLE) {
     // Get vector of vector of results - one for each selected var
-    return db.selectMultiple(
-        getSynonymsFromSelect(result->selected_declarations));
+    auto results =
+        db.selectMultiple(getSynonymsFromSelect(result->selected_declarations));
+
+    // Get all synattrs mapped to their design entities for later lookup in loop
+    auto synonym_de_map =
+        getSynoynmToDesignEntityTypeMap(decls, result->selected_declarations);
+
+    // Apply the appropriate function over the return result columns
+    // E.g. If c.procName is a columns, do .procName on that col's values
+    applyAttributesToResults(result->selected_declarations, results,
+                             synonym_de_map);
+    // Formats results by adding a space between them
+    return joinResults(results);
   } else if (result->T == ResultType::BOOLEAN) {
     // Check truth/falsity instead of getting a vector of result values
     if (db.selectBoolean()) {

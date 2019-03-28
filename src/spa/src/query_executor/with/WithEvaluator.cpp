@@ -94,10 +94,10 @@ bool WithEvaluator::handleBothArgsSynAttr() {
   PairedConstraintSet equal_values;
   for (const auto& de1 : all_des_1) {
     for (const auto& de2 : all_des_2) {
-      auto de1_applied_attrname = applyAttrToDesignEntityValue(
-          design_entity_type_1, de1, synAttr1.attrName);
-      auto de2_applied_attrname = applyAttrToDesignEntityValue(
-          design_entity_type_2, de2, synAttr2.attrName);
+      auto de1_applied_attrname = QueryExecutor::applyAttrToDesignEntityValue(
+          pkb, design_entity_type_1, de1, synAttr1.attrName);
+      auto de2_applied_attrname = QueryExecutor::applyAttrToDesignEntityValue(
+          pkb, design_entity_type_2, de2, synAttr2.attrName);
       if (de1_applied_attrname == de2_applied_attrname) {
         equal_values.insert({de1, de2});
       }
@@ -144,8 +144,9 @@ bool WithEvaluator::handleQuoteIdentSynAttr(QuoteIdent& quoteIdent,
     std::copy_if(all_des.begin(), all_des.end(),
                  std::inserter(filtered_des, filtered_des.end()),
                  [&, this](const std::string de) {
-                   return this->applyAttrToDesignEntityValue(
-                              design_entity_type, de) == quoteIdent.quote_ident;
+                   return QueryExecutor::applyAttrToDesignEntityValue(
+                              pkb, design_entity_type, de) ==
+                          quoteIdent.quote_ident;
                  });
     return db.addToSingleVariableConstraints(synAttr.synonym.synonym,
                                              filtered_des);
@@ -169,40 +170,4 @@ bool WithEvaluator::handleSynonymSynAttr(Synonym& synonym, SynAttr& synAttr) {
   return db.addToPairedVariableConstraints(
       synonym.synonym, synAttr.synonym.synonym,
       Utils::unorderedSetIntersectionToPairedSet(all_prog_lines, all_des));
-}
-
-std::string WithEvaluator::applyAttrToDesignEntityValue(
-    const DesignEntity& de_type, const std::string& de,
-    const AttrName& attrName) {
-  // Only take this seriously  if we're asking for proc name or var name
-  // Rest are no-ops for sure
-  if (attrName == AttrName::PROC_NAME || attrName == AttrName::VAR_NAME) {
-    return applyAttrToDesignEntityValue(de_type, de);
-  } else {
-    return de;
-  }
-}
-
-std::string WithEvaluator::applyAttrToDesignEntityValue(
-    const DesignEntity& de_type, const std::string& de) {
-  // This function does not check for the attribute name since there is no
-  // ambiguity - should be of type NAME, so only one possibility
-  switch (de_type) {
-    case DesignEntity::CALL:
-      return pkb->getCallProcedureFromLine(de).value();
-    case DesignEntity::READ:
-      return pkb->getReadVariableFromLine(de).value();
-    case DesignEntity::PRINT:
-      return pkb->getPrintVariableFromLine(de).value();
-    case DesignEntity::VARIABLE:
-      // no-op
-      return de;
-    case DesignEntity::PROCEDURE:
-      // no-op
-      return de;
-    default:
-      std::cerr
-          << "Received unexpected design entity type to apply attrName to\n";
-      assert(false);
-  }
 }

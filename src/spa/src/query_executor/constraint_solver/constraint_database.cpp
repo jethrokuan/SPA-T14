@@ -1,5 +1,7 @@
 #include "query_executor/constraint_solver/constraint_database.h"
 #include <algorithm>
+#include <set>
+using std::set;
 
 //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
 bool ConstraintDatabase::addToSingleVariableConstraints(
@@ -204,7 +206,7 @@ vector<string> ConstraintDatabase::selectOneColumn(
   return ctable.getColumnByName(var_to_select);
 }
 
-vector<string> ConstraintDatabase::selectMultiple(
+vector<vector<string>> ConstraintDatabase::selectMultiple(
     const vector<string> vars_to_select) {
   // Go through each table and get a filtered version of each depending on the
   // columns selected inside - try to select all variables
@@ -219,21 +221,21 @@ vector<string> ConstraintDatabase::selectMultiple(
   }
 
   // Get only the variables we want (in order) from final table
-  vector<string> out_values;
+  vector<vector<string>> out_values;
   for (auto& row : existing_table.table) {
-    string out_row_string;
+    vector<string> out_row;
     for (auto& var : vars_to_select) {
       size_t var_idx = existing_table.name_column_map[var];
-      out_row_string += row[var_idx] + " ";
+      out_row.push_back(row[var_idx]);
     }
     // Remove trailing space
-    out_row_string.erase(out_row_string.end() - 1);
-    out_values.push_back(out_row_string);
+    out_values.push_back(out_row);
   }
 
   // Force uniqueness on results
-  unordered_set<string> unique_values(out_values.begin(), out_values.end());
-  auto unique_vec = vector<string>(unique_values.begin(), unique_values.end());
+  set<vector<string>> unique_values(out_values.begin(), out_values.end());
+  auto unique_vec =
+      vector<vector<string>>(unique_values.begin(), unique_values.end());
   std::sort(unique_vec.begin(), unique_vec.end());
   return unique_vec;
 }

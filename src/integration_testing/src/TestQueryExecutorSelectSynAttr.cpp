@@ -45,7 +45,7 @@ TEST_CASE (
   SECTION ("Select print varName") {
     auto querystr = std::string("print pn; Select pn.varName");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"k+"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"k"});
   }
 
   delete pkb;

@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "query_executor/constraint_solver/constraint_database.h"
-#include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/pattern/AssignPatternEvaluator.h"
 #include "query_executor/pattern/IfPatternEvaluator.h"
 #include "query_executor/pattern/WhilePatternEvaluator.h"
@@ -189,7 +188,7 @@ bool QueryExecutor::handleWithCond(std::vector<QE::Declaration>* decls,
   return WithEvaluator(decls, withcond, pkb, db).evaluate();
 }
 
-//! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
+//! Asks the DB for the result type corresponding to the Select clause
 std::vector<std::string> QueryExecutor::selectFromDB(Result* result,
                                                      ConstraintDatabase& db) {
   if (result->T == ResultType::TUPLE) {

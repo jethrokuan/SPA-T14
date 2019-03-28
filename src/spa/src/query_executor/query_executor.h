@@ -7,10 +7,9 @@
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
 #include "query_executor/constraint_solver/constraint_database.h"
-#include "query_executor/constraint_solver/constraint_solver.h"
-#include "query_executor/constraint_solver/query_constraints.h"
 
 using namespace PKB;
+using namespace QE;
 
 //! \brief Clauses can either return constraints or indicate no constraints
 //! bool == true ==> no constraints.
@@ -50,7 +49,7 @@ class QueryExecutor {
   //! Gets the appropriate result to return when the query is evaluted to false
   std::vector<std::string> getNegativeResult(const ResultType& resultType);
 
-  //! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
+  //! Asks the DB for the result type corresponding to the Select clause
   std::vector<std::string> selectFromDB(Result* result, ConstraintDatabase& db);
 
  public:

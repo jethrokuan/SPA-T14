@@ -21,36 +21,36 @@
 #include "query_executor/suchthat/UsesPEvaluator.h"
 #include "query_executor/suchthat/UsesSEvaluator.h"
 #include "query_executor/with/WithEvaluator.h"
+#include "utils/utils.h"
 
 using namespace QE;
 
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   ConstraintDatabase db;
 
-  // Executes each such-that clause one by one
+  std::vector<Clause> clauses;
+
+  // Add all clauses to a vector of them
   if (!query->rel_cond->empty()) {
     for (auto& rel_cond : *(query->rel_cond)) {
-      if (!handleSuchThat(query->declarations, rel_cond, db)) {
-        return getNegativeResult(query->result->T);
-      }
+      clauses.push_back(rel_cond);
     }
   }
-
-  // Executes each pattern clause one by one
   if (!query->patternb->empty()) {
     for (auto& pattern : *(query->patternb)) {
-      if (!handlePattern(query->declarations, pattern, db)) {
-        return getNegativeResult(query->result->T);
-      }
+      clauses.push_back(pattern);
+    }
+  }
+  if (!query->with_cond->empty()) {
+    for (auto& with_cond : *(query->with_cond)) {
+      clauses.push_back(with_cond);
     }
   }
 
-  // Executes each pattern clause one by one
-  if (!query->with_cond->empty()) {
-    for (auto& with_cond : *(query->with_cond)) {
-      if (!handleWithCond(query->declarations, with_cond, db)) {
-        return getNegativeResult(query->result->T);
-      }
+  // Execute each clause on the PKB
+  for (auto clause : clauses) {
+    if (!executeClause(query->declarations, clause, db)) {
+      return getNegativeResult(query->result->T);
     }
   }
 
@@ -67,9 +67,15 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   return selectFromDB(query->declarations, query->result, db);
 }
 
-bool QueryExecutor::handleSuchThat(std::vector<QE::Declaration>* decls,
-                                   QE::RelCond* relCond,
-                                   ConstraintDatabase& db) {
+bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
+                                  Clause clause, ConstraintDatabase& db) {
+  return std::visit([&](auto& cl) { return executeClause(decls, cl, db); },
+                    clause);
+}
+
+bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
+                                  QE::RelCond* relCond,
+                                  ConstraintDatabase& db) {
   switch (relCond->relation) {
     case Relation::FollowsT:
       return FollowsTEvaluator(decls, relCond, pkb, db).evaluate();
@@ -100,7 +106,7 @@ bool QueryExecutor::handleSuchThat(std::vector<QE::Declaration>* decls,
   }
 }
 
-bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
+bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
                                   QE::PatternB* pattern,
                                   ConstraintDatabase& db) {
   auto pattern_syn = pattern->getSynonym();
@@ -119,9 +125,9 @@ bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
   }
 }
 
-bool QueryExecutor::handleWithCond(std::vector<QE::Declaration>* decls,
-                                   QE::WithCond* withcond,
-                                   ConstraintDatabase& db) {
+bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
+                                  QE::WithCond* withcond,
+                                  ConstraintDatabase& db) {
   return WithEvaluator(decls, withcond, pkb, db).evaluate();
 }
 

@@ -18,6 +18,7 @@ set(srcs ${srcs}
 # Query Executor
 set(srcs ${srcs}
   src/query_executor/TestConstraintSolver.cpp
+  src/query_executor/TestConstraintDatabase.cpp
   src/query_executor/TestQueryConstraints.cpp
   src/query_executor/TestQueryExecutor.cpp
   )

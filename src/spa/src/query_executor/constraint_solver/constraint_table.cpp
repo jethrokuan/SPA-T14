@@ -33,7 +33,7 @@ void ConstraintTable::initWithPairedVariables(
 }
 
 //! Filter an existing table based on an incoming single-var constraint
-void ConstraintTable::filterBy(const string& var_name,
+bool ConstraintTable::filterBy(const string& var_name,
                                const SingleConstraintSet& constraint_values) {
   size_t column_idx = name_column_map[var_name];
   table.erase(std::remove_if(table.begin(), table.end(),
@@ -44,10 +44,12 @@ void ConstraintTable::filterBy(const string& var_name,
                                       constraint_values.end();
                              }),
               table.end());
+  // Did we constrain some variables to have no valid values?
+  return table.size() > 0;
 }
 
 //! Filter an existing table based on an incoming paired-var constraint
-void ConstraintTable::filterBy(const string& var1_name, const string& var2_name,
+bool ConstraintTable::filterBy(const string& var1_name, const string& var2_name,
                                const PairedConstraintSet& constraint_values) {
   size_t column1_idx = name_column_map[var1_name];
   size_t column2_idx = name_column_map[var2_name];
@@ -61,6 +63,8 @@ void ConstraintTable::filterBy(const string& var1_name, const string& var2_name,
                                       constraint_values.end();
                              }),
               table.end());
+  // Did we constrain some variables to have no valid values?
+  return table.size() > 0;
 }
 
 //! Filter an existing table based on an incoming paired-var constraint

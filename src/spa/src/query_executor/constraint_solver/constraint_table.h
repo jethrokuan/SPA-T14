@@ -48,10 +48,10 @@ class ConstraintTable {
 
   //! var_name is a column in this table. Filter the table by these constraint
   //! values (i.e. remove rows that don't match on var_name)
-  void filterBy(const string& var_name,
+  bool filterBy(const string& var_name,
                 const SingleConstraintSet& constraint_values);
   //! Filter by both var1_name and var2_name columns
-  void filterBy(const string& var1_name, const string& var2_name,
+  bool filterBy(const string& var1_name, const string& var2_name,
                 const PairedConstraintSet& constraint_values);
 
   //! Join an existing table and an incoming constraint set on a variable

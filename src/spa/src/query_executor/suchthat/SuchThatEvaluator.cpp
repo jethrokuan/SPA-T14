@@ -74,6 +74,7 @@ bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
   //    qc.containsNoAllowedResults(results, argLeftAsSynonym->synonym)) {
   //  return false;
   // }
+  if (results.empty()) return false;
   db.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
   return true;
 }
@@ -86,6 +87,7 @@ bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
   //    qc.containsNoAllowedResults(results, argRightAsSynonym->synonym)) {
   //  return false;
   // }
+  if (results.empty()) return false;
   db.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
   return true;
 }

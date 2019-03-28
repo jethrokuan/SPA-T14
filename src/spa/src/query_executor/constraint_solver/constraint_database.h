@@ -56,13 +56,13 @@ class ConstraintDatabase {
                       const PairedConstraintSet& constraint_values);
 
   //! Essentially Hash-Join where the incoming hashmap is easy to compute
-  void doTableSetJoin(const size_t table_idx, const std::string& var1_name,
+  bool doTableSetJoin(const size_t table_idx, const std::string& var1_name,
                       const std::string& var2_name,
                       const PairedConstraintSet& constraint_values,
                       bool join_on_var1);
 
   //! Hash-Join algorithm to join two tables along a key
-  void doTableTableJoin(const size_t table1_idx, const size_t table2_idx,
+  bool doTableTableJoin(const size_t table1_idx, const size_t table2_idx,
                         const string& var_to_join);
 
   void removeTableFromDatabase(size_t table_idx);
@@ -76,12 +76,15 @@ class ConstraintDatabase {
   vector<string> selectOneColumn(const std::string var_to_select);
 
  public:
-  //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
-  void addToSingleVariableConstraints(
+  //! \brief Add the constraints for a single variable, e.g. a = {2, 3, 4}
+  //! Return false if any variables were constrained to have no valid values
+  bool addToSingleVariableConstraints(
       const std::string& var_name,
       const SingleConstraintSet& constraint_values);
-  //! Add paired constraints for 2 vars, e.g. (a, v) = {(2, 3), (3, 4), (1, 2)}
-  void addToPairedVariableConstraints(
+  //! /brief Add paired constraints for 2 vars, e.g. (a, v) = {(2, 3), (3, 4),
+  //! (1, 2)} Return false if any variables were constrained to have no valid
+  //! values.
+  bool addToPairedVariableConstraints(
       const std::string& var1_name, const std::string& var2_name,
       const PairedConstraintSet& constraint_values);
 

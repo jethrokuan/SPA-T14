@@ -14,8 +14,8 @@ using namespace QE;
 class ParentTEvaluator : public SuchThatEvaluator {
  public:
   ParentTEvaluator(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
-                   PKBManager* pkb, QueryConstraints& qc)
-      : SuchThatEvaluator(decls, relCond, pkb, qc){};
+                   PKBManager* pkb, ConstraintDatabase& db)
+      : SuchThatEvaluator(decls, relCond, pkb, db){};
 
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {

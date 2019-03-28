@@ -92,6 +92,10 @@ class ConstraintDatabase {
   //! Returns all columns containing the variables of interests in order
   vector<string> selectMultiple(const vector<string> vars_to_select);
 
+  inline bool hasVariable(const std::string& var_name) {
+    return name_table_map.find(var_name) != name_table_map.end();
+  }
+
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintDatabase const& db) {
     os << "------------------------------------------------------------\n"s;

@@ -15,7 +15,7 @@ class PatternEvaluator {
   std::vector<QE::Declaration>* declarations;
   QE::PatternB* pattern;
   PKBManager* pkb;
-  QueryConstraints& qc;
+  ConstraintDatabase& db;
 
   // Directly accessed values
   std::string synonym;
@@ -83,11 +83,11 @@ class PatternEvaluator {
 
  public:
   PatternEvaluator(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
-                   PKBManager* pkb, QueryConstraints& qc)
+                   PKBManager* pkb, ConstraintDatabase& db)
       : declarations(decls),
         pattern(pattern),
         pkb(pkb),
-        qc(qc),
+        db(db),
         synonym(pattern->getSynonym().synonym),
         pattern_lhs(pattern->getFirstArg()),
         pattern_rhs(pattern->getSecondArg()){};

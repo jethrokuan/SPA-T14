@@ -9,7 +9,7 @@
 bool PatternEvaluator::evaluate() {
   // Add entire set of values for the pattern synoynm
   QueryExecutor::addAllValuesForVariableToConstraints(declarations, pkb,
-                                                      synonym, qc);
+                                                      synonym, db);
 
   // Compute all derived expression w.r.t pattern arguments
 
@@ -84,7 +84,7 @@ bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSUnderscore() {
   auto all_assigns = handlePatternLHSUnderscoreRHSUnderscore().value_or(
       std::unordered_set<std::string>());
   if (all_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, all_assigns);
+  db.addToSingleVariableConstraints(synonym, all_assigns);
   return true;
 }
 bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSUnderscore() {
@@ -92,7 +92,7 @@ bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSUnderscore() {
   auto allowed_lines = handlePatternLHSQuoteIdentRHSUnderscore().value_or(
       std::unordered_set<std::string>());
   if (allowed_lines.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, allowed_lines);
+  db.addToSingleVariableConstraints(synonym, allowed_lines);
   return true;
 }
 bool PatternEvaluator::dispatchPatternLHSSynonymRHSUnderscore() {
@@ -100,7 +100,7 @@ bool PatternEvaluator::dispatchPatternLHSSynonymRHSUnderscore() {
   auto allowed_values = handlePatternLHSSynonymRHSUnderscore();
   if (allowed_values.empty()) return false;  // Empty clause
   PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
-  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
+  db.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
   return true;
 }
 
@@ -110,7 +110,7 @@ bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSPartialMatch() {
   matching_assigns = handlePatternLHSUnderscoreRHSPartialMatch().value_or(
       std::unordered_set<std::string>());
   if (matching_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, matching_assigns);
+  db.addToSingleVariableConstraints(synonym, matching_assigns);
   return true;
 }
 bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSPartialMatch() {
@@ -120,7 +120,7 @@ bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSPartialMatch() {
       SingleConstraintSet());
 
   if (matching_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, matching_assigns);
+  db.addToSingleVariableConstraints(synonym, matching_assigns);
   return true;
 }
 bool PatternEvaluator::dispatchPatternLHSSynonymRHSPartialMatch() {
@@ -131,7 +131,7 @@ bool PatternEvaluator::dispatchPatternLHSSynonymRHSPartialMatch() {
       handlePatternLHSSynonymRHSPartialMatch().value_or(PairedConstraintSet());
   if (allowed_values.empty()) return false;  // Empty clause
   PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
-  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
+  db.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
   return true;
 }
 
@@ -142,7 +142,7 @@ bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSCompleteMatch() {
       std::unordered_set<std::string>());
 
   if (matching_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, matching_assigns);
+  db.addToSingleVariableConstraints(synonym, matching_assigns);
   return true;
 }
 bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSCompleteMatch() {
@@ -152,7 +152,7 @@ bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSCompleteMatch() {
       SingleConstraintSet());
 
   if (matching_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, matching_assigns);
+  db.addToSingleVariableConstraints(synonym, matching_assigns);
   return true;
 }
 bool PatternEvaluator::dispatchPatternLHSSynonymRHSCompleteMatch() {
@@ -163,7 +163,7 @@ bool PatternEvaluator::dispatchPatternLHSSynonymRHSCompleteMatch() {
 
   if (allowed_values.empty()) return false;  // Empty clause
   PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
-  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
+  db.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
   return true;
 }
 
@@ -172,7 +172,7 @@ bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSNull() {
   auto all_assigns = handlePatternLHSUnderscoreRHSNull().value_or(
       std::unordered_set<std::string>());
   if (all_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, all_assigns);
+  db.addToSingleVariableConstraints(synonym, all_assigns);
   return true;
 }
 bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSNull() {
@@ -180,7 +180,7 @@ bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSNull() {
   auto allowed_lines = handlePatternLHSQuoteIdentRHSNull().value_or(
       std::unordered_set<std::string>());
   if (allowed_lines.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, allowed_lines);
+  db.addToSingleVariableConstraints(synonym, allowed_lines);
   return true;
 }
 bool PatternEvaluator::dispatchPatternLHSSynonymRHSNull() {
@@ -191,6 +191,6 @@ bool PatternEvaluator::dispatchPatternLHSSynonymRHSNull() {
 
   if (allowed_values.empty()) return false;  // Empty clause
   PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
-  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
+  db.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
   return true;
 }

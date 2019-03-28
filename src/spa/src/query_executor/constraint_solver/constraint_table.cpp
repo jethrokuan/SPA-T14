@@ -149,9 +149,11 @@ bool ConstraintTable::joinWithTableBy(const string& var_to_join,
   size_t other_table_join_var_idx = other_table.name_column_map.at(var_to_join);
 
   for (auto row : other_table.table) {
+    // Search for the incoming join val in the existing table
     auto join_val_other_table = row[other_table_join_var_idx];
     if (col_hash.find(join_val_other_table) == col_hash.end()) continue;
-    // Found it - "cross product" this row with the rows in original table
+
+    // Found it - "cross product" incoming row with the rows in original table
     row.erase(row.begin() + other_table_join_var_idx);  // remove join col
     auto matching_row_idxs = col_hash[join_val_other_table];
     for (auto row_idx : matching_row_idxs) {
@@ -161,10 +163,14 @@ bool ConstraintTable::joinWithTableBy(const string& var_to_join,
     }
   }
 
+  // ** Important -> table is REPLACED with the one with just constructed
+  table = out_table;
+
   // Update column names from joined table
   for (auto [name, idx] : other_table.name_column_map) {
     if (name != var_to_join) addNewColumnName(name);
   }
+
   // If size is 0 - no results
   return table.size() > 0;
 }

@@ -55,8 +55,7 @@ void ConstraintDatabase::addToPairedVariableConstraints(
         // second variable
         size_t table1_idx = matching_table_iterators->first->second;
         size_t table2_idx = matching_table_iterators->second->second;
-        assert(false);
-        // doTableTableJoin(table1_idx, table2_idx, var2_name);
+        doTableTableJoin(table1_idx, table2_idx, var2_name);
       }
     }
   }
@@ -137,7 +136,6 @@ void ConstraintDatabase::doTableTableJoin(const size_t table1_idx,
                                           const string& var_to_join) {
   auto& table1 = tables[table1_idx];
   auto& table2 = tables[table2_idx];
-
   // Check which table is smaller
   if (table1.size() < table2.size()) {
     table1.joinWithTableBy(var_to_join, table2);
@@ -150,29 +148,23 @@ void ConstraintDatabase::doTableTableJoin(const size_t table1_idx,
 
 void ConstraintDatabase::addVariableToTableMap(const string var_name,
                                                size_t table_idx) {
-  auto insert_result = name_table_map.insert({var_name, table_idx});
-  auto successful_insert = insert_result.second;
-  if (!successful_insert) {
-    if (tempMapping != std::nullopt) {
-      std::cerr << "Potentially > 2 keys with the same name!";
-      std::cerr << this;
-      assert(false);
-    }
-    tempMapping = {var_name, table_idx};
-  }
+  // This can fail (returned iterator is a pair, second value is success value)
+  // during hash-join, since in the middle we have two tables with the same col
+  // name. This will be resolved when after merging, one of the tables is
+  // removed.
+  name_table_map.insert({var_name, table_idx});
 }
 
 void ConstraintDatabase::removeTableFromDatabase(size_t table_idx) {
-  // Remove all variables that are associated with this table
-  ConstraintTable& ctable = tables[table_idx];
-  for (const auto& [var_name, idx] : ctable.name_column_map) {
-    name_table_map.erase(var_name);
-  }
+  // Remove old table
+  tables.erase(tables.begin() + table_idx);
 
-  // Insert the temp mapping that might have been stored during merging
-  if (tempMapping) {
-    addVariableToTableMap(tempMapping->first, tempMapping->second);
-    tempMapping = std::nullopt;
+  // Refresh var -> table mapping
+  name_table_map.clear();
+  for (int i = 0; i < tables.size(); i++) {
+    for (auto [var_name, col_idx] : tables[i].name_column_map) {
+      name_table_map.insert({var_name, i});
+    }
   }
 }
 

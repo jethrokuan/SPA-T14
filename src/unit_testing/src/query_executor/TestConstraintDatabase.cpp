@@ -194,3 +194,15 @@ TEST_CASE (
       db.selectMultiple({"x", "y", "z"}) ==
       std::vector<std::string>{"1 2 100", "2 3 700", "1 500 100", "2 3 500"});
 }
+
+TEST_CASE ("Test 2x join with table-table join") {
+  auto db = ConstraintDatabase();
+  db.addToSingleVariableConstraints("x", {"1"});
+  db.addToSingleVariableConstraints("y", {"2"});
+  db.addToPairedVariableConstraints("x", "y",
+                                    {{"1", "2"}, {"1", "500"}, {"2", "3"}});
+
+  REQUIRE(db.selectOne("x") == std::vector<std::string>{"1"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2"});
+  REQUIRE(db.selectMultiple({"x", "y"}) == std::vector<std::string>{"1 2"});
+}

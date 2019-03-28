@@ -23,7 +23,6 @@ class PKBStorage {
   // helper
   Line getCurLineNumber();
   void incrementCurLineNumber();
-  std::unordered_map<Line, Procedure> line_procedure_map;
   void addToSetMap(
       std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
       const std::string index, std::string data);
@@ -38,6 +37,7 @@ class PKBStorage {
   ~PKBStorage();
   // attributes
   AST ast;
+  std::unordered_map<Line, Procedure> line_procedure_map;
   // CFG
   std::unordered_map<std::string, std::unordered_set<std::string>>
       line_previous_line_next_map;  // adjacency list
@@ -47,6 +47,7 @@ class PKBStorage {
   // calls
   std::unordered_set<std::pair<Line, Procedure>, pair_hash>
       line_calls_procedure_set;
+  std::unordered_map<Line, Procedure> line_calls_procedure_map;
   std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
       procedure_calls_procedure_set;
   std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
@@ -110,7 +111,9 @@ class PKBStorage {
   std::unordered_set<Line> assign_set;
   std::unordered_set<Line> statement_set;
   std::unordered_set<Line> print_set;
+  std::unordered_map<Line, Variable> line_print_var_map;
   std::unordered_set<Line> read_set;
+  std::unordered_map<Line, Variable> line_read_var_map;
   std::unordered_set<Line> while_set;
   std::unordered_set<Line> if_set;
   std::unordered_set<Constant> constant_set;
@@ -173,8 +176,8 @@ class PKBStorage {
   void storeVariable(const Variable);
   void storeAssign(const Line);
   void storeStatement(const Line);
-  void storePrint(const Line);
-  void storeRead(const Line);
+  void storePrint(const Line, const Variable);
+  void storeRead(const Line, const Variable);
   void storeWhile(const Line);
   void storeIf(const Line);
   void storeConstant(const Constant);

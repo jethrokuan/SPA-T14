@@ -1,0 +1,120 @@
+1 - invalid query (missing Calls arguments)
+stmt s;
+Select s such that Calls*(s, _)
+none
+5000
+2 - invalid query (missing Calls arguments)
+read r;
+Select r such that Calls*(r, _)
+none
+5000
+3 - invalid query (missing Calls arguments)
+print p;
+Select p such that Calls*(p, _)
+none
+5000
+4 - invalid query (missing Calls arguments)
+while w;
+Select w such that Calls*(w, _)
+none
+5000
+5 - invalid query (missing Calls arguments)
+if ifs;
+Select ifs such that Calls*(ifs, _)
+none
+5000
+6 - invalid query (missing Calls arguments)
+assign a;
+Select a such that Calls*(a, _)
+none
+5000
+7 - invalid query (missing Calls arguments)
+variable v;
+Select v such that Calls*(v, _)
+none
+5000
+8 - invalid query (missing Calls arguments)
+constant c;
+Select c such that Calls*(c, _)
+none
+5000
+9 - invalid query (missing Calls arguments)
+call c;
+Select c such that Calls*(c, _)
+none
+5000
+10 - invalid query (missing Calls arguments)
+prog_line p;
+Select p such that Calls*(p, _)
+none
+5000
+11 - invalid query (missing Calls arguments)
+stmt s;
+Select s such that Calls*(2, _)
+none
+5000
+12 - invalid query (missing Calls arguments)
+stmt s;
+Select s such that Calls*(_, s)
+none
+5000
+13 - invalid query (missing Calls arguments)
+read r;
+Select r such that Calls*(_, r)
+none
+5000
+14 - invalid query (missing Calls arguments)
+print p;
+Select p such that Calls*(_, p)
+none
+5000
+15 - invalid query (missing Calls arguments)
+while w;
+Select w such that Calls*(_, w)
+none
+5000
+16 - invalid query (missing Calls arguments)
+if ifs;
+Select ifs such that Calls*(_, ifs)
+none
+5000
+17 - invalid query (missing Calls arguments)
+assign a;
+Select a such that Calls*(_, a)
+none
+5000
+18 - invalid query (missing Calls arguments)
+variable v;
+Select v such that Calls*(_, v)
+none
+5000
+19 - invalid query (missing Calls arguments)
+constant c;
+Select c such that Calls*(_, c)
+none
+5000
+20 - invalid query (missing Calls arguments)
+call c;
+Select c such that Calls*(_, c)
+none
+5000
+21 - invalid query (missing Calls arguments)
+prog_line p;
+Select p such that Calls*(_, p)
+none
+5000
+22 - invalid query (missing Calls arguments)
+stmt s;
+Select s such that Calls*(_, 5)
+none
+5000
+23 - invalid query (too many arguments)
+stmt s;
+Select s such that Calls*(_, _, _)
+none
+5000
+24 - invalid query (arguments non existent)
+stmt s;
+Select s such that Calls*(16, _)
+none
+5000

@@ -1,0 +1,34 @@
+procedure a {
+    call b;
+    read e;
+    print r;
+    call c;
+}
+
+procedure b {
+    if (t == 10) then {
+        call procedure;
+        print t;
+    } else {
+        call c;
+        read y;
+    }
+    read h;
+    print n;
+}
+
+procedure c {
+    cm2 = cu2 + cu3;
+    while(o == 1) {
+        k = o + 1;
+    }
+}
+
+procedure procedure {
+    read procedure;
+}
+
+procedure procName {
+    call procedure;
+    print procName;
+}

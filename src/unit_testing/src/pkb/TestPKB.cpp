@@ -2796,15 +2796,6 @@ TEST_CASE ("Test PKB for if_while_multiple_control_variable.txt") {
 }
 
 TEST_CASE ("Test detection of semantic errors in AST") {
-  SECTION ("procedure and variable with the same name") {
-    auto ast = SimpleInterface::getAstFromFile(
-        "tests/semantic_errors/proc_variable_same_name.txt");
-
-    REQUIRE_THROWS_WITH(
-        PKB::PKBManager(ast),
-        "Found procedure and variable with the same name: 'main'.");
-  }
-
   SECTION ("recursive procedure call") {
     auto ast =
         SimpleInterface::getAstFromFile("tests/semantic_errors/recursive.txt");

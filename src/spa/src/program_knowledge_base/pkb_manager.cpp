@@ -26,6 +26,14 @@ std::optional<std::unordered_set<std::string>> PKBManager::getSetFromMap(
                    umap.at(key));
 }
 
+std::optional<std::string> PKBManager::getElemFromMap(
+    const std::unordered_map<std::string, std::string> &umap,
+    const std::string key) {
+  return (umap.find(key) == umap.end())
+             ? std::nullopt
+             : std::make_optional<std::string>(umap.at(key));
+}
+
 // is design entity set empty
 bool PKBManager::isVariableSetEmpty() { return pkb_storage->var_set.empty(); }
 
@@ -593,6 +601,37 @@ bool PKBManager::isWhilePatternExists(const Line line, const Variable var) {
 std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(
     const Variable var) {
   return getSetFromMap(pkb_storage->assign_pattern_var_line_map, var);
+}
+
+std::optional<Procedure> PKBManager::getProcedureFromLine(const Line line) {
+  if (isStatementExists(line)) {
+    return getElemFromMap(pkb_storage->line_procedure_map, line);
+  } else {
+    return std::nullopt;
+  }
+}
+
+std::optional<Procedure> PKBManager::getCallProcedureFromLine(const Line line) {
+  if (isCallExists(line)) {
+    return getElemFromMap(pkb_storage->line_calls_procedure_map, line);
+  } else {
+    return std::nullopt;
+  }
+}
+
+std::optional<Variable> PKBManager::getReadVariableFromLine(const Line line) {
+  if (isReadExists(line)) {
+    return getElemFromMap(pkb_storage->line_read_var_map, line);
+  } else {
+    return std::nullopt;
+  }
+}
+std::optional<Variable> PKBManager::getPrintVariableFromLine(const Line line) {
+  if (isPrintExists(line)) {
+    return getElemFromMap(pkb_storage->line_print_var_map, line);
+  } else {
+    return std::nullopt;
+  }
 }
 
 bool PKBManager::isLineNextLine(const PreviousLine previous_line,

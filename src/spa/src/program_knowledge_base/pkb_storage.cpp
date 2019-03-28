@@ -138,23 +138,21 @@ void PKBStorage::storeLineModifiesVarRelation(const Line line,
   addToSetMap(var_modified_by_line_map, line, var);
 }
 
-void PKBStorage::storeVariable(const Variable var) {
-  if (procedure_set.find(var) != procedure_set.end()) {
-    // Throw an error if there's a procedure with the same name as
-    // the variable
-    throw PkbAstSemanticException(
-        "Found procedure and variable with the same name: '" + var + "'.");
-  }
-  var_set.insert(var);
-}
+void PKBStorage::storeVariable(const Variable var) { var_set.insert(var); }
 
 void PKBStorage::storeAssign(const Line line) { assign_set.insert(line); }
 
 void PKBStorage::storeStatement(const Line line) { statement_set.insert(line); }
 
-void PKBStorage::storePrint(const Line line) { print_set.insert(line); }
+void PKBStorage::storePrint(const Line line, const Variable var) {
+  print_set.insert(line);
+  line_print_var_map[line] = var;
+}
 
-void PKBStorage::storeRead(const Line line) { read_set.insert(line); }
+void PKBStorage::storeRead(const Line line, const Variable var) {
+  read_set.insert(line);
+  line_read_var_map[line] = var;
+}
 
 void PKBStorage::storeWhile(const Line line) { while_set.insert(line); }
 
@@ -163,17 +161,12 @@ void PKBStorage::storeIf(const Line line) { if_set.insert(line); }
 void PKBStorage::storeConstant(const Constant num) { constant_set.insert(num); }
 
 void PKBStorage::storeProcedure(const Procedure proc) {
-  if (var_set.find(proc) != var_set.end()) {
-    // Throw an error if there's a procedure with the same name as
-    // the variable
-    throw PkbAstSemanticException(
-        "Found procedure and variable with the same name: '" + proc + "'.");
-  } else if (procedure_set.find(proc) != procedure_set.end()) {
+  if (procedure_set.find(proc) != procedure_set.end()) {
     throw PkbAstSemanticException(
         "Found multiple procedures with the same name: '" + proc + "'.");
-  } else {
-    procedure_set.insert(proc);
   }
+
+  procedure_set.insert(proc);
 }
 
 void PKBStorage::storeCall(const Line line, const Procedure proc) {
@@ -184,6 +177,7 @@ void PKBStorage::storeCall(const Line line, const Procedure proc) {
   } else {
     call_set.insert(line);
     line_calls_procedure_set.insert(std::pair<Line, Procedure>(line, proc));
+    line_calls_procedure_map[line] = proc;
   }
 }
 

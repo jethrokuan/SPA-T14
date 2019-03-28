@@ -1,0 +1,50 @@
+1 - invalid query (missing arguments)
+variable v;
+Select v such that Next*(v, _)
+none
+5000
+2 - invalid query (missing arguments)
+variable v;
+Select v such that Next*(_, v)
+none
+5000
+3 - invalid query (missing arguments)
+procedure p;
+Select p such that Next*(p, _)
+none
+5000
+4 - invalid query (missing arguments)
+procedure p;
+Select p such that Next*(_, p)
+none
+5000
+5 - invalid query (missing arguments)
+constant c;
+Select c such that Next*(c, _)
+none
+5000
+6 - invalid query (missing arguments)
+constant c;
+Select c such that Next*(_, c)
+none
+5000
+7 - invalid query (missing arguments)
+assign a;
+Select a such that Next*("a", _)
+none
+5000
+8 - invalid query (missing arguments)
+assign a;
+Select a such that Next*(_, "a")
+none
+5000
+9 - invalid query (too many arguments)
+assign a;
+Select a such that Next*(1, 2, 3)
+none
+5000
+10 - invalid query (arguments non existent)
+assign a;
+Select a such that Next*(16, 17)
+none
+5000

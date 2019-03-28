@@ -42,11 +42,16 @@ set(srcs ${srcs}
   src/query_executor/pattern/PatternEvaluator.cpp
   src/query_executor/constraint_solver/constraint_solver.cpp
   src/query_executor/constraint_solver/query_constraints.cpp
+  src/query_executor/constraint_solver/constraint_database.cpp
+  src/query_executor/constraint_solver/constraint_table.cpp
+  src/query_executor/with/WithEvaluator.cpp
   )
 set(headers ${headers}
   src/query_executor/query_executor.h
   src/query_executor/constraint_solver/constraint_solver.h
   src/query_executor/constraint_solver/query_constraints.h
+  src/query_executor/constraint_solver/constraint_database.h
+  src/query_executor/constraint_solver/constraint_table.h
   src/query_executor/suchthat/SuchThatEvaluator.h
   src/query_executor/suchthat/FollowsTEvaluator.h
   src/query_executor/suchthat/ParentTEvaluator.h
@@ -55,12 +60,14 @@ set(headers ${headers}
   src/query_executor/suchthat/FollowsEvaluator.h
   src/query_executor/suchthat/ParentEvaluator.h
   src/query_executor/pattern/PatternEvaluator.h
+  src/query_executor/pattern/AssignPatternEvaluator.h
   src/query_executor/suchthat/NextEvaluator.h
   src/query_executor/suchthat/NextTEvaluator.h
   src/query_executor/suchthat/CallsEvaluator.h
   src/query_executor/suchthat/CallsTEvaluator.h
   src/query_executor/suchthat/ModifiesPEvaluator.h
   src/query_executor/suchthat/UsesPEvaluator.h
+  src/query_executor/with/WithEvaluator.h
   )
 
 # PQL Query Builder files
@@ -75,6 +82,7 @@ set(srcs ${srcs}
   src/query_builder/pql/relation.cpp
   src/query_builder/pql/synonym.cpp
   src/query_builder/pql/attrref.cpp
+  src/query_builder/pql/withcond.cpp
   )
 set(headers ${headers}
   src/query_builder/query_builder.h

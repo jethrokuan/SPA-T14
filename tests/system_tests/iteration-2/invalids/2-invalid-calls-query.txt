@@ -1,0 +1,75 @@
+1 - invalid query (independent synonym, entRef1 = _, entRef2 = p.procName, p.procName does not exist)
+print p;
+Select p.stmt# such that Calls(_, "e")
+none
+5000
+2 - invalid query (independent synonym, entRef1 = _, entRef2 = p.procName, p.procName is not called)
+prog_line p;
+Select p such that Calls(_, "B")
+none
+5000
+3 - invalid query (independent synonym, entRef1 = p, entRef2 = p.procName, p.procName does not exist)
+if ifs; procedure p;
+Select ifs such that Calls(p, "_")
+none
+5000
+4 - invalid query (independent synonym, entRef1 = p, entRef2 = p.procName, p.procName is not called)
+procedure p;
+Select BOOLEAN such that Calls(p, "procName")
+FALSE
+5000
+5 - invalid query (independent synonym, entRef1 = p.proc_name, entRef2 = _, p.procName does not exist)
+call c;
+Select c such that Calls("g", _)
+none
+5000
+6 - invalid query (independent synonym, entRef1 = p.proc_name, entRef2 = _, p.procName does not call)
+call c;
+Select c such that Calls("procedure", _)
+none
+5000
+7 - invalid query (independent synonym, entRef1 = p.proc_name, entRef2 = p, p.procName does not exist)
+constant c; procedure p;
+Select c such that Calls("proc", p)
+none
+5000
+8 - invalid query (independent synonym, entRef1 = p.proc_name, entRef2 = p, p.procName does not call)
+constant c; procedure p;
+Select c.value such that Calls("B", p)
+none
+5000
+9 - invalid query (independent synonym, entRef1 = p.proc_name, entRef2 = p.procName, entRef are the same)
+procedure p;
+Select p such that Calls("a", "a")
+none
+5000
+10 - invalid query (independent synonym, entRef1 = p.proc_name, entRef2 = p.procName, entRef1 does not call entRef2)
+procedure p;
+Select p such that Calls("b", "d")
+none
+5000
+11 - invalid query (dependent synonym, entRef1 = p, entRef2 = p, entRef are the same)
+procedure p;
+Select p such that Calls(p, p)
+none
+5000
+12 - invalid query (dependent synonym, entRef1 = p, entRef2 = p.procName, p.procName does not exist)
+procedure p;
+Select p such that Calls(p, "prcName")
+none
+5000
+13 - invalid query (dependent synonym, entRef1 = p, entRef2 = p.procName, p.procName is not called)
+if ifs; procedure p;
+Select p such that Calls(p, "B")
+none
+5000
+14 - invalid query (independent synonym, entRef1 = p.proc_name, entRef2 = p, p.procName does not exist)
+procedure p;
+Select p such that Calls("BOOLEAN", p)
+none
+5000
+15 - invalid query (independent synonym, entRef1 = p.proc_name, entRef2 = p, p.procName does not call)
+procedure p;
+Select p such that Calls("d", p)
+none
+5000

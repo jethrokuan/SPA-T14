@@ -21,6 +21,8 @@ class PKBManager {
   std::optional<std::unordered_set<std::string>> getSetFromMap(
       const std::unordered_map<std::string, std::unordered_set<std::string>> &,
       const std::string);
+  std::optional<std::string> getElemFromMap(
+      const std::unordered_map<std::string, std::string> &, const std::string);
 
   bool isLineNextLineTH(const Line, const Line,
                         std::shared_ptr<std::unordered_set<Line>>);
@@ -175,6 +177,10 @@ class PKBManager {
 
   // misc helpers
   std::optional<std::unordered_set<Line>> getLineForAssignVar(const Variable);
+  std::optional<Procedure> getProcedureFromLine(const Line);
+  std::optional<Procedure> getCallProcedureFromLine(const Line);
+  std::optional<Variable> getReadVariableFromLine(const Line);
+  std::optional<Variable> getPrintVariableFromLine(const Line);
 };
 
 }  // namespace PKB

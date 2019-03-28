@@ -21,9 +21,6 @@ class QueryExecutor {
  private:
   PKBManager* pkb;
 
-  //! Internal call to make the PQL query that returns unsorted results
-  std::vector<std::string> makeQueryUnsorted(QE::Query* query);
-
   //! Evaluates any SuchThat clause
   bool handleSuchThat(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
                       ConstraintDatabase& db);

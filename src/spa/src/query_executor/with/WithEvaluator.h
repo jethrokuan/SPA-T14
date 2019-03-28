@@ -13,7 +13,6 @@ using namespace QE;
 class WithEvaluator {
  private:
   std::vector<QE::Declaration>* declarations;
-  QE::WithCond* withCond;
   PKBManager* pkb;
   ConstraintDatabase& db;
 
@@ -54,7 +53,6 @@ class WithEvaluator {
   WithEvaluator(std::vector<QE::Declaration>* decls, QE::WithCond* withCond,
                 PKBManager* pkb, ConstraintDatabase& db)
       : declarations(decls),
-        withCond(withCond),
         pkb(pkb),
         db(db),
         argLeft(withCond->ref1),

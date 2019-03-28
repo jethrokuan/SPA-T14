@@ -1,4 +1,5 @@
 #include "query_executor/constraint_solver/constraint_database.h"
+#include <algorithm>
 
 //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
 bool ConstraintDatabase::addToSingleVariableConstraints(
@@ -191,7 +192,9 @@ vector<string> ConstraintDatabase::selectOne(const std::string var_to_select) {
   // Unique-ify the column and return only unique results
   auto one_column = selectOneColumn(var_to_select);
   unordered_set<string> unique_values(one_column.begin(), one_column.end());
-  return vector<string>(unique_values.begin(), unique_values.end());
+  auto unique_vec = vector<string>(unique_values.begin(), unique_values.end());
+  std::sort(unique_vec.begin(), unique_vec.end());
+  return unique_vec;
 }
 
 vector<string> ConstraintDatabase::selectOneColumn(
@@ -230,5 +233,7 @@ vector<string> ConstraintDatabase::selectMultiple(
 
   // Force uniqueness on results
   unordered_set<string> unique_values(out_values.begin(), out_values.end());
-  return vector<string>(unique_values.begin(), unique_values.end());
+  auto unique_vec = vector<string>(unique_values.begin(), unique_values.end());
+  std::sort(unique_vec.begin(), unique_vec.end());
+  return unique_vec;
 }

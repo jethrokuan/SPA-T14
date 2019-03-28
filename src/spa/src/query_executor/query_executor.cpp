@@ -25,12 +25,6 @@
 using namespace QE;
 
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
-  auto result = makeQueryUnsorted(query);
-  std::sort(result.begin(), result.end());
-  return result;
-}
-
-std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   ConstraintDatabase db;
 
   // Executes each such-that clause one by one

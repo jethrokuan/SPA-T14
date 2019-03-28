@@ -72,7 +72,7 @@ TEST_CASE ("Test PKB for assign.txt") {
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   // next
-  auto next_test_1 = pkb.isLineNextLineSetEmpty();
+  auto next_test_1 = pkb.isLineNextLineMapEmpty();
   REQUIRE(next_test_1 == true);
 
   // calls
@@ -1348,11 +1348,9 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     auto next_test_8 = pkb.getNextLine("8");
     REQUIRE(*next_test_8 == next_test_8_check);
 
-    std::unordered_set<std::string> next_test_9_check;
     auto next_test_9 = pkb.getNextLine("9");
     REQUIRE(next_test_9 == std::nullopt);
 
-    std::unordered_set<std::string> next_test_10_check;
     auto next_test_10 = pkb.getPreviousLine("1");
     REQUIRE(next_test_10 == std::nullopt);
 
@@ -1481,11 +1479,9 @@ TEST_CASE ("Test deep nesting for parent*, uses, modifies") {
     auto next_test_26 = pkb.getNextLineT("8");
     REQUIRE(*next_test_26 == next_test_26_check);
 
-    std::unordered_set<std::string> next_test_27_check;
     auto next_test_27 = pkb.getNextLineT("9");
     REQUIRE(next_test_27 == std::nullopt);
 
-    std::unordered_set<std::string> next_test_28_check;
     auto next_test_28 = pkb.getPreviousLineT("1");
     REQUIRE(next_test_28 == std::nullopt);
 
@@ -1606,7 +1602,6 @@ TEST_CASE ("Test PKB for Sample-Source.txt") {
     auto calls_test_2 = pkb.getCalleeProcedures("p");
     REQUIRE(*calls_test_2 == calls_test_2_check);
 
-    std::unordered_set<std::string> calls_test_3_check;
     auto calls_test_3 = pkb.getCalleeProcedures("q");
     REQUIRE(calls_test_3 == std::nullopt);
   }
@@ -1663,7 +1658,6 @@ TEST_CASE ("Test PKB for multiple_if_else_nesting.txt") {
     auto next_test_9 = pkb.getNextLine("9");
     REQUIRE(*next_test_9 == next_test_9_check);
 
-    std::unordered_set<std::string> next_test_10_check;
     auto next_test_10 = pkb.getNextLine("10");
     REQUIRE(next_test_10 == std::nullopt);
 
@@ -1713,7 +1707,6 @@ TEST_CASE ("Test PKB for multiple_if_else_nesting.txt") {
     auto next_test_19 = pkb.getNextLineT("9");
     REQUIRE(*next_test_19 == next_test_19_check);
 
-    std::unordered_set<std::string> next_test_20_check;
     auto next_test_20 = pkb.getNextLineT("10");
     REQUIRE(next_test_20 == std::nullopt);
   }
@@ -1976,11 +1969,9 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto calls_test_3 = pkb.getCalleeProcedures("C");
     REQUIRE(*calls_test_3 == calls_test_3_check);
 
-    std::unordered_set<std::string> calls_test_4_check;
     auto calls_test_4 = pkb.getCalleeProcedures("D");
     REQUIRE(calls_test_4 == std::nullopt);
 
-    std::unordered_set<std::string> calls_test_5_check;
     auto calls_test_5 = pkb.getCalleeProcedures("E");
     REQUIRE(calls_test_5 == std::nullopt);
 
@@ -1989,7 +1980,6 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto calls_test_6 = pkb.getCalleeProcedures("F");
     REQUIRE(*calls_test_6 == calls_test_6_check);
 
-    std::unordered_set<std::string> calls_test_7_check;
     auto calls_test_7 = pkb.getCalleeProcedures("G");
     REQUIRE(calls_test_7 == std::nullopt);
 
@@ -2014,11 +2004,9 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto calls_test_10 = pkb.getCalleeProceduresT("C");
     REQUIRE(*calls_test_10 == calls_test_10_check);
 
-    std::unordered_set<std::string> calls_test_11_check;
     auto calls_test_11 = pkb.getCalleeProceduresT("D");
     REQUIRE(calls_test_11 == std::nullopt);
 
-    std::unordered_set<std::string> calls_test_12_check;
     auto calls_test_12 = pkb.getCalleeProceduresT("E");
     REQUIRE(calls_test_12 == std::nullopt);
 
@@ -2027,7 +2015,6 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto calls_test_13 = pkb.getCalleeProceduresT("F");
     REQUIRE(*calls_test_13 == calls_test_13_check);
 
-    std::unordered_set<std::string> calls_test_14_check;
     auto calls_test_14 = pkb.getCalleeProceduresT("G");
     REQUIRE(calls_test_14 == std::nullopt);
 
@@ -2179,7 +2166,6 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto uses_test_4 = pkb.getVarUsedByProcedure("D");
     REQUIRE(*uses_test_4 == uses_test_4_check);
 
-    std::unordered_set<std::string> uses_test_5_check;
     auto uses_test_5 = pkb.getVarUsedByProcedure("E");
     REQUIRE(uses_test_5 == std::nullopt);
 
@@ -2188,7 +2174,6 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto uses_test_6 = pkb.getVarUsedByProcedure("F");
     REQUIRE(*uses_test_6 == uses_test_6_check);
 
-    std::unordered_set<std::string> uses_test_7_check;
     auto uses_test_7 = pkb.getVarUsedByProcedure("G");
     REQUIRE(uses_test_7 == std::nullopt);
 
@@ -2200,7 +2185,6 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto uses_test_8 = pkb.getVarUsedByLine("1");
     REQUIRE(*uses_test_8 == uses_test_8_check);
 
-    std::unordered_set<std::string> uses_test_9_check;
     auto uses_test_9 = pkb.getVarUsedByLine("2");
     REQUIRE(uses_test_9 == std::nullopt);
 
@@ -2226,11 +2210,9 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto uses_test_13 = pkb.getVarUsedByLine("6");
     REQUIRE(*uses_test_13 == uses_test_13_check);
 
-    std::unordered_set<std::string> uses_test_14_check;
     auto uses_test_14 = pkb.getVarUsedByLine("7");
     REQUIRE(uses_test_14 == std::nullopt);
 
-    std::unordered_set<std::string> uses_test_15_check;
     auto uses_test_15 = pkb.getVarUsedByLine("8");
     REQUIRE(uses_test_15 == std::nullopt);
 
@@ -2244,15 +2226,12 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto uses_test_17 = pkb.getVarUsedByLine("10");
     REQUIRE(*uses_test_17 == uses_test_17_check);
 
-    std::unordered_set<std::string> uses_test_18_check;
     auto uses_test_18 = pkb.getVarUsedByLine("11");
     REQUIRE(uses_test_18 == std::nullopt);
 
-    std::unordered_set<std::string> uses_test_19_check;
     auto uses_test_19 = pkb.getVarUsedByLine("12");
     REQUIRE(uses_test_19 == std::nullopt);
 
-    std::unordered_set<std::string> uses_test_20_check;
     auto uses_test_20 = pkb.getVarUsedByLine("13");
     REQUIRE(uses_test_20 == std::nullopt);
 
@@ -2261,11 +2240,9 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto uses_test_21 = pkb.getVarUsedByLine("14");
     REQUIRE(*uses_test_21 == uses_test_21_check);
 
-    std::unordered_set<std::string> uses_test_22_check;
     auto uses_test_22 = pkb.getVarUsedByLine("15");
     REQUIRE(uses_test_22 == std::nullopt);
 
-    std::unordered_set<std::string> uses_test_23_check;
     auto uses_test_23 = pkb.getVarUsedByLine("16");
     REQUIRE(uses_test_23 == std::nullopt);
   }
@@ -2348,7 +2325,6 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto modifies_test_11 = pkb.getVarModifiedByLine("4");
     REQUIRE(*modifies_test_11 == modifies_test_11_check);
 
-    std::unordered_set<std::string> modifies_test_12_check;
     auto modifies_test_12 = pkb.getVarModifiedByLine("5");
     REQUIRE(modifies_test_12 == std::nullopt);
 
@@ -2373,7 +2349,6 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto modifies_test_16 = pkb.getVarModifiedByLine("9");
     REQUIRE(*modifies_test_16 == modifies_test_16_check);
 
-    std::unordered_set<std::string> modifies_test_17_check;
     auto modifies_test_17 = pkb.getVarModifiedByLine("10");
     REQUIRE(modifies_test_17 == std::nullopt);
 
@@ -2393,7 +2368,6 @@ TEST_CASE ("Test PKB for complex_call_structure.txt") {
     auto modifies_test_20 = pkb.getVarModifiedByLine("13");
     REQUIRE(*modifies_test_20 == modifies_test_20_check);
 
-    std::unordered_set<std::string> modifies_test_21_check;
     auto modifies_test_21 = pkb.getVarModifiedByLine("14");
     REQUIRE(modifies_test_21 == std::nullopt);
 

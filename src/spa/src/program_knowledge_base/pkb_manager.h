@@ -38,13 +38,11 @@ class PKBManager {
   // is design entity set empty
   bool isVariableSetEmpty();
   bool isAssignSetEmpty();
-  bool isStatementSetEmpty();
   bool isPrintSetEmpty();
   bool isReadSetEmpty();
   bool isWhileSetEmpty();
   bool isIfSetEmpty();
   bool isConstantSetEmpty();
-  bool isProcedureSetEmpty();
   bool isCallSetEmpty();
 
   // is design entity exists
@@ -73,7 +71,7 @@ class PKBManager {
 
   // is relationship set empty
   // TODO implement for calls and next
-  bool isLineNextLineSetEmpty();
+  bool isLineNextLineMapEmpty();
   bool isProcedureCallProcedureSetEmpty();
   bool isProcedureCallProcedureTSetEmpty();
   bool isLineFollowLineSetEmpty();

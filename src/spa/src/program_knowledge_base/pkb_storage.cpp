@@ -9,11 +9,15 @@ PKBStorage::~PKBStorage(){};
 
 void PKBStorage::storeAST(const AST ast_node) { ast = ast_node; };
 
-Line PKBStorage::storeLine(const std::shared_ptr<Node> node) {
+Line PKBStorage::storeLine(const StmtNode node) {
   const Line cur_line_num = getCurLineNumber();
   incrementCurLineNumber();
-  line_node_map[cur_line_num] = node;
-  node_line_map[node] = cur_line_num;
+  std::visit(
+      [this, cur_line_num](const auto &s) {
+        line_node_map[cur_line_num] = s;
+        node_line_map[s] = cur_line_num;
+      },
+      node);
 
   return cur_line_num;
 }
@@ -22,12 +26,16 @@ Line PKBStorage::getCurLineNumber() { return std::to_string(num_lines); }
 
 void PKBStorage::incrementCurLineNumber() { num_lines = num_lines + 1; }
 
-Line PKBStorage::getLineFromNode(const std::shared_ptr<Node> node) {
-  if (node_line_map.find(node) != node_line_map.end()) {
-    return node_line_map.at(node);
-  } else {
-    assert(false);
-  }
+Line PKBStorage::getLineFromNode(const StmtNode node) {
+  return std::visit(
+      [this](const auto &s) {
+        if (node_line_map.find(s) != node_line_map.end()) {
+          return node_line_map.at(s);
+        } else {
+          assert(false);
+        }
+      },
+      node);
 }
 
 std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(
@@ -41,8 +49,6 @@ std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(
 
 void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
   // std::cout << source + " " + dest << std::endl;
-  // add to edge list
-  line_previous_line_next_set.insert(std::pair(source, dest));
   // add to adjacency list
   addToSetMap(line_previous_line_next_map, source, dest);
   addToSetMap(line_next_line_previous_map, dest, source);

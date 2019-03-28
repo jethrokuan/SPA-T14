@@ -39,10 +39,6 @@ bool PKBManager::isVariableSetEmpty() { return pkb_storage->var_set.empty(); }
 
 bool PKBManager::isAssignSetEmpty() { return pkb_storage->assign_set.empty(); }
 
-bool PKBManager::isStatementSetEmpty() {
-  return pkb_storage->statement_set.empty();
-}
-
 bool PKBManager::isPrintSetEmpty() { return pkb_storage->print_set.empty(); }
 
 bool PKBManager::isReadSetEmpty() { return pkb_storage->read_set.empty(); }
@@ -53,10 +49,6 @@ bool PKBManager::isIfSetEmpty() { return pkb_storage->if_set.empty(); }
 
 bool PKBManager::isConstantSetEmpty() {
   return pkb_storage->constant_set.empty();
-}
-
-bool PKBManager::isProcedureSetEmpty() {
-  return pkb_storage->procedure_set.empty();
 }
 
 bool PKBManager::isCallSetEmpty() { return pkb_storage->call_set.empty(); }
@@ -147,8 +139,8 @@ std::unordered_set<Procedure> PKBManager::getCallSet() {
 }
 
 // is relationship set empty
-bool PKBManager::isLineNextLineSetEmpty() {
-  return pkb_storage->line_previous_line_next_set.empty();
+bool PKBManager::isLineNextLineMapEmpty() {
+  return pkb_storage->line_previous_line_next_map.empty();
 }
 
 bool PKBManager::isProcedureCallProcedureSetEmpty() {
@@ -644,9 +636,14 @@ std::optional<Variable> PKBManager::getPrintVariableFromLine(const Line line) {
 
 bool PKBManager::isLineNextLine(const PreviousLine previous_line,
                                 const NextLine next_line) {
-  return pkb_storage->line_previous_line_next_set.find(
-             std::pair<PreviousLine, NextLine>(previous_line, next_line)) !=
-         pkb_storage->line_previous_line_next_set.end();
+  if (pkb_storage->line_previous_line_next_map.find(previous_line) !=
+      pkb_storage->line_previous_line_next_map.end()) {
+    return pkb_storage->line_previous_line_next_map.at(previous_line)
+               .find(next_line) !=
+           pkb_storage->line_previous_line_next_map.at(previous_line).end();
+  } else {
+    return false;
+  }
 }
 
 bool PKBManager::isLineNextLineT(const PreviousLine previous_line,

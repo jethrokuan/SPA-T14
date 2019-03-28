@@ -46,13 +46,51 @@ TEST_CASE (
   SECTION ("Select a pattern a (_, _\"a-b\"_)") {
     querystr += std::string("Select a pattern a (_, _\"a-b\"_)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"6, 7, 17"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"17", "6", "7"});
   }
 
-  SECTION ("Select a pattern a (_, _\"a-b\"_)") {
-    querystr += std::string("Select a pattern a (_, _\"a-b\"_)");
+  SECTION ("Select v such that Parent (9, s) and Uses (s, v)") {
+    querystr += std::string("Select v such that Parent (9, s) and Uses (s, v)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"17", "6, 7"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
+  }
+
+  SECTION ("Select s1 such that Parent* (s, s1) and Uses (s, \"x\")") {
+    querystr +=
+        std::string("Select s1 such that Parent* (s, s1) and Uses (s, \"x\")");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"13", "14", "15", "16", "17", "18"});
+  }
+
+  SECTION ("Select v1 such that Follows* (ifs, a) pattern a (v, _\"x\"_)") {
+    querystr += std::string(
+        "Select v1 such that Follows* (ifs, a) pattern a (v, _\"x\"_)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"a", "b", "c", "k", "x"});
+  }
+
+  SECTION ("Select p such that Calls* (p, q) and Modifies (p, \"x\")") {
+    querystr +=
+        std::string("Select p such that Calls* (p, q) and Modifies (p, \"x\")");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"main", "swap"});
+  }
+
+  SECTION ("Select s such that Follows* (s, s1) and Next (14, s1)") {
+    querystr +=
+        std::string("Select s such that Follows* (s, s1) and Next (14, s1)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"14"});
+  }
+
+  SECTION ("Select s such that Follows (s, s1) and Next* (14, s1)") {
+    querystr +=
+        std::string("Select s such that Follows (s, s1) and Next* (14, s1)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"12", "14", "19", "20"});
   }
 
   delete pkb;

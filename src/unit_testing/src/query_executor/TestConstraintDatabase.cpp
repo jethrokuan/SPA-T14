@@ -162,15 +162,15 @@ TEST_CASE (
   // TODO: Add a multi-select here
   REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
   REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "3"});
-  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "700", "500"});
+  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "500", "700"});
   REQUIRE(db.selectMultiple({"x", "y"}) ==
           std::vector<std::string>{"1 2", "2 3"});
   REQUIRE(db.selectMultiple({"x", "z"}) ==
-          std::vector<std::string>{"1 100", "2 700", "2 500"});
+          std::vector<std::string>{"1 100", "2 500", "2 700"});
   REQUIRE(db.selectMultiple({"y", "z"}) ==
-          std::vector<std::string>{"2 100", "3 700", "3 500"});
+          std::vector<std::string>{"2 100", "3 500", "3 700"});
   REQUIRE(db.selectMultiple({"x", "y", "z"}) ==
-          std::vector<std::string>{"1 2 100", "2 3 700", "2 3 500"});
+          std::vector<std::string>{"1 2 100", "2 3 500", "2 3 700"});
 }
 
 TEST_CASE (
@@ -182,17 +182,17 @@ TEST_CASE (
   db.addToPairedVariableConstraints(
       "x", "z", {{"1", "100"}, {"2", "700"}, {"2", "500"}, {"777", "777"}});
   REQUIRE(db.selectOne("x") == std::vector<std::string>{"1", "2"});
-  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "500", "3"});
-  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "700", "500"});
+  REQUIRE(db.selectOne("y") == std::vector<std::string>{"2", "3", "500"});
+  REQUIRE(db.selectOne("z") == std::vector<std::string>{"100", "500", "700"});
   REQUIRE(db.selectMultiple({"x", "y"}) ==
           std::vector<std::string>{"1 2", "1 500", "2 3"});
   REQUIRE(db.selectMultiple({"x", "z"}) ==
-          std::vector<std::string>{"1 100", "2 700", "2 500"});
+          std::vector<std::string>{"1 100", "2 500", "2 700"});
   REQUIRE(db.selectMultiple({"y", "z"}) ==
-          std::vector<std::string>{"500 100", "2 100", "3 700", "3 500"});
+          std::vector<std::string>{"2 100", "3 500", "3 700", "500 100"});
   REQUIRE(
       db.selectMultiple({"x", "y", "z"}) ==
-      std::vector<std::string>{"1 2 100", "2 3 700", "1 500 100", "2 3 500"});
+      std::vector<std::string>{"1 2 100", "1 500 100", "2 3 500", "2 3 700"});
 }
 
 TEST_CASE ("Test 2x join with table-table join") {

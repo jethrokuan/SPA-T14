@@ -70,10 +70,6 @@ bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
   // Case 1:  Follows*(s, 3)
   // Get PKB to give us list of possible s
   auto results = handleLeftSynonymRightBasic(*argRightAsBasic);
-  // if (results.empty() ||
-  //    qc.containsNoAllowedResults(results, argLeftAsSynonym->synonym)) {
-  //  return false;
-  // }
   if (results.empty()) return false;
   return db.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
 }
@@ -82,10 +78,6 @@ bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
   // Case 2:  Follows*(3, s)
   // Get PKB to give us list of possible s
   auto results = handleRightSynonymLeftBasic(*argLeftAsBasic);
-  // if (results.empty() ||
-  //    qc.containsNoAllowedResults(results, argRightAsSynonym->synonym)) {
-  //  return false;
-  // }
   if (results.empty()) return false;
   return db.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
 }

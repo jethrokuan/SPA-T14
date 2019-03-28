@@ -208,7 +208,7 @@ ConstraintTable ConstraintTable::cartesianProduct(ConstraintTable& t1,
     out_table.addNewColumnName(name);
   }
 
-  // Cartesia product of rows in both tables
+  // Cartesian product of rows in both tables
   for (auto row1 : t1.table) {
     for (auto row2 : t2.table) {
       vector<string> new_row;

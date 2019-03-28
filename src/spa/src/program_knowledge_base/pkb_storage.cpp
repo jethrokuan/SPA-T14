@@ -132,9 +132,7 @@ void PKBStorage::storeLineModifiesVarRelation(const Line line,
   addToSetMap(var_modified_by_line_map, line, var);
 }
 
-void PKBStorage::storeVariable(const Variable var) {
-  var_set.insert(var);
-}
+void PKBStorage::storeVariable(const Variable var) { var_set.insert(var); }
 
 void PKBStorage::storeAssign(const Line line) { assign_set.insert(line); }
 

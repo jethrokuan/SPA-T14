@@ -51,7 +51,7 @@ class NextTEvaluator : public SuchThatEvaluator {
     // Next(1,2) ==> Next*(1,2)
     // Next*(1,2) ==> some combination of Next
     // Either both are empty or neither
-    return !pkb->isLineNextLineSetEmpty();
+    return !pkb->isLineNextLineMapEmpty();
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // Next*(3, _)

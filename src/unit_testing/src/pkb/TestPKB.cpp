@@ -72,7 +72,7 @@ TEST_CASE ("Test PKB for assign.txt") {
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   // next
-  auto next_test_1 = pkb.isLineNextLineSetEmpty();
+  auto next_test_1 = pkb.isLineNextLineMapEmpty();
   REQUIRE(next_test_1 == true);
 
   // calls

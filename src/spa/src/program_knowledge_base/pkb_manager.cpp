@@ -131,7 +131,7 @@ std::unordered_set<Procedure> PKBManager::getCallSet() {
 }
 
 // is relationship set empty
-bool PKBManager::isLineNextLineSetEmpty() {
+bool PKBManager::isLineNextLineMapEmpty() {
   return pkb_storage->line_previous_line_next_map.empty();
 }
 

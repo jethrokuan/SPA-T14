@@ -6,6 +6,63 @@
 
 using namespace QE;
 
+std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
+                                                         DesignEntity de) {
+  // All possible return types from select all PKB calls are vector<string>
+  // std::cout << "GetSelect: ";
+  switch (de) {
+    case DesignEntity::ASSIGN:
+      // std::cout << "assign";
+      return pkb->getAssignSet();
+      break;
+    case DesignEntity::CALL:
+      // Next iteration
+      return pkb->getCallSet();
+      // std::cout << "call";
+      break;
+    case DesignEntity::CONSTANT:
+      // std::cout << "constant";
+      return pkb->getConstantSet();
+      break;
+    case DesignEntity::IF:
+      // std::cout << "if";
+      return pkb->getIfSet();
+      break;
+    case DesignEntity::PRINT:
+      // std::cout << "print";
+      return pkb->getPrintSet();
+      break;
+    case DesignEntity::PROCEDURE:
+      // std::cout << "procedure: ";
+      return pkb->getProcedureSet();
+      break;
+    case DesignEntity::PROG_LINE:
+      // std::cout << "prog_line: ";
+      return pkb->getStatementSet();
+      break;
+    case DesignEntity::READ:
+      // std::cout << "read";
+      return pkb->getReadSet();
+      break;
+    case DesignEntity::STMT:
+      // std::cout << "stmt";
+      return pkb->getStatementSet();
+      break;
+    case DesignEntity::VARIABLE:
+      // std::cout << "variable";
+      return pkb->getVariableSet();
+      break;
+    case DesignEntity::WHILE:
+      // std::cout << "while";
+      return pkb->getWhileSet();
+      break;
+    default:
+      // This should never happen - we should have handled all cases
+      assert(false);
+  }
+  return {};
+}
+
 std::optional<Synonym> QueryExecutor::getRefAsSynonym(Ref arg) {
   if (auto syn = std::get_if<Synonym>(&arg)) {
     return *syn;

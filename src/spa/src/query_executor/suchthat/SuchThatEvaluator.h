@@ -4,7 +4,6 @@
 #include <unordered_set>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-// #include "query_executor/constraint_solver/constraint_solver.h"
 #include "query_executor/query_executor.h"
 
 using namespace PKB;
@@ -15,7 +14,7 @@ class SuchThatEvaluator {
   std::vector<QE::Declaration>* declarations;
   QE::RelCond* relCond;
   PKBManager* pkb;
-  QueryConstraints& qc;
+  ConstraintDatabase& db;
 
   // Calculated from the Query object
   QE::Ref argLeft;
@@ -58,11 +57,11 @@ class SuchThatEvaluator {
 
  public:
   SuchThatEvaluator(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
-                    PKBManager* pkb, QueryConstraints& qc)
+                    PKBManager* pkb, ConstraintDatabase& db)
       : declarations(decls),
         relCond(relCond),
         pkb(pkb),
-        qc(qc),
+        db(db),
         argLeft(relCond->arg1),
         argRight(relCond->arg2){};
 

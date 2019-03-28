@@ -20,12 +20,12 @@ bool SuchThatEvaluator::evaluate() {
   if (argLeftAsSynonym) {
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(
-        declarations, pkb, argLeftAsSynonym->synonym, qc);
+        declarations, pkb, argLeftAsSynonym->synonym, db);
   }
   if (argRightAsSynonym) {
     // Add entire set of values for variable into the overall constraints
     QueryExecutor::addAllValuesForVariableToConstraints(
-        declarations, pkb, argRightAsSynonym->synonym, qc);
+        declarations, pkb, argRightAsSynonym->synonym, db);
   }
 
   return dispatch();
@@ -70,24 +70,16 @@ bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
   // Case 1:  Follows*(s, 3)
   // Get PKB to give us list of possible s
   auto results = handleLeftSynonymRightBasic(*argRightAsBasic);
-  if (results.empty() ||
-      qc.containsNoAllowedResults(results, argLeftAsSynonym->synonym)) {
-    return false;
-  }
-  qc.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
-  return true;
+  if (results.empty()) return false;
+  return db.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
   // Case 2:  Follows*(3, s)
   // Get PKB to give us list of possible s
   auto results = handleRightSynonymLeftBasic(*argLeftAsBasic);
-  if (results.empty() ||
-      qc.containsNoAllowedResults(results, argRightAsSynonym->synonym)) {
-    return false;
-  }
-  qc.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
-  return true;
+  if (results.empty()) return false;
+  return db.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
@@ -98,15 +90,14 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
   auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       declarations, pkb, argLeftAsSynonym->synonym);
 
-  std::vector<std::string> results;
+  SingleConstraintSet results;
   for (auto de : lhs_designentities) {
     if (handleLeftSynonymRightUnderscore(de)) {
-      results.push_back(de);
+      results.insert(de);
     }
   }
   if (results.empty()) return false;
-  qc.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
-  return true;
+  return db.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
@@ -116,15 +107,14 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
   // E.g. Follows*(_, 3)? Follows*(, 4)?
   auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
       declarations, pkb, argRightAsSynonym->synonym);
-  std::vector<std::string> results;
+  SingleConstraintSet results;
   for (auto de : rhs_designentities) {
     if (handleRightSynonymLeftUnderscore(de)) {
-      results.push_back(de);
+      results.insert(de);
     }
   }
   if (results.empty()) return false;
-  qc.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
-  return true;
+  return db.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
@@ -146,9 +136,8 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
     }
   }
   if (results.empty()) return false;
-  qc.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
-                                    argRightAsSynonym->synonym, results);
-  return true;
+  return db.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
+                                           argRightAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchDoubleUnderscore() {

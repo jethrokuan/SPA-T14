@@ -15,7 +15,7 @@ class WithEvaluator {
   std::vector<QE::Declaration>* declarations;
   QE::WithCond* withCond;
   PKBManager* pkb;
-  QueryConstraints& qc;
+  ConstraintDatabase& db;
 
   QE::AttrRef argLeft;
   QE::AttrRef argRight;
@@ -52,11 +52,11 @@ class WithEvaluator {
 
  public:
   WithEvaluator(std::vector<QE::Declaration>* decls, QE::WithCond* withCond,
-                PKBManager* pkb, QueryConstraints& qc)
+                PKBManager* pkb, ConstraintDatabase& db)
       : declarations(decls),
         withCond(withCond),
         pkb(pkb),
-        qc(qc),
+        db(db),
         argLeft(withCond->ref1),
         argRight(withCond->ref2){};
 

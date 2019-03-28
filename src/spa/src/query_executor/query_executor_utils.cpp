@@ -70,7 +70,7 @@ std::vector<std::string> QueryExecutor::getNegativeResult(
 
 void QueryExecutor::addAllValuesForVariableToConstraints(
     std::vector<Declaration>* declarations, PKBManager* pkb,
-    const std::string& var_name, QueryConstraints& qc) {
+    const std::string& var_name, ConstraintDatabase& db) {
   // For optimizations's sake: if we spot the variable already in the
   // constraint list - do not re-execute getSelect and re-constrain. If the
   // variable is already in the list, we can assume that this function was
@@ -78,14 +78,14 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
   // have been either in a such-that clause or pattern clause (ignoring
   // select). If it was in either of those clauses, this function would have
   // run.
-  if (qc.isVarInAllPossibleValues(var_name)) return;
+  // if (db.hasVariable(var_name)) return;
 
   auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);
-  qc.addToAllPossibleValues(var_name, all_de);
+  db.addToSingleVariableConstraints(var_name, all_de);
 }
 
 void QueryExecutor::addAllSelectedVarsToConstraints(Query* query,
-                                                    QueryConstraints& qc) {
+                                                    ConstraintDatabase& db) {
   // No variables to constrain if this is a BOOLEAN query
   if (query->result->T == ResultType::BOOLEAN) return;
   // Otherwise add each variable's full set of values to constraints
@@ -101,7 +101,7 @@ void QueryExecutor::addAllSelectedVarsToConstraints(Query* query,
       assert(false);
     }
     addAllValuesForVariableToConstraints(query->declarations, pkb,
-                                         select_var_str, qc);
+                                         select_var_str, db);
   }
 }
 

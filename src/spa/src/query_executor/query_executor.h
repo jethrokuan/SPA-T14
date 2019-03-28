@@ -6,10 +6,10 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_executor/constraint_solver/constraint_solver.h"
-#include "query_executor/constraint_solver/query_constraints.h"
+#include "query_executor/constraint_solver/constraint_database.h"
 
 using namespace PKB;
+using namespace QE;
 
 //! \brief Clauses can either return constraints or indicate no constraints
 //! bool == true ==> no constraints.
@@ -26,14 +26,14 @@ class QueryExecutor {
 
   //! Evaluates any SuchThat clause
   bool handleSuchThat(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
-                      QueryConstraints&);
+                      ConstraintDatabase& db);
   //! Evaluates any Pattern clause
   bool handlePattern(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
-                     QueryConstraints& qc);
+                     ConstraintDatabase& db);
 
   //! Evaluates any With clauses
   bool handleWithCond(std::vector<QE::Declaration>* decls,
-                      QE::WithCond* withcond, QueryConstraints& qc);
+                      QE::WithCond* withcond, ConstraintDatabase& db);
 
   //! Utility function to get all synonym strings from a list of selected
   //! vars
@@ -41,7 +41,7 @@ class QueryExecutor {
       std::vector<QE::ResultItem>* resultItems);
 
   //! Add all selected variables to the set of constraints
-  void addAllSelectedVarsToConstraints(Query* query, QueryConstraints& qc);
+  void addAllSelectedVarsToConstraints(Query* query, ConstraintDatabase& db);
 
   //! Convert Synonym/SynAttr to string based on synonym
   std::string resultItemToString(const ResultItem& resultItem);
@@ -49,9 +49,8 @@ class QueryExecutor {
   //! Gets the appropriate result to return when the query is evaluted to false
   std::vector<std::string> getNegativeResult(const ResultType& resultType);
 
-  //! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
-  std::vector<std::string> runConstraintSolver(
-      Result* result, QueryConstraints& query_constraints);
+  //! Asks the DB for the result type corresponding to the Select clause
+  std::vector<std::string> selectFromDB(Result* result, ConstraintDatabase& db);
 
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};
@@ -66,7 +65,7 @@ class QueryExecutor {
   //! Utility method to call getSelect for a single variable
   static void addAllValuesForVariableToConstraints(
       std::vector<QE::Declaration>*, PKBManager* pkb, const std::string&,
-      QueryConstraints&);
+      ConstraintDatabase&);
 
   static std::unordered_set<std::string> getAllDesignEntityValuesByVarName(
       std::vector<QE::Declaration>*, PKBManager*, const std::string&);

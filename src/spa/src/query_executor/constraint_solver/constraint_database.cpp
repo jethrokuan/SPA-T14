@@ -1,21 +1,22 @@
 #include "query_executor/constraint_solver/constraint_database.h"
 
 //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
-void ConstraintDatabase::addToSingleVariableConstraints(
+bool ConstraintDatabase::addToSingleVariableConstraints(
     const string& var_name, const SingleConstraintSet& constraint_values) {
   // Is an instance of this variable already stored?
   auto matching_table_idx = getTableIdxForVar(var_name);
   // If no table, create one (disjoint, so needs new table)
   if (!matching_table_idx) {
     createNewTable(var_name, constraint_values);
+    return true;
   } else {
     // FILTER algorithm: filter existing table by this constraint set
-    tables[*matching_table_idx].filterBy(var_name, constraint_values);
+    return tables[*matching_table_idx].filterBy(var_name, constraint_values);
   }
 }
 
 //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
-void ConstraintDatabase::addToPairedVariableConstraints(
+bool ConstraintDatabase::addToPairedVariableConstraints(
     const string& var1_name, const string& var2_name,
     const PairedConstraintSet& constraint_values) {
   // Is an instance of this variable already stored?
@@ -23,13 +24,14 @@ void ConstraintDatabase::addToPairedVariableConstraints(
   // If no table, create one (disjoint, so needs new table)
   if (!matching_table_iterators) {
     createNewTable(var1_name, var2_name, constraint_values);
+    return true;
   } else if ((matching_table_iterators->first != name_table_map.end()) &&
              (matching_table_iterators->second != name_table_map.end()) &&
              matching_table_iterators->first->second ==
                  matching_table_iterators->second->second) {
     // Exact match to same table, filter only
     size_t table_idx = matching_table_iterators->first->second;
-    tables[table_idx].filterBy(var1_name, var2_name, constraint_values);
+    return tables[table_idx].filterBy(var1_name, var2_name, constraint_values);
   } else {
     // 2 possibilities
     //  1. Only one variable is found, so only one join needs to be done
@@ -39,7 +41,9 @@ void ConstraintDatabase::addToPairedVariableConstraints(
     if (matching_table_iterators->first != name_table_map.end()) {
       // Join required on var1_name
       size_t table_idx = matching_table_iterators->first->second;
-      doTableSetJoin(table_idx, var1_name, var2_name, constraint_values, true);
+      bool join_at_least_one = doTableSetJoin(table_idx, var1_name, var2_name,
+                                              constraint_values, true);
+      if (!join_at_least_one) return false;
       have_done_table_set_join = true;
     }
 
@@ -47,17 +51,19 @@ void ConstraintDatabase::addToPairedVariableConstraints(
       // Join required on var2_name
       if (!have_done_table_set_join) {
         size_t table_idx = matching_table_iterators->second->second;
-        doTableSetJoin(table_idx, var1_name, var2_name, constraint_values,
-                       false);
+        return doTableSetJoin(table_idx, var1_name, var2_name,
+                              constraint_values, false);
       } else {
         // The first join happened, so we have a newly joined table (1)
         // We now need to join (1) with the table we found for this
         // second variable
         size_t table1_idx = matching_table_iterators->first->second;
         size_t table2_idx = matching_table_iterators->second->second;
-        doTableTableJoin(table1_idx, table2_idx, var2_name);
+        return doTableTableJoin(table1_idx, table2_idx, var2_name);
       }
     }
+
+    return true;
   }
 }
 
@@ -107,7 +113,7 @@ void ConstraintDatabase::createNewTable(
   addVariableToTableMap(var2_name, new_table_index);
 }
 
-void ConstraintDatabase::doTableSetJoin(
+bool ConstraintDatabase::doTableSetJoin(
     const size_t table_idx, const string& var1_name, const string& var2_name,
     const PairedConstraintSet& constraint_values, bool join_on_var1) {
   bool join_at_least_one = false;
@@ -129,20 +135,24 @@ void ConstraintDatabase::doTableSetJoin(
       addVariableToTableMap(var1_name, table_idx);
     }
   }
+
+  return join_at_least_one;
 }
 
-void ConstraintDatabase::doTableTableJoin(const size_t table1_idx,
+bool ConstraintDatabase::doTableTableJoin(const size_t table1_idx,
                                           const size_t table2_idx,
                                           const string& var_to_join) {
   auto& table1 = tables[table1_idx];
   auto& table2 = tables[table2_idx];
   // Check which table is smaller
   if (table1.size() < table2.size()) {
-    table1.joinWithTableBy(var_to_join, table2);
+    auto successful_join = table1.joinWithTableBy(var_to_join, table2);
     removeTableFromDatabase(table2_idx);
+    return successful_join;
   } else {
-    table2.joinWithTableBy(var_to_join, table1);
+    auto successful_join = table2.joinWithTableBy(var_to_join, table1);
     removeTableFromDatabase(table1_idx);
+    return successful_join;
   }
 }
 
@@ -161,7 +171,7 @@ void ConstraintDatabase::removeTableFromDatabase(size_t table_idx) {
 
   // Refresh var -> table mapping
   name_table_map.clear();
-  for (int i = 0; i < tables.size(); i++) {
+  for (size_t i = 0; i < tables.size(); i++) {
     for (auto [var_name, col_idx] : tables[i].name_column_map) {
       name_table_map.insert({var_name, i});
     }

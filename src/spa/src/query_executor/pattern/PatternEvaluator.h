@@ -4,7 +4,6 @@
 #include <vector>
 #include "program_knowledge_base/pkb_manager.h"
 #include "query_builder/pql/pql.h"
-#include "query_executor/constraint_solver/query_constraints.h"
 #include "query_executor/query_executor.h"
 
 using namespace PKB;
@@ -15,7 +14,7 @@ class PatternEvaluator {
   std::vector<QE::Declaration>* declarations;
   QE::PatternB* pattern;
   PKBManager* pkb;
-  QueryConstraints& qc;
+  ConstraintDatabase& db;
 
   // Directly accessed values
   std::string synonym;
@@ -83,11 +82,11 @@ class PatternEvaluator {
 
  public:
   PatternEvaluator(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
-                   PKBManager* pkb, QueryConstraints& qc)
+                   PKBManager* pkb, ConstraintDatabase& db)
       : declarations(decls),
         pattern(pattern),
         pkb(pkb),
-        qc(qc),
+        db(db),
         synonym(pattern->getSynonym().synonym),
         pattern_lhs(pattern->getFirstArg()),
         pattern_rhs(pattern->getSecondArg()){};

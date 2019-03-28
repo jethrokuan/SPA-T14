@@ -56,13 +56,13 @@ class ConstraintDatabase {
                       const PairedConstraintSet& constraint_values);
 
   //! Essentially Hash-Join where the incoming hashmap is easy to compute
-  void doTableSetJoin(const size_t table_idx, const std::string& var1_name,
+  bool doTableSetJoin(const size_t table_idx, const std::string& var1_name,
                       const std::string& var2_name,
                       const PairedConstraintSet& constraint_values,
                       bool join_on_var1);
 
   //! Hash-Join algorithm to join two tables along a key
-  void doTableTableJoin(const size_t table1_idx, const size_t table2_idx,
+  bool doTableTableJoin(const size_t table1_idx, const size_t table2_idx,
                         const string& var_to_join);
 
   void removeTableFromDatabase(size_t table_idx);
@@ -76,12 +76,15 @@ class ConstraintDatabase {
   vector<string> selectOneColumn(const std::string var_to_select);
 
  public:
-  //! Add the constraints for a single variable, e.g. a = {2, 3, 4}
-  void addToSingleVariableConstraints(
+  //! \brief Add the constraints for a single variable, e.g. a = {2, 3, 4}
+  //! Return false if any variables were constrained to have no valid values
+  bool addToSingleVariableConstraints(
       const std::string& var_name,
       const SingleConstraintSet& constraint_values);
-  //! Add paired constraints for 2 vars, e.g. (a, v) = {(2, 3), (3, 4), (1, 2)}
-  void addToPairedVariableConstraints(
+  //! /brief Add paired constraints for 2 vars, e.g. (a, v) = {(2, 3), (3, 4),
+  //! (1, 2)} Return false if any variables were constrained to have no valid
+  //! values.
+  bool addToPairedVariableConstraints(
       const std::string& var1_name, const std::string& var2_name,
       const PairedConstraintSet& constraint_values);
 
@@ -92,23 +95,33 @@ class ConstraintDatabase {
   //! Returns all columns containing the variables of interests in order
   vector<string> selectMultiple(const vector<string> vars_to_select);
 
+  inline bool hasVariable(const std::string& var_name) {
+    return name_table_map.find(var_name) != name_table_map.end();
+  }
+
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintDatabase const& db) {
-    os << "------------------------------------------------------------\n"s;
-    os << "DB: Synonym to table idx mappings\n"s;
+    os << "\n\n------------------------------------------------------------\n"s;
+    os << "DATABASE STATE\n\n";
+    os << "SYNONYM => TABLE INDEX MAPPING:\n"s;
     // Print out the table headers
     for (auto [key, val] : db.name_table_map) {
-      os << key << " => table index "s << std::to_string(val) << "\n"s;
+      os << key << "\t";
     }
-    os << "------------------------------------------------------------\n"s;
+    os << "\n-----------------------------------------\n";
+    for (auto [key, val] : db.name_table_map) {
+      os << val << "\t";
+    }
 
-    os << "\n---------------------------------\n"s;
-    os << "DB: Tables: \n"s;
+    os << "\n\n";
+
+    os << "DATABASE TABLES: \n"s;
     // Print out the table headers
     for (const auto& table : db.tables) {
       os << table << "\n\n"s;
     }
-    os << "---------------------------------\n"s;
+    os << "END DATABASE STATE\n";
+    os << "------------------------------------------------------------\n\n"s;
 
     return os;
   }

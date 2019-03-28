@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "query_executor/constraint_solver/query_constraints.h"
+#include "query_executor/constraint_solver/constraint_database.h"
 #include "query_executor/pattern/AssignPatternEvaluator.h"
 #include "query_executor/pattern/IfPatternEvaluator.h"
 #include "query_executor/pattern/WhilePatternEvaluator.h"
@@ -31,12 +31,12 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 }
 
 std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
-  QueryConstraints query_constraints;
+  ConstraintDatabase db;
 
   // Executes each such-that clause one by one
   if (!query->rel_cond->empty()) {
     for (auto& rel_cond : *(query->rel_cond)) {
-      if (!handleSuchThat(query->declarations, rel_cond, query_constraints)) {
+      if (!handleSuchThat(query->declarations, rel_cond, db)) {
         return getNegativeResult(query->result->T);
       }
     }
@@ -45,7 +45,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // Executes each pattern clause one by one
   if (!query->patternb->empty()) {
     for (auto& pattern : *(query->patternb)) {
-      if (!handlePattern(query->declarations, pattern, query_constraints)) {
+      if (!handlePattern(query->declarations, pattern, db)) {
         return getNegativeResult(query->result->T);
       }
     }
@@ -54,7 +54,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // Executes each pattern clause one by one
   if (!query->with_cond->empty()) {
     for (auto& with_cond : *(query->with_cond)) {
-      if (!handleWithCond(query->declarations, with_cond, query_constraints)) {
+      if (!handleWithCond(query->declarations, with_cond, db)) {
         return getNegativeResult(query->result->T);
       }
     }
@@ -67,10 +67,10 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   // add all possible values for it to take in at the start
   // Case: Select v such that Follows(1, 2) [Follows(1, 2) == true]
   // Do this for all selected variables
-  addAllSelectedVarsToConstraints(query, query_constraints);
+  addAllSelectedVarsToConstraints(query, db);
 
   // Runs the correct constraint solver method (BOOLEAN vs non-BOOLEAN)
-  return runConstraintSolver(query->result, query_constraints);
+  return selectFromDB(query->result, db);
 }
 
 std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
@@ -131,49 +131,51 @@ std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
 }
 
 bool QueryExecutor::handleSuchThat(std::vector<QE::Declaration>* decls,
-                                   QE::RelCond* relCond, QueryConstraints& qc) {
+                                   QE::RelCond* relCond,
+                                   ConstraintDatabase& db) {
   switch (relCond->relation) {
     case Relation::FollowsT:
-      return FollowsTEvaluator(decls, relCond, pkb, qc).evaluate();
+      return FollowsTEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::ModifiesS:
-      return ModifiesSEvaluator(decls, relCond, pkb, qc).evaluate();
+      return ModifiesSEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::UsesS:
-      return UsesSEvaluator(decls, relCond, pkb, qc).evaluate();
+      return UsesSEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::ParentT:
-      return ParentTEvaluator(decls, relCond, pkb, qc).evaluate();
+      return ParentTEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::Follows:
-      return FollowsEvaluator(decls, relCond, pkb, qc).evaluate();
+      return FollowsEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::Parent:
-      return ParentEvaluator(decls, relCond, pkb, qc).evaluate();
+      return ParentEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::Next:
-      return NextEvaluator(decls, relCond, pkb, qc).evaluate();
+      return NextEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::NextT:
-      return NextTEvaluator(decls, relCond, pkb, qc).evaluate();
+      return NextTEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::Calls:
-      return CallsEvaluator(decls, relCond, pkb, qc).evaluate();
+      return CallsEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::CallsT:
-      return CallsTEvaluator(decls, relCond, pkb, qc).evaluate();
+      return CallsTEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::ModifiesP:
-      return ModifiesPEvaluator(decls, relCond, pkb, qc).evaluate();
+      return ModifiesPEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::UsesP:
-      return UsesPEvaluator(decls, relCond, pkb, qc).evaluate();
+      return UsesPEvaluator(decls, relCond, pkb, db).evaluate();
     default:
       assert(false);
   }
 }
 
 bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
-                                  QE::PatternB* pattern, QueryConstraints& qc) {
+                                  QE::PatternB* pattern,
+                                  ConstraintDatabase& db) {
   auto pattern_syn = pattern->getSynonym();
   auto pattern_de = Declaration::findDeclarationForSynonym(decls, pattern_syn)
                         ->getDesignEntity();
   switch (pattern_de) {
     case DesignEntity::ASSIGN:
-      return AssignPatternEvaluator(decls, pattern, pkb, qc).evaluate();
+      return AssignPatternEvaluator(decls, pattern, pkb, db).evaluate();
     case DesignEntity::IF:
-      return IfPatternEvaluator(decls, pattern, pkb, qc).evaluate();
+      return IfPatternEvaluator(decls, pattern, pkb, db).evaluate();
     case DesignEntity::WHILE:
-      return WhilePatternEvaluator(decls, pattern, pkb, qc).evaluate();
+      return WhilePatternEvaluator(decls, pattern, pkb, db).evaluate();
     default:
       std::cout << "No design entity matches for pattern!\n";
       assert(false);
@@ -182,23 +184,20 @@ bool QueryExecutor::handlePattern(std::vector<QE::Declaration>* decls,
 
 bool QueryExecutor::handleWithCond(std::vector<QE::Declaration>* decls,
                                    QE::WithCond* withcond,
-                                   QueryConstraints& qc) {
-  return WithEvaluator(decls, withcond, pkb, qc).evaluate();
+                                   ConstraintDatabase& db) {
+  return WithEvaluator(decls, withcond, pkb, db).evaluate();
 }
 
-//! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
-std::vector<std::string> QueryExecutor::runConstraintSolver(
-    Result* result, QueryConstraints& query_constraints) {
+//! Asks the DB for the result type corresponding to the Select clause
+std::vector<std::string> QueryExecutor::selectFromDB(Result* result,
+                                                     ConstraintDatabase& db) {
   if (result->T == ResultType::TUPLE) {
     // Get vector of vector of results - one for each selected var
-    auto results = ConstraintSolver::constrainAndSelect(
-        query_constraints,
+    return db.selectMultiple(
         getSynonymsFromSelect(result->selected_declarations));
-    return Utils::cartesianProduct(results);
   } else if (result->T == ResultType::BOOLEAN) {
     // Check truth/falsity instead of getting a vector of result values
-    if (bool select_is_true =
-            ConstraintSolver::constrainAndSelectBoolean(query_constraints)) {
+    if (db.selectBoolean()) {
       return std::vector<std::string>{"TRUE"};
     } else {
       return std::vector<std::string>{"FALSE"};

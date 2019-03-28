@@ -68,6 +68,6 @@ class IfPatternEvaluator : public PatternEvaluator {
 
  public:
   IfPatternEvaluator(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
-                     PKBManager* pkb, QueryConstraints& qc)
-      : PatternEvaluator(decls, pattern, pkb, qc) {}
+                     PKBManager* pkb, ConstraintDatabase& db)
+      : PatternEvaluator(decls, pattern, pkb, db) {}
 };

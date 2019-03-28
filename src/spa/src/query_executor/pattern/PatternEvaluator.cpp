@@ -9,7 +9,7 @@
 bool PatternEvaluator::evaluate() {
   // Add entire set of values for the pattern synoynm
   QueryExecutor::addAllValuesForVariableToConstraints(declarations, pkb,
-                                                      synonym, qc);
+                                                      synonym, db);
 
   // Compute all derived expression w.r.t pattern arguments
 
@@ -84,24 +84,22 @@ bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSUnderscore() {
   auto all_assigns = handlePatternLHSUnderscoreRHSUnderscore().value_or(
       std::unordered_set<std::string>());
   if (all_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, all_assigns);
-  return true;
+  return db.addToSingleVariableConstraints(synonym, all_assigns);
 }
 bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSUnderscore() {
   // pattern a ("x", _) --> all assignments with LHS "x"
   auto allowed_lines = handlePatternLHSQuoteIdentRHSUnderscore().value_or(
       std::unordered_set<std::string>());
   if (allowed_lines.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, allowed_lines);
-  return true;
+  return db.addToSingleVariableConstraints(synonym, allowed_lines);
 }
 bool PatternEvaluator::dispatchPatternLHSSynonymRHSUnderscore() {
   // pattern a (v, _) --> all assignments
   auto allowed_values = handlePatternLHSSynonymRHSUnderscore();
   if (allowed_values.empty()) return false;  // Empty clause
   PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
-  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
-  return true;
+  return db.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym,
+                                           avs);
 }
 
 bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSPartialMatch() {
@@ -110,8 +108,7 @@ bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSPartialMatch() {
   matching_assigns = handlePatternLHSUnderscoreRHSPartialMatch().value_or(
       std::unordered_set<std::string>());
   if (matching_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, matching_assigns);
-  return true;
+  return db.addToSingleVariableConstraints(synonym, matching_assigns);
 }
 bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSPartialMatch() {
   // pattern a ("x", _"x + y"_) --> partial match
@@ -120,8 +117,7 @@ bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSPartialMatch() {
       SingleConstraintSet());
 
   if (matching_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, matching_assigns);
-  return true;
+  return db.addToSingleVariableConstraints(synonym, matching_assigns);
 }
 bool PatternEvaluator::dispatchPatternLHSSynonymRHSPartialMatch() {
   // pattern a (v, _"x + y"_) --> partial match
@@ -131,8 +127,8 @@ bool PatternEvaluator::dispatchPatternLHSSynonymRHSPartialMatch() {
       handlePatternLHSSynonymRHSPartialMatch().value_or(PairedConstraintSet());
   if (allowed_values.empty()) return false;  // Empty clause
   PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
-  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
-  return true;
+  return db.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym,
+                                           avs);
 }
 
 bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSCompleteMatch() {
@@ -142,8 +138,7 @@ bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSCompleteMatch() {
       std::unordered_set<std::string>());
 
   if (matching_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, matching_assigns);
-  return true;
+  return db.addToSingleVariableConstraints(synonym, matching_assigns);
 }
 bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSCompleteMatch() {
   // pattern a ("x", _"x + y"_) --> complete match
@@ -152,8 +147,7 @@ bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSCompleteMatch() {
       SingleConstraintSet());
 
   if (matching_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, matching_assigns);
-  return true;
+  return db.addToSingleVariableConstraints(synonym, matching_assigns);
 }
 bool PatternEvaluator::dispatchPatternLHSSynonymRHSCompleteMatch() {
   // pattern a (v, "x + y") --> complete match
@@ -163,8 +157,8 @@ bool PatternEvaluator::dispatchPatternLHSSynonymRHSCompleteMatch() {
 
   if (allowed_values.empty()) return false;  // Empty clause
   PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
-  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
-  return true;
+  return db.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym,
+                                           avs);
 }
 
 bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSNull() {
@@ -172,16 +166,14 @@ bool PatternEvaluator::dispatchPatternLHSUnderscoreRHSNull() {
   auto all_assigns = handlePatternLHSUnderscoreRHSNull().value_or(
       std::unordered_set<std::string>());
   if (all_assigns.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, all_assigns);
-  return true;
+  return db.addToSingleVariableConstraints(synonym, all_assigns);
 }
 bool PatternEvaluator::dispatchPatternLHSQuoteIdentRHSNull() {
   // pattern ifs/while ("x", _,..)
   auto allowed_lines = handlePatternLHSQuoteIdentRHSNull().value_or(
       std::unordered_set<std::string>());
   if (allowed_lines.empty()) return false;  // Empty clause
-  qc.addToSingleVariableConstraints(synonym, allowed_lines);
-  return true;
+  return db.addToSingleVariableConstraints(synonym, allowed_lines);
 }
 bool PatternEvaluator::dispatchPatternLHSSynonymRHSNull() {
   // pattern ifs/while (v, _,...) --> complete match
@@ -191,6 +183,6 @@ bool PatternEvaluator::dispatchPatternLHSSynonymRHSNull() {
 
   if (allowed_values.empty()) return false;  // Empty clause
   PairedConstraintSet avs(allowed_values.begin(), allowed_values.end());
-  qc.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym, avs);
-  return true;
+  return db.addToPairedVariableConstraints(synonym, argLeftAsSynonym->synonym,
+                                           avs);
 }

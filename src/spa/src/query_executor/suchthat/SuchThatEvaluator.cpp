@@ -75,8 +75,7 @@ bool SuchThatEvaluator::dispatchLeftSynonymRightBasic() {
   //  return false;
   // }
   if (results.empty()) return false;
-  db.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
-  return true;
+  return db.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
@@ -88,8 +87,7 @@ bool SuchThatEvaluator::dispatchRightSynonymLeftBasic() {
   //  return false;
   // }
   if (results.empty()) return false;
-  db.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
-  return true;
+  return db.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
@@ -107,8 +105,7 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
     }
   }
   if (results.empty()) return false;
-  db.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
-  return true;
+  return db.addToSingleVariableConstraints(argLeftAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
@@ -125,8 +122,7 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
     }
   }
   if (results.empty()) return false;
-  db.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
-  return true;
+  return db.addToSingleVariableConstraints(argRightAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
@@ -148,9 +144,8 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
     }
   }
   if (results.empty()) return false;
-  db.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
-                                    argRightAsSynonym->synonym, results);
-  return true;
+  return db.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
+                                           argRightAsSynonym->synonym, results);
 }
 
 bool SuchThatEvaluator::dispatchDoubleUnderscore() {

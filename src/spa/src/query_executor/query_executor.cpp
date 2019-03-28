@@ -192,7 +192,6 @@ bool QueryExecutor::handleWithCond(std::vector<QE::Declaration>* decls,
 //! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
 std::vector<std::string> QueryExecutor::selectFromDB(Result* result,
                                                      ConstraintDatabase& db) {
-  std::cout << db;
   if (result->T == ResultType::TUPLE) {
     // Get vector of vector of results - one for each selected var
     return db.selectMultiple(

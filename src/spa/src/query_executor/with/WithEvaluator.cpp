@@ -104,15 +104,13 @@ bool WithEvaluator::handleBothArgsSynAttr() {
     }
   }
 
-  db.addToPairedVariableConstraints(synAttr1.synonym.synonym,
-                                    synAttr2.synonym.synonym, equal_values);
-  return true;
+  return db.addToPairedVariableConstraints(
+      synAttr1.synonym.synonym, synAttr2.synonym.synonym, equal_values);
 }
 
 bool WithEvaluator::handleNumberSynonym(unsigned int num, Synonym& synonym) {
-  db.addToSingleVariableConstraints(synonym.synonym,
-                                    SingleConstraintSet{std::to_string(num)});
-  return true;
+  return db.addToSingleVariableConstraints(
+      synonym.synonym, SingleConstraintSet{std::to_string(num)});
 }
 
 bool WithEvaluator::handleNumberSynAttr(unsigned int num, SynAttr& synAttr) {
@@ -120,9 +118,8 @@ bool WithEvaluator::handleNumberSynAttr(unsigned int num, SynAttr& synAttr) {
   // All the attribute applications are no-ops
   // We MUST have accessed constant.value / <stmttype>.stmt# - no work to do
   // Can just add constraint: (c) -> (10) for e.g.
-  db.addToSingleVariableConstraints(synAttr.synonym.synonym,
-                                    SingleConstraintSet{std::to_string(num)});
-  return true;
+  return db.addToSingleVariableConstraints(
+      synAttr.synonym.synonym, SingleConstraintSet{std::to_string(num)});
 }
 
 bool WithEvaluator::handleQuoteIdentSynAttr(QuoteIdent& quoteIdent,
@@ -137,7 +134,7 @@ bool WithEvaluator::handleQuoteIdentSynAttr(QuoteIdent& quoteIdent,
   // If we have a variable or procedure: no - op, just constrain directly
   if (design_entity_type == DesignEntity::PROCEDURE ||
       design_entity_type == DesignEntity::VARIABLE) {
-    db.addToSingleVariableConstraints(
+    return db.addToSingleVariableConstraints(
         synAttr.synonym.synonym, SingleConstraintSet{quoteIdent.quote_ident});
   } else {
     auto all_des = QueryExecutor::getSelect(pkb, design_entity_type);
@@ -150,9 +147,9 @@ bool WithEvaluator::handleQuoteIdentSynAttr(QuoteIdent& quoteIdent,
                    return this->applyAttrToDesignEntityValue(
                               design_entity_type, de) == quoteIdent.quote_ident;
                  });
-    db.addToSingleVariableConstraints(synAttr.synonym.synonym, filtered_des);
+    return db.addToSingleVariableConstraints(synAttr.synonym.synonym,
+                                             filtered_des);
   }
-  return true;
 }
 
 bool WithEvaluator::handleSynonymSynAttr(Synonym& synonym, SynAttr& synAttr) {
@@ -169,10 +166,9 @@ bool WithEvaluator::handleSynonymSynAttr(Synonym& synonym, SynAttr& synAttr) {
 
   // Perform set intersection and duplicate all resultant values
   // E.g. (1, 2) INT (2, 3) ==> {(2, 2)}
-  db.addToPairedVariableConstraints(
+  return db.addToPairedVariableConstraints(
       synonym.synonym, synAttr.synonym.synonym,
       Utils::unorderedSetIntersectionToPairedSet(all_prog_lines, all_des));
-  return true;
 }
 
 std::string WithEvaluator::applyAttrToDesignEntityValue(

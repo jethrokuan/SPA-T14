@@ -78,7 +78,7 @@ void QueryExecutor::addAllValuesForVariableToConstraints(
   // have been either in a such-that clause or pattern clause (ignoring
   // select). If it was in either of those clauses, this function would have
   // run.
-  if (db.hasVariable(var_name)) return;
+  // if (db.hasVariable(var_name)) return;
 
   auto all_de = getAllDesignEntityValuesByVarName(declarations, pkb, var_name);
   db.addToSingleVariableConstraints(var_name, all_de);

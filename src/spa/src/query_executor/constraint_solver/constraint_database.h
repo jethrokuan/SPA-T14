@@ -98,21 +98,27 @@ class ConstraintDatabase {
 
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintDatabase const& db) {
-    os << "------------------------------------------------------------\n"s;
-    os << "DB: Synonym to table idx mappings\n"s;
+    os << "\n\n------------------------------------------------------------\n"s;
+    os << "DATABASE STATE\n\n";
+    os << "SYNONYM => TABLE INDEX MAPPING:\n"s;
     // Print out the table headers
     for (auto [key, val] : db.name_table_map) {
-      os << key << " => table index "s << std::to_string(val) << "\n"s;
+      os << key << "\t";
     }
-    os << "------------------------------------------------------------\n"s;
+    os << "\n-----------------------------------------\n";
+    for (auto [key, val] : db.name_table_map) {
+      os << val << "\t";
+    }
 
-    os << "\n---------------------------------\n"s;
-    os << "DB: Tables: \n"s;
+    os << "\n\n";
+
+    os << "DATABASE TABLES: \n"s;
     // Print out the table headers
     for (const auto& table : db.tables) {
       os << table << "\n\n"s;
     }
-    os << "---------------------------------\n"s;
+    os << "END DATABASE STATE\n";
+    os << "------------------------------------------------------------\n\n"s;
 
     return os;
   }

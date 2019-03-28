@@ -51,8 +51,7 @@ class QueryExecutor {
   std::vector<std::string> getNegativeResult(const ResultType& resultType);
 
   //! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
-  std::vector<std::string> runConstraintSolver(Result* result,
-                                               ConstraintDatabase& db);
+  std::vector<std::string> selectFromDB(Result* result, ConstraintDatabase& db);
 
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};

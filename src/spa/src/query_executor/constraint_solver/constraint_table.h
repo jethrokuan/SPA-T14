@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <iostream>
+#include <map>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -8,6 +9,7 @@
 #include <vector>
 #include "utils/utils.h"
 
+using std::map;
 using std::string;
 using std::unordered_map;
 using std::vector;
@@ -78,12 +80,15 @@ class ConstraintTable {
   friend std::ostream& operator<<(std::ostream& os,
                                   ConstraintTable const& ctable) {
     // Print out the table headers
-    os << "\n*************************\n"s;
-    os << "Columns for this table: \n"s;
+    // Sort them by the index so we can print out column headers
+    map<size_t, string> idx_var_map;
     for (auto [key, val] : ctable.name_column_map) {
-      os << key << " => column idx "s << std::to_string(val) << "\n"s;
+      idx_var_map.insert({val, key});
     }
-    os << "*************************\n"s;
+    for (auto [key, val] : idx_var_map) {
+      os << val << "\t";
+    }
+    os << "\n*************************\n"s;
 
     // Print out the table headers
     for (const auto& row : ctable.table) {

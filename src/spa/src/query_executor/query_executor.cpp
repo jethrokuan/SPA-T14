@@ -71,7 +71,7 @@ std::vector<std::string> QueryExecutor::makeQueryUnsorted(Query* query) {
   addAllSelectedVarsToConstraints(query, db);
 
   // Runs the correct constraint solver method (BOOLEAN vs non-BOOLEAN)
-  return runConstraintSolver(query->result, db);
+  return selectFromDB(query->result, db);
 }
 
 std::unordered_set<std::string> QueryExecutor::getSelect(PKBManager* pkb,
@@ -190,8 +190,9 @@ bool QueryExecutor::handleWithCond(std::vector<QE::Declaration>* decls,
 }
 
 //! Runs the correct ConstraintSolver methods for non/BOOLEAN selects
-std::vector<std::string> QueryExecutor::runConstraintSolver(
-    Result* result, ConstraintDatabase& db) {
+std::vector<std::string> QueryExecutor::selectFromDB(Result* result,
+                                                     ConstraintDatabase& db) {
+  std::cout << db;
   if (result->T == ResultType::TUPLE) {
     // Get vector of vector of results - one for each selected var
     return db.selectMultiple(

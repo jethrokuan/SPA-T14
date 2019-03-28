@@ -161,7 +161,7 @@ void ConstraintDatabase::removeTableFromDatabase(size_t table_idx) {
 
   // Refresh var -> table mapping
   name_table_map.clear();
-  for (int i = 0; i < tables.size(); i++) {
+  for (size_t i = 0; i < tables.size(); i++) {
     for (auto [var_name, col_idx] : tables[i].name_column_map) {
       name_table_map.insert({var_name, i});
     }

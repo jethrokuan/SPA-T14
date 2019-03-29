@@ -107,3 +107,144 @@ assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; v
 Select r1 such that Modifies(r1, "x") and Uses(i1,"z") and Follows(1,s1) and Follows*(1,n1)  and pattern i("x",_,_) and pattern a(v,_"y+1"_) and pattern w("x",_) and Next*(7,n2) and Next(n1,6) and Parent(16,n2) and Parent*(16,s2) and Calls(_,p2) and Calls*(_,p2) 
 1
 5000
+23 - More cases
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select s1 such that Follows(r1,s1) and Follows*(r1,s1) and Follows*(1,s1)
+2,3,4
+5000
+24 
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select s1 such that Follows(n1,s1) and Follows(_,s1) and Follows*(n1,s1) and Follows*(_,s1) 
+2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26
+5000
+25
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select s1 such that Follows(a1,s1) and Follows*(a1,s1)
+7,10,14,15,16,18,20
+5000
+26
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select s1 such that Follows(p1,s1) and Follows*(p1,s1)
+22,23,24,25,26
+5000
+27
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select s1 such that Follows(p1,s1) and Follows*(p1,s1) and Follows(a1,s1) and Follows*(a1,s1)
+none
+5000
+28
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select s1 such that Follows(a1,s1) and Follows*(a1,s1) and Follows(_,s1) and Follows*(n1,s1)
+7,10,14,15,16,18,20
+5000
+29
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select s1 such that Follows(s1,s1) and Follows(w1,s1) and Follows(s1,1) and Follows(r1,1) and Follows(p1,1) and Follows(c1,1) and Follows(w1,1) and Follows(i1,1) and Follows(a1,1) and Follows(n1,1)
+none
+5000
+30
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select s1 such that Follows(s1,s1) and Follows(w1,s1) and Follows(s1,1) and Follows(r1,1) and Follows(p1,1) and Follows(w1,1) and Follows(i1,1) and Follows(a1,1) and Follows(n1,1) and Follows(_,1) and Follows(1,1) and Follows*(s1,s1)
+none
+5000
+31 - Select BOOLEAN
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+Select BOOLEAN such that Calls(_,"main") and Calls("main","main") and Calls("main","addABC") and Calls("loops","main") and Calls("loops","loops") and Calls("addABC",_) and Calls("addABC","main") and Calls("addABC","loops") and Calls("addABC","addABC") and Calls*(_,"main") and Calls*("main","main") and pattern a("b",_"b+5"_) and pattern a("c","a+b") and pattern w("y",_)
+FALSE
+5000
+32 
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+Select BOOLEAN such that Calls(_,_) and Calls(_,"loops") and Calls(_,"addABC") and Calls("main",_) and Calls("main","loops") and Calls("loops",_) and Calls("loops","addABC") and Calls*(_,_) and Calls*(_,"loops") and Calls*(_,"addABC")
+TRUE
+5000
+33
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+Select BOOLEAN such that Calls(_,_) and Calls(_,"loops") and Calls(_,"addABC") and Calls("main",_) and Calls("main","loops") and Calls("loops",_) and Calls("loops","addABC") and Calls*(_,_) and Calls*(_,"loops") and Calls*(_,"addABC") and pattern i("y",_,_)
+FALSE
+5000
+34
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+Select BOOLEAN such that Calls*("addABC",_) and Calls*("addABC","main") and Calls*("addABC","loops") and Calls*("addABC","addABC") and pattern a("x",_"y+1"_) and pattern a("x",_"z+1"_) and pattern a("b",_"a+1"_) and pattern a("b",_"b+5"_) and pattern a("c","a+b") and pattern w("y",_) and pattern i("y",_,_) and Calls(_,_)
+FALSE
+5000
+35
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+Select BOOLEAN such that Calls*("addABC",_) and Calls*("addABC","main") and Calls("main","main") and Calls("main","addABC") and Calls("loops","main") and Calls("loops","loops") and Calls("addABC",_) and pattern a("b",_"b+5"_) and pattern a("c","a+b") and pattern w("y",_) and pattern i("y",_,_) and Calls(_,_)
+FALSE
+5000
+36
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+Select BOOLEAN such that Calls*("main","addABC") and Calls*("loops",_) and Calls*("loops","addABC") and pattern a(_,_"x+1"_) and pattern a(_,_"y+1"_) and pattern a(_,_"z+1"_) and pattern a(_,_"a+1"_) and pattern a(_,_"a+10"_) and pattern a(_,_"b+5"_) and pattern a(_,"a+b") and pattern a("x",_) and pattern a("x",_"x+1"_) and pattern a("b",_"a+10"_) and pattern a("b","a+b")
+TRUE
+5000
+37
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+Select BOOLEAN such that Calls*("main","addABC") and Calls*("loops",_) and Calls*("loops","addABC") and Calls(_,_) and Calls(_,"loops") and Calls(_,"addABC") and Calls("main",_) and pattern a(_,_"a+10"_) and pattern a(_,_"b+5"_) and pattern a(_,"a+b") and pattern a("x",_) and pattern a("x",_"x+1"_) and pattern a("b",_"a+10"_) and pattern a("b","a+b")
+TRUE
+5000
+38 - TUPLE
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <p1,p2> such that Calls*(p1,p2) and Calls(p1,p2) and Calls*(p1,p2) and Calls*(p1,_) and Modifies(p1,"x") and Modifies(p1,"y") and Modifies(p1,"z") and Calls*(p1,"addABC") and Calls(p1,"loops") and Calls*(p1,"loops")
+main loops
+5000
+39 
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <p1,p2> such that Calls*(p1,p2) and Calls(p1,p2) and Calls*(p1,p2) and Calls*(p1,_) and Modifies(p1,"x") and Modifies(p1,"y") and Modifies(p1,"z") and Calls*(p1,"addABC") and Calls(p1,"addABC")
+loops addABC, loops handlePrint
+5000
+40
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <p1,p2> such that Calls*(p1,p2) and Calls*(p1,p2) and Calls*(p1,_) and Modifies(p1,"x") and Modifies(p1,"y") and Modifies(p1,"z") and Calls*(p1,"addABC") and Calls*(p1,"loops")
+main loops, main addABC, main handlePrint
+5000
+41
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <p1,p2> such that Calls*(p1,p2) and Calls*(p1,p2) and Calls*(p1,_) and Modifies(p1,"x") and Modifies(p1,"y") and Modifies(p1,"z") and Calls*(p1,"addABC")
+main loops, main addABC, main handlePrint, loops addABC, loops handlePrint
+5000
+42
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <w,v> such that pattern w(v,_) and pattern i(v,_,_) and pattern i(_,_,_) and pattern w(v,_) and pattern i("x",_,_) and  and 
+8 x
+5000
+43
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <a1,v1> such that pattern a1(_,_) and Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Follows(a1,_)
+6 y, 9 z, 13 a, 14 a, 14 b, 15 a, 15 b, 15 c, 17 a, 17 b, 19 a, 19 b
+5000
+44
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <a1,v1> such that pattern a1(_,_) and Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Follows(a1,_) and Modifies(a1,"y")
+6 y
+5000
+45
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <a1,v1> such that pattern a1(_,_) and Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"y") and Modifies(a1,"x")
+7 x, 11 x
+5000
+46
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <a1,v1> such that pattern a1(_,_) and Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"y") and Modifies(a1,"x") and Follows(c1,a1)
+11 x
+5000
+47
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <a1,v1> such that pattern a1(_,_) and Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"y") and Modifies(a1,"x") and Follows(c1,a1) and Follows*(a1,a1)
+none
+5000
+48
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select <a1,v1> such that pattern a1(_,_) and Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"y") and Modifies(a1,"x") and Follows(c1,a1) and Follows*(a1,a1) and Follows*(1,a1) and Follows*(w1,a1) and Follows*(i1,a1) and Follows*(a1,a1) and Follows*(1,a1)
+none
+5000
+49
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w,w1,w2; if i,i1, i2; variable v,v1, v2;
+Select <a1,v1> such that pattern a1(_,_) and Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and pattern i(v,_,_)
+7 x,11 x, 13 a, 14 a,15 a,17 a, 18 a, 19 a
+5000
+50
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w,w1,w2; if i,i1, i2; variable v,v1, v2;
+Select <a1,v1> such that pattern a1(_,_) and Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and pattern i(v,_,_)pattern w(v,_)
+7 x,11 x
+5000
+

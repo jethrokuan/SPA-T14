@@ -10,9 +10,10 @@
 using namespace PKB;
 using namespace QE;
 
-struct WeightedClause {
+struct WeightedGroupedClause {
   Clause clause;
-  int weight;
+  int weight;             // Lower score ==> higher prority, can be negative
+  unsigned int group_id;  // To group related clauses together
 };
 
 class ClausePrioritizer {
@@ -20,7 +21,7 @@ class ClausePrioritizer {
   Query* query;
 
   //! Initializes all intemediate clause objects with a starting weight
-  std::vector<WeightedClause> getInitialWeightedClauses();
+  std::vector<WeightedGroupedClause> getInitialWeightedGroupedClauses();
 
   //! Takes all clause types from query and puts them all into one vector
   std::vector<Clause> getClausesFromQuery();
@@ -29,6 +30,7 @@ class ClausePrioritizer {
   bool tooFewClauses();
 
   static const int STARTING_WEIGHT = 1;
+  static const int DEFAULT_GROUP = 0;
   static const int MIN_CLAUSES_TO_SORT = 2;
 
  public:

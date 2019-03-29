@@ -8,31 +8,30 @@ std::vector<Clause> ClausePrioritizer::getClauses() {
   // Not worth sorting - little to no gain
   if (tooFewClauses()) return getClausesFromQuery();
 
-  // Give all clauses a score based on what kind of clause they are
-  std::vector<WeightedClause> clauses = getInitialWeightedClauses();
-
-  
+  // Initializes all clauses to a default starting score and group
+  std::vector<WeightedGroupedClause> clauses =
+      getInitialWeightedGroupedClauses();
 }
 
 // Utils
 
-//! Create all clauses with weight 1
-std::vector<WeightedClause> ClausePrioritizer::getInitialWeightedClauses() {
-  std::vector<WeightedClause> clauses;
+std::vector<WeightedGroupedClause>
+ClausePrioritizer::getInitialWeightedGroupedClauses() {
+  std::vector<WeightedGroupedClause> clauses;
   // Add all clauses to a vector of them
   if (!query->rel_cond->empty()) {
     for (auto& rel_cond : *(query->rel_cond)) {
-      clauses.push_back({rel_cond, STARTING_WEIGHT});
+      clauses.push_back({rel_cond, STARTING_WEIGHT, DEFAULT_GROUP});
     }
   }
   if (!query->patternb->empty()) {
     for (auto& pattern : *(query->patternb)) {
-      clauses.push_back({pattern, STARTING_WEIGHT});
+      clauses.push_back({pattern, STARTING_WEIGHT, DEFAULT_GROUP});
     }
   }
   if (!query->with_cond->empty()) {
     for (auto& with_cond : *(query->with_cond)) {
-      clauses.push_back({with_cond, STARTING_WEIGHT});
+      clauses.push_back({with_cond, STARTING_WEIGHT, DEFAULT_GROUP});
     }
   }
   return clauses;

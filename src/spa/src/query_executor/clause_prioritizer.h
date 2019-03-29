@@ -29,7 +29,7 @@ class ClausePrioritizer {
   bool tooFewClauses();
 
   static const int STARTING_WEIGHT = 1;
-  static const int MIN_CLAUSES_TO_SORT = 5;
+  static const int MIN_CLAUSES_TO_SORT = 2;
 
  public:
   ClausePrioritizer(Query* query) : query(query){};

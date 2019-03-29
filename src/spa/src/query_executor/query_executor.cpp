@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "query_executor/clause_prioritizer.h"
 #include "query_executor/constraint_solver/constraint_database.h"
 #include "query_executor/pattern/AssignPatternEvaluator.h"
 #include "query_executor/pattern/IfPatternEvaluator.h"
@@ -28,7 +29,7 @@ using namespace QE;
 std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
   ConstraintDatabase db;
 
-  std::vector<Clause> clauses = getClausesFromQuery(query);
+  std::vector<Clause> clauses = ClausePrioritizer(query).getClauses();
 
   // Execute each clause on the PKB
   for (auto clause : clauses) {
@@ -144,25 +145,4 @@ std::vector<std::string> QueryExecutor::selectFromDB(
     // No other result types allowed
     assert(false);
   }
-}
-
-std::vector<Clause> QueryExecutor::getClausesFromQuery(Query* query) {
-  std::vector<Clause> clauses;
-  // Add all clauses to a vector of them
-  if (!query->rel_cond->empty()) {
-    for (auto& rel_cond : *(query->rel_cond)) {
-      clauses.push_back(rel_cond);
-    }
-  }
-  if (!query->patternb->empty()) {
-    for (auto& pattern : *(query->patternb)) {
-      clauses.push_back(pattern);
-    }
-  }
-  if (!query->with_cond->empty()) {
-    for (auto& with_cond : *(query->with_cond)) {
-      clauses.push_back(with_cond);
-    }
-  }
-  return clauses;
 }

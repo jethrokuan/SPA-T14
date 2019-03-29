@@ -42,12 +42,14 @@ set(srcs ${srcs}
   src/query_executor/pattern/PatternEvaluator.cpp
   src/query_executor/constraint_solver/constraint_database.cpp
   src/query_executor/constraint_solver/constraint_table.cpp
+  src/query_executor/clause_prioritizer.cpp
   src/query_executor/with/WithEvaluator.cpp
   )
 set(headers ${headers}
   src/query_executor/query_executor.h
   src/query_executor/constraint_solver/constraint_database.h
   src/query_executor/constraint_solver/constraint_table.h
+  src/query_executor/clause_prioritizer.h
   src/query_executor/suchthat/SuchThatEvaluator.h
   src/query_executor/suchthat/FollowsTEvaluator.h
   src/query_executor/suchthat/ParentTEvaluator.h

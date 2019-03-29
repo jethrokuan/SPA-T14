@@ -36,7 +36,7 @@ Select a pattern a(v,_"b+5"_)
 8 - Pattern, assign
 assign a; variable v;
 Select a pattern a(v,"a+b")
-14,15
+14
 5000
 9 - Pattern, assign
 assign a; variable v;
@@ -121,5 +121,5 @@ TRUE
 25 - Pattern, assign
 assign a; variable v;
 Select BOOLEAN pattern a("c","a+b")
-TRUE
+FALSE
 5000

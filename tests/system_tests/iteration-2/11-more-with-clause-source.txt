@@ -1,0 +1,126 @@
+procedure ZERO
+{
+    rh = anyNum / (2 + someNum) - 11 + sr * ss;
+
+    ss = gg - 4 % anyNum;
+
+    while (d < one) {
+        if (!( (first <= 0) && (a != c) )) then {
+            id = id - 1;
+        } else {
+            print x;
+            while (happy != user) {
+                lithium = I - (k + helium2 * heart);
+                read anyNum;
+            }
+        }
+        while (beta >= 11) {
+            if ( (6 >= someNum) && (!(c == rh)) ) then {
+                if (gamma != score) then {
+                    p = a % c1 + 1 ;
+                } else {
+                    print someNum;
+                    while ( !(id <= 22) ) {
+                        read one;
+                    }
+                    y = 1;
+                }
+                one = one - 2;
+            } else {
+                read x;
+                read y;
+                print x;
+                y = (y % 7 + 23 * 11) / (100 - x);
+            } 
+        }
+
+        while ((c <= 0) && ((alpha > 11) || (b % someNum + 10 != alpha)) )  {
+            c = 1000;
+            print one;
+            ss = beta + l  / user + score;
+        }
+    }
+    read sr;
+}
+ 
+procedure ONE {
+    if (d < one) then {
+        if (count <= x) then {
+            call TWO;
+        } else {
+            y = (d - d * (a + c + 21)) % (b - b / 14);
+        }
+    } else {
+        if (sum < 21) then {
+            print sum;
+        } else {
+            count = count + 1;
+            f = ring + 4 + g * a * 2 * 1 + shine;
+        }
+    }
+    read r;
+    read x;
+    x = x + 200;
+    print r;
+}
+
+procedure TWO {
+    while ((c <= 0) && ((alpha > 11) || (b % y + 10 != alpha)) )
+    {
+        a = f + y + z + sum * sum / f + x;
+        if ((x >= 100) && (x < 1)) then {
+            x = x % 10;
+        } else {                    
+            x = v + x * y + z * t;
+        }
+    }
+}
+
+procedure THREE {
+    read y;
+    ring = shine * 2;
+    call ZERO;
+    if (a != shine) then {
+        print y;
+        while (lost == a) {
+            lost = lost - 1;
+            w = a + lost;
+            shine = i + ring;
+        }
+        d  = (shine + 12) * (lost + 13);
+        read shine;
+        print a;
+    } else {
+        if (lost != c) then {
+            f = f - 71 * 88;
+            c = 1;
+        } else {
+            while (6 < x + 1 - 8) {
+                read f;
+                print z;
+                y = f + 6 + 1;
+                print y;
+            }   
+        }
+    }
+}
+
+procedure FOUR {
+    while (x + y - z != test) {
+        x = (test + 102 % (x * y) - 11) / z;
+        read test;
+        y = y + z + 1;
+        print z;
+        if (z > 1) then {
+            call ZERO;
+        } else {    
+            print test;
+        }
+        while (x - 1 <= y + 21) {
+            print x;
+            y = y - 1;
+            print y;
+            read a;
+        }
+    }
+}

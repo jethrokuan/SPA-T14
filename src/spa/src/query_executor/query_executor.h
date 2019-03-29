@@ -47,7 +47,23 @@ class QueryExecutor {
   std::vector<std::string> getNegativeResult(const ResultType& resultType);
 
   //! Asks the DB for the result type corresponding to the Select clause
-  std::vector<std::string> selectFromDB(Result* result, ConstraintDatabase& db);
+  std::vector<std::string> selectFromDB(std::vector<QE::Declaration>* decls,
+                                        Result* result, ConstraintDatabase& db);
+
+  //! For each synonym, look at decls and map them to their design entity
+  std::unordered_map<std::string, DesignEntity> getSynoynmToDesignEntityTypeMap(
+      std::vector<Declaration>* decls,
+      std::vector<QE::ResultItem>* selected_declarations);
+
+  //! E.g. If c.procName is a columns, do .procName on that col's values
+  void applyAttributesToResults(
+      std::vector<QE::ResultItem>* selected_declarations,
+      std::vector<std::vector<std::string>>& results,
+      unordered_map<std::string, DesignEntity>& synonym_de_map);
+
+  //! Format results by adding a space between them
+  std::vector<std::string> joinResults(
+      const std::vector<std::vector<std::string>>& results);
 
  public:
   QueryExecutor(PKBManager* pkb) : pkb(pkb){};
@@ -71,4 +87,16 @@ class QueryExecutor {
   static std::optional<QE::Synonym> getRefAsSynonym(QE::Ref);
   static bool isRefUnderscore(QE::Ref);
   static std::optional<std::string> getRefAsBasic(QE::Ref);
+
+  //! /brief Convenience method to get an attribute value from a design entity
+  //! value.
+  //! E.g. for type print and value 3, we check 3.varName
+  static std::string applyAttrToDesignEntityValue(PKBManager* pkb,
+                                                  const DesignEntity& de_type,
+                                                  const std::string& val);
+  //! Convenience when we don't know it's a NAME type
+  static std::string applyAttrToDesignEntityValue(PKBManager* pkb,
+                                                  const DesignEntity& de_type,
+                                                  const std::string& val,
+                                                  const AttrName& attrName);
 };

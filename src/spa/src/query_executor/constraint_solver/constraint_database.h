@@ -92,8 +92,8 @@ class ConstraintDatabase {
   bool selectBoolean();
   //! Returns the column containing the variable of interest
   vector<string> selectOne(const std::string var_to_select);
-  //! Returns all columns containing the variables of interests in order
-  vector<string> selectMultiple(const vector<string> vars_to_select);
+  //! Returns all rows where columns are in the order of vars_to_select
+  vector<vector<string>> selectMultiple(const vector<string> vars_to_select);
 
   inline bool hasVariable(const std::string& var_name) {
     return name_table_map.find(var_name) != name_table_map.end();

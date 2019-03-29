@@ -1,5 +1,9 @@
 #pragma once
 
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -154,5 +158,28 @@ std::vector<std::string> cartesianProduct(const std::vector<std::string> v1,
 //! Finds the cartesian-product of multiple vectors of strings
 std::vector<std::string> cartesianProduct(
     const std::vector<std::vector<std::string>> vecs, char sep = ' ');
+
+template <typename InputIt>
+std::string join(InputIt first, InputIt last,
+                 const std::string& separator = " ",
+                 const std::string& concluder = "") {
+  if (first == last) {
+    return concluder;
+  }
+
+  std::stringstream ss;
+  ss << *first;
+  ++first;
+
+  while (first != last) {
+    ss << separator;
+    ss << *first;
+    ++first;
+  }
+
+  ss << concluder;
+
+  return ss.str();
+}
 
 }  // namespace Utils

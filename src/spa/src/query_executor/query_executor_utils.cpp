@@ -113,3 +113,85 @@ QueryExecutor::getAllDesignEntityValuesByVarName(
                     ->getDesignEntity();
   return QueryExecutor::getSelect(pkb, var_de);
 }
+
+std::string QueryExecutor::applyAttrToDesignEntityValue(
+    PKBManager* pkb, const DesignEntity& de_type, const std::string& de,
+    const AttrName& attrName) {
+  // Only take this seriously  if we're asking for proc name or var name
+  // Rest are no-ops for sure
+
+  if (attrName == AttrName::PROC_NAME || attrName == AttrName::VAR_NAME) {
+    return applyAttrToDesignEntityValue(pkb, de_type, de);
+  } else {
+    return de;
+  }
+}
+
+std::string QueryExecutor::applyAttrToDesignEntityValue(
+    PKBManager* pkb, const DesignEntity& de_type, const std::string& de) {
+  // This function does not check for the attribute name since there is no
+  // ambiguity - should be of type NAME, so only one possibility
+
+  switch (de_type) {
+    case DesignEntity::CALL:
+      return pkb->getCallProcedureFromLine(de).value();
+    case DesignEntity::READ:
+      return pkb->getReadVariableFromLine(de).value();
+    case DesignEntity::PRINT:
+      return pkb->getPrintVariableFromLine(de).value();
+    case DesignEntity::VARIABLE:
+      // no-op
+      return de;
+    case DesignEntity::PROCEDURE:
+      // no-op
+      return de;
+    default:
+      std::cerr
+          << "Received unexpected design entity type to apply attrName to\n";
+      assert(false);
+  }
+}
+
+unordered_map<std::string, DesignEntity>
+QueryExecutor::getSynoynmToDesignEntityTypeMap(
+    std::vector<Declaration>* decls,
+    std::vector<QE::ResultItem>* selected_declarations) {
+  unordered_map<std::string, DesignEntity> synattr_de_map;
+  for (auto& selected : *selected_declarations) {
+    if (auto synattr = std::get_if<SynAttr>(&selected)) {
+      auto de = Declaration::findDeclarationForSynonym(decls, synattr->synonym)
+                    ->getDesignEntity();
+      synattr_de_map.insert({synattr->synonym.synonym, de});
+    }
+  }
+  return synattr_de_map;
+}
+
+void QueryExecutor::applyAttributesToResults(
+    std::vector<QE::ResultItem>* selected_declarations,
+    std::vector<std::vector<std::string>>& results,
+    unordered_map<std::string, DesignEntity>& synonym_de_map) {
+  // Apply the synattr transform on each element that needs it
+  for (size_t row_idx = 0; row_idx < results.size(); row_idx++) {
+    for (size_t col_idx = 0; col_idx < results[row_idx].size(); col_idx++) {
+      // If this column is for a SynAttr result, transform it.
+      if (auto synattr =
+              std::get_if<SynAttr>(&selected_declarations->at(col_idx))) {
+        std::string synonym = synattr->synonym.synonym;
+        std::string value = results[row_idx][col_idx];
+        results[row_idx][col_idx] = applyAttrToDesignEntityValue(
+            pkb, synonym_de_map[synonym], value, synattr->attrName);
+      }
+    }
+  }
+}
+
+std::vector<std::string> QueryExecutor::joinResults(
+    const std::vector<std::vector<std::string>>& results) {
+  std::vector<std::string> out_result;
+  // Join all vectors by comma
+  for (const auto& row : results) {
+    out_result.push_back(Utils::join(row.begin(), row.end()));
+  }
+  return out_result;
+}

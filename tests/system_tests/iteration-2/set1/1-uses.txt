@@ -86,7 +86,7 @@ Select w1 such that Uses(w1,"x")
 18 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select w1 such that Uses(w1,"y")
-8
+none
 5000
 19 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
@@ -101,27 +101,27 @@ Select w1 such that Uses(w1,v1)
 21 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select p1 such that Uses(p1,_)
-main,loops.addABC
+main,loops,addABC,handlePrint
 5000
 22 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select p1 such that Uses(p1,"x")
-main,loops
+main,loops,handlePrint
 5000
 23 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select p1 such that Uses(p1,"y")
-main,loops
+main,loops,handlePrint
 5000
 24 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select p1 such that Uses(p1,"z")
-main,loops
+main,loops,handlePrint
 5000
 25 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select p1 such that Uses(p1,v1)
-main,loops.addABC
+main,loops,addABC,handlePrint
 5000
 26 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
@@ -155,6 +155,6 @@ x
 5000
 32 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
-Select v1 such that Modifies"main",v1)
+Select v1 such that Modifies("main",v1)
 x,y,z,a,b,c
 5000

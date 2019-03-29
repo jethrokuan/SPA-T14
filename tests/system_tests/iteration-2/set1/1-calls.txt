@@ -26,7 +26,7 @@ loops
 6 - Calls
 procedure p1, p2;
 Select p2 such that Calls(_,p2)
-main,loops,addABC,handlePrint
+loops,addABC,handlePrint
 5000
 7 - Calls
 procedure p1, p2;

@@ -126,7 +126,7 @@ TRUE
 574
 assign a, a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
 Select BOOLEAN such that Calls*("main","addABC") and Calls*("loops",_) and Calls*("loops","addABC") and Calls(_,_) and Calls(_,"loops") and Calls(_,"addABC") and Calls("main",_) pattern a(_,_"a+10"_) pattern a(_,_"b+5"_) pattern a(_,"a+b") and a("x",_) and a("x",_"x+1"_) and a("b",_"a+10"_) and a("b","a+b")
-TRUE
+FALSE
 5000
 579
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v, v1, v2;

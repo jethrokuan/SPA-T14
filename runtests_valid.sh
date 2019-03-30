@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 # Run Autotester on System Tests
 
 # CREATE THE OUTPUT DIRECTORY

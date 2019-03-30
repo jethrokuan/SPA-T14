@@ -10,12 +10,19 @@ using namespace std::placeholders;
  *   SETTINGS!
  */
 // Generic penalty/reward numbers
-const int EXECUTE_ME_FIRST_REWARD = -1000;
-const int SMALL_REWARD = -5;
-const int SET_LOOKUP_PENALTY = 5;
-const int EXECUTE_ME_LAST_PENALTY = 1000;
+constexpr int EXECUTE_ME_FIRST_REWARD = -1000;
+constexpr int SMALL_REWARD = -5;
+constexpr int SET_LOOKUP_PENALTY = 5;
+constexpr int EXECUTE_ME_LAST_PENALTY = 1000;
+constexpr int NO_DELTA = 0;
 
 // Pattern penalty for any string matching
+
+// On-the-fly penalties
+constexpr int ON_THE_FLY_PENALTY = EXECUTE_ME_LAST_PENALTY;
+constexpr int AFFECTS_T_PENALTY = 1000;
+constexpr int AFFECTS_PENALTY = 500;
+constexpr int NEXT_T_PENALTY = 300;
 
 // Make passing into functions more explicit: otherwise magic numbers everywhere
 struct RelCondWeightDelta {
@@ -79,3 +86,35 @@ WeightFunction weightBooleanClause =
               RelCondWeightDelta{EXECUTE_ME_FIRST_REWARD + SET_LOOKUP_PENALTY},
               PatternWeightDelta{EXECUTE_ME_FIRST_REWARD + SET_LOOKUP_PENALTY},
               WithCondWeightDelta{EXECUTE_ME_FIRST_REWARD});
+
+// Handle the most expensive runtime clauses
+bool isAffectsClause(const WeightedGroupedClause& wgclause) {
+  if (auto relcond = std::get_if<RelCond*>(&wgclause.clause)) {
+    return (*relcond)->relation == Relation::Affects;
+  } else {
+    return false;
+  }
+}
+WeightFunction weightAffectsClause =
+    std::bind(addWeightToClauses, _1, RelCondWeightDelta{AFFECTS_PENALTY},
+              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});
+bool isAffectsTClause(const WeightedGroupedClause& wgclause) {
+  if (auto relcond = std::get_if<RelCond*>(&wgclause.clause)) {
+    return (*relcond)->relation == Relation::AffectsT;
+  } else {
+    return false;
+  }
+}
+WeightFunction weightAffectsTClause =
+    std::bind(addWeightToClauses, _1, RelCondWeightDelta{AFFECTS_T_PENALTY},
+              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});
+bool isNextTClause(const WeightedGroupedClause& wgclause) {
+  if (auto relcond = std::get_if<RelCond*>(&wgclause.clause)) {
+    return (*relcond)->relation == Relation::NextT;
+  } else {
+    return false;
+  }
+}
+WeightFunction weightNextTClause =
+    std::bind(addWeightToClauses, _1, RelCondWeightDelta{NEXT_T_PENALTY},
+              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});

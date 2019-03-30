@@ -43,7 +43,10 @@ void ClausePrioritizer::weightClauses(
 // Actual definition of the weightUpdaters static variables
 std::vector<std::pair<ClauseTypeChecker, WeightFunction>>
     ClausePrioritizer::weightUpdaters = {
-        {isBooleanClause, weightBooleanClause}};
+        {isBooleanClause, weightBooleanClause},
+        {isAffectsClause, weightAffectsClause},
+        {isAffectsTClause, weightAffectsTClause},
+        {isNextTClause, weightNextTClause}};
 
 std::vector<WeightedGroupedClause>
 ClausePrioritizer::getInitialWeightedGroupedClauses() {

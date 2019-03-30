@@ -29,6 +29,9 @@ class ClausePrioritizer {
   //! Indicates if not worth sorting - little to no gain
   bool tooFewClauses();
 
+  //! Calculates weights and groupings for clauses - modifies input parameter
+  void prioritizeClauses(std::vector<WeightedGroupedClause>& clauses);
+
   static const int STARTING_WEIGHT = 1;
   static const int DEFAULT_GROUP = 0;
   static const int MIN_CLAUSES_TO_SORT = 2;

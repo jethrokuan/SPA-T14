@@ -11,7 +11,13 @@ std::vector<Clause> ClausePrioritizer::getClauses() {
   // Initializes all clauses to a default starting score and group
   std::vector<WeightedGroupedClause> clauses =
       getInitialWeightedGroupedClauses();
+
+  prioritizeClauses(clauses);
 }
+
+// Weight calculation
+void ClausePrioritizer::prioritizeClauses(
+    std::vector<WeightedGroupedClause>& clauses) {}
 
 // Utils
 

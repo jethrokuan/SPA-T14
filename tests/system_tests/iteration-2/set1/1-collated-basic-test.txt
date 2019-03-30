@@ -696,7 +696,7 @@ Select a1 such that Follows(a1,_)
 140
 stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
 Select n1 such that Follows(n1,_)
-1,2,3,5,6,9,10,13,14,15,17,19,21,22,23,24,25
+1,2,3,4,5,6,7,8,9,10,13,14,15,17,19,21,22,23,24,25
 5000
 141
 stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
@@ -1201,7 +1201,7 @@ Select n1 such that Follows*(n1,_)
 241
 stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
 Select s1 such that Follows*(_,_)
-1,2,3,5,6,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
 5000
 242
 stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
@@ -2331,7 +2331,7 @@ Select a pattern a(v,"a+b")
 467
 assign a; variable v;
 Select <a,v> pattern a(_,_)
-6 y, 7 x, 9 z, 11 x, 13 a, 14 a, 14 b, 15 a, 15 b, 15 c, 17 a, 17 b, 18 a, 18 c, 19 a, 19 b, 20 c, 20 b
+6 y, 7 x, 9 z, 11 x, 13 a, 14 a, 14 b, 15 a, 15 b, 15 c, 17 a, 17 b, 18 a, 18 c, 19 a, 19 b, 20 c, 20 b, 11 a,11 b,11 c,11 y,11 z,13 b,13 c,13 x,13 y,13 z,14 c,14 x,14 y,14 z,15 x,15 y,15 z,17 c,17 x,17 y,17 z,18 b,18 x,18 y,18 z,19 c,19 x,19 y,19 z,20 a,20 x,20 y,20 z,6 a,6 b,6 c,6 x,6 z,7 a,7 b,7 c,7 y,7 z,9 a,9 b,9 c,9 x,9 y
 5000
 468
 assign a; variable v;
@@ -2441,12 +2441,12 @@ x
 489
 while w; variable v;
 Select v pattern w(_,_)
-none
+a,b,c,x,y,z
 5000
 490
 while w; variable v;
 Select v pattern w("x",_)
-none
+a,b,c,x,y,z
 5000
 491
 while w; variable v;
@@ -2496,12 +2496,12 @@ x,a
 500
 if i; variable v;
 Select v pattern i(_,_,_)
-x,a
+a,b,c,x,y,z
 5000
 501
 if i; variable v;
 Select v pattern i("x",_,_)
-x
+a,b,c,x,y,z
 5000
 502
 if i; variable v;
@@ -2676,7 +2676,7 @@ Select c1 such that Uses(c1,v1)
 536
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select v1 such that Uses(1,v1)
-x
+none
 5000
 537
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;

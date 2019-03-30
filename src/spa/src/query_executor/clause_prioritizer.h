@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <optional>
 
 #include <string>
@@ -14,7 +15,21 @@ struct WeightedGroupedClause {
   Clause clause;
   int weight;             // Lower score ==> higher prority, can be negative
   unsigned int group_id;  // To group related clauses together
+
+  // Sort by groupid, then weight
+  bool operator<(const WeightedGroupedClause& other) {
+    return std::tie(group_id, weight) < std::tie(other.group_id, other.weight);
+  }
+  friend std::ostream& operator<<(std::ostream& os,
+                                  WeightedGroupedClause const& wgc) {
+    os << "Group: " << wgc.group_id << ", Weight: " << wgc.weight;
+    return os;
+  }
 };
+
+//! For application of clause weights based on their type
+using ClauseTypeChecker = std::function<bool(const WeightedGroupedClause&)>;
+using WeightFunction = std::function<void(WeightedGroupedClause&)>;
 
 class ClausePrioritizer {
  private:
@@ -32,9 +47,23 @@ class ClausePrioritizer {
   //! Calculates weights and groupings for clauses - modifies input parameter
   void prioritizeClauses(std::vector<WeightedGroupedClause>& clauses);
 
+  //! Does weight assignments / modifications to clauses
+  void weightClauses(std::vector<WeightedGroupedClause>& clauses);
+
+  //! Groups related clauses together to keep result table small
+  void groupClauses(std::vector<WeightedGroupedClause>& clauses);
+
   //! Utility to go from weighted clauses back to normal clauses
   std::vector<Clause> getClausesFromWeightedGroupedClauses(
       const std::vector<WeightedGroupedClause>& clauses);
+
+  /*
+   * This is a list of functions that test if a clause is of a certain type and
+   * then applies a function to update the weights inside that clause if it
+   * matches
+   */
+  static std::vector<std::pair<ClauseTypeChecker, WeightFunction>>
+      weightUpdaters;
 
   static const int STARTING_WEIGHT = 1;
   static const int DEFAULT_GROUP = 0;

@@ -1,8 +1,10 @@
 #include "query_executor/clause_prioritizer.h"
 #include <cassert>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+#include "query_executor/clause_functions.cpp"
 
 std::vector<Clause> ClausePrioritizer::getClauses() {
   // Not worth sorting - little to no gain
@@ -16,11 +18,41 @@ std::vector<Clause> ClausePrioritizer::getClauses() {
   return getClausesFromWeightedGroupedClauses(weighted_grouped_clauses);
 }
 
-// Weight calculation
 void ClausePrioritizer::prioritizeClauses(
-    std::vector<WeightedGroupedClause>& clauses) {}
+    std::vector<WeightedGroupedClause>& clauses) {
+  /* Prioritization algorithm: https://github.com/jethrokuan/SPA-T14/issues/200
+   * 1. Apply weightages on clauses: different penalties and modifiers.
+   * 2. Group clauses: sort them so that groups are executed one after another
+   */
+  weightClauses(clauses);
+  for (const auto& clause : clauses) {
+    std::cout << clause << std::endl;
+    ;
+  }
+  std::cout << "SORT!\n";
+  std::sort(clauses.begin(), clauses.end());
+  for (const auto& clause : clauses) {
+    std::cout << clause << std::endl;
+    ;
+  }
+}
 
-// Utils
+// Weight calculation
+void ClausePrioritizer::weightClauses(
+    std::vector<WeightedGroupedClause>& clauses) {
+  // For each clause, attempt to apply a clause type checking function
+  // If it matches, update it with the appropriate weighting function
+  for (auto& clause : clauses) {
+    for (auto [clauseTypeChecker, weightFunction] : weightUpdaters) {
+      if (clauseTypeChecker(clause)) weightFunction(clause);
+    }
+  }
+}
+
+// Actual definition of the weightUpdaters static variables
+std::vector<std::pair<ClauseTypeChecker, WeightFunction>>
+    ClausePrioritizer::weightUpdaters = {
+        {isBooleanClause, weightBooleanClause}};
 
 std::vector<WeightedGroupedClause>
 ClausePrioritizer::getInitialWeightedGroupedClauses() {

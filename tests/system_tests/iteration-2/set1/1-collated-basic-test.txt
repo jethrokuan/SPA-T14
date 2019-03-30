@@ -2794,17 +2794,17 @@ Select r1 such that Modifies(r1, "x") and Uses(i1,"z") and Follows(1,s1) and Fol
 1
 5000
 560
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
 Select s1 such that Follows(r1,s1) and Follows*(r1,s1) and Follows*(1,s1)
 2,3,4
 5000
 561
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
 Select s1 such that Follows(n1,s1) and Follows(_,s1) and Follows*(n1,s1) and Follows*(_,s1) 
 2,3,4,12,7,10,11,14,15,16,18,20,22,23,24,25,26
 5000
 562
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
 Select s1 such that Follows(a1,s1) and Follows*(a1,s1)
 7,10,14,15,16,18,20
 5000

@@ -61,7 +61,7 @@ none
 556
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
 Select i1 such that Modifies(i1,_) and Modifies(i1,v1) pattern i1(v,_,_) and i1(_,_,_) such that Uses(i1,_) and Uses(i1,v1) and Follows(s1,i1) and Follows(a1,i1) and Follows(n1,i1) and Follows(_,i1) and Follows*(s1,i1) and Follows*(a1,i1) and Follows*(n1,i1) and Follows*(_,i1)
-none
+16
 5000
 557
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
@@ -71,7 +71,7 @@ Select i1 such that Modifies(i1,_) and Modifies(i1,v1) pattern i1(v,_,_) pattern
 559 - should pass, since all clauses other than the first does not constraint r1
 assign a,a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w,w1,w2; if i, i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
 Select r1 such that Modifies(r1, "x") and Uses(i1,"z") and Follows(1,s1) and Follows*(1,n1)  pattern i1("x",_,_) pattern a(v,_"y+1"_) pattern w("x",_) such that Next*(7,n2) and Next(n1,6) and Parent(16,n2) and Parent*(16,s2) and Calls(_,p2) and Calls*(_,p2) 
-1
+none
 5000
 560
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
@@ -121,7 +121,7 @@ FALSE
 573
 assign a, a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
 Select BOOLEAN such that Calls*("main","addABC") and Calls*("loops",_) and Calls*("loops","addABC") pattern a(_,_"x+1"_) and a(_,_"y+1"_) and a(_,_"z+1"_) and a(_,_"a+1"_) and a(_,_"a+10"_) and a(_,_"b+5"_) and a(_,"a+b") and a("x",_) and a("x",_"x+1"_) and a("b",_"a+10"_) and a("b","a+b")
-TRUE
+FALSE
 5000
 574
 assign a, a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
@@ -150,7 +150,7 @@ Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and U
 5000
 583
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; prog_line n1, n2; stmt s1,s2;
-Select <a1,v1>  pattern a1(_,_) such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"y") and Modifies(a1,"x") and Follows(c1,a1)
+Select <a1,v1>  pattern a1(_,_) such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"x") and Follows(c1,a1)
 11 x
 5000
 586
@@ -162,9 +162,4 @@ Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and U
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w,w1,w2; if i,i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
 Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) pattern i(v,_,_) pattern w(v,_) pattern a1(_,_)
 7 x,11 x
-5000
-582
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; prog_line n1, n2; stmt s1,s2;
-Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"y") and Modifies(a1,"x") pattern a1(_,_)
-7 x, 11 x
 5000

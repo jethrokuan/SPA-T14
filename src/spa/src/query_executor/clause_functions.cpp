@@ -1,7 +1,27 @@
+#include <functional>
 #include "query_executor/clause_prioritizer.h"
 #include "query_executor/query_executor.h"
 
+using namespace std::placeholders;
+
 // Clause Type Checker + weight functions
+
+// Generic function that we can std::bind to to fill in the arguments we want
+void addWeightToClauses(WeightedGroupedClause& wgclause,
+                        int relcond_weight_delta, int pattern_weight_delta,
+                        int withcond_weight_delta) {
+  auto& clause = wgclause.clause;
+  std::visit(
+      overload{
+          // Follows (1,2) --> checks set in O(1) (memory accesss)
+          [&](RelCond*) { wgclause.weight += relcond_weight_delta; },
+          // pattern a ("x", "x+y") --> significant comparison work
+          [&](PatternB*) { wgclause.weight += pattern_weight_delta; },
+          // with 2 = 3 or "2" = "3" --> only computation, no memory access
+          [&](WithCond*) { wgclause.weight += withcond_weight_delta; },
+      },
+      clause);
+}
 
 // Boolean-type clauses, e.g.
 // Follows(1, 2)
@@ -33,17 +53,6 @@ bool isBooleanClause(const WeightedGroupedClause& wgclause) {
       },
       clause);
 }
-
-void weightBooleanClause(WeightedGroupedClause& wgclause) {
-  auto& clause = wgclause.clause;
-  std::visit(
-      overload{
-          // Follows (1,2) --> checks set in O(1) (memory accesss)
-          [&](RelCond*) { wgclause.weight += 2; },
-          // pattern a ("x", "x+y") --> significant comparison work
-          [&](PatternB*) { wgclause.weight += 10; },
-          // with 2 = 3 or "2" = "3" --> only computation, no memory access
-          [&](WithCond*) { wgclause.weight += 1; },
-      },
-      clause);
-}
+// Read as: +2 for relcond, +10 for pattern, +1 for with
+WeightFunction weightBooleanClause =
+    std::bind(addWeightToClauses, _1, 2, 10, 1);

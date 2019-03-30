@@ -25,16 +25,7 @@ void ClausePrioritizer::prioritizeClauses(
    * 2. Group clauses: sort them so that groups are executed one after another
    */
   weightClauses(clauses);
-  for (const auto& clause : clauses) {
-    std::cout << clause << std::endl;
-    ;
-  }
-  std::cout << "SORT!\n";
   std::sort(clauses.begin(), clauses.end());
-  for (const auto& clause : clauses) {
-    std::cout << clause << std::endl;
-    ;
-  }
 }
 
 // Weight calculation

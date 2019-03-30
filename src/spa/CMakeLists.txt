@@ -43,6 +43,7 @@ set(srcs ${srcs}
   src/query_executor/constraint_solver/constraint_database.cpp
   src/query_executor/constraint_solver/constraint_table.cpp
   src/query_executor/clause_prioritizer.cpp
+  src/query_executor/clause_functions.cpp
   src/query_executor/with/WithEvaluator.cpp
   )
 set(headers ${headers}

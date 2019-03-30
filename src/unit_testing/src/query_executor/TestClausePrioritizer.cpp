@@ -37,9 +37,8 @@ TEST_CASE ("Test Clause Prioritizer on multiple numbers of clauses") {
 
   SECTION ("Test clause prioritizer for 3 boolean clauses") {
     auto querystr = std::string(
-        "assign a; Select BOOLEAN such that Follows(1, 2) pattern a (\"x\", "
-        "\"x\") with "
-        "2 = 3");
+        "assign a; Select BOOLEAN such that Follows(1, 2) pattern a (\"x\", _) "
+        " with 2 = 3");
     auto query = qb.makePqlQuery(querystr);
     auto clause_prioritizer = ClausePrioritizer(&query);
     auto clauses_order = clause_prioritizer.getClauses();

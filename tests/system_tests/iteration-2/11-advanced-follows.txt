@@ -1,5 +1,0 @@
-1 - 
-while w;
-Select w pattern w("x",_)
-5
-5000

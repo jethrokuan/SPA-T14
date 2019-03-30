@@ -136,7 +136,7 @@ Select <w,v> pattern w(v,_) and i(v,_,_) and i(_,_,_) and w(v,_) and i("x",_,_)
 580
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Follows(a1,_) pattern a1(_,_)
-6 y, 9 z, 13 a, 14 a, 14 b, 15 a, 15 b, 15 c, 17 a, 17 b, 19 a, 19 b
+6 y, 9 z, 13 a, 14 b, 15 c
 5000
 581
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; prog_line n1, n2; stmt s1,s2;

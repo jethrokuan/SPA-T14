@@ -1,0 +1,12 @@
+procedure main {
+	x = 100;
+	if(x > 50) then {
+		x = x - 20;
+	} else {
+		x = x + 1;
+	}
+
+	while(x < 50){
+		x = x + 1;
+	}
+}

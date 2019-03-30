@@ -1,0 +1,205 @@
+1 - 1 synonym, 2 clause (pattern and USES)
+assign a; while w;
+Select a such that Uses(a,"v1") pattern a(_, _)
+10,11,12,13,14,15,16,21
+5000
+2 - invalid
+assign a; if i;
+Select a such that Uses(a,"v1") pattern a(a, _)
+none
+5000
+3
+assign a; stmt s;
+Select a such that Uses(a,"v1") pattern a("v1", _)
+16
+5000
+4
+assign a; while w;
+Select a such that Uses(a,"v1") pattern a(_, "v1")
+none
+5000
+5 
+assign a; while w;
+Select a such that Uses(a,"v1") pattern a(_, _"v1"_)
+10,11,12,13,14,15,16,21
+5000
+6 - 1 synonym, 2 clause (pattern and MODIFIES)
+assign a;
+Select a such that Modifies(a,"v1") pattern a(_, _)
+16
+5000
+7 - invalid
+assign a; stmt s;
+Select a such that Modifies(a,"v1") pattern a(a, _)
+none
+5000
+8
+assign a; stmt s;
+Select a such that Modifies(a,"v1") pattern a("v1", _)
+16
+5000
+9
+assign a; while w;
+Select a such that Modifies(a,"v1") pattern a(_,"v1")
+none
+5000
+10 - 1 synonym, 2 clause (pattern and FOLLOWS)
+assign a; while w;
+Select a such that Follows(10,a)  pattern a(_, _)
+11
+5000
+11
+assign a; stmt s;
+Select a such that Follows(1,a)  pattern a(a, _)
+none
+5000
+12
+assign a; while w;
+Select a such that Follows(1,a)  pattern a("v1", _)
+none
+5000
+13
+assign a; stmt s;
+Select a such that Follows(1,a)  pattern a(_, "v1")
+none
+5000
+14
+assign a; while w;
+Select a such that Follows(12,a)  pattern a(_, _"v1"_)
+13
+5000
+15 - 1 synonym, 2 clause (pattern and FOLLOWS*)
+assign a; while w;
+Select a such that Follows*(10,a)  pattern a(_, _)
+11,12,13,14,15,16
+5000
+16 - invalid
+assign a; variable v;
+Select a such that Follows*(1,a)  pattern a(a, _)
+none
+5000
+17
+assign a; variable v;
+Select a such that Follows*(10,a)  pattern a("v1", _)
+16
+5000
+18
+assign a; variable v;
+Select a such that Follows*(10,a)  pattern a(_, "v1")
+none
+5000
+19
+assign a; variable v;
+Select a such that Follows*(10,a)  pattern a(_, _"v1"_)
+11,12,13,14,15,16
+5000
+20 - 1 synonym, 2 clause (pattern and Parent)
+assign a; variable v;
+Select a such that Parent(9,a)  pattern a(_, _)
+10,11,12,13,14,15,16
+5000
+21 - invalid
+assign a; variable v;
+Select a such that Parent(9,a)  pattern a(a, _)
+none
+5000
+22
+assign a; variable v;
+Select a such that Parent(9,a)  pattern a("v1", _)
+16
+5000
+23
+assign a; variable v;
+Select a such that Parent(9,a)  pattern a(_, "v1")
+none
+5000
+24
+assign a; variable v;
+Select a such that Parent(9,a)  pattern a(_, _"v1"_)
+10,11,12,13,14,15,16
+5000
+25 - 1 synonym, 2 clause (pattern and Parent*)
+assign a; variable v;
+Select a such that Parent*(9,a)  pattern a(_, _)
+10,11,12,13,14,15,16
+5000
+26 - invalid
+assign a; variable v;
+Select a such that Parent*(9,a)  pattern a(a, _)
+none
+5000
+27
+assign a; variable v;
+Select a such that Parent*(9,a)  pattern a("v1", _)
+16
+5000
+28
+assign a; stmt s;
+Select a such that Parent*(9,a)  pattern a(_, "v1")
+none
+5000
+29
+assign a; stmt s;
+Select a such that Parent*(9,a)  pattern a(_, _"v1"_)
+10,11,12,13,14,15,16
+5000
+30 - PATTERNS WITH CONSTANTS
+assign a; stmt s;
+Select a such that Uses(a,"v1") pattern a(_, _"1"_)
+16
+5000
+31 - PATTERNS WITH CONSTANTS
+assign a; stmt s;
+Select a such that Uses(a,"v1") pattern a("v1", _"1"_)
+16
+5000
+32 - PATTERNS WITH CONSTANTS
+assign a; stmt s;
+Select a such that Modifies(a,"v1") pattern a(_, "1")
+none
+5000
+33 - PATTERNS WITH CONSTANTS
+assign a; stmt s;
+Select a such that Modifies(a,"v1") pattern a("v1", _"1"_)
+16
+5000
+34 - PATTERNS WITH CONSTANTS
+assign a; stmt s;
+Select a such that Follows(10,a) pattern a(_, _"1"_)
+none
+5000
+35 - PATTERNS WITH CONSTANTS
+assign a; stmt s;
+Select a such that Follows(15,a) pattern a("v1", _"1"_)
+16
+5000
+36 - PATTERNS WITH CONSTANTS
+assign a; stmt s;
+Select a such that Follows*(10,a) pattern a(_, _"1"_)
+16
+5000
+37 - PATTERNS WITH CONSTANTS
+assign a; stmt s;
+Select a such that Follows*(15,a) pattern a("v1", _"1"_)
+16
+5000
+38 - PATTERNS WITH CONSTANTS (Parent)
+assign a; stmt s;
+Select a such that Parent(9,a)  pattern a(_, "1")
+none
+5000
+39 - PATTERNS WITH CONSTANTS (Parent)
+assign a; stmt s;
+Select a such that Parent(9,a)  pattern a(_, _"1"_)
+16
+5000
+40 - PATTERNS WITH CONSTANTS (Parent*)
+assign a; stmt s;
+Select a such that Parent*(9,a)  pattern a(_, "1")
+none
+5000
+41 - PATTERNS WITH CONSTANTS (Parent)
+assign a; stmt s;
+Select a such that Parent*(9,a)  pattern a(_, _"1"_)
+16
+5000

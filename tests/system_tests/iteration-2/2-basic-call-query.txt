@@ -1,0 +1,30 @@
+1 - Select procedures that calls other procedure
+procedure p, q;
+Select p such that Calls(p,q)
+main,sub
+5000
+2 - Select procedures that are called by other procedure
+procedure p, q;
+Select q such that Calls(p,q)
+sub,alt
+5000
+3 - Select procedures that is called by sub
+procedure p, q;
+Select q such that Calls("sub",q)
+alt
+5000
+4 - Select procedures that calls alt
+procedure p, q;
+Select p such that Calls(p,"alt")
+main,sub
+5000
+5 - Calls clause with _: select all procedures that are called by other procedures
+procedure p;
+Select p such that Calls(_,p)
+sub,alt
+5000
+6 - Calls clause with _: select all procedures that are calls other procedures
+procedure p;
+Select p such that Calls(p,_)
+main,sub
+5000

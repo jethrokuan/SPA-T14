@@ -1,0 +1,35 @@
+1 - Select all program lines that can be executed immediately after another program line
+prog_line n1,n2;
+Select n2 such that Next(n1,n2)
+2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
+5000
+2 - test prog_lines 1,2,3,13,4,14, the rest are just repeated of this pattern (Root node)
+prog_line n;
+Select n such that Next(1,n)
+2
+5000
+3 - First if
+prog_line n;
+Select n such that Next(2,n)
+3,13
+5000
+4 - True branch
+prog_line n;
+Select n such that Next(3,n)
+4
+5000
+5 - First if in true branch
+prog_line n;
+Select n such that Next(4,n)
+5,9
+5000
+6 - False branch
+prog_line n;
+Select n such that Next(13,n)
+14
+5000
+7 - First if in false branch
+prog_line n;
+Select n such that Next(14,n)
+15,19
+5000

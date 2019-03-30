@@ -9,10 +9,11 @@ std::vector<Clause> ClausePrioritizer::getClauses() {
   if (tooFewClauses()) return getClausesFromQuery();
 
   // Initializes all clauses to a default starting score and group
-  std::vector<WeightedGroupedClause> clauses =
-      getInitialWeightedGroupedClauses();
+  auto weighted_grouped_clauses = getInitialWeightedGroupedClauses();
 
-  prioritizeClauses(clauses);
+  prioritizeClauses(weighted_grouped_clauses);
+
+  return getClausesFromWeightedGroupedClauses(weighted_grouped_clauses);
 }
 
 // Weight calculation
@@ -69,4 +70,13 @@ bool ClausePrioritizer::tooFewClauses() {
                          (query->patternb ? query->patternb->size() : 0) +
                          (query->with_cond ? query->with_cond->size() : 0);
   return total_clauses < MIN_CLAUSES_TO_SORT;
+}
+
+std::vector<Clause> ClausePrioritizer::getClausesFromWeightedGroupedClauses(
+    const std::vector<WeightedGroupedClause>& clauses) {
+  std::vector<Clause> out_clauses;
+  for (const auto& clause : clauses) {
+    out_clauses.push_back(clause.clause);
+  }
+  return out_clauses;
 }

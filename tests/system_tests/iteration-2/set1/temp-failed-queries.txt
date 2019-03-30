@@ -145,7 +145,7 @@ Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and U
 5000
 582
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; prog_line n1, n2; stmt s1,s2;
-Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"y") and Modifies(a1,"x") pattern a1(_,_)
+Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"x") pattern a1(_,_)
 7 x, 11 x
 5000
 583
@@ -162,4 +162,9 @@ Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and U
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w,w1,w2; if i,i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
 Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) pattern i(v,_,_) pattern w(v,_) pattern a1(_,_)
 7 x,11 x
+5000
+582
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; prog_line n1, n2; stmt s1,s2;
+Select <a1,v1> such that Modifies(a1,_) and Modifies(a1,v1) and Uses(a1,_) and Uses(a1,v1) and Modifies(a1,"y") and Modifies(a1,"x") pattern a1(_,_)
+7 x, 11 x
 5000

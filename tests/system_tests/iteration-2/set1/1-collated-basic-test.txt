@@ -2809,37 +2809,37 @@ Select s1 such that Follows(a1,s1) and Follows*(a1,s1)
 7,10,14,15,16,18,20
 5000
 563
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
 Select s1 such that Follows(p1,s1) and Follows*(p1,s1)
 22,23,24,25,26
 5000
 564
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
 Select s1 such that Follows(p1,s1) and Follows*(p1,s1) and Follows(a1,s1) and Follows*(a1,s1)
 none
 5000
 565
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
 Select s1 such that Follows(a1,s1) and Follows*(a1,s1) and Follows(_,s1) and Follows*(n1,s1)
 7,10,14,15,16,18,20
 5000
 566
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
 Select s1 such that Follows(s1,s1) and Follows(w1,s1) and Follows(s1,1) and Follows(r1,1) and Follows(p1,1) and Follows(c1,1) and Follows(w1,1) and Follows(i1,1) and Follows(a1,1) and Follows(n1,1)
 none
 5000
 567
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;
 Select s1 such that Follows(s1,s1) and Follows(w1,s1) and Follows(s1,1) and Follows(r1,1) and Follows(p1,1) and Follows(w1,1) and Follows(i1,1) and Follows(a1,1) and Follows(n1,1) and Follows(_,1) and Follows(1,1) and Follows*(s1,s1)
 none
 5000
 568
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2; stmt s1, s2;
 Select BOOLEAN such that Calls(_,"main") and Calls("main","main") and Calls("main","addABC") and Calls("loops","main") and Calls("loops","loops") and Calls("addABC",_) and Calls("addABC","main") and Calls("addABC","loops") and Calls("addABC","addABC") and Calls*(_,"main") and Calls*("main","main") and pattern a("b",_"b+5"_) and pattern a("c","a+b") and pattern w("y",_)
 FALSE
 5000
 569
-assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2;
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w, w1,w2; if i, i1, i2; variable v1, v2; stmt s1, s2;
 Select BOOLEAN such that Calls(_,_) and Calls(_,"loops") and Calls(_,"addABC") and Calls("main",_) and Calls("main","loops") and Calls("loops",_) and Calls("loops","addABC") and Calls*(_,_) and Calls*(_,"loops") and Calls*(_,"addABC")
 TRUE
 5000
@@ -2890,7 +2890,7 @@ main loops, main addABC, main handlePrint, loops addABC, loops handlePrint
 5000
 579
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
-Select <w,v> such that pattern w(v,_) and pattern i(v,_,_) and pattern i(_,_,_) and pattern w(v,_) and pattern i("x",_,_) and  and 
+Select <w,v> such that pattern w(v,_) and pattern i(v,_,_) and pattern i(_,_,_) and pattern w(v,_) and pattern i("x",_,_)
 8 x
 5000
 580

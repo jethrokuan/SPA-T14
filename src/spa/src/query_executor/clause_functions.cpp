@@ -53,6 +53,6 @@ bool isBooleanClause(const WeightedGroupedClause& wgclause) {
       },
       clause);
 }
-// Read as: +2 for relcond, +10 for pattern, +1 for with
+// The numbers represent the weight adjustments for relcond, pattern and with.
 WeightFunction weightBooleanClause =
-    std::bind(addWeightToClauses, _1, 2, 10, 1);
+    std::bind(addWeightToClauses, _1, -90, -50, -100);

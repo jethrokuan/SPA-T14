@@ -65,7 +65,7 @@ class ClausePrioritizer {
   static std::vector<std::pair<ClauseTypeChecker, WeightFunction>>
       weightUpdaters;
 
-  static const int STARTING_WEIGHT = 1;
+  static const int STARTING_WEIGHT = 100;
   static const int DEFAULT_GROUP = 0;
   static const int MIN_CLAUSES_TO_SORT = 2;
 

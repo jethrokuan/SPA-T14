@@ -14,7 +14,7 @@ build:
     - make -j4
     - ctest -V
     - cd ..
-    - ./runtests.sh
+    - ./run-all-tests.sh
     - (! grep -q -B 14 -n -r /failed tests/system_tests/output/)
     - (! grep -q -B 14 -n -r exception tests/system_tests/output/)
   # artifacts:

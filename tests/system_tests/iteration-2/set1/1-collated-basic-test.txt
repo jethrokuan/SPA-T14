@@ -2791,7 +2791,7 @@ none
 559 - should pass, since all clauses other than the first does not constraint r1
 assign a,a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w,w1,w2; if i, i1, i2; variable v,v1, v2; prog_line n1, n2; stmt s1,s2;
 Select r1 such that Modifies(r1, "x") and Uses(i1,"z") and Follows(1,s1) and Follows*(1,n1)  pattern i1("x",_,_) pattern a(v,_"y+1"_) pattern w("x",_) such that Next*(7,n2) and Next(n1,6) and Parent(16,n2) and Parent*(16,s2) and Calls(_,p2) and Calls*(_,p2) 
-1
+none
 5000
 560
 assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2; stmt s1, s2;

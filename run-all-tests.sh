@@ -62,4 +62,4 @@ build/src/autotester/autotester tests/system_tests/iteration-2/set0/10-basic-pat
 # build/src/autotester/autotester tests/system_tests/iteration-2/set1/source-1.txt tests/system_tests/iteration-2/set1/1-uses.txt tests/system_tests/output/iteration2-1-uses.xml
 build/src/autotester/autotester tests/system_tests/iteration-2/set1/source-1.txt tests/system_tests/iteration-2/set1/1-collated-basic-test.txt tests/system_tests/output/iteration2-1-collated-basic-test.xml
 
-build/src/autotester/autotester tests/system_tests/iteration-2/set1/source-1.txt tests/system_tests/iteration-2/set1/temp-failed-queries.txt tests/system_tests/output/temp-failed-queries.xml
+# build/src/autotester/autotester tests/system_tests/iteration-2/set1/source-1.txt tests/system_tests/iteration-2/set1/temp-failed-queries.txt tests/system_tests/output/temp-failed-queries.xml

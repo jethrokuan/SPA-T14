@@ -1,0 +1,115 @@
+1 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+procedure p;
+Select p with "ZERO" = p.procName
+ZERO
+5000
+2 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+procedure p;
+Select p.procName with "TWO" = p.procName
+TWO
+5000
+3 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+procedure p;
+Select p with "FOUR" = p.procName
+FOUR
+5000
+4 - valid query (1 with clause, 1 attrCond, ref1 = attrRef, ref2 = IDENT, type: NAME)
+call c;
+Select c.stmt# with c.procName = "ZERO"
+47, 71
+5000
+5 - valid query (1 with clause, 1 attrCond, ref1 = attrRef, ref2 = IDENT, type: NAME)
+call c;
+Select c with c.procName = "TWO"
+30
+5000
+6 - valid query (1 with clause, 1 attrCond, ref1 = attrRef, ref2 = IDENT, type: NAME)
+variable v;
+Select v with v.varName = "f"
+f
+5000
+7 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+read r;
+Select r with "x" = r.varName
+19, 37
+5000
+8 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+read r;
+Select r.stmt# with "one" = r.varName
+16
+5000
+9 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+read r;
+Select r with "anyNum" = r.varName
+9
+5000
+10 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+read r;
+Select r with "y" = r.varName
+20, 45
+5000
+11 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+read r;
+Select r with "test" = r.varName
+67
+5000
+12 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+print p;
+Select p.stmt# with "x" = p.varName
+6, 21, 74
+5000
+13 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+print p;
+Select p.stmt# with "someNum" = p.varName
+14
+5000
+14 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+print p;
+Select p.stmt# with "one" = p.varName
+25
+5000
+15 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+print p;
+Select p.stmt# with "sum" = p.varName
+33
+5000
+16 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+print p;
+Select p.stmt# with "z" = p.varName
+62, 69
+5000
+17 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+print p;
+Select p.stmt# with "y" = p.varName
+49, 64, 76
+5000
+18 - valid query (1 with clause, 1 attrCond, ref1 = IDENT, ref2 = attrRef, type: NAME)
+print p;
+Select p.stmt# with "a" = p.varName
+56
+5000
+19 - valid query (1 with clause, 1 attrCond, ref1 = INTEGER, ref2 = attrRef, type: INTEGER)
+constant c;
+Select c with 71 = c.value
+71
+5000
+20 - valid query (1 with clause, 1 attrCond, ref1 = INTEGER, ref2 = attrRef, type: INTEGER)
+assign a;
+Select a with 66 = a.stmt#
+66
+5000
+21 - valid query (1 with clause, 1 attrCond, ref1 = INTEGER, ref2 = attrRef, type: INTEGER)
+stmt s;
+Select s with 45 = s.stmt#
+45
+5000
+22 - valid query (1 with clause, 1 attrCond, ref1 = INTEGER, ref2 = attrRef, type: INTEGER)
+print p;
+Select p with 33 = p.stmt#
+33
+5000
+23 - valid query (1 with clause, 1 attrCond, ref1 = INTEGER, ref2 = attrRef, type: INTEGER)
+read r;
+Select r with 61 = r.stmt#
+61
+5000

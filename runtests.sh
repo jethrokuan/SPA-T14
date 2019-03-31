@@ -143,7 +143,7 @@ build/src/autotester/autotester tests/system_tests/iteration-2/7-mixed-nest-next
 
 build/src/autotester/autotester tests/system_tests/iteration-2/8-basic-uses-modifies.txt tests/system_tests/iteration-2/8-basic-uses-modifies-queries.txt tests/system_tests/output/8.xml
 
-build/src/autotester/autotester tests/system_tests/iteration-2/10-basic-pattern.txt tests/system_tests/iteration-2/10-basic-pattern-queries.txt tests/system_tests/output/10.xml
+build/src/autotester/autotester tests/system_tests/iteration-2/11-more-with-clause-source.txt tests/system_tests/iteration-2/11-more-with-clause-queries.txt tests/system_tests/output/11.xml
 
 # RUN INVALID TESTS (ITERATION TWO)
 build/src/autotester/autotester tests/system_tests/iteration-2/invalids/1-invalid-source.txt tests/system_tests/iteration-2/invalids/1-invalid-calls-query.txt tests/system_tests/output/1-invalid-calls-query.xml

@@ -1,0 +1,40 @@
+1 
+assign a;
+Select a pattern a(_, _)
+10,11,12,13,14,15,16,21,22
+5000
+2 - invalid, a is not entRef
+assign a;
+Select a pattern a(a, _)
+none
+5000
+3
+assign a;
+Select a pattern a("v", _)
+10
+5000
+4 
+assign a;
+Select a pattern a(_, "v")
+none
+5000
+5
+assign a;
+Select a pattern a(_, _"v"_)
+10
+5000
+6 - Constants
+assign a;
+Select a pattern a(_, _"1"_)
+16
+5000
+7
+assign a;
+Select a pattern a("v1", _"1"_)
+16
+5000
+8
+assign a;
+Select a pattern a("v", "1")
+none
+5000

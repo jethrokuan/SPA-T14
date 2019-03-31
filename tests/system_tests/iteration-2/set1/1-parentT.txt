@@ -1,0 +1,320 @@
+1 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select s2 such that Parent*(i1,s2)
+6,7,8,9,10,11,17,18,19,20
+5000
+2 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select s2 such that Parent*(w1,s2)
+9,10,11
+5000
+3 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select s2 such that Parent*(n1,s2)
+6,7,8,9,10,11,17,18,19,20
+5000
+4 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select s2 such that Parent*(s1,s2)
+6,7,8,9,10,11,17,18,19,20
+5000
+5 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select s2 such that Parent*(_,s2)
+6,7,8,9,10,11,17,18,19,20
+5000
+6 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select s2 such that Parent*(5,s2)
+6,7,8,9,10,11
+5000
+7 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select s2 such that Parent*(8,s2)
+9,10,11
+5000
+8 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select s2 such that Parent*(16,s2)
+17,18,19,20
+5000
+9 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select r2 such that Parent*(i1,r2)
+none
+5000
+10 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select r2 such that Parent*(w1,r2)
+none
+5000
+11 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select r2 such that Parent*(n1,r2)
+none
+5000
+12 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select r2 such that Parent*(s1,r2)
+none
+5000
+13 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select r2 such that Parent*(_,r2)
+none
+5000
+14 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select r2 such that Parent*(5,r2)
+none
+5000
+15 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select r2 such that Parent*(8,r2)
+none
+5000
+16 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select r2 such that Parent*(16,r2)
+none
+5000
+17 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select p2 such that Parent*(i1,p2)
+none
+5000
+18 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select p2 such that Parent*(w1,p2)
+none
+5000
+19 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select p2 such that Parent*(n1,p2)
+none
+5000
+20 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select p2 such that Parent*(s1,p2)
+none
+5000
+21 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select p2 such that Parent*(_,p2)
+none
+5000
+22 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select p2 such that Parent*(5,p2)
+none
+5000
+23 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select p2 such that Parent*(8,p2)
+none
+5000
+24 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select p2 such that Parent*(16,p2)
+none
+5000
+25 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select c2 such that Parent*(i1,c2)
+10
+5000
+26 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select c2 such that Parent*(w1,c2)
+10
+5000
+27 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select c2 such that Parent*(n1,c2)
+10
+5000
+28 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select c2 such that Parent*(s1,c2)
+10
+5000
+29 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select c2 such that Parent*(_,c2)
+10
+5000
+30 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select c2 such that Parent*(5,c2)
+10
+5000
+31 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select c2 such that Parent*(8,c2)
+10
+5000
+32 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select c2 such that Parent*(16,c2)
+none
+5000
+33 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select w2 such that Parent*(i1,w2)
+8
+5000
+34 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select w2 such that Parent*(w1,w2)
+none
+5000
+35 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select w2 such that Parent*(n1,w2)
+8
+5000
+36 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select w2 such that Parent*(s1,w2)
+8
+5000
+37 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select w2 such that Parent*(_,w2)
+8
+5000
+38 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select w2 such that Parent*(5,w2)
+8
+5000
+39 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select w2 such that Parent*(8,w2)
+none
+5000
+40 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select w2 such that Parent*(16,w2)
+none
+5000
+41 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select i2 such that Parent*(i1,i2)
+none
+5000
+42 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select i2 such that Parent*(w1,i2)
+none
+5000
+43 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select i2 such that Parent*(n1,i2)
+none
+5000
+44 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select i2 such that Parent*(s1,i2)
+none
+5000
+45 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select i2 such that Parent*(_,i2)
+none
+5000
+46 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select i2 such that Parent*(5,i2)
+none
+5000
+47 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select i2 such that Parent*(8,i2)
+none
+5000
+48 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select i2 such that Parent*(16,i2)
+none
+5000
+49 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select a2 such that Parent*(i1,a2)
+6,7,9,11,17,18,19,20
+5000
+50 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select a2 such that Parent*(w1,a2)
+9,11
+5000
+51 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select a2 such that Parent*(n1,a2)
+6,7,9,11,17,18,19,20
+5000
+52 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select a2 such that Parent*(s1,a2)
+6,7,9,11,17,18,19,20
+5000
+53 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select a2 such that Parent*(_,a2)
+6,7,9,11,17,18,19,20
+5000
+54 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select a2 such that Parent*(5,a2)
+6,7,9,11
+5000
+55 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select a2 such that Parent*(8,a2)
+9,11
+5000
+56 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select a2 such that Parent*(16,a2)
+17,18,19,20
+5000
+57 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select n2 such that Parent*(i1,n2)
+6,7,8,9,10,11,17,18,19,20
+5000
+58 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select n2 such that Parent*(w1,n2)
+9,10,11
+5000
+59 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select n2 such that Parent*(n1,n2)
+6,7,8,9,10,11,17,18,19,20
+5000
+60 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select n2 such that Parent*(s1,n2)
+6,7,8,9,10,11,17,18,19,20
+5000
+61 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select n2 such that Parent*(_,n2)
+6,7,8,9,10,11,17,18,19,20
+5000
+62 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select n2 such that Parent*(5,n2)
+6,7,8,9,10,11
+5000
+63 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select n2 such that Parent*(8,n2)
+9,10,11
+5000
+64 - Parent*
+stmt s1,s2; read r1, r2; print p1, p2; call c1, c2; while w1, w2; if i1, i2; assign a1, a2; prog_line n1, n2;
+Select n2 such that Parent*(16,n2)
+17,18,19,20
+5000

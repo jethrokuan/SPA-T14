@@ -1,0 +1,45 @@
+2 - valid query
+variable v; while w;
+Select v such that Uses(w, v)
+x, y, z
+5000
+5 - valid query (Modifies)
+assign a; variable v;
+Select v such that Modifies(a,v)
+x, y, z
+5000
+6 - valid query
+read r; variable v;
+Select v such that Modifies(r,v)
+none
+5000
+7 - valid query
+while w; variable v;
+Select v such that Modifies(w,v)
+x, y, z
+5000
+10 - valid query (Parent and Parent*)
+assign a; while w;
+Select a such that Parent(w,a)
+5, 6, 8, 9, 10, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22
+5000
+11 - valid query 
+assign a; while w;
+Select a such that Parent*(w,a)
+5, 6, 8, 9, 10, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22
+5000
+12 - valid query (Follow and Follows*)
+assign a; while w;
+Select a such that Follows(w,a)
+22
+5000
+13 - valid query
+stmt s; while w;
+Select s such that Follows(w,s)
+22, 23
+5000
+14 - valid query
+assign a; stmt s;
+Select s such that Follows(a,s)
+2, 3, 4, 6, 7, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20, 21
+5000

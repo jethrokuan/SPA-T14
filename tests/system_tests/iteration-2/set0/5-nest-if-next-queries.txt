@@ -1,0 +1,25 @@
+1 - Select all program lines that can be executed immediately after another program line
+prog_line n1,n2;
+Select n2 such that Next(n1,n2)
+2,3,4,5,6,7,8,9,10
+5000
+2 - test individual program lines from 2 to 4 // CFG after 4 is similar to line 1 to 4
+prog_line n;
+Select n such that Next(1,n)
+2
+5000
+3 - test individual program lines from 2 to 4
+prog_line n;
+Select n such that Next(2,n)
+3,10
+5000
+4 - test individual program lines from 2 to 4
+prog_line n;
+Select n such that Next(3,n)
+4
+5000
+5 - test individual program lines from 2 to 4
+prog_line n;
+Select n such that Next(4,n)
+5,9
+5000

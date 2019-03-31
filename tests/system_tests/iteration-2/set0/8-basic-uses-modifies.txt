@@ -1,0 +1,14 @@
+procedure main {
+	call subX;
+}
+
+procedure subX {
+	read x;
+	x = x + 1;
+	print x;
+}
+
+procedure subY {
+	read y;
+	print y;
+}

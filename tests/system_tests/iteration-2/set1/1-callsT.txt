@@ -1,0 +1,130 @@
+1 - Calls*
+procedure p1, p2;
+Select p1 such that Calls*(p1,p2)
+main,loops
+5000
+2 - Calls*
+procedure p1, p2;
+Select p1 such that Calls*(p1,_)
+main,loops
+5000
+3 - Calls*
+procedure p1, p2;
+Select p1 such that Calls*(p1,"main")
+none
+5000
+4 - Calls*
+procedure p1, p2;
+Select p1 such that Calls*(p1,"loops")
+main
+5000
+5 - Calls*
+procedure p1, p2;
+Select p1 such that Calls*(p1,"addABC")
+main, loops
+5000
+6 - Calls*
+procedure p1, p2;
+Select p2 such that Calls*(_,p2)
+loops,addABC,handlePrint
+5000
+7 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*(_,_)
+TRUE
+5000
+8 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*(_,"main")
+FALSE
+5000
+9 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*(_,"loops")
+TRUE
+5000
+10 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*(_,"addABC")
+TRUE
+5000
+11 - Calls*
+procedure p1, p2;
+Select p2 such that Calls*("main",p2)
+loops, addABC, handlePrint
+5000
+12 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("main",_)
+TRUE
+5000
+13 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("main","main")
+FALSE
+5000
+14 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("main","loops")
+TRUE
+5000
+15 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("main","addABC")
+TRUE
+5000
+16 - Calls*
+procedure p1, p2;
+Select p2 such that Calls*("loops",p2)
+addABC,handlePrint
+5000
+17 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("loops",_)
+TRUE
+5000
+18 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("loops","main")
+FALSE
+5000
+19 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("loops","loops")
+FALSE
+5000
+20 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("loops","addABC")
+TRUE
+5000
+21 - Calls*
+procedure p1, p2;
+Select p2 such that Calls*("addABC",p2)
+none
+5000
+22 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("addABC",_)
+FALSE
+5000
+23 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("addABC","main")
+FALSE
+5000
+24 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("addABC","loops")
+FALSE
+5000
+25 - Calls*
+procedure p1, p2;
+Select BOOLEAN such that Calls*("addABC","addABC")
+FALSE
+5000
+26 - Calls*
+procedure p1, p2;
+Select <p1,p2> such that Calls*(p1,p2)
+main loops, main addABC, main handlePrint, loops addABC, loops handlePrint
+5000

@@ -1,0 +1,30 @@
+1 - Select all program lines that can be executed immediately after another program line
+prog_line n1,n2;
+Select n2 such that Next(n1,n2)
+2,3,4,5,6,7,8,9,10
+5000
+2 - test individual program lines from 1 to 5 // CFG after 5 is similar to line 2 to 5
+prog_line n;
+Select n such that Next(1,n)
+2
+5000
+3 - test individual program lines from 1 to 5
+prog_line n;
+Select n such that Next(2,n)
+3
+5000
+4 - test individual program lines from 1 to 5
+prog_line n;
+Select n such that Next(3,n)
+4
+5000
+5 - test individual program lines from 1 to 5
+prog_line n;
+Select n such that Next(4,n)
+5
+5000
+6 - Test if SPA correctly gets the two possible NEXT program line from nested while 
+prog_line n;
+Select n such that Next(5,n)
+6,2
+5000

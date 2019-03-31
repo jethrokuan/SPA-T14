@@ -1,0 +1,125 @@
+1 - Pattern, assign
+assign a; variable v;
+Select a pattern a(v,_)
+6,7,9,11,13,14,15,17,18,19,20
+5000
+2 - Pattern, assign
+assign a; variable v;
+Select a pattern a(v,_"x+1"_)
+7
+5000
+3 - Pattern, assign
+assign a; variable v;
+Select a pattern a(v,_"y+1"_)
+6
+5000
+4 - Pattern, assign
+assign a; variable v;
+Select a pattern a(v,_"z+1"_)
+9
+5000
+5 - Pattern, assign
+assign a; variable v;
+Select a pattern a(v,_"a+1"_)
+13
+5000
+6 - Pattern, assign
+assign a; variable v;
+Select a pattern a(v,_"a+10"_)
+17
+5000
+7 - Pattern, assign
+assign a; variable v;
+Select a pattern a(v,_"b+5"_)
+20
+5000
+8 - Pattern, assign
+assign a; variable v;
+Select a pattern a(v,"a+b")
+14
+5000
+9 - Pattern, assign
+assign a; variable v;
+Select <a,v> pattern a(_,_)
+6 y, 7 x, 9 z, 11 x, 13 a, 14 a, 14 b, 15 a, 15 b, 15 c, 17 a, 17 b, 18 a, 18 c, 19 a, 19 b, 20 c, 20 b
+5000
+10 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a(_,_"x+1"_)
+TRUE
+5000
+11 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a(_,_"y+1"_)
+TRUE
+5000
+12 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a(_,_"z+1"_)
+TRUE
+5000
+13 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a(_,_"a+1"_)
+TRUE
+5000
+14 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a(_,_"a+10"_)
+TRUE
+5000
+15 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a(_,_"b+5"_)
+TRUE
+5000
+16 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a(_,"a+b")
+TRUE
+5000
+17 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("x",_)
+TRUE
+5000
+18 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("x",_"x+1"_)
+TRUE
+5000
+19 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("x",_"y+1"_)
+FALSE
+5000
+20 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("x",_"z+1"_)
+FALSE
+5000
+21 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("b",_"a+1"_)
+FALSE
+5000
+22 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("b",_"a+10"_)
+TRUE
+5000
+23 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("b",_"b+5"_)
+FALSE
+5000
+24 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("b","a+b")
+TRUE
+5000
+25 - Pattern, assign
+assign a; variable v;
+Select BOOLEAN pattern a("c","a+b")
+FALSE
+5000

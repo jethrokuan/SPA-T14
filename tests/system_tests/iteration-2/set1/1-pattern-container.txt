@@ -1,0 +1,110 @@
+1 - Pattern, while
+while w; variable v;
+Select w pattern w(v,_)
+8
+5000
+2 - Pattern, while
+while w; variable v;
+Select w pattern w(_,_)
+8
+5000
+3 - Pattern, while
+while w; variable v;
+Select w pattern w("x",_)
+8
+5000
+4 - Pattern, while variable not in any while control var
+while w; variable v;
+Select w pattern w("y",_)
+none
+5000
+5 - Pattern, while
+while w; variable v;
+Select v pattern w(v,_)
+x
+5000
+6 - Pattern, while
+while w; variable v;
+Select v pattern w(_,_)
+none
+5000
+7 - Pattern, while
+while w; variable v;
+Select v pattern w("x",_)
+none
+5000
+8 - Pattern, while variable not in any while control var
+while w; variable v;
+Select v pattern w("y",_)
+none
+5000
+9 - Pattern, while
+while w; variable v;
+Select <w,v> pattern w(v,_)
+8 x
+5000
+10 - Pattern, while
+while w; variable v;
+Select BOOLEAN pattern w("x",_)
+TRUE
+5000
+11 - Pattern, while variable not in any while control var
+while w; variable v;
+Select BOOLEAN pattern w("y",_)
+FALSE
+5000
+12 - Pattern, if
+if i; variable v;
+Select i pattern i(v,_,_)
+5,16
+5000
+13 - Pattern, if
+if i; variable v;
+Select i pattern i(_,_,_)
+5,16
+5000
+14 - Pattern, if
+if i; variable v;
+Select i pattern i("x",_,_)
+5
+5000
+15 - Pattern, if
+if i; variable v;
+Select i pattern i("y",_,_)
+none
+5000
+16 - Pattern, if
+if i; variable v;
+Select v pattern i(v,_,_)
+x,a
+5000
+17 - Pattern, if
+if i; variable v;
+Select v pattern i(_,_,_)
+x,a
+5000
+18 - Pattern, if
+if i; variable v;
+Select v pattern i("x",_,_)
+x
+5000
+19 - Pattern, if
+if i; variable v;
+Select v pattern i("y",_,_)
+none
+5000
+20 - Pattern, if
+if i; variable v;
+Select <i,v> pattern i(v,_,_)
+5 x, 16 a
+5000
+21 - Pattern, if
+if i; variable v;
+Select BOOLEAN pattern i("x",_,_)
+TRUE
+5000
+22 - Pattern, if
+if i; variable v;
+Select BOOLEAN pattern i("y",_,_)
+FALSE
+5000

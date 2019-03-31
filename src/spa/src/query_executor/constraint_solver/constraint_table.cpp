@@ -206,12 +206,16 @@ ConstraintTable ConstraintTable::cartesianProduct(ConstraintTable& t1,
   ConstraintTable out_table;
   // Construct new column headers
   for (auto& [name, col_idx] : t1.name_column_map) {
-    out_table.addNewColumnName(name);
+    // can't addNewColumnName, idx wrong
+    out_table.name_column_map[name] = col_idx;
+    out_table.next_column_idx++;  // to be consistent with its purpose
   }
+  // Add this to all col numbers for t2 as we merge
+  size_t base_t2_column_idx = out_table.next_column_idx;
   for (auto& [name, col_idx] : t2.name_column_map) {
-    out_table.addNewColumnName(name);
+    out_table.name_column_map[name] = col_idx + base_t2_column_idx;
+    out_table.next_column_idx++;  // to be consistent with its purpose
   }
-
   // Cartesian product of rows in both tables
   for (auto row1 : t1.table) {
     for (auto row2 : t2.table) {

@@ -10,13 +10,14 @@ using namespace std::placeholders;
  *   SETTINGS!
  */
 // Generic penalty/reward numbers
-constexpr int EXECUTE_ME_FIRST_REWARD = -1000;
-constexpr int SMALL_REWARD = -5;
+constexpr int EXECUTE_ME_FIRST_REWARD = -10000;
 constexpr int SET_LOOKUP_PENALTY = 5;
-constexpr int EXECUTE_ME_LAST_PENALTY = 1000;
+constexpr int EXECUTE_ME_LAST_PENALTY = 10000;
 constexpr int NO_DELTA = 0;
 
 // Pattern penalty for any string matching
+constexpr int PARTIAL_STRING_MATCH_PENALTY = 600;
+constexpr int COMPLETE_STRING_MATCH_PENALTY = 300;
 
 // On-the-fly penalties
 constexpr int ON_THE_FLY_PENALTY = EXECUTE_ME_LAST_PENALTY;
@@ -99,6 +100,23 @@ RelCondMatcher isAffectsTClause =
 RelCondMatcher isNextTClause =
     std::bind(isRelCondRelationType, _1, Relation::NextT);
 
+// For penalizing string matching for pattern
+PatternBMatcher patternPartialMatcher = [](const PatternB* p) {
+  auto pattern_rhs = p->getSecondArg();
+  auto argRightIsMatcher =
+      pattern_rhs && std::holds_alternative<Matcher>(pattern_rhs.value());
+  auto argRightIsPartialMatch =
+      argRightIsMatcher && std::get<Matcher>(pattern_rhs.value()).isPartial;
+  return argRightIsPartialMatch;
+};
+PatternBMatcher patternCompleteMatcher = [](const PatternB* p) {
+  auto pattern_rhs = p->getSecondArg();
+  auto argRightIsMatcher =
+      pattern_rhs && std::holds_alternative<Matcher>(pattern_rhs.value());
+  auto argRightIsCompleteMatch =
+      argRightIsMatcher && !std::get<Matcher>(pattern_rhs.value()).isPartial;
+  return argRightIsCompleteMatch;
+};
 
 // *** START OF ACTUAL WEIGHT APPLICATION FUNCTIONS ***
 
@@ -127,3 +145,15 @@ WeightFunction weightNextTClause =
               RelCondWeightDelta{ON_THE_FLY_PENALTY + NEXT_T_PENALTY},
               PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA},
               isNextTClause, falsePatternMatcher, falseWithCondMatcher);
+
+WeightFunction weightPartialPatternMatch =
+    std::bind(addWeightToClausesConditionally, _1, RelCondWeightDelta{NO_DELTA},
+              PatternWeightDelta{PARTIAL_STRING_MATCH_PENALTY},
+              WithCondWeightDelta{NO_DELTA}, falseRelCondMatcher,
+              patternPartialMatcher, falseWithCondMatcher);
+
+WeightFunction weightCompletePatternMatch =
+    std::bind(addWeightToClausesConditionally, _1, RelCondWeightDelta{NO_DELTA},
+              PatternWeightDelta{COMPLETE_STRING_MATCH_PENALTY},
+              WithCondWeightDelta{NO_DELTA}, falseRelCondMatcher,
+              patternCompleteMatcher, falseWithCondMatcher);

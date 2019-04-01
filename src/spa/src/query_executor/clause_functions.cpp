@@ -96,8 +96,10 @@ bool isAffectsClause(const WeightedGroupedClause& wgclause) {
   }
 }
 WeightFunction weightAffectsClause =
-    std::bind(addWeightToClauses, _1, RelCondWeightDelta{AFFECTS_PENALTY},
+    std::bind(addWeightToClauses, _1,
+              RelCondWeightDelta{ON_THE_FLY_PENALTY + AFFECTS_PENALTY},
               PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});
+
 bool isAffectsTClause(const WeightedGroupedClause& wgclause) {
   if (auto relcond = std::get_if<RelCond*>(&wgclause.clause)) {
     return (*relcond)->relation == Relation::AffectsT;
@@ -106,8 +108,10 @@ bool isAffectsTClause(const WeightedGroupedClause& wgclause) {
   }
 }
 WeightFunction weightAffectsTClause =
-    std::bind(addWeightToClauses, _1, RelCondWeightDelta{AFFECTS_T_PENALTY},
+    std::bind(addWeightToClauses, _1,
+              RelCondWeightDelta{ON_THE_FLY_PENALTY + AFFECTS_T_PENALTY},
               PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});
+
 bool isNextTClause(const WeightedGroupedClause& wgclause) {
   if (auto relcond = std::get_if<RelCond*>(&wgclause.clause)) {
     return (*relcond)->relation == Relation::NextT;
@@ -116,5 +120,6 @@ bool isNextTClause(const WeightedGroupedClause& wgclause) {
   }
 }
 WeightFunction weightNextTClause =
-    std::bind(addWeightToClauses, _1, RelCondWeightDelta{NEXT_T_PENALTY},
+    std::bind(addWeightToClauses, _1,
+              RelCondWeightDelta{ON_THE_FLY_PENALTY + NEXT_T_PENALTY},
               PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});

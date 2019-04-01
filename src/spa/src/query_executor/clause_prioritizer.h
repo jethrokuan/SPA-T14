@@ -29,6 +29,9 @@ struct WeightedGroupedClause {
 
 //! For application of clause weights based on their type
 using ClauseTypeChecker = std::function<bool(const WeightedGroupedClause&)>;
+using RelCondMatcher = std::function<bool(const RelCond*)>;
+using PatternBMatcher = std::function<bool(const PatternB*)>;
+using WithCondMatcher = std::function<bool(const WithCond*)>;
 using WeightFunction = std::function<void(WeightedGroupedClause&)>;
 
 class ClausePrioritizer {
@@ -62,8 +65,7 @@ class ClausePrioritizer {
    * then applies a function to update the weights inside that clause if it
    * matches
    */
-  static std::vector<std::pair<ClauseTypeChecker, WeightFunction>>
-      weightUpdaters;
+  static std::vector<WeightFunction> weightUpdaters;
 
   static const int STARTING_WEIGHT = 100;
   static const int DEFAULT_GROUP = 0;

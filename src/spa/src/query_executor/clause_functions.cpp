@@ -35,91 +35,95 @@ struct WithCondWeightDelta {
   int weight;
 };
 
-// Generic function that we can std::bind to to fill in the arguments we want
-void addWeightToClauses(WeightedGroupedClause& wgclause,
-                        const RelCondWeightDelta& relcond_weight_delta,
-                        const PatternWeightDelta& pattern_weight_delta,
-                        const WithCondWeightDelta& withcond_weight_delta) {
+//! Add the stated weight to the clause if the matcher returns true
+// This function will be used by partial binding of all arguments except
+// wgclause
+void addWeightToClausesConditionally(WeightedGroupedClause& wgclause,
+                                     RelCondWeightDelta& relcond_weight_delta,
+                                     PatternWeightDelta& pattern_weight_delta,
+                                     WithCondWeightDelta& withcond_weight_delta,
+                                     RelCondMatcher& relcond_matcher,
+                                     PatternBMatcher& pattern_matcher,
+                                     WithCondMatcher& withcond_matcher) {
   auto& clause = wgclause.clause;
   std::visit(
       overload{
-          [&](RelCond*) { wgclause.weight += relcond_weight_delta.weight; },
-          [&](PatternB*) { wgclause.weight += pattern_weight_delta.weight; },
-          [&](WithCond*) { wgclause.weight += withcond_weight_delta.weight; },
+          [&](RelCond* r) {
+            if (relcond_matcher(r))
+              wgclause.weight += relcond_weight_delta.weight;
+          },
+          [&](PatternB* p) {
+            if (pattern_matcher(p))
+              wgclause.weight += pattern_weight_delta.weight;
+          },
+          [&](WithCond* w) {
+            if (withcond_matcher(w))
+              wgclause.weight += withcond_weight_delta.weight;
+          },
       },
       clause);
 }
 
-// Boolean-type clauses, e.g.
-// Follows(1, 2)
-// pattern a ("x", _)
-// with 2 = 3
-bool isBooleanClause(const WeightedGroupedClause& wgclause) {
-  auto& clause = wgclause.clause;
-  return std::visit(
-      overload{
-          // Follows (1,2)
-          [](RelCond* r) {
-            return QueryExecutor::getRefAsBasic(r->arg1) &&
-                   QueryExecutor::getRefAsBasic(r->arg2);
-          },
-          [](PatternB* p) {
-            // pattern a ("x", _) / i("x", _, _) / w("x", _)
-            return QueryExecutor::getRefAsBasic(p->getFirstArg()) &&
-                   p->getSecondArg() &&
-                   std::holds_alternative<Underscore>(
-                       p->getSecondArg().value());
-          },
-          // with 2 = 3 or "2" = "3"
-          [](WithCond* w) {
-            return (std::get_if<QuoteIdent>(&w->ref1.attr) &&
-                    std::get_if<QuoteIdent>(&w->ref2.attr)) ||
-                   (std::get_if<unsigned int>(&w->ref1.attr) &&
-                    std::get_if<unsigned int>(&w->ref2.attr));
-          },
-      },
-      clause);
+// Default matchers that just don't match on each of the types of clause
+RelCondMatcher falseRelCondMatcher = [](const RelCond*) { return false; };
+PatternBMatcher falsePatternMatcher = [](const PatternB*) { return false; };
+WithCondMatcher falseWithCondMatcher = [](const WithCond*) { return false; };
+
+// Match basic clauses for each of the clause types (cheap clauses to exec)
+RelCondMatcher relCondBasicMatcher = [](const RelCond* r) {
+  // Follows (1,2)
+  return QueryExecutor::getRefAsBasic(r->arg1) &&
+         QueryExecutor::getRefAsBasic(r->arg2);
+};
+PatternBMatcher patternBasicMatcher = [](const PatternB* p) {
+  // pattern a ("x", _) / i("x", _, _) / w("x", _)
+  return QueryExecutor::getRefAsBasic(p->getFirstArg()) && p->getSecondArg() &&
+         std::holds_alternative<Underscore>(p->getSecondArg().value());
+};
+WithCondMatcher withCondBasicMatcher = [](const WithCond* w) {
+  // with 2 = 3 or "2" = "3"
+  return (std::get_if<QuoteIdent>(&w->ref1.attr) &&
+          std::get_if<QuoteIdent>(&w->ref2.attr)) ||
+         (std::get_if<unsigned int>(&w->ref1.attr) &&
+          std::get_if<unsigned int>(&w->ref2.attr));
+};
+
+// Clauses to check if a relcond is of a particular type
+auto isRelCondRelationType(const RelCond* clause, Relation relation) {
+  return clause->relation == relation;
 }
+RelCondMatcher isAffectsClause =
+    std::bind(isRelCondRelationType, _1, Relation::Affects);
+RelCondMatcher isAffectsTClause =
+    std::bind(isRelCondRelationType, _1, Relation::AffectsT);
+RelCondMatcher isNextTClause =
+    std::bind(isRelCondRelationType, _1, Relation::NextT);
+
+
+// *** START OF ACTUAL WEIGHT APPLICATION FUNCTIONS ***
+
 // WithCond is the easiest to execute (2 = 2), RelCond and Pattern are O(1)
 WeightFunction weightBooleanClause =
-    std::bind(addWeightToClauses, _1,
+    std::bind(addWeightToClausesConditionally, _1,
               RelCondWeightDelta{EXECUTE_ME_FIRST_REWARD + SET_LOOKUP_PENALTY},
               PatternWeightDelta{EXECUTE_ME_FIRST_REWARD + SET_LOOKUP_PENALTY},
-              WithCondWeightDelta{EXECUTE_ME_FIRST_REWARD});
+              WithCondWeightDelta{EXECUTE_ME_FIRST_REWARD}, relCondBasicMatcher,
+              patternBasicMatcher, withCondBasicMatcher);
 
-// Handle the most expensive runtime clauses
-bool isAffectsClause(const WeightedGroupedClause& wgclause) {
-  if (auto relcond = std::get_if<RelCond*>(&wgclause.clause)) {
-    return (*relcond)->relation == Relation::Affects;
-  } else {
-    return false;
-  }
-}
 WeightFunction weightAffectsClause =
-    std::bind(addWeightToClauses, _1,
+    std::bind(addWeightToClausesConditionally, _1,
               RelCondWeightDelta{ON_THE_FLY_PENALTY + AFFECTS_PENALTY},
-              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});
+              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA},
+              isAffectsClause, falsePatternMatcher, falseWithCondMatcher);
 
-bool isAffectsTClause(const WeightedGroupedClause& wgclause) {
-  if (auto relcond = std::get_if<RelCond*>(&wgclause.clause)) {
-    return (*relcond)->relation == Relation::AffectsT;
-  } else {
-    return false;
-  }
-}
 WeightFunction weightAffectsTClause =
-    std::bind(addWeightToClauses, _1,
+    std::bind(addWeightToClausesConditionally, _1,
               RelCondWeightDelta{ON_THE_FLY_PENALTY + AFFECTS_T_PENALTY},
-              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});
+              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA},
+              isAffectsTClause, falsePatternMatcher, falseWithCondMatcher);
 
-bool isNextTClause(const WeightedGroupedClause& wgclause) {
-  if (auto relcond = std::get_if<RelCond*>(&wgclause.clause)) {
-    return (*relcond)->relation == Relation::NextT;
-  } else {
-    return false;
-  }
-}
 WeightFunction weightNextTClause =
-    std::bind(addWeightToClauses, _1,
+    std::bind(addWeightToClausesConditionally, _1,
               RelCondWeightDelta{ON_THE_FLY_PENALTY + NEXT_T_PENALTY},
-              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA});
+              PatternWeightDelta{NO_DELTA}, WithCondWeightDelta{NO_DELTA},
+              isNextTClause, falsePatternMatcher, falseWithCondMatcher);

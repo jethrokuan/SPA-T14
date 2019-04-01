@@ -31,22 +31,19 @@ void ClausePrioritizer::prioritizeClauses(
 // Weight calculation
 void ClausePrioritizer::weightClauses(
     std::vector<WeightedGroupedClause>& clauses) {
-  // For each clause, attempt to apply a clause type checking function
-  // If it matches, update it with the appropriate weighting function
+  // Apply functions over each clause to test if they need to have their weights
+  // adjusted, and adjust them if so
   for (auto& clause : clauses) {
-    for (auto [clauseTypeChecker, weightFunction] : weightUpdaters) {
-      if (clauseTypeChecker(clause)) weightFunction(clause);
+    for (auto weightFunction : weightUpdaters) {
+      weightFunction(clause);
     }
   }
 }
 
 // Actual definition of the weightUpdaters static variables
-std::vector<std::pair<ClauseTypeChecker, WeightFunction>>
-    ClausePrioritizer::weightUpdaters = {
-        {isBooleanClause, weightBooleanClause},
-        {isAffectsClause, weightAffectsClause},
-        {isAffectsTClause, weightAffectsTClause},
-        {isNextTClause, weightNextTClause}};
+std::vector<WeightFunction> ClausePrioritizer::weightUpdaters = {
+    weightBooleanClause, weightAffectsClause, weightAffectsTClause,
+    weightNextTClause};
 
 std::vector<WeightedGroupedClause>
 ClausePrioritizer::getInitialWeightedGroupedClauses() {

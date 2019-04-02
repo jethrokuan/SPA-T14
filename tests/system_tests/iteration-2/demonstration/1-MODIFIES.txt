@@ -1,0 +1,160 @@
+253
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Modifies(a1,_)
+6,7,9,11,13,14,15,17,18,19,20
+5000
+254
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Modifies(a1,"x")
+7,11
+5000
+255
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Modifies(a1,"y")
+6
+5000
+256
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Modifies(a1,"z")
+9
+5000
+257
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Modifies(a1,v1)
+6,7,9,11,13,14,15,17,18,19,20
+5000
+258
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select r1 such that Modifies(r1,_)
+1,2,3
+5000
+259
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select r1 such that Modifies(r1,"x")
+1
+5000
+260
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select r1 such that Modifies(r1,"y")
+2
+5000
+261
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select r1 such that Modifies(r1,"z")
+3
+5000
+262
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select r1 such that Modifies(r1,v1)
+1,2,3
+5000
+263
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Modifies(i1,_)
+5,16
+5000
+264
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Modifies(i1,"x")
+5
+5000
+265
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Modifies(i1,"y")
+5
+5000
+266
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Modifies(i1,"z")
+5
+5000
+267
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Modifies(i1,v1)
+5,16
+5000
+268
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Modifies(w1,_)
+8
+5000
+269
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Modifies(w1,"x")
+8
+5000
+270
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Modifies(w1,"y")
+none
+5000
+271
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Modifies(w1,"z")
+8
+5000
+272
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Modifies(w1,v1)
+8
+5000
+273
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Modifies(p1,_)
+main,loops,addABC
+5000
+274
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Modifies(p1,"x")
+main,loops
+5000
+275
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Modifies(p1,"y")
+main,loops
+5000
+276
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Modifies(p1,"z")
+main,loops
+5000
+277
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Modifies(p1,v1)
+main,loops,addABC
+5000
+278
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Modifies(c1,_)
+4,10
+5000
+279
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Modifies(c1,"x")
+4
+5000
+280
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Modifies(c1,"y")
+4
+5000
+281
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Modifies(c1,"z")
+4
+5000
+282
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Modifies(c1,v1)
+4,10
+5000
+283
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select v1 such that Modifies(1,v1)
+x
+5000
+284
+assign a1,a2; read r1,r2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select v1 such that Modifies("main",v1)
+x,y,z,a,b,c
+5000

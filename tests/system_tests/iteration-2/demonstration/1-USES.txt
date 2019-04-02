@@ -1,0 +1,155 @@
+506
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Uses(a1,_)
+6,7,9,11,13,14,15,17,18,19,20
+5000
+507
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Uses(a1,"x")
+7,11
+5000
+508
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Uses(a1,"y")
+6
+5000
+509
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Uses(a1,"z")
+9
+5000
+510
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select a1 such that Uses(a1,v1)
+6,7,9,11,13,14,15,17,18,19,20
+5000
+511
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select pn1 such that Uses(pn1,_)
+21,22,23,24,25,26
+5000
+512
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select pn1 such that Uses(pn1,"x")
+21
+5000
+513
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select pn1 such that Uses(pn1,"y")
+22
+5000
+514
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select pn1 such that Uses(pn1,"z")
+23
+5000
+515
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select pn1 such that Uses(pn1,v1)
+21,22,23,24,25,26
+5000
+516
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Uses(i1,_)
+5,16
+5000
+517
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Uses(i1,"x")
+5
+5000
+518
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Uses(i1,"y")
+5
+5000
+519
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Uses(i1,"z")
+5
+5000
+520
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select i1 such that Uses(i1,v1)
+5,16
+5000
+521
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Uses(w1,_)
+8
+5000
+522
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Uses(w1,"x")
+8
+5000
+523
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Uses(w1,"y")
+none
+5000
+524
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Uses(w1,"z")
+8
+5000
+525
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select w1 such that Uses(w1,v1)
+8
+5000
+526
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Uses(p1,_)
+main,loops,addABC,handlePrint
+5000
+527
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Uses(p1,"x")
+main,loops,handlePrint
+5000
+528
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Uses(p1,"y")
+main,loops,handlePrint
+5000
+529
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Uses(p1,"z")
+main,loops,handlePrint
+5000
+530
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select p1 such that Uses(p1,v1)
+main,loops,addABC,handlePrint
+5000
+531
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Uses(c1,_)
+4,10,12
+5000
+532
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Uses(c1,"x")
+4,12
+5000
+533
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Uses(c1,"y")
+4,12
+5000
+534
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Uses(c1,"z")
+4,12
+5000
+535
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select c1 such that Uses(c1,v1)
+4,10,12
+5000
+536
+assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
+Select v1 such that Uses(1,v1)
+none
+5000

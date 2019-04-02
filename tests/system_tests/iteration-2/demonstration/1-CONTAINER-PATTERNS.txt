@@ -1,0 +1,110 @@
+484
+while w; variable v;
+Select w pattern w(v,_)
+8
+5000
+485
+while w; variable v;
+Select w pattern w(_,_)
+8
+5000
+486
+while w; variable v;
+Select w pattern w("x",_)
+8
+5000
+487
+while w; variable v;
+Select w pattern w("y",_)
+none
+5000
+488
+while w; variable v;
+Select v pattern w(v,_)
+x
+5000
+489
+while w; variable v;
+Select v pattern w(_,_)
+a,b,c,x,y,z
+5000
+490
+while w; variable v;
+Select v pattern w("x",_)
+a,b,c,x,y,z
+5000
+491
+while w; variable v;
+Select v pattern w("y",_)
+none
+5000
+492
+while w; variable v;
+Select <w,v> pattern w(v,_)
+8 x
+5000
+493
+while w; variable v;
+Select BOOLEAN pattern w("x",_)
+TRUE
+5000
+494
+while w; variable v;
+Select BOOLEAN pattern w("y",_)
+FALSE
+5000
+495
+if i; variable v;
+Select i pattern i(v,_,_)
+5,16
+5000
+496
+if i; variable v;
+Select i pattern i(_,_,_)
+5,16
+5000
+497
+if i; variable v;
+Select i pattern i("x",_,_)
+5
+5000
+498
+if i; variable v;
+Select i pattern i("y",_,_)
+none
+5000
+499
+if i; variable v;
+Select v pattern i(v,_,_)
+x,a
+5000
+500
+if i; variable v;
+Select v pattern i(_,_,_)
+a,b,c,x,y,z
+5000
+501
+if i; variable v;
+Select v pattern i("x",_,_)
+a,b,c,x,y,z
+5000
+502
+if i; variable v;
+Select v pattern i("y",_,_)
+none
+5000
+503
+if i; variable v;
+Select <i,v> pattern i(v,_,_)
+5 x, 16 a
+5000
+504
+if i; variable v;
+Select BOOLEAN pattern i("x",_,_)
+TRUE
+5000
+505
+if i; variable v;
+Select BOOLEAN pattern i("y",_,_)
+FALSE
+5000

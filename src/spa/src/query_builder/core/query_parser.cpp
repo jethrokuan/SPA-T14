@@ -1,5 +1,5 @@
-#include "query_builder/core/query_parser.h"
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_parser.h"
 #include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
@@ -205,7 +205,7 @@ void QueryParser::parseRelRef() {
 
   // Declarations passed to RelCond to do specialization for Modifies/Uses
   RelCond* relcond = new RelCond(relation, ref_1, ref_2, query_->declarations);
-  query_->rel_cond->push_back(relcond);
+  query_->rel_conds->push_back(relcond);
 }
 
 void QueryParser::parseRelCond() {
@@ -260,7 +260,7 @@ void QueryParser::parsePatternClause() {
 
   expect("(");
 
-  PatternB* pattern;
+  PatternCond* pattern;
   Ref ref = Underscore();  // Default, will be overriden
   Expression expr;
 
@@ -269,7 +269,7 @@ void QueryParser::parsePatternClause() {
       ref = parseRef();
       expect(",");
       expr = parseExpression();
-      pattern = new PatternB(synonym, ref, expr);
+      pattern = new PatternCond(synonym, ref, expr);
       break;
     case DesignEntity::IF:
       ref = parseRef();
@@ -277,13 +277,13 @@ void QueryParser::parsePatternClause() {
       expect("_");
       expect(",");
       expect("_");
-      pattern = new PatternB(synonym, ref);
+      pattern = new PatternCond(synonym, ref);
       break;
     case DesignEntity::WHILE:
       ref = parseRef();
       expect(",");
       expect("_");
-      pattern = new PatternB(synonym, ref);
+      pattern = new PatternCond(synonym, ref);
       break;
     case DesignEntity::READ:
     case DesignEntity::STMT:
@@ -299,7 +299,7 @@ void QueryParser::parsePatternClause() {
 
   expect(")");
 
-  query_->patternb->push_back(pattern);
+  query_->pattern_conds->push_back(pattern);
 }
 
 bool QueryParser::parsePattern() {
@@ -349,7 +349,7 @@ void QueryParser::parseAttrCompare() {
   expect("=");
   AttrRef ref2 = parseAttrRef();
   WithCond* with_cond = new WithCond(ref1, ref2);
-  query_->with_cond->push_back(with_cond);
+  query_->with_conds->push_back(with_cond);
 }
 
 void QueryParser::parseAttrCond() {

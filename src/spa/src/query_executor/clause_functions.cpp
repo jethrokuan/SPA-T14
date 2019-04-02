@@ -44,7 +44,7 @@ void addWeightToClausesConditionally(WeightedGroupedClause& wgclause,
                                      PatternWeightDelta& pattern_weight_delta,
                                      WithCondWeightDelta& withcond_weight_delta,
                                      RelCondMatcher& relcond_matcher,
-                                     PatternBMatcher& pattern_matcher,
+                                     PatternCondMatcher& pattern_matcher,
                                      WithCondMatcher& withcond_matcher) {
   auto& clause = wgclause.clause;
   std::visit(
@@ -53,7 +53,7 @@ void addWeightToClausesConditionally(WeightedGroupedClause& wgclause,
             if (relcond_matcher(r))
               wgclause.weight += relcond_weight_delta.weight;
           },
-          [&](PatternB* p) {
+          [&](PatternCond* p) {
             if (pattern_matcher(p))
               wgclause.weight += pattern_weight_delta.weight;
           },
@@ -67,7 +67,9 @@ void addWeightToClausesConditionally(WeightedGroupedClause& wgclause,
 
 // Default matchers that just don't match on each of the types of clause
 RelCondMatcher falseRelCondMatcher = [](const RelCond*) { return false; };
-PatternBMatcher falsePatternMatcher = [](const PatternB*) { return false; };
+PatternCondMatcher falsePatternMatcher = [](const PatternCond*) {
+  return false;
+};
 WithCondMatcher falseWithCondMatcher = [](const WithCond*) { return false; };
 
 // Match basic clauses for each of the clause types (cheap clauses to exec)
@@ -76,7 +78,7 @@ RelCondMatcher relCondBasicMatcher = [](const RelCond* r) {
   return QueryExecutor::getRefAsBasic(r->arg1) &&
          QueryExecutor::getRefAsBasic(r->arg2);
 };
-PatternBMatcher patternBasicMatcher = [](const PatternB* p) {
+PatternCondMatcher patternBasicMatcher = [](const PatternCond* p) {
   // pattern a ("x", _) / i("x", _, _) / w("x", _)
   return QueryExecutor::getRefAsBasic(p->getFirstArg()) && p->getSecondArg() &&
          std::holds_alternative<Underscore>(p->getSecondArg().value());
@@ -101,7 +103,7 @@ RelCondMatcher isNextTClause =
     std::bind(isRelCondRelationType, _1, Relation::NextT);
 
 // For penalizing string matching for pattern
-PatternBMatcher patternPartialMatcher = [](const PatternB* p) {
+PatternCondMatcher patternPartialMatcher = [](const PatternCond* p) {
   auto pattern_rhs = p->getSecondArg();
   auto argRightIsMatcher =
       pattern_rhs && std::holds_alternative<Matcher>(pattern_rhs.value());
@@ -109,7 +111,7 @@ PatternBMatcher patternPartialMatcher = [](const PatternB* p) {
       argRightIsMatcher && std::get<Matcher>(pattern_rhs.value()).isPartial;
   return argRightIsPartialMatch;
 };
-PatternBMatcher patternCompleteMatcher = [](const PatternB* p) {
+PatternCondMatcher patternCompleteMatcher = [](const PatternCond* p) {
   auto pattern_rhs = p->getSecondArg();
   auto argRightIsMatcher =
       pattern_rhs && std::holds_alternative<Matcher>(pattern_rhs.value());

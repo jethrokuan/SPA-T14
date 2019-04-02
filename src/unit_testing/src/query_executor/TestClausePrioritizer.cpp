@@ -42,11 +42,11 @@ TEST_CASE ("Test Clause Prioritizer on multiple numbers of clauses") {
     auto query = qb.makePqlQuery(querystr);
     auto clause_prioritizer = ClausePrioritizer(&query);
     auto clauses_order = clause_prioritizer.getClauses();
+    REQUIRE((std::get<WithCond*>(clauses_order.at(0)) ==
+             (query.with_conds->at(0))));
     REQUIRE(
-        (std::get<WithCond*>(clauses_order.at(0)) == (query.with_cond->at(0))));
-    REQUIRE(
-        (std::get<RelCond*>(clauses_order.at(1)) == (query.rel_cond->at(0))));
-    REQUIRE(
-        (std::get<PatternB*>(clauses_order.at(2)) == (query.patternb->at(0))));
+        (std::get<RelCond*>(clauses_order.at(1)) == (query.rel_conds->at(0))));
+    REQUIRE((std::get<PatternCond*>(clauses_order.at(2)) ==
+             (query.pattern_conds->at(0))));
   }
 }

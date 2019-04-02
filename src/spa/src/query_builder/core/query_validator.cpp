@@ -1,7 +1,7 @@
-#include "query_builder/core/query_validator.h"
 #include <unordered_set>
 #include <variant>
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_validator.h"
 #include "query_builder/pql/declaration.h"
 
 using namespace QE;
@@ -40,7 +40,7 @@ void QueryValidator::validateSelectSynonymsAreDeclared(const Query& query) {
 
 void QueryValidator::validateModifyUsesNoFirstArgUnderscore(
     const Query& query) {
-  for (auto such_that : *(query.rel_cond)) {
+  for (auto such_that : *(query.rel_conds)) {
     // Early return if not modifies or uses
     if (such_that->relation != Relation::Uses &&
         such_that->relation != Relation::Modifies) {
@@ -59,7 +59,7 @@ void QueryValidator::validateModifyUsesNoFirstArgUnderscore(
 }
 
 void QueryValidator::validateSuchThatSynonymsAreDeclared(const Query& query) {
-  for (auto such_that : *(query.rel_cond)) {
+  for (auto such_that : *(query.rel_conds)) {
     // Error if first arg is underscore otherwise
     auto such_that_firstarg = such_that->arg1;
     auto such_that_secondarg = such_that->arg2;
@@ -86,8 +86,8 @@ void QueryValidator::validateSuchThatSynonymsAreDeclared(const Query& query) {
 }
 
 void QueryValidator::validateSuchThatRefTypes(const Query& query) {
-  for (auto such_that : *(query.rel_cond)) {
-    auto [ref1Types, ref2Types] =
+  for (auto such_that : *(query.rel_conds)) {
+    auto[ref1Types, ref2Types] =
         getArgRefTypesFromRelation(such_that->relation);
     bool such_that_arg1_valid =
         ref1Types.find(such_that->arg1.index()) != ref1Types.end();
@@ -104,7 +104,7 @@ void QueryValidator::validateSuchThatRefTypes(const Query& query) {
 }
 
 void QueryValidator::validatePatternRefTypes(const Query& query) {
-  for (auto pattern : *(query.patternb)) {
+  for (auto pattern : *(query.pattern_conds)) {
     if (entRefIndices.find(pattern->getFirstArg().index()) ==
         entRefIndices.end()) {
       throw PQLValidationException(
@@ -114,7 +114,7 @@ void QueryValidator::validatePatternRefTypes(const Query& query) {
 }
 
 void QueryValidator::validateSuchThatSynonymTypes(const Query& query) {
-  for (auto such_that : *(query.rel_cond)) {
+  for (auto such_that : *(query.rel_conds)) {
     // Idea here is to check the synonym's design entity type
     // against the list of allowed design entity types allowed for
     // each argument of the relation in this query
@@ -175,7 +175,7 @@ void QueryValidator::validateNoIdenticalSynonyms(const Query& query) {
 
 void QueryValidator::validatePatternFirstArgSynonymIsVariable(
     const Query& query) {
-  for (auto pattern : *(query.patternb)) {
+  for (auto pattern : *(query.pattern_conds)) {
     auto first_arg = pattern->getFirstArg();
     if (auto first_arg_syn = std::get_if<Synonym>(&first_arg)) {
       // Search the available declarations for the pattern synonym
@@ -196,7 +196,7 @@ void QueryValidator::validatePatternFirstArgSynonymIsVariable(
 }
 
 void QueryValidator::validateWithCondSameAttrType(const Query& query) {
-  for (const auto withcond : *(query.with_cond)) {
+  for (const auto withcond : *(query.with_conds)) {
     if (withcond->ref1.attrType != withcond->ref2.attrType) {
       throw PQLValidationException(
           "Semantic Error: cannot check two attrrefs of differing types.");

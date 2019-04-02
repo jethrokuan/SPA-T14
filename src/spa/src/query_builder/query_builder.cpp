@@ -1,8 +1,8 @@
-#include "query_builder/query_builder.h"
 #include <iostream>
 #include "query_builder/core/query_lexer.h"
 #include "query_builder/core/query_parser.h"
 #include "query_builder/core/query_validator.h"
+#include "query_builder/query_builder.h"
 
 using namespace QE;
 
@@ -13,8 +13,8 @@ Query QueryBuilder::makePqlQuery(std::string& pql_query_string) {
   // Get the query object from the query
   // getQuery can throw PQLParseException / PQLTokenizeException
   QueryLexer lexer = QueryLexer(pql_query_string);
-  lexer.lex();
-  QueryParser parser = QueryParser(lexer.Tokens);
+  auto tokens = lexer.lex();
+  QueryParser parser = QueryParser(tokens);
   Query query = parser.parse();
   // Check for semantic errors - can throw PQLValidationException
   QueryValidator validator = QueryValidator();

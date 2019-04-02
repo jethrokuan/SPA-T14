@@ -1,8 +1,8 @@
-#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
 #include <vector>
+#include "query_executor/query_executor.h"
 
 #include "query_executor/clause_prioritizer.h"
 #include "query_executor/constraint_solver/constraint_database.h"
@@ -91,7 +91,7 @@ bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
 }
 
 bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
-                                  QE::PatternB* pattern,
+                                  QE::PatternCond* pattern,
                                   ConstraintDatabase& db) {
   auto pattern_syn = pattern->getSynonym();
   auto pattern_de = Declaration::findDeclarationForSynonym(decls, pattern_syn)

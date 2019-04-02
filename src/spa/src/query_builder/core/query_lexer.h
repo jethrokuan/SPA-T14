@@ -19,6 +19,6 @@ class QueryLexer {
  public:
   std::vector<std::string> Tokens;
   explicit QueryLexer(std::string query);
-  void lex();
+  std::vector<std::string> lex();
 };
 }  // namespace QE

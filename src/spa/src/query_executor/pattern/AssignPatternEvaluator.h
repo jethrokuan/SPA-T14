@@ -71,7 +71,7 @@ class AssignPatternEvaluator : public PatternEvaluator {
 
  public:
   AssignPatternEvaluator(std::vector<QE::Declaration>* decls,
-                         QE::PatternB* pattern, PKBManager* pkb,
+                         QE::PatternCond* pattern, PKBManager* pkb,
                          ConstraintDatabase& db)
       : PatternEvaluator(decls, pattern, pkb, db) {}
 };

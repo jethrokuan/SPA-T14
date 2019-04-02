@@ -14,7 +14,7 @@ TEST_CASE ("Test Lex Tokens") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(&input);
-  lexer.lex();
+  auto tokens = lexer.lex();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new NumberToken("5"),         new NumberToken("50"),
@@ -41,7 +41,7 @@ TEST_CASE ("Test Lex Assign Statement") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(&input);
-  lexer.lex();
+  auto tokens = lexer.lex();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new PunctToken("{"),          new SymbolToken("i"),
@@ -53,7 +53,7 @@ TEST_CASE ("Test Lex Assign Statement") {
 
   // Expect that the vector of tokens are equivalent
   REQUIRE(std::equal(
-      begin(lexer.tokens), end(lexer.tokens), begin(expected), end(expected),
+      begin(tokens), end(tokens), begin(expected), end(expected),
       [](const Token* lexed, const Token* expt) { return *lexed == *expt; }));
 }
 
@@ -62,7 +62,7 @@ TEST_CASE ("Test Lex While Statement") {
   std::ifstream input(filename);
 
   auto lexer = Lexer(&input);
-  lexer.lex();
+  auto tokens = lexer.lex();
   std::vector<Token*> expected{
       new SymbolToken("procedure"), new SymbolToken("main"),
       new PunctToken("{"),          new SymbolToken("while"),
@@ -78,7 +78,7 @@ TEST_CASE ("Test Lex While Statement") {
 
   // Expect that the vector of tokens are equivalent
   REQUIRE(std::equal(
-      begin(lexer.tokens), end(lexer.tokens), begin(expected), end(expected),
+      begin(tokens), end(tokens), begin(expected), end(expected),
       [](const Token* lexed, const Token* expt) { return *lexed == *expt; }));
 }
 

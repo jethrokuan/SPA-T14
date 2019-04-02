@@ -1,0 +1,750 @@
+procedure main {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONE;
+	call TWO;
+	call THREE;
+	call FOUR;
+	call FIVE;
+	call SIX;
+	call SEVEN;
+	call EIGHT;
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;
+
+}
+
+procedure ONE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWO;
+	call THREE;
+	call FOUR;
+	call FIVE;
+	call SIX;
+	call SEVEN;
+	call EIGHT;
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;
+}
+
+procedure TWO {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call THREE;
+	call FOUR;
+	call FIVE;
+	call SIX;
+	call SEVEN;
+	call EIGHT;
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;
+
+}
+
+procedure THREE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call FOUR;
+	call FIVE;
+	call SIX;
+	call SEVEN;
+	call EIGHT;
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;	
+}
+
+procedure FOUR {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call FIVE;
+	call SIX;
+	call SEVEN;
+	call EIGHT;
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure FIVE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call SIX;
+	call SEVEN;
+	call EIGHT;
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure SIX {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call SEVEN;
+	call EIGHT;
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure SEVEN {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call EIGHT;
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure EIGHT {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call NINE;
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;			
+}
+
+procedure NINE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TEN;
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;	
+}
+
+procedure TEN {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONEONE;
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;	
+}
+
+procedure ONEONE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONETWO;
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure ONETWO {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONETHREE;
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure ONETHREE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONEFOUR;
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure ONEFOUR {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONEFIVE;
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure ONEFIVE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONESIX;
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure ONESIX {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONESEVEN;
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}	
+
+
+procedure ONESEVEN {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONEEIGHT;
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;	
+}
+
+procedure ONEEIGHT {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call ONENINE;
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure ONENINE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOZERO;
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure TWOZERO {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOONE;
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;			
+}
+
+procedure TWOONE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOTWO;
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure TWOTWO {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOTHREE;
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure TWOTHREE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOFOUR;
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+procedure TWOFOUR {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOFIVE;
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;			
+}
+
+procedure TWOFIVE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOSIX;
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+
+procedure TWOSIX {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOSEVEN;
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;		
+}
+
+
+procedure TWOSEVEN {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWOEIGHT;
+	call TWONINE;
+	call THREEZERO;			
+}
+
+
+procedure TWOEIGHT {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call TWONINE;
+	call THREEZERO;		
+}
+
+
+procedure TWONINE {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+
+	call THREEZERO;	
+}
+
+
+procedure THREEZERO {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+}

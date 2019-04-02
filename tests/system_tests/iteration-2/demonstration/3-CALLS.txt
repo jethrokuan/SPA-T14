@@ -1,0 +1,260 @@
+1
+procedure p1, p2;
+Select p1 such that Calls(p1,p2)
+main,loops
+5000
+2
+procedure p1, p2;
+Select p1 such that Calls(p1,_)
+none
+5000
+3
+procedure p1, p2;
+Select p1 such that Calls(p1,"main")
+none
+5000
+4
+procedure p1, p2;
+Select p1 such that Calls(p1,"loops")
+none
+5000
+5
+procedure p1, p2;
+Select p1 such that Calls(p1,"addABC")
+none
+5000
+6
+procedure p1, p2;
+Select p2 such that Calls(_,p2)
+none
+5000
+7
+procedure p1, p2;
+Select BOOLEAN such that Calls(_,_)
+none
+5000
+8
+procedure p1, p2;
+Select BOOLEAN such that Calls(_,"main")
+none
+5000
+9
+procedure p1, p2;
+Select BOOLEAN such that Calls(_,"loops")
+none
+5000
+10
+procedure p1, p2;
+Select BOOLEAN such that Calls(_,"addABC")
+none
+5000
+11
+procedure p1, p2;
+Select p2 such that Calls("main",p2)
+none
+5000
+12
+procedure p1, p2;
+Select BOOLEAN such that Calls("main",_)
+none
+5000
+13
+procedure p1, p2;
+Select BOOLEAN such that Calls("main","main")
+none
+5000
+14
+procedure p1, p2;
+Select BOOLEAN such that Calls("main","loops")
+none
+5000
+15
+procedure p1, p2;
+Select BOOLEAN such that Calls("main","addABC")
+none
+5000
+16
+procedure p1, p2;
+Select p2 such that Calls("loops",p2)
+none
+5000
+17
+procedure p1, p2;
+Select BOOLEAN such that Calls("loops",_)
+none
+5000
+18
+procedure p1, p2;
+Select BOOLEAN such that Calls("loops","main")
+none
+5000
+19
+procedure p1, p2;
+Select BOOLEAN such that Calls("loops","loops")
+none
+5000
+20
+procedure p1, p2;
+Select BOOLEAN such that Calls("loops","addABC")
+none
+5000
+21
+procedure p1, p2;
+Select p2 such that Calls("addABC",p2)
+none
+5000
+22
+procedure p1, p2;
+Select BOOLEAN such that Calls("addABC",_)
+none
+5000
+23
+procedure p1, p2;
+Select BOOLEAN such that Calls("addABC","main")
+none
+5000
+24
+procedure p1, p2;
+Select BOOLEAN such that Calls("addABC","loops")
+none
+5000
+25
+procedure p1, p2;
+Select BOOLEAN such that Calls("addABC","addABC")
+none
+5000
+26
+procedure p1, p2;
+Select <p1,p2> such that Calls(p1,p2)
+none
+5000
+27
+procedure p1, p2;
+Select p1 such that Calls*(p1,p2)
+none
+5000
+28
+procedure p1, p2;
+Select p1 such that Calls*(p1,_)
+none
+5000
+29
+procedure p1, p2;
+Select p1 such that Calls*(p1,"main")
+none
+5000
+30
+procedure p1, p2;
+Select p1 such that Calls*(p1,"loops")
+none
+5000
+31
+procedure p1, p2;
+Select p1 such that Calls*(p1,"addABC")
+none
+5000
+32
+procedure p1, p2;
+Select p2 such that Calls*(_,p2)
+none
+5000
+33
+procedure p1, p2;
+Select BOOLEAN such that Calls*(_,_)
+none
+5000
+34
+procedure p1, p2;
+Select BOOLEAN such that Calls*(_,"main")
+none
+5000
+35
+procedure p1, p2;
+Select BOOLEAN such that Calls*(_,"loops")
+none
+5000
+36
+procedure p1, p2;
+Select BOOLEAN such that Calls*(_,"addABC")
+none
+5000
+37
+procedure p1, p2;
+Select p2 such that Calls*("main",p2)
+none
+5000
+38
+procedure p1, p2;
+Select BOOLEAN such that Calls*("main",_)
+none
+5000
+39
+procedure p1, p2;
+Select BOOLEAN such that Calls*("main","main")
+none
+5000
+40
+procedure p1, p2;
+Select BOOLEAN such that Calls*("main","loops")
+none
+5000
+41
+procedure p1, p2;
+Select BOOLEAN such that Calls*("main","addABC")
+none
+5000
+42
+procedure p1, p2;
+Select p2 such that Calls*("loops",p2)
+none
+5000
+43
+procedure p1, p2;
+Select BOOLEAN such that Calls*("loops",_)
+none
+5000
+44
+procedure p1, p2;
+Select BOOLEAN such that Calls*("loops","main")
+none
+5000
+45
+procedure p1, p2;
+Select BOOLEAN such that Calls*("loops","loops")
+none
+5000
+46
+procedure p1, p2;
+Select BOOLEAN such that Calls*("loops","addABC")
+none
+5000
+47
+procedure p1, p2;
+Select p2 such that Calls*("addABC",p2)
+none
+5000
+48
+procedure p1, p2;
+Select BOOLEAN such that Calls*("addABC",_)
+none
+5000
+49
+procedure p1, p2;
+Select BOOLEAN such that Calls*("addABC","main")
+none
+5000
+50
+procedure p1, p2;
+Select BOOLEAN such that Calls*("addABC","loops")
+none
+5000
+51
+procedure p1, p2;
+Select BOOLEAN such that Calls*("addABC","addABC")
+none
+5000
+52
+procedure p1, p2;
+Select <p1,p2> such that Calls*(p1,p2)
+none
+5000

@@ -1,10 +1,10 @@
+#include "query_executor/clause_prioritizer.h"
 #include <cassert>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
 #include "query_executor/clause_functions.cpp"
-#include "query_executor/clause_prioritizer.h"
 
 std::vector<Clause> ClausePrioritizer::getClauses() {
   // Not worth sorting - little to no gain

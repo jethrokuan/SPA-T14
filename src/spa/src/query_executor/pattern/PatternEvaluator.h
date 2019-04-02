@@ -81,8 +81,9 @@ class PatternEvaluator {
   handlePatternLHSSynonymRHSNull() = 0;
 
  public:
-  PatternEvaluator(std::vector<QE::Declaration>* decls, QE::PatternCond* pattern,
-                   PKBManager* pkb, ConstraintDatabase& db)
+  PatternEvaluator(std::vector<QE::Declaration>* decls,
+                   QE::PatternCond* pattern, PKBManager* pkb,
+                   ConstraintDatabase& db)
       : declarations(decls),
         pattern(pattern),
         pkb(pkb),

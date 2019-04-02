@@ -1,8 +1,8 @@
+#include "query_builder/core/query_lexer.h"
 #include <cctype>
 #include <iostream>
 #include <unordered_set>
 #include "query_builder/core/exceptions.h"
-#include "query_builder/core/query_lexer.h"
 
 using QE::QueryLexer;
 

@@ -1,8 +1,8 @@
+#include "query_executor/query_executor.h"
 #include <cassert>
 #include <sstream>
 #include <string>
 #include <vector>
-#include "query_executor/query_executor.h"
 
 #include "query_executor/clause_prioritizer.h"
 #include "query_executor/constraint_solver/constraint_database.h"

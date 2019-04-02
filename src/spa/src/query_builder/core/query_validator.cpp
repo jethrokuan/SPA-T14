@@ -1,7 +1,7 @@
+#include "query_builder/core/query_validator.h"
 #include <unordered_set>
 #include <variant>
 #include "query_builder/core/exceptions.h"
-#include "query_builder/core/query_validator.h"
 #include "query_builder/pql/declaration.h"
 
 using namespace QE;
@@ -87,7 +87,7 @@ void QueryValidator::validateSuchThatSynonymsAreDeclared(const Query& query) {
 
 void QueryValidator::validateSuchThatRefTypes(const Query& query) {
   for (auto such_that : *(query.rel_conds)) {
-    auto[ref1Types, ref2Types] =
+    auto [ref1Types, ref2Types] =
         getArgRefTypesFromRelation(such_that->relation);
     bool such_that_arg1_valid =
         ref1Types.find(such_that->arg1.index()) != ref1Types.end();

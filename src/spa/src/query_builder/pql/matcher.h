@@ -1,3 +1,5 @@
+#include <string>
+
 namespace QE {
 class Matcher {
  public:

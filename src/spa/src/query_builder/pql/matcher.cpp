@@ -1,5 +1,5 @@
-#include "query_builder/core/exceptions.h"
 #include "query_builder/pql/matcher.h"
+#include "query_builder/core/exceptions.h"
 #include "simple_parser/exceptions.h"
 #include "simple_parser/interface.h"
 

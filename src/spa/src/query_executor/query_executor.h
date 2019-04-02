@@ -16,22 +16,25 @@ using namespace QE;
 //! bool == false or empty allowed pair ==> no valid results
 //! Otherwise, need to constrain other relevant values
 // using AllowedValuesPairOrBool = std::variant<TupledConstraint, bool>;
-
+//! Any type of clause - for use during sorting and synonym mapping
 class QueryExecutor {
  private:
   PKBManager* pkb;
 
+  //! Evaluates any clause by passing it to the correct executor
+  bool executeClause(std::vector<QE::Declaration>* decls, Clause clause,
+                     ConstraintDatabase& db);
   //! Evaluates any SuchThat clause
-  bool handleSuchThat(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
-                      ConstraintDatabase& db);
+  bool executeClause(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
+                     ConstraintDatabase& db);
   //! Evaluates any Pattern clause
-  bool handlePattern(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
+  bool executeClause(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
                      ConstraintDatabase& db);
 
   //! Evaluates any With clauses
-  bool handleWithCond(std::vector<QE::Declaration>* decls,
-                      QE::WithCond* withcond, ConstraintDatabase& db);
-
+  bool executeClause(std::vector<QE::Declaration>* decls,
+                     QE::WithCond* withcond, 
+                     ConstraintDatabase& db);
   //! Utility function to get all synonym strings from a list of selected
   //! vars
   std::vector<std::string> getSynonymsFromSelect(

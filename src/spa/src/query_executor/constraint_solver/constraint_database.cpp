@@ -199,6 +199,14 @@ vector<string> ConstraintDatabase::selectOne(const std::string var_to_select) {
   return unique_vec;
 }
 
+SingleConstraintSet ConstraintDatabase::selectOneAsSet(
+    const std::string var_to_select) {
+  // Unique-ify the column and return only unique results
+  auto one_column = selectOneColumn(var_to_select);
+  SingleConstraintSet unique_values(one_column.begin(), one_column.end());
+  return unique_values;
+}
+
 vector<string> ConstraintDatabase::selectOneColumn(
     const std::string var_to_select) {
   size_t table_idx = name_table_map[var_to_select];

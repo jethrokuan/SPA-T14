@@ -8,6 +8,9 @@
 #include "query_builder/pql/withcond.h"
 
 namespace QE {
+//! Utility definition to refer to all three types of clauses
+using Clause = std::variant<QE::RelCond*, QE::PatternB*, QE::WithCond*>;
+
 //! Query object containing all relevant information to pass to the PKB
 class Query {
  public:

@@ -92,6 +92,8 @@ class ConstraintDatabase {
   bool selectBoolean();
   //! Returns the column containing the variable of interest
   vector<string> selectOne(const std::string var_to_select);
+  //! Same as selectOne but no sorting is done, so an unordered_set is OK
+  SingleConstraintSet selectOneAsSet(const std::string var_to_select);
   //! Returns all rows where columns are in the order of vars_to_select
   vector<vector<string>> selectMultiple(const vector<string> vars_to_select);
 

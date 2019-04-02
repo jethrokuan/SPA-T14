@@ -90,9 +90,7 @@ std::vector<Clause> ClausePrioritizer::getClausesFromQuery() {
 }
 
 bool ClausePrioritizer::tooFewClauses() {
-  size_t total_clauses = (query->rel_cond ? query->rel_cond->size() : 0) +
-                         (query->patternb ? query->patternb->size() : 0) +
-                         (query->with_cond ? query->with_cond->size() : 0);
+  size_t total_clauses = query->rel_cond->size() + query->patternb->size() + query->with_cond->size();
   return total_clauses < MIN_CLAUSES_TO_SORT;
 }
 

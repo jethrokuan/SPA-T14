@@ -87,8 +87,15 @@ bool SuchThatEvaluator::dispatchLeftVarSynonymRightUnderscore() {
   // Iterate through all possible s, ask PKB if that relation has any results
   // Add those that have results to output
   // E.g. Follows*(3, _)? Follows*(4, _)?
-  auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      declarations, pkb, argLeftAsSynonym->synonym);
+
+  // Either get all possible DEs, or look up existing set of DEs in DB
+  SingleConstraintSet lhs_designentities;
+  if (db.hasVariable(argLeftAsSynonym->synonym)) {
+    lhs_designentities = db.selectOneAsSet(argLeftAsSynonym->synonym);
+  } else {
+    lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+        declarations, pkb, argLeftAsSynonym->synonym);
+  }
 
   SingleConstraintSet results;
   for (auto de : lhs_designentities) {
@@ -105,8 +112,16 @@ bool SuchThatEvaluator::dispatchRightVarSynonymLeftUnderscore() {
   // Iterate through all possible s, ask PKB if that relation has any results
   // Add those that have results to output
   // E.g. Follows*(_, 3)? Follows*(, 4)?
-  auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      declarations, pkb, argRightAsSynonym->synonym);
+
+  // Either get all possible DEs, or look up existing set of DEs in DB
+  SingleConstraintSet rhs_designentities;
+  if (db.hasVariable(argRightAsSynonym->synonym)) {
+    rhs_designentities = db.selectOneAsSet(argRightAsSynonym->synonym);
+  } else {
+    rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+        declarations, pkb, argRightAsSynonym->synonym);
+  }
+
   SingleConstraintSet results;
   for (auto de : rhs_designentities) {
     if (handleRightSynonymLeftUnderscore(de)) {
@@ -122,10 +137,21 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   // Iterate through all possible s1, s2 if that relation has any results
   // Add those that have results to output
   // E.g. Follows*(2, 3)? Follows*(2, 4)? Follows*(3, 3)? ...
-  auto lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      declarations, pkb, argLeftAsSynonym->synonym);
-  auto rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-      declarations, pkb, argRightAsSynonym->synonym);
+  // Either get all possible DEs, or look up existing set of DEs in DB
+  SingleConstraintSet lhs_designentities;
+  if (db.hasVariable(argLeftAsSynonym->synonym)) {
+    lhs_designentities = db.selectOneAsSet(argLeftAsSynonym->synonym);
+  } else {
+    lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+        declarations, pkb, argLeftAsSynonym->synonym);
+  }
+  SingleConstraintSet rhs_designentities;
+  if (db.hasVariable(argRightAsSynonym->synonym)) {
+    rhs_designentities = db.selectOneAsSet(argRightAsSynonym->synonym);
+  } else {
+    rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+        declarations, pkb, argRightAsSynonym->synonym);
+  }
 
   PairedConstraintSet results;
   for (auto lhs_de : lhs_designentities) {

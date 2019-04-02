@@ -64,11 +64,26 @@ bool WithEvaluator::handleBothArgsSynonym() {
   // prog_line n1, n2; Select <n1, n2> with n1 = n2
   // Only allow values of n1 and n2 where n1 = n2
   // Our simplified case: {(n', n') | n' in prog_line}
-  auto all_prog_lines = QueryExecutor::getSelect(pkb, DesignEntity::PROG_LINE);
-  // [1,2,3,4] --> {(1,1), (2,2), (3,3), (4,4)}
+  SingleConstraintSet lhs_prog_lines;
+  if (db.hasVariable(argLeftAsSynonym->synonym)) {
+    lhs_prog_lines = db.selectOneAsSet(argLeftAsSynonym->synonym);
+  } else {
+    lhs_prog_lines = QueryExecutor::getSelect(pkb, DesignEntity::PROG_LINE);
+  }
+  SingleConstraintSet rhs_prog_lines;
+  if (db.hasVariable(argRightAsSynonym->synonym)) {
+    rhs_prog_lines = db.selectOneAsSet(argRightAsSynonym->synonym);
+  } else {
+    rhs_prog_lines = QueryExecutor::getSelect(pkb, DesignEntity::PROG_LINE);
+  }
+  // Insert only matching prog_lines from both synonyms
   PairedConstraintSet pcs;
-  for (const auto& prog_line : all_prog_lines) {
-    pcs.insert({prog_line, prog_line});
+  for (const auto& left_prog_line : lhs_prog_lines) {
+    for (const auto& right_prog_line : rhs_prog_lines) {
+      if (left_prog_line == right_prog_line) {
+        pcs.insert({left_prog_line, right_prog_line});
+      }
+    }
   }
   db.addToPairedVariableConstraints(argLeftAsSynonym->synonym,
                                     argRightAsSynonym->synonym, pcs);
@@ -88,8 +103,18 @@ bool WithEvaluator::handleBothArgsSynAttr() {
 
   auto design_entity_type_1 = found_declaration_1.getDesignEntity();
   auto design_entity_type_2 = found_declaration_2.getDesignEntity();
-  auto all_des_1 = QueryExecutor::getSelect(pkb, design_entity_type_1);
-  auto all_des_2 = QueryExecutor::getSelect(pkb, design_entity_type_2);
+  SingleConstraintSet all_des_1;
+  if (db.hasVariable(synAttr1.synonym.synonym)) {
+    all_des_1 = db.selectOneAsSet(synAttr1.synonym.synonym);
+  } else {
+    all_des_1 = QueryExecutor::getSelect(pkb, design_entity_type_1);
+  }
+  SingleConstraintSet all_des_2;
+  if (db.hasVariable(synAttr2.synonym.synonym)) {
+    all_des_2 = db.selectOneAsSet(synAttr2.synonym.synonym);
+  } else {
+    all_des_2 = QueryExecutor::getSelect(pkb, design_entity_type_2);
+  }
 
   PairedConstraintSet equal_values;
   for (const auto& de1 : all_des_1) {
@@ -137,7 +162,12 @@ bool WithEvaluator::handleQuoteIdentSynAttr(QuoteIdent& quoteIdent,
     return db.addToSingleVariableConstraints(
         synAttr.synonym.synonym, SingleConstraintSet{quoteIdent.quote_ident});
   } else {
-    auto all_des = QueryExecutor::getSelect(pkb, design_entity_type);
+    SingleConstraintSet all_des;
+    if (db.hasVariable(synAttr.synonym.synonym)) {
+      all_des = db.selectOneAsSet(synAttr.synonym.synonym);
+    } else {
+      all_des = QueryExecutor::getSelect(pkb, design_entity_type);
+    }
     // Filter out values that don't match call to .procName/.varName for
     // call/read/print
     SingleConstraintSet filtered_des;
@@ -161,9 +191,19 @@ bool WithEvaluator::handleSynonymSynAttr(Synonym& synonym, SynAttr& synAttr) {
       Declaration::findDeclarationForSynonym(declarations, synAttr.synonym)
           .value();
   auto design_entity_type = found_declaration.getDesignEntity();
-  auto all_prog_lines = QueryExecutor::getSelect(pkb, DesignEntity::PROG_LINE);
-  auto all_des = QueryExecutor::getSelect(pkb, design_entity_type);
-  if (all_des.empty()) return false;
+  SingleConstraintSet all_prog_lines;
+  if (db.hasVariable(synonym.synonym)) {
+    all_prog_lines = db.selectOneAsSet(synonym.synonym);
+  } else {
+    all_prog_lines = QueryExecutor::getSelect(pkb, DesignEntity::PROG_LINE);
+  }
+  SingleConstraintSet all_des;
+  if (db.hasVariable(synAttr.synonym.synonym)) {
+    all_des = db.selectOneAsSet(synAttr.synonym.synonym);
+  } else {
+    all_des = QueryExecutor::getSelect(pkb, design_entity_type);
+  }
+  if (all_des.empty() || all_prog_lines.empty()) return false;
 
   // Perform set intersection and duplicate all resultant values
   // E.g. (1, 2) INT (2, 3) ==> {(2, 2)}

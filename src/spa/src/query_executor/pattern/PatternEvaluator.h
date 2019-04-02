@@ -12,7 +12,7 @@ using namespace QE;
 class PatternEvaluator {
  protected:
   std::vector<QE::Declaration>* declarations;
-  QE::PatternB* pattern;
+  QE::PatternCond* pattern;
   PKBManager* pkb;
   ConstraintDatabase& db;
 
@@ -81,8 +81,9 @@ class PatternEvaluator {
   handlePatternLHSSynonymRHSNull() = 0;
 
  public:
-  PatternEvaluator(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
-                   PKBManager* pkb, ConstraintDatabase& db)
+  PatternEvaluator(std::vector<QE::Declaration>* decls,
+                   QE::PatternCond* pattern, PKBManager* pkb,
+                   ConstraintDatabase& db)
       : declarations(decls),
         pattern(pattern),
         pkb(pkb),

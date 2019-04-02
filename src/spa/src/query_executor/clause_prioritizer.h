@@ -30,7 +30,7 @@ struct WeightedGroupedClause {
 //! For application of clause weights based on their type
 using ClauseTypeChecker = std::function<bool(const WeightedGroupedClause&)>;
 using RelCondMatcher = std::function<bool(const RelCond*)>;
-using PatternBMatcher = std::function<bool(const PatternB*)>;
+using PatternCondMatcher = std::function<bool(const PatternCond*)>;
 using WithCondMatcher = std::function<bool(const WithCond*)>;
 using WeightFunction = std::function<void(WeightedGroupedClause&)>;
 

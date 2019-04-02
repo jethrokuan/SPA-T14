@@ -68,7 +68,7 @@ class WhilePatternEvaluator : public PatternEvaluator {
 
  public:
   WhilePatternEvaluator(std::vector<QE::Declaration>* decls,
-                        QE::PatternB* pattern, PKBManager* pkb,
+                        QE::PatternCond* pattern, PKBManager* pkb,
                         ConstraintDatabase& db)
       : PatternEvaluator(decls, pattern, pkb, db) {}
 };

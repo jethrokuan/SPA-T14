@@ -25,9 +25,9 @@ TEST_CASE ("Test QueryParser Declarations") {
       REQUIRE(query.result->selected_declarations->size() == 1);
       REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
               Synonym("a"));
-      REQUIRE(query.rel_cond->empty());
-      REQUIRE(query.patternb->empty());
-      REQUIRE(query.with_cond->empty());
+      REQUIRE(query.rel_conds->empty());
+      REQUIRE(query.pattern_conds->empty());
+      REQUIRE(query.with_conds->empty());
     }
 
     SECTION ("SUCCESS: variable v;Select v") {
@@ -39,9 +39,9 @@ TEST_CASE ("Test QueryParser Declarations") {
       REQUIRE(query.result->selected_declarations->size() == 1);
       REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
               Synonym("v"));
-      REQUIRE(query.rel_cond->empty());
-      REQUIRE(query.patternb->empty());
-      REQUIRE(query.with_cond->empty());
+      REQUIRE(query.rel_conds->empty());
+      REQUIRE(query.pattern_conds->empty());
+      REQUIRE(query.with_conds->empty());
     }
 
     SECTION ("SUCCESS: stmt p;Select p") {
@@ -52,9 +52,9 @@ TEST_CASE ("Test QueryParser Declarations") {
       REQUIRE(query.result->selected_declarations->size() == 1);
       REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
               Synonym("p"));
-      REQUIRE(query.rel_cond->empty());
-      REQUIRE(query.patternb->empty());
-      REQUIRE(query.with_cond->empty());
+      REQUIRE(query.rel_conds->empty());
+      REQUIRE(query.pattern_conds->empty());
+      REQUIRE(query.with_conds->empty());
     }
 
     SECTION ("SUCCESS: read r;Select r") {
@@ -65,9 +65,9 @@ TEST_CASE ("Test QueryParser Declarations") {
       REQUIRE(query.result->selected_declarations->size() == 1);
       REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
               Synonym("r"));
-      REQUIRE(query.rel_cond->empty());
-      REQUIRE(query.patternb->empty());
-      REQUIRE(query.with_cond->empty());
+      REQUIRE(query.rel_conds->empty());
+      REQUIRE(query.pattern_conds->empty());
+      REQUIRE(query.with_conds->empty());
     }
 
     SECTION ("SUCCESS: prog_line p;Select p") {
@@ -79,9 +79,9 @@ TEST_CASE ("Test QueryParser Declarations") {
       REQUIRE(query.result->selected_declarations->size() == 1);
       REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
               Synonym("p"));
-      REQUIRE(query.rel_cond->empty());
-      REQUIRE(query.patternb->empty());
-      REQUIRE(query.with_cond->empty());
+      REQUIRE(query.rel_conds->empty());
+      REQUIRE(query.pattern_conds->empty());
+      REQUIRE(query.with_conds->empty());
     }
   }
 
@@ -110,9 +110,9 @@ TEST_CASE ("Test QueryParser Declarations") {
       REQUIRE(query.result->selected_declarations->size() == 1);
       REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
               Synonym("a2"));
-      REQUIRE(query.rel_cond->empty());
-      REQUIRE(query.patternb->empty());
-      REQUIRE(query.with_cond->empty());
+      REQUIRE(query.rel_conds->empty());
+      REQUIRE(query.pattern_conds->empty());
+      REQUIRE(query.with_conds->empty());
     }
 
     SECTION ("SUCCESS: assign a1; stmt s1; Select a1") {
@@ -125,9 +125,9 @@ TEST_CASE ("Test QueryParser Declarations") {
       REQUIRE(query.result->selected_declarations->size() == 1);
       REQUIRE(std::get<Synonym>(query.result->selected_declarations->at(0)) ==
               Synonym("a1"));
-      REQUIRE(query.rel_cond->empty());
-      REQUIRE(query.patternb->empty());
-      REQUIRE(query.with_cond->empty());
+      REQUIRE(query.rel_conds->empty());
+      REQUIRE(query.pattern_conds->empty());
+      REQUIRE(query.with_conds->empty());
     }
   }
 
@@ -258,28 +258,28 @@ TEST_CASE ("Test RelCond clause") {
     SECTION ("SUCCESS: Uses") {
       std::string input = "stmt p; Select p such that Uses(p, \"a\")";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.rel_cond->size() == 1);
-      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::Uses, Synonym("p"),
-                                                QuoteIdent("a"),
-                                                query.declarations));
+      REQUIRE(query.rel_conds->size() == 1);
+      REQUIRE(*query.rel_conds->at(0) == RelCond(Relation::Uses, Synonym("p"),
+                                                 QuoteIdent("a"),
+                                                 query.declarations));
     }
 
     SECTION ("SUCCESS: Modifies") {
       std::string input = "stmt p; Select p such that Modifies(p, \"a\")";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.rel_cond->size() == 1);
-      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::Modifies,
-                                                Synonym("p"), QuoteIdent("a"),
-                                                query.declarations));
+      REQUIRE(query.rel_conds->size() == 1);
+      REQUIRE(*query.rel_conds->at(0) == RelCond(Relation::Modifies,
+                                                 Synonym("p"), QuoteIdent("a"),
+                                                 query.declarations));
     }
 
     SECTION ("SUCCESS: Follows*") {
       std::string input = "stmt p, p1; Select p such that Follows*(p, p1)";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.rel_cond->size() == 1);
-      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::FollowsT,
-                                                Synonym("p"), Synonym("p1"),
-                                                query.declarations));
+      REQUIRE(query.rel_conds->size() == 1);
+      REQUIRE(*query.rel_conds->at(0) == RelCond(Relation::FollowsT,
+                                                 Synonym("p"), Synonym("p1"),
+                                                 query.declarations));
     }
   }
 
@@ -289,13 +289,13 @@ TEST_CASE ("Test RelCond clause") {
           "stmt p, p1; Select p such that Follows*(p, p1) and Modifies(p, "
           "\"b\")";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.rel_cond->size() == 2);
-      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::FollowsT,
-                                                Synonym("p"), Synonym("p1"),
-                                                query.declarations));
-      REQUIRE(*query.rel_cond->at(1) == RelCond(Relation::Modifies,
-                                                Synonym("p"), QuoteIdent("b"),
-                                                query.declarations));
+      REQUIRE(query.rel_conds->size() == 2);
+      REQUIRE(*query.rel_conds->at(0) == RelCond(Relation::FollowsT,
+                                                 Synonym("p"), Synonym("p1"),
+                                                 query.declarations));
+      REQUIRE(*query.rel_conds->at(1) == RelCond(Relation::Modifies,
+                                                 Synonym("p"), QuoteIdent("b"),
+                                                 query.declarations));
     }
 
     SECTION ("SUCCESS: such that") {
@@ -303,13 +303,13 @@ TEST_CASE ("Test RelCond clause") {
           "stmt p, p1; Select p such that Follows*(p,p1) such that Modifies(p, "
           "\"b\")";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.rel_cond->size() == 2);
-      REQUIRE(*query.rel_cond->at(0) == RelCond(Relation::FollowsT,
-                                                Synonym("p"), Synonym("p1"),
-                                                query.declarations));
-      REQUIRE(*query.rel_cond->at(1) == RelCond(Relation::Modifies,
-                                                Synonym("p"), QuoteIdent("b"),
-                                                query.declarations));
+      REQUIRE(query.rel_conds->size() == 2);
+      REQUIRE(*query.rel_conds->at(0) == RelCond(Relation::FollowsT,
+                                                 Synonym("p"), Synonym("p1"),
+                                                 query.declarations));
+      REQUIRE(*query.rel_conds->at(1) == RelCond(Relation::Modifies,
+                                                 Synonym("p"), QuoteIdent("b"),
+                                                 query.declarations));
     }
   }
 
@@ -366,9 +366,9 @@ TEST_CASE ("Test QueryParser pattern clause") {
     SECTION ("SUCCESS") {
       std::string input = "if i; Select i pattern i(\"a\", _, _)";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.patternb->size() == 1);
-      REQUIRE(*query.patternb->at(0) ==
-              PatternB(Synonym("i"), QuoteIdent("a")));
+      REQUIRE(query.pattern_conds->size() == 1);
+      REQUIRE(*query.pattern_conds->at(0) ==
+              PatternCond(Synonym("i"), QuoteIdent("a")));
     }
     SECTION ("FAILURE") {
       SECTION ("Incorrect # of args") {
@@ -396,9 +396,9 @@ TEST_CASE ("Test QueryParser pattern clause") {
     SECTION ("SUCCESS") {
       std::string input = "while w; Select w pattern w(\"a\", _)";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.patternb->size() == 1);
-      REQUIRE(*query.patternb->at(0) ==
-              PatternB(Synonym("w"), QuoteIdent("a")));
+      REQUIRE(query.pattern_conds->size() == 1);
+      REQUIRE(*query.pattern_conds->at(0) ==
+              PatternCond(Synonym("w"), QuoteIdent("a")));
     }
     SECTION ("FAILURE") {
       SECTION ("Incorrect # of args") {
@@ -420,25 +420,27 @@ TEST_CASE ("Test QueryParser pattern clause") {
       SECTION ("underscore") {
         std::string input = "assign a; Select a pattern a(\"a\", _)";
         auto query = qe.makePqlQuery(input);
-        REQUIRE(query.patternb->size() == 1);
-        REQUIRE(*query.patternb->at(0) ==
-                PatternB(Synonym("a"), QuoteIdent("a"), Underscore()));
+        REQUIRE(query.pattern_conds->size() == 1);
+        REQUIRE(*query.pattern_conds->at(0) ==
+                PatternCond(Synonym("a"), QuoteIdent("a"), Underscore()));
       }
 
       SECTION ("partial matching") {
         std::string input = "assign a; Select a pattern a(\"a\", _\"abc\"_)";
         auto query = qe.makePqlQuery(input);
-        REQUIRE(query.patternb->size() == 1);
-        REQUIRE(*query.patternb->at(0) ==
-                PatternB(Synonym("a"), QuoteIdent("a"), Matcher(true, "abc")));
+        REQUIRE(query.pattern_conds->size() == 1);
+        REQUIRE(
+            *query.pattern_conds->at(0) ==
+            PatternCond(Synonym("a"), QuoteIdent("a"), Matcher(true, "abc")));
       }
 
       SECTION ("exact matching") {
         std::string input = "assign a; Select a pattern a(\"a\", \"abc\")";
         auto query = qe.makePqlQuery(input);
-        REQUIRE(query.patternb->size() == 1);
-        REQUIRE(*query.patternb->at(0) ==
-                PatternB(Synonym("a"), QuoteIdent("a"), Matcher(false, "abc")));
+        REQUIRE(query.pattern_conds->size() == 1);
+        REQUIRE(
+            *query.pattern_conds->at(0) ==
+            PatternCond(Synonym("a"), QuoteIdent("a"), Matcher(false, "abc")));
       }
     }
     SECTION ("FAILURE") {
@@ -462,11 +464,11 @@ TEST_CASE ("Test QueryParser pattern clause") {
           "assign a; if i; Select a pattern a(\"a\", _) and i(\"a\", "
           "_, _)";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.patternb->size() == 2);
-      REQUIRE(*query.patternb->at(0) ==
-              PatternB(Synonym("a"), QuoteIdent("a"), Underscore()));
-      REQUIRE(*query.patternb->at(1) ==
-              PatternB(Synonym("i"), QuoteIdent("a")));
+      REQUIRE(query.pattern_conds->size() == 2);
+      REQUIRE(*query.pattern_conds->at(0) ==
+              PatternCond(Synonym("a"), QuoteIdent("a"), Underscore()));
+      REQUIRE(*query.pattern_conds->at(1) ==
+              PatternCond(Synonym("i"), QuoteIdent("a")));
     }
 
     SECTION ("SUCCESS: pattern") {
@@ -474,11 +476,11 @@ TEST_CASE ("Test QueryParser pattern clause") {
           "assign a; if i; Select a pattern a(\"a\", _) pattern i(\"a\", "
           "_, _)";
       auto query = qe.makePqlQuery(input);
-      REQUIRE(query.patternb->size() == 2);
-      REQUIRE(*query.patternb->at(0) ==
-              PatternB(Synonym("a"), QuoteIdent("a"), Underscore()));
-      REQUIRE(*query.patternb->at(1) ==
-              PatternB(Synonym("i"), QuoteIdent("a")));
+      REQUIRE(query.pattern_conds->size() == 2);
+      REQUIRE(*query.pattern_conds->at(0) ==
+              PatternCond(Synonym("a"), QuoteIdent("a"), Underscore()));
+      REQUIRE(*query.pattern_conds->at(1) ==
+              PatternCond(Synonym("i"), QuoteIdent("a")));
     }
   }
 
@@ -496,8 +498,8 @@ TEST_CASE ("Test QueryParser WithCond") {
     std::string input = "prog_line p; Select p with p = 1";
     auto query = qe.makePqlQuery(input);
 
-    REQUIRE(query.with_cond->size() == 1);
-    REQUIRE(*query.with_cond->at(0) ==
+    REQUIRE(query.with_conds->size() == 1);
+    REQUIRE(*query.with_conds->at(0) ==
             WithCond(AttrRef(Synonym("p"), query.declarations),
                      AttrRef(1, query.declarations)));
   }
@@ -506,8 +508,8 @@ TEST_CASE ("Test QueryParser WithCond") {
     std::string input = "assign a; Select a with a.stmt# = 1";
     auto query = qe.makePqlQuery(input);
 
-    REQUIRE(query.with_cond->size() == 1);
-    REQUIRE(*query.with_cond->at(0) ==
+    REQUIRE(query.with_conds->size() == 1);
+    REQUIRE(*query.with_conds->at(0) ==
             WithCond(AttrRef(SynAttr(Synonym("a"), AttrName::STMT_NO,
                                      query.declarations),
                              query.declarations),
@@ -518,8 +520,8 @@ TEST_CASE ("Test QueryParser WithCond") {
     std::string input = "prog_line p; Select p with 2 = 1";
     auto query = qe.makePqlQuery(input);
 
-    REQUIRE(query.with_cond->size() == 1);
-    REQUIRE(*query.with_cond->at(0) ==
+    REQUIRE(query.with_conds->size() == 1);
+    REQUIRE(*query.with_conds->at(0) ==
             WithCond(AttrRef(2, query.declarations),
                      AttrRef(1, query.declarations)));
   }
@@ -528,8 +530,8 @@ TEST_CASE ("Test QueryParser WithCond") {
     std::string input = "assign a, b; Select a with a.stmt# = b.stmt#";
     auto query = qe.makePqlQuery(input);
 
-    REQUIRE(query.with_cond->size() == 1);
-    REQUIRE(*query.with_cond->at(0) ==
+    REQUIRE(query.with_conds->size() == 1);
+    REQUIRE(*query.with_conds->at(0) ==
             WithCond(AttrRef(SynAttr(Synonym("a"), AttrName::STMT_NO,
                                      query.declarations),
                              query.declarations),
@@ -542,8 +544,8 @@ TEST_CASE ("Test QueryParser WithCond") {
     std::string input = "assign a, b; Select a with a.stmt# = b.stmt#";
     auto query = qe.makePqlQuery(input);
 
-    REQUIRE(query.with_cond->size() == 1);
-    REQUIRE(*query.with_cond->at(0) ==
+    REQUIRE(query.with_conds->size() == 1);
+    REQUIRE(*query.with_conds->at(0) ==
             WithCond(AttrRef(SynAttr(Synonym("a"), AttrName::STMT_NO,
                                      query.declarations),
                              query.declarations),
@@ -556,8 +558,8 @@ TEST_CASE ("Test QueryParser WithCond") {
     std::string input = "prog_line p; Select p with p = 1";
     auto query = qe.makePqlQuery(input);
 
-    REQUIRE(query.with_cond->size() == 1);
-    REQUIRE(*query.with_cond->at(0) ==
+    REQUIRE(query.with_conds->size() == 1);
+    REQUIRE(*query.with_conds->at(0) ==
             WithCond(AttrRef(Synonym("p"), query.declarations),
                      AttrRef(1, query.declarations)));
   }
@@ -567,11 +569,11 @@ TEST_CASE ("Test QueryParser WithCond") {
       std::string input = "prog_line p; Select p with p = 1 and 1 = 2";
       auto query = qe.makePqlQuery(input);
 
-      REQUIRE(query.with_cond->size() == 2);
-      REQUIRE(*query.with_cond->at(0) ==
+      REQUIRE(query.with_conds->size() == 2);
+      REQUIRE(*query.with_conds->at(0) ==
               WithCond(AttrRef(Synonym("p"), query.declarations),
                        AttrRef(1, query.declarations)));
-      REQUIRE(*query.with_cond->at(1) ==
+      REQUIRE(*query.with_conds->at(1) ==
               WithCond(AttrRef(1, query.declarations),
                        AttrRef(2, query.declarations)));
     }
@@ -579,11 +581,11 @@ TEST_CASE ("Test QueryParser WithCond") {
       std::string input = "prog_line p; Select p with p = 1 with 1 = 2";
       auto query = qe.makePqlQuery(input);
 
-      REQUIRE(query.with_cond->size() == 2);
-      REQUIRE(*query.with_cond->at(0) ==
+      REQUIRE(query.with_conds->size() == 2);
+      REQUIRE(*query.with_conds->at(0) ==
               WithCond(AttrRef(Synonym("p"), query.declarations),
                        AttrRef(1, query.declarations)));
-      REQUIRE(*query.with_cond->at(1) ==
+      REQUIRE(*query.with_conds->at(1) ==
               WithCond(AttrRef(1, query.declarations),
                        AttrRef(2, query.declarations)));
     }

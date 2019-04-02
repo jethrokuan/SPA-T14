@@ -91,7 +91,7 @@ bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
 }
 
 bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
-                                  QE::PatternB* pattern,
+                                  QE::PatternCond* pattern,
                                   ConstraintDatabase& db) {
   auto pattern_syn = pattern->getSynonym();
   auto pattern_de = Declaration::findDeclarationForSynonym(decls, pattern_syn)

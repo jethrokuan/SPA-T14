@@ -28,13 +28,12 @@ class QueryExecutor {
   bool executeClause(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
                      ConstraintDatabase& db);
   //! Evaluates any Pattern clause
-  bool executeClause(std::vector<QE::Declaration>* decls, QE::PatternB* pattern,
-                     ConstraintDatabase& db);
+  bool executeClause(std::vector<QE::Declaration>* decls,
+                     QE::PatternCond* pattern, ConstraintDatabase& db);
 
   //! Evaluates any With clauses
   bool executeClause(std::vector<QE::Declaration>* decls,
-                     QE::WithCond* withcond, 
-                     ConstraintDatabase& db);
+                     QE::WithCond* withcond, ConstraintDatabase& db);
   //! Utility function to get all synonym strings from a list of selected
   //! vars
   std::vector<std::string> getSynonymsFromSelect(

@@ -3,6 +3,7 @@
 #include <optional>
 
 #include "query_builder/core/exceptions.h"
+#include "query_builder/pql/matcher.h"
 #include "query_builder/pql/ref.h"
 #include "query_builder/pql/synonym.h"
 #include "query_builder/pql/underscore.h"
@@ -15,28 +16,9 @@ using namespace Utils;
 namespace QE {
 //! Represents a pattern clause in PQL (e.g. pattern a (_,"v")
 
-class Matcher {
- public:
-  bool isPartial;
-  std::string expr;
-
-  Matcher(bool isPartial_, std::string expr_)
-      : isPartial(isPartial_), expr(expr_) {
-    try {
-      Simple::SimpleInterface::parseExpression(expr_);
-    } catch (Simple::SimpleParseException e) {
-      throw PQLParseException("'" + expr_ + "' does not fit expression spec.");
-    }
-  };
-
-  bool operator==(const Matcher& other) const {
-    return isPartial == other.isPartial && expr.compare(other.expr) == 0;
-  }
-};
-
 using Expression = std::variant<Underscore, Matcher>;
 
-class PatternB {
+class PatternCond {
  private:
   Synonym synonym;
   Ref firstArg;
@@ -44,18 +26,18 @@ class PatternB {
 
  public:
   bool isPartial;
-  PatternB(Synonym s, Ref a1, Expression a2)
+  PatternCond(Synonym s, Ref a1, Expression a2)
       : synonym(s), firstArg(a1), secondArg(a2), isPartial(false){};
-  PatternB(Synonym s, Ref a1)
+  PatternCond(Synonym s, Ref a1)
       : synonym(s), firstArg(a1), secondArg(std::nullopt), isPartial(false){};
-  PatternB(Synonym s, Ref a1, Expression a2, bool isPartial_)
+  PatternCond(Synonym s, Ref a1, Expression a2, bool isPartial_)
       : synonym(s), firstArg(a1), secondArg(a2), isPartial(isPartial_){};
 
   Synonym getSynonym() const { return synonym; }
   Ref getFirstArg() const { return firstArg; }
   std::optional<Expression> getSecondArg() const { return secondArg; }
 
-  bool operator==(const PatternB& pat) const {
+  bool operator==(const PatternCond& pat) const {
     return synonym == pat.synonym && firstArg == pat.firstArg &&
            secondArg == pat.secondArg;
   }

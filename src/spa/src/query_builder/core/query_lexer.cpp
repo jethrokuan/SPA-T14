@@ -43,7 +43,7 @@ void QueryLexer::readNumber() {
 
 bool QueryLexer::isAtEnd() { return Curr == Query.length(); }
 
-void QueryLexer::lex() {
+std::vector<std::string> QueryLexer::lex() {
   char nextChar;
 
   while (!isAtEnd()) {
@@ -82,4 +82,5 @@ void QueryLexer::lex() {
   }
 
   Tokens.push_back("");  // Use empty string to denote end
+  return Tokens;
 }

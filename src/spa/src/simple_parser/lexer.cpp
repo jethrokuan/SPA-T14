@@ -48,7 +48,7 @@ void Lexer::readNumber() {
 
 Lexer::Lexer(std::istream* stream_) : stream(stream_) {}
 
-void Lexer::lex() {
+std::vector<Token*> Lexer::lex() {
   char nextChar;
 
   while (!stream->eof()) {
@@ -110,4 +110,6 @@ void Lexer::lex() {
   }
 
   tokens.push_back(new EndOfFileToken());
+
+  return tokens;
 }

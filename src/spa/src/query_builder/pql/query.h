@@ -2,14 +2,14 @@
 #include <vector>
 
 #include "query_builder/pql/declaration.h"
-#include "query_builder/pql/patternb.h"
-#include "query_builder/pql/relcond.h"
+#include "query_builder/pql/pattern_cond.h"
+#include "query_builder/pql/rel_cond.h"
 #include "query_builder/pql/result.h"
-#include "query_builder/pql/withcond.h"
+#include "query_builder/pql/with_cond.h"
 
 namespace QE {
 //! Utility definition to refer to all three types of clauses
-using Clause = std::variant<QE::RelCond*, QE::PatternB*, QE::WithCond*>;
+using Clause = std::variant<QE::RelCond*, QE::PatternCond*, QE::WithCond*>;
 
 //! Query object containing all relevant information to pass to the PKB
 class Query {
@@ -18,9 +18,9 @@ class Query {
 
   std::vector<Declaration>* declarations;
   Result* result;  // Result clause (boolean or tuple)
-  std::vector<RelCond*>* rel_cond;
-  std::vector<PatternB*>* patternb;
-  std::vector<WithCond*>* with_cond;
+  std::vector<RelCond*>* rel_conds;
+  std::vector<PatternCond*>* pattern_conds;
+  std::vector<WithCond*>* with_conds;
 
   // -- Accessors and constructors --
 
@@ -33,10 +33,10 @@ class Query {
       os << decl << "; ";
     }
 
-    for (const auto& relcond : *(query.rel_cond)) {
+    for (const auto& relcond : *(query.rel_conds)) {
       os << *relcond << " ";
     }
-    for (const auto& pat : *(query.patternb)) {
+    for (const auto& pat : *(query.pattern_conds)) {
       os << pat;
     }
 

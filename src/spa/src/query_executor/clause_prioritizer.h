@@ -17,7 +17,7 @@ struct WeightedGroupedClause {
   unsigned int group_id;  // To group related clauses together
 
   // Sort by groupid, then weight
-  bool operator<(const WeightedGroupedClause& other) {
+  bool operator<(const WeightedGroupedClause& other) const {
     return std::tie(group_id, weight) < std::tie(other.group_id, other.weight);
   }
   friend std::ostream& operator<<(std::ostream& os,

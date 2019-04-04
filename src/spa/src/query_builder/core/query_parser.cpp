@@ -12,6 +12,16 @@
 
 using namespace QE;
 
+namespace QE {
+std::unordered_map<std::string, Relation> str_to_relation_map = {
+    {"Modifies", Relation::Modifies}, {"Uses", Relation::Uses},
+    {"Calls", Relation::Calls},       {"Calls*", Relation::CallsT},
+    {"Parent", Relation::Parent},     {"Parent*", Relation::ParentT},
+    {"Follows", Relation::Follows},   {"Follows*", Relation::FollowsT},
+    {"Next", Relation::Next},         {"Next*", Relation::NextT},
+    {"Affects", Relation::Affects},   {"Affects*", Relation::AffectsT}};
+}
+
 QueryParser::QueryParser(std::vector<std::string> tokens)
     : query_(new Query()), current_(0), tokens_(tokens) {}
 
@@ -159,42 +169,11 @@ Ref QueryParser::parseRef() {
 
 void QueryParser::parseRelRef() {
   Relation relation;
-  if (match("Modifies")) {
-    relation = Relation::Modifies;
-  } else if (match("Uses")) {
-    relation = Relation::Uses;
-  } else if (match("Calls")) {
-    if (match("*")) {
-      relation = Relation::CallsT;
-    } else {
-      relation = Relation::Calls;
-    }
-  } else if (match("Parent")) {
-    if (match("*")) {
-      relation = Relation::ParentT;
-    } else {
-      relation = Relation::Parent;
-    }
-  } else if (match("Follows")) {
-    if (match("*")) {
-      relation = Relation::FollowsT;
-    } else {
-      relation = Relation::Follows;
-    }
-  } else if (match("Next")) {
-    if (match("*")) {
-      relation = Relation::NextT;
-    } else {
-      relation = Relation::Next;
-    }
-  } else if (match("Affects")) {
-    if (match("*")) {
-      relation = Relation::AffectsT;
-    } else {
-      relation = Relation::Affects;
-    }
-  } else {
-    throw PQLParseException("Unknown relation: " + peek());
+
+  try {
+    relation = str_to_relation_map.at(advance());
+  } catch (const std::out_of_range& oor) {
+    throw PQLParseException("Unknown relation: " + previous());
   }
 
   expect("(");

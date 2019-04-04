@@ -9,7 +9,9 @@ using QE::QueryLexer;
 namespace QE {
 std::unordered_set<std::string> single_token_puncts({"(", ")", ",", "_", "<",
                                                      "*", ">", ";", "=", "."});
-}
+std::unordered_set<std::string> ops_with_t({"Follows", "Parent", "Calls",
+                                            "Next", "Affects"});
+}  // namespace QE
 
 QueryLexer::QueryLexer(std::string query) : Curr(0), Query(query){};
 
@@ -30,7 +32,15 @@ char QueryLexer::advance() {
 }
 
 void QueryLexer::readSymbol() {
-  while (isalnum(peek()) || peek() == '#') {
+  while (isalnum(peek())) {
+    Str += advance();
+  }
+
+  if (Str == "stmt" && peek() == '#') {
+    Str += advance();
+  }
+
+  if (ops_with_t.find(Str) != ops_with_t.end() && peek() == '*') {
     Str += advance();
   }
 }

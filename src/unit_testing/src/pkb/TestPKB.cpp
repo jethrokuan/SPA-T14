@@ -940,6 +940,27 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
     auto while_pattern_test_2 = pkb.getWhilePatternVariable("4");
     REQUIRE(*while_pattern_test_2 == while_pattern_test_2_check);
   }
+
+  SECTION ("affects") {
+    auto affects_test_1 = pkb.isLineAffectsLine("1", "22");
+    REQUIRE(affects_test_1 == true);
+    auto affects_test_2 = pkb.isLineAffectsLine("1", "1");
+    REQUIRE(affects_test_2 == false);
+    auto affects_test_3 = pkb.isLineAffectsLine("1", "-1");
+    REQUIRE(affects_test_3 == false);
+    auto affects_test_4 = pkb.isLineAffectsLine("1", "10");
+    REQUIRE(affects_test_4 == false);
+    auto affects_test_5 = pkb.isLineAffectsLine("1", "34120");
+    REQUIRE(affects_test_5 == false);
+    auto affects_test_6 = pkb.isLineAffectsLine("2", "5");
+    REQUIRE(affects_test_6 == true);
+    auto affects_test_7 = pkb.isLineAffectsLine("3", "6");
+    REQUIRE(affects_test_7 == true);
+    auto affects_test_8 = pkb.isLineAffectsLine("2", "8");
+    REQUIRE(affects_test_8 == false);
+    auto affects_test_9 = pkb.isLineAffectsLine("3", "9");
+    REQUIRE(affects_test_9 == false);
+  }
 }
 
 TEST_CASE ("Test deep nesting for parent*, uses, modifies") {

@@ -626,9 +626,18 @@ std::optional<Variable> PKBManager::getReadVariableFromLine(const Line line) {
     return std::nullopt;
   }
 }
+
 std::optional<Variable> PKBManager::getPrintVariableFromLine(const Line line) {
   if (isPrintExists(line)) {
     return getElemFromMap(pkb_storage->line_print_var_map, line);
+  } else {
+    return std::nullopt;
+  }
+}
+
+std::optional<Variable> PKBManager::getVariableFromAssignLine(const Line line) {
+  if (isAssignExists(line)) {
+    return getElemFromMap(pkb_storage->assign_line_modifies_variable_map, line);
   } else {
     return std::nullopt;
   }
@@ -650,12 +659,14 @@ bool PKBManager::isLineNextLineT(const PreviousLine previous_line,
                                  const NextLine next_line) {
   // check that lines are in the same procedure
   // able to eliminate unnecessary DFS
-  if (isStatementExists(previous_line) && isStatementExists(next_line)) {
-    const Procedure p1 = pkb_storage->getProcedureFromLine(previous_line);
-    const Procedure p2 = pkb_storage->getProcedureFromLine(next_line);
-    if (p1 != p2) {
+  auto p1 = getProcedureFromLine(previous_line);
+  auto p2 = getProcedureFromLine(next_line);
+  if (p1 && p2) {
+    if (*p1 != *p2) {
       return false;
     }
+  } else {
+    return false;
   }
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
@@ -765,6 +776,78 @@ void PKBManager::getNextLineTH(
     for (const auto &neighbour : *to_visit) {
       getNextLineTH(neighbour, visited);
     }
+  }
+}
+
+// TODO
+// optimisations
+bool PKBManager::isLineAffectsLine(const ModifyLine modify_line, 
+                                   const UsesLine uses_line) {
+  // check that a1 a2 belong to the same procedure
+  auto p1 = getProcedureFromLine(modify_line);
+  auto p2 = getProcedureFromLine(uses_line);
+  if (p1 && p2) {
+    if (*p1 != *p2) {
+      return false;
+    }
+  } else {
+    return false;
+  }
+  // check what variable the modify_line modifies
+  auto var = getVariableFromAssignLine(modify_line);
+  if (var) {
+    std::shared_ptr<std::unordered_set<Line>> visited =
+        std::make_shared<std::unordered_set<Line>>();
+    // do dfs starting from line
+    return isLineAffectsLineH(modify_line, uses_line, (*var), visited);
+  } else {
+    return false;
+  }
+}
+
+// helper class for isLineAffectsLine DFS
+bool PKBManager::isLineAffectsLineH(const ModifyLine cur_line,
+                                    const UsesLine target_line,
+                                    const Variable target_var,
+                                    std::shared_ptr<std::unordered_set<Line>> visited) {
+  // check if line has been visited before
+  if (visited->find(cur_line) == visited->end()) {
+    // don't need to traverse further
+    return false;
+  } else if (cur_line != target_line) {
+    visited->insert(cur_line);
+  } else {
+    // at the target line
+    auto var_used = getSetFromMap(pkb_storage->assign_line_uses_variable_map, cur_line);
+    if (var_used) {
+      if ((*var_used).find(target_var) != (*var_used).end()) {
+        return true;
+      }
+    }
+  }
+  // still have to continue DFS even if var is not used on line
+  // since it is possible there is a different path where the line can be
+  // reached without being modified along the way
+
+  // check if modified
+  auto var_modified = getVariableFromAssignLine(cur_line);
+  if (var_modified) {
+    if ((*var_modified) == target_var) {
+      return false;
+    }
+  }
+
+  // get neighbours
+  auto neighbours = getNextLine(cur_line);
+  bool b = false; // TODO rename this shit
+  if (neighbours) {
+    for (const auto &neighbour : *neighbours) {
+      b =  b || isLineAffectsLineH(neighbour, target_line, target_var, visited);
+    }
+    return b;
+  } else {
+    // reached the end of DFS without encountering node that uses var
+    return false;
   }
 }
 

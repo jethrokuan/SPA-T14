@@ -140,7 +140,9 @@ void PKBStorage::storeLineModifiesVarRelation(const Line line,
 
 void PKBStorage::storeVariable(const Variable var) { var_set.insert(var); }
 
-void PKBStorage::storeAssign(const Line line) { assign_set.insert(line); }
+void PKBStorage::storeAssign(const Line line) {
+  assign_set.insert(line);
+}
 
 void PKBStorage::storeStatement(const Line line) { statement_set.insert(line); }
 
@@ -228,6 +230,16 @@ Procedure PKBStorage::getProcedureFromLine(const Line line) {
   } else {
     assert(false);
   }
+}
+
+
+void PKBStorage::storeAssignLineModifiesVariable(const Line line,
+                                                 const Variable var) {
+  assign_line_modifies_variable_map[line] = var;
+}
+
+void PKBStorage::storeAssignLineUsesVariable(const Line line, const Variable var) {
+  addToSetMap(assign_line_uses_variable_map, line, var);
 }
 
 // helper

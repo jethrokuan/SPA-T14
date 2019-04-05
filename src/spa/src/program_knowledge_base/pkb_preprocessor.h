@@ -136,6 +136,22 @@ class PKBPreprocessor {
                    const StmtNode parent_node);
   void setPatternIterator(const std::vector<StmtNode> stmt_lst);
 
+  void setAssign(const std::shared_ptr<RootNode> node);
+  void setAssign(const std::shared_ptr<ProcedureNode> node);
+  void setAssign(const std::shared_ptr<IfNode> node);
+  void setAssign(const std::shared_ptr<WhileNode> node);
+  void setAssign(const std::shared_ptr<ReadNode> node);
+  void setAssign(const std::shared_ptr<PrintNode> node);
+  void setAssign(const std::shared_ptr<AssignNode> node);
+  void setAssign(const std::shared_ptr<CallNode> node);
+  void setAssign(const Expr node, const Line line_number);
+  void setAssign(const std::shared_ptr<BinOpNode> node, const Line line_number);
+  void setAssign(const std::shared_ptr<CondExprNode> node, const Line line_number);
+  void setAssign(const std::shared_ptr<RelExprNode> node, const Line line_number);
+  void setAssign(const std::shared_ptr<NumberNode> node, const Line);
+  void setAssign(const std::shared_ptr<VariableNode> node, const Line line_number);
+  void setAssignIterator(const std::vector<StmtNode> stmt_lst);
+
  public:
   PKBPreprocessor(const AST ast, std::shared_ptr<PKBStorage> pkb_storage);
   ~PKBPreprocessor();

@@ -146,10 +146,13 @@ class PKBPreprocessor {
   void setAssign(const std::shared_ptr<CallNode> node);
   void setAssign(const Expr node, const Line line_number);
   void setAssign(const std::shared_ptr<BinOpNode> node, const Line line_number);
-  void setAssign(const std::shared_ptr<CondExprNode> node, const Line line_number);
-  void setAssign(const std::shared_ptr<RelExprNode> node, const Line line_number);
+  void setAssign(const std::shared_ptr<CondExprNode> node,
+                 const Line line_number);
+  void setAssign(const std::shared_ptr<RelExprNode> node,
+                 const Line line_number);
   void setAssign(const std::shared_ptr<NumberNode> node, const Line);
-  void setAssign(const std::shared_ptr<VariableNode> node, const Line line_number);
+  void setAssign(const std::shared_ptr<VariableNode> node,
+                 const Line line_number);
   void setAssignIterator(const std::vector<StmtNode> stmt_lst);
 
  public:

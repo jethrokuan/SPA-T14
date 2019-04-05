@@ -781,7 +781,7 @@ void PKBManager::getNextLineTH(
 
 // TODO
 // optimisations
-bool PKBManager::isLineAffectsLine(const ModifyLine modify_line, 
+bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
                                    const UsesLine uses_line) {
   // check that a1 a2 belong to the same procedure
   auto p1 = getProcedureFromLine(modify_line);
@@ -799,26 +799,28 @@ bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
     std::shared_ptr<std::unordered_set<Line>> visited =
         std::make_shared<std::unordered_set<Line>>();
     // do dfs starting from line
-    return isLineAffectsLineH(modify_line, uses_line, (*var), visited);
+    return isLineAffectsLineH(modify_line, modify_line, uses_line, (*var),
+                              visited);
   } else {
     return false;
   }
 }
 
 // helper class for isLineAffectsLine DFS
-bool PKBManager::isLineAffectsLineH(const ModifyLine cur_line,
-                                    const UsesLine target_line,
-                                    const Variable target_var,
-                                    std::shared_ptr<std::unordered_set<Line>> visited) {
+bool PKBManager::isLineAffectsLineH(
+    const Line cur_line, const ModifyLine start_line,
+    const UsesLine target_line, const Variable target_var,
+    std::shared_ptr<std::unordered_set<Line>> visited) {
   // check if line has been visited before
-  if (visited->find(cur_line) == visited->end()) {
+  if (visited->find(cur_line) != visited->end()) {
     // don't need to traverse further
     return false;
   } else if (cur_line != target_line) {
     visited->insert(cur_line);
   } else {
     // at the target line
-    auto var_used = getSetFromMap(pkb_storage->assign_line_uses_variable_map, cur_line);
+    auto var_used =
+        getSetFromMap(pkb_storage->assign_line_uses_variable_map, cur_line);
     if (var_used) {
       if ((*var_used).find(target_var) != (*var_used).end()) {
         return true;
@@ -830,19 +832,22 @@ bool PKBManager::isLineAffectsLineH(const ModifyLine cur_line,
   // reached without being modified along the way
 
   // check if modified
-  auto var_modified = getVariableFromAssignLine(cur_line);
-  if (var_modified) {
-    if ((*var_modified) == target_var) {
-      return false;
+  if (cur_line != start_line) {
+    auto var_modified = getVariableFromAssignLine(cur_line);
+    if (var_modified) {
+      if ((*var_modified) == target_var) {
+        return false;
+      }
     }
   }
 
   // get neighbours
   auto neighbours = getNextLine(cur_line);
-  bool b = false; // TODO rename this shit
+  bool b = false;  // TODO rename this shit
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
-      b =  b || isLineAffectsLineH(neighbour, target_line, target_var, visited);
+      b = b || isLineAffectsLineH(neighbour, start_line, target_line,
+                                  target_var, visited);
     }
     return b;
   } else {

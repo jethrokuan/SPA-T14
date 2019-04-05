@@ -156,12 +156,13 @@ class PKBStorage {
       while_pattern_control_variable_line_map;
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
       while_pattern_line_var_set;
-  
+
   // misc
   // for affects relations
   // modifies and uses only applies for assignment statements
   std::unordered_map<Line, Variable> assign_line_modifies_variable_map;
-  std::unordered_map<Line, std::unordered_set<Variable>> assign_line_uses_variable_map;
+  std::unordered_map<Line, std::unordered_set<Variable>>
+      assign_line_uses_variable_map;
 
   // setters
   void storeAST(const AST);

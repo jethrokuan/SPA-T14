@@ -160,8 +160,8 @@ class PKBStorage {
   // misc
   // for affects relations
   // modifies and uses only applies for assignment statements
-  std::unordered_map<Line, Variable> assign_line_modifies_variable_map;
-  std::unordered_map<Line, std::unordered_set<Variable>>
+  std::unordered_map<ModifyLine, Variable> assign_line_modifies_variable_map;
+  std::unordered_map<UsesLine, std::unordered_set<Variable>>
       assign_line_uses_variable_map;
 
   // setters

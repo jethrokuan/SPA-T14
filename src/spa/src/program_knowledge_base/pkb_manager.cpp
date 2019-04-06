@@ -10,7 +10,6 @@ PKBManager::PKBManager(const AST ast) {
   pkb_storage->storeAST(ast);
   std::unique_ptr<PKBPreprocessor> pkb_preprocessor =
       std::make_unique<PKBPreprocessor>(ast, pkb_storage);
-  // TODO indicate finished
 }
 
 PKBManager::~PKBManager() {}
@@ -635,9 +634,20 @@ std::optional<Variable> PKBManager::getPrintVariableFromLine(const Line line) {
   }
 }
 
-std::optional<Variable> PKBManager::getVariableFromAssignLine(const Line line) {
-  if (isAssignExists(line)) {
-    return getElemFromMap(pkb_storage->assign_line_modifies_variable_map, line);
+std::optional<Variable> PKBManager::getModifyVariableFromAssignLine(
+    const ModifyLine modify_line) {
+  if (isAssignExists(modify_line)) {
+    return getElemFromMap(pkb_storage->assign_line_modifies_variable_map,
+                          modify_line);
+  } else {
+    return std::nullopt;
+  }
+}
+
+std::optional<std::unordered_set<Variable>>
+PKBManager::getUsesVariableFromAssignLine(const UsesLine uses_line) {
+  if (isAssignExists(uses_line)) {
+    return getSetFromMap(pkb_storage->assign_line_uses_variable_map, uses_line);
   } else {
     return std::nullopt;
   }
@@ -794,7 +804,7 @@ bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
     return false;
   }
   // check what variable the modify_line modifies
-  auto var = getVariableFromAssignLine(modify_line);
+  auto var = getModifyVariableFromAssignLine(modify_line);
   if (var) {
     std::shared_ptr<std::unordered_set<Line>> visited =
         std::make_shared<std::unordered_set<Line>>();
@@ -819,8 +829,7 @@ bool PKBManager::isLineAffectsLineH(
     visited->insert(cur_line);
   } else {
     // at the target line
-    auto var_used =
-        getSetFromMap(pkb_storage->assign_line_uses_variable_map, cur_line);
+    auto var_used = getUsesVariableFromAssignLine(cur_line);
     if (var_used) {
       if ((*var_used).find(target_var) != (*var_used).end()) {
         return true;
@@ -833,7 +842,7 @@ bool PKBManager::isLineAffectsLineH(
 
   // check if modified
   if (cur_line != start_line) {
-    auto var_modified = getVariableFromAssignLine(cur_line);
+    auto var_modified = getModifyVariableFromAssignLine(cur_line);
     if (var_modified) {
       if ((*var_modified) == target_var) {
         return false;
@@ -843,16 +852,86 @@ bool PKBManager::isLineAffectsLineH(
 
   // get neighbours
   auto neighbours = getNextLine(cur_line);
-  bool b = false;  // TODO rename this shit
+  bool is_affected = false;
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
-      b = b || isLineAffectsLineH(neighbour, start_line, target_line,
-                                  target_var, visited);
+      is_affected =
+          is_affected || isLineAffectsLineH(neighbour, start_line, target_line,
+                                            target_var, visited);
     }
-    return b;
+    return is_affected;
   } else {
     // reached the end of DFS without encountering node that uses var
     return false;
+  }
+}
+
+std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLine(
+    const ModifyLine modify_line) {
+  // check what variable the modify_line modifies
+  auto var = getModifyVariableFromAssignLine(modify_line);
+  if (var) {
+    std::shared_ptr<std::unordered_set<Line>> visited =
+        std::make_shared<std::unordered_set<Line>>();
+    std::shared_ptr<std::unordered_set<Line>> uses_set =
+        std::make_shared<std::unordered_set<Line>>();
+    // do dfs starting from line
+    getAffectUsesLineH(modify_line, (*var), visited, uses_set);
+    if (uses_set->empty()) {
+      return std::nullopt;
+    } else {
+      return std::make_optional<std::unordered_set<UsesLine>>(*uses_set.get());
+    }
+  } else {
+    return std::nullopt;
+  }
+}
+
+void PKBManager::getAffectUsesLineH(
+    const Line cur_line, const Variable target_var,
+    std::shared_ptr<std::unordered_set<Line>> visited,
+    std::shared_ptr<std::unordered_set<Line>> uses_set) {
+  bool first_iteration = false;
+  if (visited->empty()) {
+    // first iteration
+    // probably just have to set a boolean here to use later on
+    first_iteration = true;
+  } else if (visited->find(cur_line) != visited->end()) {
+    // node has ben visited before
+    // stop traversing down this path
+    return;
+  } else {
+    // add node to visited
+    visited->insert(cur_line);
+  }
+
+  // check if line uses the variable
+  auto var_used = getUsesVariableFromAssignLine(cur_line);
+  if (var_used) {
+    if ((*var_used).find(target_var) != (*var_used).end()) {
+      uses_set->insert(cur_line);
+    }
+  }
+
+  // check if line modifies the variable
+  // ignore on first iteration since line can possibly be like
+  // x = x + 1
+  if (!first_iteration) {
+    auto var_modified = getModifyVariableFromAssignLine(cur_line);
+    if (var_modified) {
+      if ((*var_modified) == target_var) {
+        // stop traversing down this path
+        return;
+      }
+    }
+  }
+
+  // traverse down neighbours
+  auto neighbours = getNextLine(cur_line);
+  if (neighbours) {
+    for (const auto &neighbour : *neighbours) {
+      getAffectUsesLineH(neighbour, target_var, visited, uses_set);
+    }
   }
 }
 

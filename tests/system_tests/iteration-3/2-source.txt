@@ -1,0 +1,35 @@
+procedure main {
+	a = 1;
+	a = a + 2;
+	a = a + 3;
+	b = a + 1;
+	b = a + 2;
+	b = b + 3;
+	c = b + 1;
+	read b;
+	c = b + 1;
+
+	while ( a > 0){
+		c = c + 1;
+	}
+
+	a = 1;
+	if( a > 0) then {
+		b = a + 1;
+		b = b + 1;
+	} else {
+		b = a + 2;
+		c = b + 3;
+	}
+
+	d = b + c;
+
+	while ( d > 0 ){
+		read e;
+		e = 1;
+		d = e + 1;
+		f = 2;
+		read f;
+		d = f + e;
+	}
+}

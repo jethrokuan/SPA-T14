@@ -27,7 +27,6 @@ procedure alt {
 		}
 	} else {
 		a = a + 2; 
-		call main;
 		a = a + 1;
 	}
 }

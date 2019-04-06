@@ -34,6 +34,9 @@ class PKBManager {
                           const Variable,
                           std::shared_ptr<std::unordered_set<Line>>);
   void getAffectUsesLineH(const Line cur_line, const Variable target_var,
+                          std::shared_ptr<std::unordered_set<Line>> uses_set);
+  void getAffectUsesLineH(const Line cur_line, const Variable target_var,
+                          const bool first_iteration,
                           std::shared_ptr<std::unordered_set<Line>> visited,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
 

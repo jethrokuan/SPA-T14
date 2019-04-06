@@ -1,0 +1,10 @@
+source patterns which would influence Affects evaluation
+
+while stmt: possible for param 1 to come after param 2, i.e. Affects(35,25), possible for both param to be the same assignment stmt, i.e. Affects(2,2)?
+
+if stmt: e.g. param 1 from if then stmtLst, param 2 from if else stmtLst results in no flow between them
+
+if nested in while: by nesting if in while, we create a flow between if then stmtLst and if else stmtLst
+
+while nested in if: no impact, akin to testing while and if separately
+

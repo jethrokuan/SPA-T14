@@ -1086,6 +1086,129 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
 
     auto affects_test_33 = pkb.getAffectUsesLine("24");
     REQUIRE(affects_test_33 == std::nullopt);
+
+    auto affects_test_34 = pkb.getAffectModifiesLine("1");
+    REQUIRE(affects_test_34 == std::nullopt);
+
+    auto affects_test_35 = pkb.getAffectModifiesLine("2");
+    REQUIRE(affects_test_35 == std::nullopt);
+
+    auto affects_test_36 = pkb.getAffectModifiesLine("3");
+    REQUIRE(affects_test_36 == std::nullopt);
+
+    auto affects_test_37 = pkb.getAffectModifiesLine("4");
+    REQUIRE(affects_test_37 == std::nullopt);
+
+    std::unordered_set<std::string> affects_test_38_check;
+    affects_test_38_check.insert("2");
+    affects_test_38_check.insert("5");
+    affects_test_38_check.insert("8");
+    affects_test_38_check.insert("12");
+    affects_test_38_check.insert("17");
+    auto affects_test_38 = pkb.getAffectModifiesLine("5");
+    REQUIRE(*affects_test_38 == affects_test_38_check);
+
+    std::unordered_set<std::string> affects_test_39_check;
+    affects_test_39_check.insert("3");
+    affects_test_39_check.insert("6");
+    affects_test_39_check.insert("10");
+    affects_test_39_check.insert("15");
+    affects_test_39_check.insert("21");
+    auto affects_test_39 = pkb.getAffectModifiesLine("6");
+    REQUIRE(*affects_test_39 == affects_test_39_check);
+
+    auto affects_test_40 = pkb.getAffectModifiesLine("7");
+    REQUIRE(affects_test_40 == std::nullopt);
+
+    std::unordered_set<std::string> affects_test_41_check;
+    affects_test_41_check.insert("5");
+    affects_test_41_check.insert("8");
+    affects_test_41_check.insert("12");
+    affects_test_41_check.insert("17");
+    auto affects_test_41 = pkb.getAffectModifiesLine("8");
+    REQUIRE(*affects_test_41 == affects_test_41_check);
+
+    std::unordered_set<std::string> affects_test_42_check;
+    affects_test_42_check.insert("6");
+    affects_test_42_check.insert("10");
+    affects_test_42_check.insert("15");
+    affects_test_42_check.insert("21");
+    auto affects_test_42 = pkb.getAffectModifiesLine("9");
+    REQUIRE(*affects_test_42 == affects_test_42_check);
+
+    std::unordered_set<std::string> affects_test_43_check;
+    affects_test_43_check.insert("9");
+    auto affects_test_43 = pkb.getAffectModifiesLine("10");
+    REQUIRE(*affects_test_43 == affects_test_43_check);
+
+    auto affects_test_44 = pkb.getAffectModifiesLine("11");
+    REQUIRE(affects_test_44 == std::nullopt);
+
+    std::unordered_set<std::string> affects_test_45_check;
+    affects_test_45_check.insert("8");
+    affects_test_45_check.insert("12");
+    affects_test_45_check.insert("17");
+    auto affects_test_45 = pkb.getAffectModifiesLine("12");
+    REQUIRE(*affects_test_45 == affects_test_45_check);
+
+    std::unordered_set<std::string> affects_test_46_check;
+    affects_test_46_check.insert("10");
+    affects_test_46_check.insert("15");
+    affects_test_46_check.insert("21");
+    auto affects_test_46 = pkb.getAffectModifiesLine("13");
+    REQUIRE(*affects_test_46 == affects_test_46_check);
+
+    std::unordered_set<std::string> affects_test_47_check;
+    affects_test_47_check.insert("13");
+    auto affects_test_47 = pkb.getAffectModifiesLine("14");
+    REQUIRE(*affects_test_47 == affects_test_47_check);
+
+    std::unordered_set<std::string> affects_test_48_check;
+    affects_test_48_check.insert("14");
+    auto affects_test_48 = pkb.getAffectModifiesLine("15");
+    REQUIRE(*affects_test_48 == affects_test_48_check);
+
+    auto affects_test_49 = pkb.getAffectModifiesLine("16");
+    REQUIRE(affects_test_49 == std::nullopt);
+
+    std::unordered_set<std::string> affects_test_50_check;
+    affects_test_50_check.insert("12");
+    affects_test_50_check.insert("17");
+    auto affects_test_50 = pkb.getAffectModifiesLine("17");
+    REQUIRE(*affects_test_50 == affects_test_50_check);
+
+    std::unordered_set<std::string> affects_test_51_check;
+    affects_test_51_check.insert("15");
+    affects_test_51_check.insert("21");
+    auto affects_test_51 = pkb.getAffectModifiesLine("18");
+    REQUIRE(*affects_test_51 == affects_test_51_check);
+
+    std::unordered_set<std::string> affects_test_52_check;
+    affects_test_52_check.insert("18");
+    auto affects_test_52 = pkb.getAffectModifiesLine("19");
+    REQUIRE(*affects_test_52 == affects_test_52_check);
+
+    std::unordered_set<std::string> affects_test_53_check;
+    affects_test_53_check.insert("19");
+    auto affects_test_53 = pkb.getAffectModifiesLine("20");
+    REQUIRE(*affects_test_53 == affects_test_53_check);
+
+    std::unordered_set<std::string> affects_test_54_check;
+    affects_test_54_check.insert("20");
+    auto affects_test_54 = pkb.getAffectModifiesLine("21");
+    REQUIRE(*affects_test_54 == affects_test_54_check);
+
+    std::unordered_set<std::string> affects_test_55_check;
+    affects_test_55_check.insert("1");
+    affects_test_55_check.insert("22");
+    auto affects_test_55 = pkb.getAffectModifiesLine("22");
+    REQUIRE(*affects_test_55 == affects_test_55_check);
+
+    auto affects_test_56 = pkb.getAffectModifiesLine("23");
+    REQUIRE(affects_test_56 == std::nullopt);
+
+    auto affects_test_57 = pkb.getAffectModifiesLine("24");
+    REQUIRE(affects_test_57 == std::nullopt);
   }
 }
 

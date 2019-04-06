@@ -1,9 +1,9 @@
-1 - True
+1 - True: basic case
 assign a1, a2;
 Select BOOLEAN such that Affects(1,2)
 TRUE
 5000
-2 - True
+2 - True: basic case
 assign a1, a2;
 Select BOOLEAN such that Affects(2,3)
 TRUE
@@ -13,7 +13,7 @@ assign a1, a2;
 Select BOOLEAN such that Affects(1,3)
 FALSE
 5000
-4 - True
+4 - True: basic case
 assign a1, a2;
 Select BOOLEAN such that Affects(3,4)
 TRUE
@@ -23,22 +23,22 @@ assign a1, a2;
 Select BOOLEAN such that Affects(4,5)
 FALSE
 5000
-6 - True
+6 - True: basic case
 assign a1, a2;
 Select BOOLEAN such that Affects(5,6)
 TRUE
 5000
-7 - True
+7 - True: basic case
 assign a1, a2;
 Select BOOLEAN such that Affects(6,7)
 TRUE
 5000
-8 - Invalid: 2nd parameter is read stmt
+8 - Invalid: 2nd parameter is READ stmt 
 assign a1, a2;
 Select BOOLEAN such that Affects(7,8)
 none
 5000
-9 - Invalid: 1st parameter is read stmt
+9 - Invalid: 1st parameter is READ stmt
 assign a1, a2;
 Select BOOLEAN such that Affects(8,9)
 none
@@ -46,5 +46,60 @@ none
 10 - False: b is modified by read stmt# 8
 assign a1, a2;
 Select BOOLEAN such that Affects(6,9)
+FALSE
+5000
+11 - TRUE: param2 in while loop
+assign a1, a2;
+Select BOOLEAN such that Affects(9,11)
+TRUE
+5000
+12 - TRUE: while loop CFG
+assign a1, a2;
+Select BOOLEAN such that Affects(11,11)
+TRUE
+5000
+13 - False: var assigned in param1 not used in param2
+assign a1, a2;
+Select BOOLEAN such that Affects(11,12)
+FALSE
+5000
+14 - INVALID: 2nd parameter is IF stmt 
+assign a1, a2;
+Select BOOLEAN such that Affects(12,13)
 none
+5000
+15 - INVALID: 2nd parameter is WHILE stmt 
+assign a1, a2;
+Select BOOLEAN such that Affects(9,10)
+none
+5000
+16 - TRUE: test if then branch
+assign a1, a2;
+Select BOOLEAN such that Affects(12,14)
+TRUE
+5000
+17 - TRUE: test if else branch
+assign a1, a2;
+Select BOOLEAN such that Affects(12,16)
+TRUE
+5000
+18 - TRUE: test exit from if then branch
+assign a1, a2;
+Select BOOLEAN such that Affects(15,18)
+TRUE
+5000
+19 - TRUE: test exit from if else branch
+assign a1, a2;
+Select BOOLEAN such that Affects(17,18)
+TRUE
+5000
+20 - FALSE: from if then to if else, i.e. no CFG flow
+assign a1, a2;
+Select BOOLEAN such that Affects(15,16)
+FALSE
+5000
+20 - FALSE: from if then to if else, i.e. no CFG flow
+assign a1, a2;
+Select BOOLEAN such that Affects(15,16)
+TRUE
 5000

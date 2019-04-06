@@ -98,8 +98,73 @@ assign a1, a2;
 Select BOOLEAN such that Affects(15,16)
 FALSE
 5000
-20 - FALSE: from if then to if else, i.e. no CFG flow
+21 - FALSE: from if else to if then, i.e. no CFG flow
 assign a1, a2;
-Select BOOLEAN such that Affects(15,16)
+Select BOOLEAN such that Affects(16,15)
+FALSE
+5000
+22 - invalid: 1st parameter is WHILE stmt
+assign a1, a2;
+Select BOOLEAN such that Affects(20,21)
+none
+5000
+23 - true: basic case
+assign a1, a2;
+Select BOOLEAN such that Affects(21,22)
+TRUE
+5000
+24 - true: basic case
+assign a1, a2;
+Select BOOLEAN such that Affects(21,25)
+TRUE
+5000
+25 - true: WHILE LOOP (param 1 is a stmt# that occurs after param2)
+assign a1, a2;
+Select BOOLEAN such that Affects(25,22)
+TRUE
+5000
+26 - false: variable modified by read in CFG 
+assign a1, a2;
+Select BOOLEAN such that Affects(23,25)
+FALSE
+5000
+27 - false: variable modified by in both if else and if then stmtLst
+assign a1, a2;
+Select BOOLEAN such that Affects(27,34)
+FALSE
+5000
+28 - TRUE: exit from if then
+assign a1, a2;
+Select BOOLEAN such that Affects(31,34)
+TRUE
+5000
+29 - TRUE: exit from if else
+assign a1, a2;
+Select BOOLEAN such that Affects(33,34)
+TRUE
+5000
+30 - TRUE: exit from if else  
+assign a1, a2;
+Select BOOLEAN such that Affects(33,34)
+TRUE
+5000
+31 - TRUE: if then stmtLst
+assign a1, a2;
+Select BOOLEAN such that Affects(28,30)
+TRUE
+5000
+32 - TRUE: if then stmtLst to if else stmtLst, but if nested in WHILE 
+assign a1, a2;
+Select BOOLEAN such that Affects(30,32)
+TRUE
+5000
+33 - FALSE: variable modified by read (param 1 is a stmt# that occurs after param2)
+assign a1, a2;
+Select BOOLEAN such that Affects(35,30)
+FALSE
+5000
+34 - TRUE: while loop (param 1 is a stmt# that occurs after param2)
+assign a1, a2;
+Select BOOLEAN such that Affects(34,30)
 TRUE
 5000

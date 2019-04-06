@@ -34,11 +34,17 @@ procedure main {
 	}
 
 	while ( f > 0 ){
+		k = 1;
 		g = 1;
 		if ( f > 10) then {
-			f = g + 1;
+			f = g + i;
+			k = 2;
 		} else {
 			h = f + 1;
+			k = 2;
 		}
+		i = g + k;
+		g = 2;
+		read g;
 	}
 }

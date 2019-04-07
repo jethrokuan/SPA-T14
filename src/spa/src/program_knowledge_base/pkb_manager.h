@@ -33,12 +33,14 @@ class PKBManager {
   bool isLineAffectsLineH(const Line, const ModifyLine, const UsesLine,
                           const Variable,
                           std::shared_ptr<std::unordered_set<Line>>);
-  void getAffectModifiesLineH(const Line cur_line, const Variable target_var,
-                          std::shared_ptr<std::unordered_set<Line>> modifies_set);
-  void getAffectModifiesLineH(const Line cur_line, const Variable target_var,
-                          const bool first_iteration,
-                          std::shared_ptr<std::unordered_set<Line>> visited,
-                          std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectModifiesLineH(
+      const Line cur_line, const Variable target_var,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectModifiesLineH(
+      const Line cur_line, const Variable target_var,
+      const bool first_iteration,
+      std::shared_ptr<std::unordered_set<Line>> visited,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set);
   void getAffectUsesLineH(const Line cur_line, const Variable target_var,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
   void getAffectUsesLineH(const Line cur_line, const Variable target_var,
@@ -213,6 +215,7 @@ class PKBManager {
   std::optional<Variable> getModifyVariableFromAssignLine(const ModifyLine);
   std::optional<std::unordered_set<Variable>> getUsesVariableFromAssignLine(
       const UsesLine);
+  bool isFromSameProcedure(const Line, const Line);
 };
 
 }  // namespace PKB

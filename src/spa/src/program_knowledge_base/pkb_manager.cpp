@@ -653,6 +653,12 @@ PKBManager::getUsesVariableFromAssignLine(const UsesLine uses_line) {
   }
 }
 
+bool PKBManager::isFromSameProcedure(const Line l1, const Line l2) {
+  auto p1 = getProcedureFromLine(l1);
+  auto p2 = getProcedureFromLine(l2);
+  return (p1 && p2) && (*p1 == *p2);
+}
+
 bool PKBManager::isLineNextLine(const PreviousLine previous_line,
                                 const NextLine next_line) {
   if (pkb_storage->line_previous_line_next_map.find(previous_line) !=
@@ -669,13 +675,7 @@ bool PKBManager::isLineNextLineT(const PreviousLine previous_line,
                                  const NextLine next_line) {
   // check that lines are in the same procedure
   // able to eliminate unnecessary DFS
-  auto p1 = getProcedureFromLine(previous_line);
-  auto p2 = getProcedureFromLine(next_line);
-  if (p1 && p2) {
-    if (*p1 != *p2) {
-      return false;
-    }
-  } else {
+  if (!isFromSameProcedure(previous_line, next_line)) {
     return false;
   }
   std::shared_ptr<std::unordered_set<Line>> visited =
@@ -794,13 +794,7 @@ void PKBManager::getNextLineTH(
 bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
                                    const UsesLine uses_line) {
   // check that a1 a2 belong to the same procedure
-  auto p1 = getProcedureFromLine(modify_line);
-  auto p2 = getProcedureFromLine(uses_line);
-  if (p1 && p2) {
-    if (*p1 != *p2) {
-      return false;
-    }
-  } else {
+  if (!isFromSameProcedure(modify_line, uses_line)) {
     return false;
   }
   // check what variable the modify_line modifies
@@ -881,7 +875,8 @@ std::optional<std::unordered_set<ModifyLine>> PKBManager::getAffectModifiesLine(
     if (modifies_set->empty()) {
       return std::nullopt;
     } else {
-      return std::make_optional<std::unordered_set<UsesLine>>(*modifies_set.get());
+      return std::make_optional<std::unordered_set<UsesLine>>(
+          *modifies_set.get());
     }
   } else {
     return std::nullopt;
@@ -897,8 +892,7 @@ void PKBManager::getAffectModifiesLineH(
 }
 
 void PKBManager::getAffectModifiesLineH(
-    const Line cur_line, const Variable target_var,
-    const bool first_iteration,
+    const Line cur_line, const Variable target_var, const bool first_iteration,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<std::unordered_set<Line>> modifies_set) {
   // std::cout << "visiting " + cur_line << std::endl;
@@ -929,7 +923,8 @@ void PKBManager::getAffectModifiesLineH(
   auto neighbours = getPreviousLine(cur_line);
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
-      getAffectModifiesLineH(neighbour, target_var, false, visited, modifies_set);
+      getAffectModifiesLineH(neighbour, target_var, false, visited,
+                             modifies_set);
     }
   }
 }
@@ -962,8 +957,7 @@ void PKBManager::getAffectUsesLineH(
 }
 
 void PKBManager::getAffectUsesLineH(
-    const Line cur_line, const Variable target_var,
-    const bool first_iteration,
+    const Line cur_line, const Variable target_var, const bool first_iteration,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<std::unordered_set<Line>> uses_set) {
   // std::cout << "visiting " + cur_line << std::endl;
@@ -979,7 +973,6 @@ void PKBManager::getAffectUsesLineH(
   // ignore on first iteration since line can possibly be like
   // x = x + 1
   if (!first_iteration) {
-
     // check if line uses the variable
     auto var_used = getUsesVariableFromAssignLine(cur_line);
     if (var_used) {

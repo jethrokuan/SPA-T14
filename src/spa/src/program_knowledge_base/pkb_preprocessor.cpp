@@ -16,6 +16,7 @@ PKBPreprocessor::PKBPreprocessor(const AST ast,
   setUsesRelations(ast);
   setModifiesRelations(ast);
   setPattern(ast);
+  setAssign(ast);
 }
 
 PKBPreprocessor::~PKBPreprocessor() {}
@@ -745,14 +746,12 @@ void PKBPreprocessor::setPattern(const std::shared_ptr<AssignNode> node) {
 }
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<IfNode> node) {
-  // TODO
   setPatternH(node->CondExpr, node);
   setPatternIterator(node->StmtListThen);
   setPatternIterator(node->StmtListElse);
 }
 
 void PKBPreprocessor::setPattern(const std::shared_ptr<WhileNode> node) {
-  // TODO
   setPatternH(node->CondExpr, node);
   setPatternIterator(node->StmtList);
 }
@@ -819,6 +818,82 @@ void PKBPreprocessor::setPatternH(const std::shared_ptr<VariableNode> node,
 void PKBPreprocessor::setPatternIterator(const std::vector<StmtNode> stmt_lst) {
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setPattern(s); }, stmt);
+  }
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    setAssign(proc);
+  }
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<ProcedureNode> node) {
+  setAssignIterator(node->StmtList);
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<IfNode> node) {
+  setAssignIterator(node->StmtListThen);
+  setAssignIterator(node->StmtListElse);
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<WhileNode> node) {
+  setAssignIterator(node->StmtList);
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<ReadNode>) {}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<PrintNode>) {}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<AssignNode> node) {
+  const Line cur_line = storage->getLineFromNode(node);
+  storage->storeAssignLineModifiesVariable(cur_line, node->Var->Name);
+  setAssign(node->Exp, cur_line);
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<CallNode>) {}
+
+void PKBPreprocessor::setAssign(const Expr node, const Line line_number) {
+  std::visit([this, line_number](const auto &n) { setAssign(n, line_number); },
+             node);
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<BinOpNode> node,
+                                const Line line_number) {
+  setAssign(node->Left, line_number);
+  setAssign(node->Right, line_number);
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<CondExprNode> node,
+                                const Line line_number) {
+  if (node == nullptr) {
+    return;
+  }
+  setAssign(node->RelExpr, line_number);
+  setAssign(node->CondLHS, line_number);
+  setAssign(node->CondRHS, line_number);
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<RelExprNode> node,
+                                const Line line_number) {
+  if (node == nullptr) {
+    return;
+  }
+  setAssign(node->LHS, line_number);
+  setAssign(node->RHS, line_number);
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<NumberNode>, const Line) {
+}
+
+void PKBPreprocessor::setAssign(const std::shared_ptr<VariableNode> node,
+                                const Line line_number) {
+  storage->storeAssignLineUsesVariable(line_number, node->Name);
+}
+
+void PKBPreprocessor::setAssignIterator(const std::vector<StmtNode> stmt_lst) {
+  // iterate through AST via DFS
+  for (const auto &stmt : stmt_lst) {
+    std::visit([this](const auto &s) { setAssign(s); }, stmt);
   }
 }
 

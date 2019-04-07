@@ -230,6 +230,16 @@ Procedure PKBStorage::getProcedureFromLine(const Line line) {
   }
 }
 
+void PKBStorage::storeAssignLineModifiesVariable(const Line line,
+                                                 const Variable var) {
+  assign_line_modifies_variable_map[line] = var;
+}
+
+void PKBStorage::storeAssignLineUsesVariable(const Line line,
+                                             const Variable var) {
+  addToSetMap(assign_line_uses_variable_map, line, var);
+}
+
 // helper
 void PKBStorage::addToSetMap(
     std::unordered_map<std::string, std::unordered_set<std::string>> &umap,

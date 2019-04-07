@@ -29,6 +29,25 @@ class PKBManager {
   void getNextLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
   void getPreviousLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
 
+  // helper for affects
+  bool isLineAffectsLineH(const Line, const ModifyLine, const UsesLine,
+                          const Variable,
+                          std::shared_ptr<std::unordered_set<Line>>);
+  void getAffectModifiesLineH(
+      const Line cur_line, const Variable target_var,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectModifiesLineH(
+      const Line cur_line, const Variable target_var,
+      const bool first_iteration,
+      std::shared_ptr<std::unordered_set<Line>> visited,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectUsesLineH(const Line cur_line, const Variable target_var,
+                          std::shared_ptr<std::unordered_set<Line>> uses_set);
+  void getAffectUsesLineH(const Line cur_line, const Variable target_var,
+                          const bool first_iteration,
+                          std::shared_ptr<std::unordered_set<Line>> visited,
+                          std::shared_ptr<std::unordered_set<Line>> uses_set);
+
  public:
   PKBManager(const AST ast);
   ~PKBManager();
@@ -172,6 +191,18 @@ class PKBManager {
       const NextLine);
   std::optional<std::unordered_set<NextLine>> getNextLineT(const PreviousLine);
 
+  // affects
+  bool isLineAffectsLine(const ModifyLine, const UsesLine);
+  bool isLineAffectsLineT(const ModifyLine, const UsesLine);
+  std::optional<std::unordered_set<ModifyLine>> getAffectModifiesLine(
+      const UsesLine);
+  std::optional<std::unordered_set<UsesLine>> getAffectUsesLine(
+      const ModifyLine);
+  std::optional<std::unordered_set<ModifyLine>> getAffectModiesLineT(
+      const UsesLine);
+  std::optional<std::unordered_set<UsesLine>> getAffectUsesLineT(
+      const ModifyLine);
+
   // CFG
   std::unordered_map<std::string, std::unordered_set<std::string>> getCFG();
 
@@ -181,6 +212,10 @@ class PKBManager {
   std::optional<Procedure> getCallProcedureFromLine(const Line);
   std::optional<Variable> getReadVariableFromLine(const Line);
   std::optional<Variable> getPrintVariableFromLine(const Line);
+  std::optional<Variable> getModifyVariableFromAssignLine(const ModifyLine);
+  std::optional<std::unordered_set<Variable>> getUsesVariableFromAssignLine(
+      const UsesLine);
+  bool isFromSameProcedure(const Line, const Line);
 };
 
 }  // namespace PKB

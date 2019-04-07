@@ -1,0 +1,168 @@
+procedure main {
+
+read x;
+print x;
+x = 1 + 2 + 3 + 4;
+y = x + 2 * 3 + 4;
+z = x + y + z;
+call sub;
+
+	if(x>1) then {
+
+		read x;
+		print x;
+		x = 1 + 2 + 3 + 4;
+		y = x + 2 * 3 + 4;
+		z = x + y + z;
+		call sub;	
+
+		if((x<2)&&(y>2)) then {
+
+			read x;
+			print x;
+			x = 1 + 2 + 3 + 4;
+			y = x + 2 * 3 + 4;
+			z = x + y + z;
+			call sub;	
+
+			while ((z<10)||((x<20)||(y<100))) {
+
+				read x;
+				print x;
+				x = 1 + 2 + 3 + 4;
+				y = x + 2 * 3 + 4;
+				z = x + y + z;
+				call sub;
+
+				while (x>10) {
+
+					read x;
+					print x;
+					x = 1 + 2 + 3 + 4;
+					y = x + 2 * 3 + 4;
+					z = x + y + z;
+					call sub;
+
+					if(x>20)then{
+
+						read x;
+						print x;
+						x = 1 + 2 + 3 + 4;
+						y = x + 2 * 3 + 4;
+						z = x + y + z;
+						call sub;					
+
+					}else {
+
+						read x;
+						print x;
+						x = 1 + 2 + 3 + 4;
+						y = x + 2 * 3 + 4;
+						z = x + y + z;
+						call sub;	
+
+						if(x>30)then{
+
+							read x;
+							print x;
+							x = 1 + 2 + 3 + 4;
+							y = x + 2 * 3 + 4;
+							z = x + y + z;
+							call sub;						
+
+						}else {
+
+							read x;
+							print x;
+							x = 1 + 2 + 3 + 4;
+							y = x + 2 * 3 + 4;
+							z = x + y + z;
+							call sub;						
+
+						}
+					}					
+				}			
+			}			
+		} else {
+
+			read x;
+			print x;
+			x = 1 + 2 + 3 + 4;
+			y = x + 2 * 3 + 4;
+			z = x + y + z;
+			call sub;		
+
+		}		
+	} else {
+
+		read x;
+		print x;
+		x = 1 + 2 + 3 + 4;
+		y = x + 2 * 3 + 4;
+		z = x + y + z;
+		call sub;
+
+		while (x <= 10) {
+
+			read x;
+			print x;
+			x = 1 + 2 + 3 + 4;
+			y = x + 2 * 3 + 4;
+			z = x + y + z;
+			call sub;	
+
+			if(x!=10)then{
+
+				read x;
+				print x;
+				x = 1 + 2 + 3 + 4;
+				y = x + 2 * 3 + 4;
+				z = x + y + z;
+				call sub;	
+						
+				while (x>5) {
+
+					read x;
+					print x;
+					x = 1 + 2 + 3 + 4;
+					y = x + 2 * 3 + 4;
+					z = x + y + z;
+					call sub;		
+
+					if(y<5)then{
+
+						read x;
+						print x;
+						x = 1 + 2 + 3 + 4;
+						y = x + 2 * 3 + 4;
+						z = x + y + z;
+						call sub;
+						
+					}else {
+						read x;
+						print x;
+						x = 1 + 2 + 3 + 4;
+						y = x + 2 * 3 + 4;
+						z = x + y + z;
+						call sub;
+					}
+				}
+			}else {
+				read x;
+				print x;
+				x = 1 + 2 + 3 + 4;
+				y = x + 2 * 3 + 4;
+				z = x + y + z;
+				call sub;
+			}
+		}
+	}
+}
+
+procedure sub {
+	read x;
+	print x;
+	x = 1 + 2 + 3 + 4;
+	y = x + 2 * 3 + 4;
+	z = x + y + z;
+}

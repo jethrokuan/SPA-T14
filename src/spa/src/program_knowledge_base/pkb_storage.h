@@ -157,6 +157,13 @@ class PKBStorage {
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
       while_pattern_line_var_set;
 
+  // misc
+  // for affects relations
+  // modifies and uses only applies for assignment statements
+  std::unordered_map<ModifyLine, Variable> assign_line_modifies_variable_map;
+  std::unordered_map<UsesLine, std::unordered_set<Variable>>
+      assign_line_uses_variable_map;
+
   // setters
   void storeAST(const AST);
   Line storeLine(const StmtNode node);
@@ -187,6 +194,10 @@ class PKBStorage {
   void storeAssignPattern(const Variable, const ExprStr, const Line);
   void storeIfPattern(const Variable, const Line);
   void storeWhilePattern(const Variable, const Line);
+
+  // affects
+  void storeAssignLineModifiesVariable(const Line, const Variable);
+  void storeAssignLineUsesVariable(const Line, const Variable);
 
   // helper
   void storeLineProcedureRelation(const Line, const Procedure);

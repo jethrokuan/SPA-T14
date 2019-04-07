@@ -1,3 +1,0 @@
-procedure main {
-  main = 1;
-}

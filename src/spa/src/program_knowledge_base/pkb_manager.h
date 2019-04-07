@@ -89,7 +89,6 @@ class PKBManager {
   std::unordered_set<Line> getCallSet();
 
   // is relationship set empty
-  // TODO implement for calls and next
   bool isLineNextLineMapEmpty();
   bool isProcedureCallProcedureSetEmpty();
   bool isProcedureCallProcedureTSetEmpty();
@@ -216,6 +215,7 @@ class PKBManager {
   std::optional<std::unordered_set<Variable>> getUsesVariableFromAssignLine(
       const UsesLine);
   bool isFromSameProcedure(const Line, const Line);
+  bool isLineAffectsVariable(const Line, const Variable);
 };
 
 }  // namespace PKB

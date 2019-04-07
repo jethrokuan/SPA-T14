@@ -1,0 +1,36 @@
+procedure main {
+	a = 1 + 2 + 3;
+	b = a + a + 2;
+	h = 3;
+
+	while(c > 10){
+		if(d > 10) then {
+			c = 6;
+			d = 7;
+		} else {
+			e = 8;
+			f = 9;
+		}
+		g = c + d + e + f + g + 10;
+		h = h + 11;
+	}
+
+	call sub;
+}
+
+procedure sub {
+	a = 13;
+	while( a > 14){
+		a = a + 15;
+		call alt;
+	}
+}
+
+procedure alt {
+	if ( a < 17) then {
+		a = 18;
+		cfgSuchThatCallAltWillNotModifyA = 19;
+	} else {
+		print a;
+	}	
+}

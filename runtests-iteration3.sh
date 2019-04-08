@@ -5,6 +5,7 @@
 # CREATE THE OUTPUT DIRECTORY
 mkdir -p tests/system_tests/output
 
+# AFFECTS/AFFECTS*
 build/src/autotester/autotester tests/system_tests/iteration-3/affects/1-source.txt tests/system_tests/iteration-3/affects/1-affects.txt tests/system_tests/output/iter3-1-affects.xml
 
 build/src/autotester/autotester tests/system_tests/iteration-3/affects/2-source.txt tests/system_tests/iteration-3/affects/2-affects.txt tests/system_tests/output/iter3-2-affects.xml
@@ -16,3 +17,6 @@ build/src/autotester/autotester tests/system_tests/iteration-3/affects/4-source.
 build/src/autotester/autotester tests/system_tests/iteration-3/affects/4-source.txt tests/system_tests/iteration-3/affects/4-affects-t-double-clause.txt tests/system_tests/output/iter3-4-affects-t-double-clause.xml
 
 build/src/autotester/autotester tests/system_tests/iteration-3/affects/5-source.txt tests/system_tests/iteration-3/affects/5-multi-clause.txt tests/system_tests/output/iter3-5-multi.xml
+
+#  STRESS TEST
+build/src/autotester/autotester tests/system_tests/iteration-3/stress-test/1-source-read-assign.txt tests/system_tests/iteration-3/stress-test/1-query.txt tests/system_tests/output/iter3-stress-test-01.xml

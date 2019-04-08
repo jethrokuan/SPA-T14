@@ -79,13 +79,13 @@ TEST_CASE ("Test Query Executor on Affects queries (source 2)") {
     auto querystr =
         std::string("assign a1, a2; Select a1 such that Affects(a1, 3)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"2", "3"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"2"});
   }
 
   SECTION ("Test Affects(3, a1)") {
     auto querystr =
         std::string("assign a1, a2; Select a1 such that Affects(3, a1)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"2", "3"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"2"});
   }
 }

@@ -820,7 +820,7 @@ bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
     std::shared_ptr<std::unordered_set<Line>> visited =
         std::make_shared<std::unordered_set<Line>>();
     // do dfs starting from line
-    return isLineAffectsLineH(modify_line, modify_line, uses_line, (*var),
+    return isLineAffectsLineH(modify_line, uses_line, (*var), true,
                               visited);
   } else {
     return false;
@@ -829,23 +829,16 @@ bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
 
 // helper class for isLineAffectsLine DFS
 bool PKBManager::isLineAffectsLineH(
-    const Line cur_line, const ModifyLine start_line,
+    const Line cur_line, 
     const UsesLine target_line, const Variable target_var,
+    const bool first_iteration,
     std::shared_ptr<std::unordered_set<Line>> visited) {
   // check if line has been visited before
   if (visited->find(cur_line) != visited->end()) {
     // don't need to traverse further
     return false;
-  } else if (cur_line != target_line) {
+  } else if (!first_iteration) {
     visited->insert(cur_line);
-  } else {
-    // at the target line
-    auto var_used = getUsesVariableFromAssignLine(cur_line);
-    if (var_used) {
-      return (*var_used).find(target_var) != (*var_used).end();
-    } else {
-      return false;
-    }
   }
   // still have to continue DFS even if var is not used on line
   // since it is possible there is a different path where the line can be
@@ -854,8 +847,17 @@ bool PKBManager::isLineAffectsLineH(
   // check if modified
   // ignore on first iteration since line can possibly be like
   // x = x + 1
-  if (cur_line != start_line) {
-    if (isLineAffectsVariable(cur_line, target_var)) {
+  if (!first_iteration) {
+    if (cur_line == target_line) {
+      // at the target line
+      auto var_used = getUsesVariableFromAssignLine(cur_line);
+      if (var_used) {
+        return (*var_used).find(target_var) != (*var_used).end();
+      } else {
+        return false;
+      }
+    } else if (isLineAffectsVariable(cur_line, target_var)) {
+      // non-target line modifies variable
       return false;
     }
   }
@@ -866,8 +868,8 @@ bool PKBManager::isLineAffectsLineH(
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
       is_affected =
-          is_affected || isLineAffectsLineH(neighbour, start_line, target_line,
-                                            target_var, visited);
+          is_affected || isLineAffectsLineH(neighbour, target_line,
+                                            target_var, false, visited);
     }
     return is_affected;
   } else {

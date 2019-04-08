@@ -88,6 +88,8 @@ bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
       return UsesPEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::Affects:
       return AffectsEvaluator(decls, relCond, pkb, db).evaluate();
+    case Relation::AffectsT:
+      return false;  // TODO: Implement
     default:
       assert(false);
   }

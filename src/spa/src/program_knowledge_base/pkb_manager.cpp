@@ -659,6 +659,19 @@ bool PKBManager::isFromSameProcedure(const Line l1, const Line l2) {
   return (p1 && p2) && (*p1 == *p2);
 }
 
+bool PKBManager::isLineAffectsVariable(const Line line, const Variable var) {
+  // modify in affects can only occur for
+  // assign, read and call
+  if (isAssignExists(line) || isReadExists(line) || isCallExists(line)) {
+    auto var_modified = getVarModifiedByLine(line);
+    if (var_modified) {
+      return (*var_modified).find(var) != (*var_modified).end();
+    }
+  }
+
+  return false;
+}
+
 bool PKBManager::isLineNextLine(const PreviousLine previous_line,
                                 const NextLine next_line) {
   if (pkb_storage->line_previous_line_next_map.find(previous_line) !=
@@ -797,6 +810,10 @@ bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
   if (!isFromSameProcedure(modify_line, uses_line)) {
     return false;
   }
+  // check that a1 a2 are both assignment statements
+  if (!isAssignExists(modify_line) || !isAssignExists(modify_line)) {
+    return false;
+  }
   // check what variable the modify_line modifies
   auto var = getModifyVariableFromAssignLine(modify_line);
   if (var) {
@@ -825,9 +842,9 @@ bool PKBManager::isLineAffectsLineH(
     // at the target line
     auto var_used = getUsesVariableFromAssignLine(cur_line);
     if (var_used) {
-      if ((*var_used).find(target_var) != (*var_used).end()) {
-        return true;
-      }
+      return (*var_used).find(target_var) != (*var_used).end();
+    } else {
+      return false;
     }
   }
   // still have to continue DFS even if var is not used on line
@@ -835,12 +852,11 @@ bool PKBManager::isLineAffectsLineH(
   // reached without being modified along the way
 
   // check if modified
+  // ignore on first iteration since line can possibly be like
+  // x = x + 1
   if (cur_line != start_line) {
-    auto var_modified = getModifyVariableFromAssignLine(cur_line);
-    if (var_modified) {
-      if ((*var_modified) == target_var) {
-        return false;
-      }
+    if (isLineAffectsVariable(cur_line, target_var)) {
+      return false;
     }
   }
 
@@ -909,13 +925,12 @@ void PKBManager::getAffectModifiesLineH(
   // x = x + 1
   if (!first_iteration) {
     // check if line modifies the variable
-    auto var_modified = getModifyVariableFromAssignLine(cur_line);
-    if (var_modified) {
-      if ((*var_modified) == target_var) {
+    if (isLineAffectsVariable(cur_line, target_var)) {
+      if (isAssignExists(cur_line)) {
         modifies_set->insert(cur_line);
-        // stop traversing down this path
-        return;
       }
+      // stop traversing down this path
+      return;
     }
   }
 
@@ -982,12 +997,9 @@ void PKBManager::getAffectUsesLineH(
     }
 
     // check if line modifies the variable
-    auto var_modified = getModifyVariableFromAssignLine(cur_line);
-    if (var_modified) {
-      if ((*var_modified) == target_var) {
-        // stop traversing down this path
-        return;
-      }
+    if (isLineAffectsVariable(cur_line, target_var)) {
+      // stop traversing down this path
+      return;
     }
   }
 

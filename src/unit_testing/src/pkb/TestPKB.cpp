@@ -3065,6 +3065,100 @@ TEST_CASE ("Test PKB for if_while_multiple_control_variable.txt") {
   }
 }
 
+TEST_CASE ("Test PKB for Test1-Source.txt") {
+  auto ast = SimpleInterface::getAstFromFile("tests/Test1-Source.txt");
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
+
+  SECTION ("affects relations") {
+    auto affects_test_1 = pkb.isLineAffectsLine("5", "6");
+    REQUIRE(affects_test_1 == true);
+    auto affects_test_2 = pkb.isLineAffectsLine("5", "7");
+    REQUIRE(affects_test_2 == true);
+    auto affects_test_3 = pkb.isLineAffectsLine("5", "8");
+    REQUIRE(affects_test_3 == false);
+    auto affects_test_4 = pkb.isLineAffectsLine("5", "9");
+    REQUIRE(affects_test_4 == false);
+    auto affects_test_5 = pkb.isLineAffectsLine("5", "10");
+    REQUIRE(affects_test_5 == false);
+    auto affects_test_6 = pkb.isLineAffectsLine("6", "7");
+    REQUIRE(affects_test_6 == true);
+    auto affects_test_7 = pkb.isLineAffectsLine("6", "8");
+    REQUIRE(affects_test_7 == true);
+    auto affects_test_8 = pkb.isLineAffectsLine("6", "9");
+    REQUIRE(affects_test_8 == false);
+    auto affects_test_9 = pkb.isLineAffectsLine("6", "10");
+    REQUIRE(affects_test_9 == false);
+    auto affects_test_10 = pkb.isLineAffectsLine("7", "8");
+    REQUIRE(affects_test_10 == true);
+    auto affects_test_11 = pkb.isLineAffectsLine("7", "9");
+    REQUIRE(affects_test_11 == false);
+    auto affects_test_12 = pkb.isLineAffectsLine("7", "10");
+    REQUIRE(affects_test_12 == false);
+    auto affects_test_13 = pkb.isLineAffectsLine("11", "12");
+    REQUIRE(affects_test_13 == false);
+    auto affects_test_14 = pkb.isLineAffectsLine("11", "13");
+    REQUIRE(affects_test_14 == false);
+    auto affects_test_15 = pkb.isLineAffectsLine("14", "14");
+    REQUIRE(affects_test_15 == true);
+    auto affects_test_16 = pkb.isLineAffectsLine("15", "13");
+    REQUIRE(affects_test_16 == false);
+    auto affects_test_17 = pkb.isLineAffectsLine("18", "17");
+    REQUIRE(affects_test_17 == true);
+    auto affects_test_18 = pkb.isLineAffectsLine("15", "19");
+    REQUIRE(affects_test_18 == true);
+    auto affects_test_19 = pkb.isLineAffectsLine("17", "19");
+    REQUIRE(affects_test_19 == true);
+    auto affects_test_20 = pkb.isLineAffectsLine("15", "20");
+    REQUIRE(affects_test_20 == false);
+    auto affects_test_21 = pkb.isLineAffectsLine("17", "20");
+    REQUIRE(affects_test_21 == false);
+    auto affects_test_22 = pkb.isLineAffectsLine("18", "20");
+    REQUIRE(affects_test_22 == true);
+    auto affects_test_23 = pkb.isLineAffectsLine("19", "20");
+    REQUIRE(affects_test_23 == true);
+    auto affects_test_24 = pkb.isLineAffectsLine("20", "21");
+    REQUIRE(affects_test_24 == false);
+
+    auto affects_test_25 = pkb.getAffectModifiesLine("1");
+    REQUIRE(affects_test_25 == std::nullopt);
+
+    auto affects_test_26 = pkb.getAffectModifiesLine("2");
+    REQUIRE(affects_test_26 == std::nullopt);
+
+    auto affects_test_27 = pkb.getAffectModifiesLine("3");
+    REQUIRE(affects_test_27 == std::nullopt);
+
+    auto affects_test_28 = pkb.getAffectModifiesLine("4");
+    REQUIRE(affects_test_28 == std::nullopt);
+
+    auto affects_test_29 = pkb.getAffectModifiesLine("5");
+    REQUIRE(affects_test_29 == std::nullopt);
+
+    std::unordered_set<std::string> affects_test_30_check;
+    affects_test_30_check.insert("5");
+    auto affects_test_30 = pkb.getAffectModifiesLine("6");
+    REQUIRE(*affects_test_30 == affects_test_30_check);
+
+    std::unordered_set<std::string> affects_test_31_check;
+    affects_test_31_check.insert("5");
+    affects_test_31_check.insert("6");
+    auto affects_test_31 = pkb.getAffectModifiesLine("7");
+    REQUIRE(*affects_test_31 == affects_test_31_check);
+
+    std::unordered_set<std::string> affects_test_32_check;
+    affects_test_32_check.insert("6");
+    affects_test_32_check.insert("7");
+    auto affects_test_32 = pkb.getAffectModifiesLine("8");
+    REQUIRE(*affects_test_32 == affects_test_32_check);
+
+    auto affects_test_33 = pkb.getAffectModifiesLine("9");
+    REQUIRE(affects_test_33 == std::nullopt);
+
+    auto affects_test_34 = pkb.getAffectModifiesLine("10");
+    REQUIRE(affects_test_34 == std::nullopt);
+  }
+}
+
 TEST_CASE ("Test detection of semantic errors in AST") {
   SECTION ("recursive procedure call") {
     auto ast =

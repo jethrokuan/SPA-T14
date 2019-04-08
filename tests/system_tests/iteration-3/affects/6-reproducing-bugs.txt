@@ -1,0 +1,40 @@
+1 - reproduce BUG 1: while loop bugs. Control Test
+assign a, a1, a2;
+Select BOOLEAN such that Affects(1,3)
+TRUE
+5000
+2 - reproduce BUG 1: while loop bugs. Control Test
+assign a, a1, a2;
+Select BOOLEAN such that Affects(3,4)
+TRUE
+5000
+3 - reproduce BUG 1: while loop bugs. Control Test
+assign a, a1, a2;
+Select BOOLEAN such that Affects(4,3)
+TRUE
+5000
+4 - reproduce BUG 1: while loop bugs. Actual Bug, expects False
+assign a, a1, a2;
+Select BOOLEAN such that Affects(4,4)
+FALSE
+5000
+5 - reproduce BUG 1: while loop bugs. Actual Bug, expects False
+assign a, a1, a2;
+Select BOOLEAN such that Affects(3,3)
+FALSE
+5000
+6 - reproduce BUG 2: Affects + Next, in relation with While. Actual Bug, expects True
+assign a, a1, a2; stmt s,s1,s2;
+Select BOOLEAN such that Affects(1,3) and Next(1,3)
+TRUE
+5000
+7 - reproduce BUG 2: Affects + Next, in relation with While. Actual Bug, expects True
+assign a, a1, a2; stmt s,s1,s2;
+Select BOOLEAN such that Affects(3,4) and Next(3,4)
+TRUE
+5000
+8 - reproduce BUG 2: Affects + Next, in relation with While. Actual Bug, expects True
+assign a, a1, a2; stmt s,s1,s2;
+Select BOOLEAN such that Affects(4,3) and Next(4,3)
+TRUE
+5000

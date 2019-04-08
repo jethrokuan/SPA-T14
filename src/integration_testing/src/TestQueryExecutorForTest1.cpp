@@ -124,6 +124,18 @@ TEST_CASE (
             std::vector<std::string>{"14", "17", "19"});
   }
 
+  SECTION ("Select a such that Affects (a, 10)") {
+    querystr += std::string("Select a such that Affects (a, 10)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{});
+  }
+
+  SECTION ("Select a such that Affects (14, a)") {
+    querystr += std::string("Select a such that Affects (14, a)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"14"});
+  }
+
   delete pkb;
   delete qm;
 }

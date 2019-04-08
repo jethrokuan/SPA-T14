@@ -3,7 +3,7 @@ assign a1, a2;
 Select BOOLEAN such that Affects(1,5)
 FALSE
 5000
-2 - expects false: "a" modified through procedure call
+2 - expects false: a modified through procedure call
 assign a1, a2;
 Select BOOLEAN such that Affects(1,4)
 FALSE

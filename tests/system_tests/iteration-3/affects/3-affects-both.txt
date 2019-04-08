@@ -8,7 +8,7 @@ assign a1, a2;
 Select BOOLEAN such that Affects(2,3)
 TRUE
 5000
-3 - False: stmt 2 modifies variable "a"
+3 - False: stmt 2 modifies variable a
 assign a1, a2;
 Select BOOLEAN such that Affects(1,3)
 FALSE
@@ -28,7 +28,7 @@ assign a1, a2;
 Select BOOLEAN such that Affects(4,5)
 TRUE
 5000
-7 - False: stmt 4 modifies variable "b"
+7 - False: stmt 4 modifies variable b
 assign a1, a2;
 Select BOOLEAN such that Affects(3,5)
 FALSE
@@ -38,7 +38,7 @@ assign a1, a2;
 Select BOOLEAN such that Affects*(3,5)
 TRUE
 5000
-9 - False: stmt 4 modifies variable "a"
+9 - False: stmt 4 modifies variable a
 assign a1, a2;
 Select BOOLEAN such that Affects(1,9)
 FALSE
@@ -48,7 +48,7 @@ assign a1, a2;
 Select BOOLEAN such that Affects*(1,9)
 TRUE
 5000
-10 - False: stmt 4 modifies variable "b"
+10 - False: stmt 4 modifies variable b
 assign a1, a2;
 Select BOOLEAN such that Affects(3,9)
 FALSE
@@ -58,7 +58,7 @@ assign a1, a2;
 Select BOOLEAN such that Affects*(3,9)
 TRUE
 5000
-12 - False: stmt 4 modifies variable "c"
+12 - False: stmt 4 modifies variable c
 assign a1, a2;
 Select BOOLEAN such that Affects(5,9)
 FALSE

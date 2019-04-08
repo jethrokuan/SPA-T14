@@ -8,34 +8,34 @@ assign a,a1,a2;
 Select <a1,a2> such that Affects(a1,a2)
 1 2,3 11, 6 10, 7 10, 8 10, 9 10, 10 10, 11 11, 13 15, 15 15
 5000
-3 - 3 clauses, common synonym "a", return TUPLE
+3 - 3 clauses, common synonym a, return TUPLE
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a, v> such that Affects(a1,a) and Affects (a, a2) and Uses(a,v)
 10 c, 10 d, 10 e, 10 f, 10 g
 5000
-4 - 6 clauses, common synonym "a", return TUPLE
+4 - 6 clauses, common synonym a, return TUPLE
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a, v> such that Affects(a1,a) and Affects (a, a2) and Uses(a,v) and Modifies(a, v1) with v1.varName = v.varName
 10 g
 5000
-5 - 5 clauses, some common synonyms "a", "v", return TUPLE
+5 - 5 clauses, some common synonyms a, v, return TUPLE
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a, v> such that Affects(a1,a) and Affects (a, a2) and Uses(a,v) and Modifies(a1, v) pattern w(v,_)
 10 c
 5000
 6 - 16 clause, some common synonyms, return BOOLEAN
 assign a, a1, a2, a3, a4,a5,a6; constant c, c1, c2, c3, c4; prog_line n, n1, n2, n3, n4; procedure p, p1, p2, p3, p4; stmt s, s1, s2, s3, s4, s5, s6, s7, s8; read r, r1,r2,r3,r4; print pn, pn1,pn2,pn3,pn4; variable v,v1,v2,v3,v4, v5; while w,w1,w2,w3,w4; if i,i1,i2,i3,i4; call cl, cl1,cl2,cl3,cl4;
-Select BOOLEAN such that Affects(a1,a2) and Affects*(a1,a2) and Follows(a1,a2) and Follows*(a1,a2) and Parent(i,a1) and Parent*(w,a1) and Modifies(a1,v) and Uses(a2,v) and Calls(p1,p2) and Calls*(p1,p2) and Next(n1,n2) and Next*(n1,n2) pattern a(a1,"1") and w(v,_) and i(v,_,_) with v.varName = "abc"
+Select BOOLEAN such that Affects(a1,a2) and Affects*(a1,a2) and Follows(a1,a2) and Follows*(a1,a2) and Parent(i,a1) and Parent*(w,a1) and Modifies(a1,v) and Uses(a2,v) and Calls(p1,p2) and Calls*(p1,p2) and Next(n1,n2) and Next*(n1,n2) pattern a(a1,1) and w(v,_) and i(v,_,_) with v.varName = abc
 FALSE
 5000
 7 - 16 clause, some common synonyms, return BOOLEAN
 assign a, a1, a2, a3, a4,a5,a6; constant c, c1, c2, c3, c4; prog_line n, n1, n2, n3, n4; procedure p, p1, p2, p3, p4; stmt s, s1, s2, s3, s4, s5, s6, s7, s8; read r, r1,r2,r3,r4; print pn, pn1,pn2,pn3,pn4; variable v,v1,v2,v3,v4, v5; while w,w1,w2,w3,w4; if i,i1,i2,i3,i4; call cl, cl1,cl2,cl3,cl4;
-Select BOOLEAN such that Affects(1,a) and Affects*(a,a2) and Follows(s1,a) and Follows*(a,s2) and Parent(i,a) and Parent*(w,a) and Modifies(a1,v) and Uses(a2,v) and Calls(p1,p2) and Calls*(p3,p4) and Next(n1,n2) and Next*(n1,n2) pattern a(a4,"1") and w1(v,_) and i1(v,_,_) with v.varName = "abcd"
+Select BOOLEAN such that Affects(1,a) and Affects*(a,a2) and Follows(s1,a) and Follows*(a,s2) and Parent(i,a) and Parent*(w,a) and Modifies(a1,v) and Uses(a2,v) and Calls(p1,p2) and Calls*(p3,p4) and Next(n1,n2) and Next*(n1,n2) pattern a(a4,1) and w1(v,_) and i1(v,_,_) with v.varName = abcd
 FALSE
 5000 
 8 - 16 clause, some common synonyms, return BOOLEAN
 assign a, a1, a2, a3, a4,a5,a6; constant c, c1, c2, c3, c4; prog_line n, n1, n2, n3, n4; procedure p, p1, p2, p3, p4; stmt s, s1, s2, s3, s4, s5, s6, s7, s8; read r, r1,r2,r3,r4; print pn, pn1,pn2,pn3,pn4; variable v,v1,v2,v3,v4, v5; while w,w1,w2,w3,w4; if i,i1,i2,i3,i4; call cl, cl1,cl2,cl3,cl4;
-Select BOOLEAN such that Affects(a1,a) and Affects*(a,a2) and Follows(s1,a) and Follows*(a,s2) and Parent(i,a) and Parent*(w,a) and Modifies(a,v) and Uses(a,v) and Calls(p1,p2) and Calls*(p3,p4) and Next(n1,n2) and Next*(n1,n2) pattern a(a,"1") and w1(v,_) and i1(v,_,_) with v.varName = "abcde"
+Select BOOLEAN such that Affects(a1,a) and Affects*(a,a2) and Follows(s1,a) and Follows*(a,s2) and Parent(i,a) and Parent*(w,a) and Modifies(a,v) and Uses(a,v) and Calls(p1,p2) and Calls*(p3,p4) and Next(n1,n2) and Next*(n1,n2) pattern a(a,1) and w1(v,_) and i1(v,_,_) with v.varName = abcde
 FALSE
 5000 
 9 - 5 clauses, some related clauses, return TUPLE
@@ -45,12 +45,12 @@ main a, main c, main d, main e, main f, main g, main h, sub a
 5000
 10 - 10 clauses, some related clauses, return TUPLE
 assign a, a1, a2, a3, a4,a5,a6; constant c, c1, c2, c3, c4; prog_line n, n1, n2, n3, n4; procedure p, p1, p2, p3, p4; stmt s, s1, s2, s3, s4, s5, s6, s7, s8; read r, r1,r2,r3,r4; print pn, pn1,pn2,pn3,pn4; variable v,v1,v2,v3,v4, v5; while w,w1,w2,w3,w4; if i,i1,i2,i3,i4; call cl, cl1,cl2,cl3,cl4;
-Select <p1, a> such that Calls(p1,p2) and Uses(p1, v) and Affects(a, a2) and Uses(a2, v) and Follows(a, a2) and Modifies(a2, "b") and Uses(a, v) and Follows*(a,w) pattern w(v,_) with a.stmt# = c.value
+Select <p1, a> such that Calls(p1,p2) and Uses(p1, v) and Affects(a, a2) and Uses(a2, v) and Follows(a, a2) and Modifies(a2, b) and Uses(a, v) and Follows*(a,w) pattern w(v,_) with a.stmt# = c.value
 main 1
 5000 
 11 - 16 clause, NO common synonyms, return BOOLEAN
 assign a, a1, a2, a3, a4,a5,a6; constant c, c1, c2, c3, c4; prog_line n, n1, n2, n3, n4; procedure p, p1, p2, p3, p4; stmt s, s1, s2, s3, s4, s5, s6, s7, s8; read r, r1,r2,r3,r4; print pn, pn1,pn2,pn3,pn4; variable v,v1,v2,v3,v4, v5; while w,w1,w2,w3,w4; if i,i1,i2,i3,i4; call cl, cl1,cl2,cl3,cl4;
-Select BOOLEAN such that Affects(a1,a2) and Affects*(a3,a4) and Follows(s1,s2) and Follows*(s3,s4) and Parent(i,s5) and Parent*(w,s6) and Modifies(a5,v1) and Uses(a6,v2) and Calls(p1,p2) and Calls*(p3,p4) and Next(n1,n2) and Next*(n3,n4) pattern a(a,"1") and w1(v3,_) and i1(v4,_,_) with v5.varName = "abc"
+Select BOOLEAN such that Affects(a1,a2) and Affects*(a3,a4) and Follows(s1,s2) and Follows*(s3,s4) and Parent(i,s5) and Parent*(w,s6) and Modifies(a5,v1) and Uses(a6,v2) and Calls(p1,p2) and Calls*(p3,p4) and Next(n1,n2) and Next*(n3,n4) pattern a(a,1) and w1(v3,_) and i1(v4,_,_) with v5.varName = abc
 FALSE
 5000
 12 - multiple affects clauses, return TUPLE

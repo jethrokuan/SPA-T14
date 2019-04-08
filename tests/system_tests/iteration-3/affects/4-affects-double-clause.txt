@@ -45,23 +45,23 @@ Select <a1,a2> such that Affects(a1, a2) and Calls(p1,p2)
 5000
 10 - Calls* + Affects: Select all affects pair that follows one another. Calls alone will not constrain Affects. Expected results to be same as query 1 
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
-Select <a1,a2> such that Affects(a1, a2) Calls*(p1,p2)
+Select <a1,a2> such that Affects(a1, a2) and Calls*(p1,p2)
 1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
 5000
 11 - Next + Affects: expecting next to have more results than affects, i.e. affects is constraining next. expect same results as first query
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
-Select <a1,a2> such that Affects(a1,a2) and Next(a1.stmt#, a2.stmt#)
+Select <a1,a2> such that Affects(a1,a2) and Next(a1, a2)
 1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
 5000
 12 - Next* + Affects: expecting next to have more results than affects, i.e. affects is constraining next. expect same results as first query
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
-Select <a1,a2> such that Affects(a1,a2) and Next*(a1.stmt#, a2.stmt#)
-1 2, 2 4, 5 5, 8 9,12 18, 12 19, 18 19, 15 16, 16 17
+Select <a1,a2> such that Affects(a1,a2) and Next*(a1, a2)
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
 5000
 13 - assign pattern + Affects. Pattern: assignment that init variable as 1
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1,a2) pattern a(v,"1")
-1 2, 2 4, 5 5, 8 9,12 18, 12 19, 18 19, 15 16, 16 17
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
 5000
 14 - if pattern + Affects. Pattern: pattern i alone does not constrain affects, expect same results as query 1
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;

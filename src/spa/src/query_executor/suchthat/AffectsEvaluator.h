@@ -22,7 +22,6 @@ class AffectsEvaluator : public SuchThatEvaluator {
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
     // Affects(a, 1)
-    std::cout << "Here\n";
     return pkb->getAffectModifiesLine(basic_value)
         .value_or(std::unordered_set<std::string>());
   }

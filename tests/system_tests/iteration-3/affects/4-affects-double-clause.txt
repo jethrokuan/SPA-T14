@@ -1,17 +1,17 @@
 1 - Affects (use as working to verify the a1,a2 are selected correctly)
 assign a, a1, a2;
 Select <a1,a2> such that Affects(a1,a2)
-1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17, 17 17 
 5000
 2 - Modifies + Affects: Select pairs of assignment that affects some other assignment and their variables
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1, a2, v> such that Affects(a1, a2) and Modifies(a1, v)
-1 2 a, 2 4 b, 5 5 c,8 9 d, 15 16 x, 16 17 x, 12 18 a, 18 19 a
+1 2 a, 2 4 b, 5 5 c,8 9 d, 15 16 x, 16 17 x, 12 18 a, 18 19 a, 17 17 y
 5000
 3 - Uses + Affects: Select variables used by the first assignment parameter in affects. assignment that does not use variable = false, hence not all affects pair are reflected
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2,v> such that Affects(a1, a2) and Uses(a1, v)
-2 4 a, 5 5 c,18 19 a, 16 17 x, 17 17 , 17 17 y
+2 4 a, 5 5 c,18 19 a, 16 17 x, 17 17 x, 17 17 y
 5000
 4 - Parent + Affects: Select all affects pair that are nested in while
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
@@ -26,7 +26,7 @@ Select <a1,a2> such that Affects(a1, a2) and Parent(i, a1) and Parent(i, a2)
 6 - Parent* + Affects: Select all affects pair that are nested in if
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1, a2) and Parent*(i, a1) and Parent*(i, a2)
-5 5, 15 16, 16 17, 18 19,17 17
+15 16, 16 17, 18 19,17 17
 5000
 7 - Follows + Affects: Select all affects pair that immediately follows one another
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
@@ -41,40 +41,40 @@ Select <a1,a2> such that Affects(a1, a2) and Follows*(a1, a2)
 9 - Calls + Affects: Select all affects pair that follows one another. Calls alone will not constrain Affects. Expected results = same as query 1 
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1, a2) and Calls(p1,p2)
-1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17, 17 17
 5000
 10 - Calls* + Affects: Select all affects pair that follows one another. Calls alone will not constrain Affects. Expected results to be same as query 1 
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1, a2) and Calls*(p1,p2)
-1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17, 17 17
 5000
 11 - Next + Affects: expecting next to have more results than affects, i.e. affects is constraining next. expect same results as first query
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1,a2) and Next(a1, a2)
-1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
+1 2, 8 9, 18 19, 15 16, 16 17
 5000
 12 - Next* + Affects: expecting next to have more results than affects, i.e. affects is constraining next. expect same results as first query
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1,a2) and Next*(a1, a2)
-1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17, 17 17
 5000
 13 - assign pattern + Affects. Pattern: assignment that init variable as 1
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1,a2) pattern a(v,"1")
-1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17, 17 17
 5000
 14 - if pattern + Affects. Pattern: pattern i alone does not constrain affects, expect same results as query 1
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1,a2) pattern i(v,_,_)
-1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17, 17 17
 5000
 15 - while pattern + Affects. Pattern: pattern w alone does not constrain affects, expect same results as query 1
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1,a2) pattern w(v,_)
-1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17
+1 2, 2 4, 5 5, 8 9,12 18, 18 19, 15 16, 16 17, 17 17
 5000
 16 - with + Affects: Select a1 a2 affects pair that are the same stmt
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
 Select <a1,a2> such that Affects(a1,a2) with a1.stmt# = a2.stmt#
-5 5
+5 5, 17 17
 5000

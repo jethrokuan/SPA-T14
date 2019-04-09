@@ -239,7 +239,7 @@ class PKBManager {
       const UsesLine);
   std::optional<std::unordered_set<UsesLine>> getAffectUsesLine(
       const ModifyLine);
-  std::optional<std::unordered_set<ModifyLine>> getAffectModiesLineT(
+  std::optional<std::unordered_set<ModifyLine>> getAffectModifiesLineT(
       const UsesLine);
   std::optional<std::unordered_set<UsesLine>> getAffectUsesLineT(
       const ModifyLine);

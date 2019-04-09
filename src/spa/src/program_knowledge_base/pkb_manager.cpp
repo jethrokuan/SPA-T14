@@ -927,6 +927,7 @@ bool PKBManager::isLineAffectsLineTH(
                              call_ref_set);
 }
 
+// TODO break if modified by non assignment statement
 // helper class for isLineAffectsLine DFS
 bool PKBManager::isLineAffectsLineTH(
     const Line cur_line, const UsesLine target_line, const Variable target_var,
@@ -944,6 +945,7 @@ bool PKBManager::isLineAffectsLineTH(
     // std::cout << "adding " + cur_line + " to visited list" << std::endl;
     visited->insert(cur_line);
   }
+  bool is_affected = false;
 
   // check if modified
   // ignore on first iteration since line can possibly be like
@@ -968,20 +970,25 @@ bool PKBManager::isLineAffectsLineTH(
 
           // check if call has already been made before
           if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
+            // std::cout << "call has already been made" << std::endl;
             return false;
           } else {
+            // std::cout << "making call to " + cur_line + " " + (*var_modified) << std::endl;
             call_ref_set->insert(call_line_var);
-            return isLineAffectsLineTH(cur_line, target_line, (*var_modified),
+            is_affected = isLineAffectsLineTH(cur_line, target_line, (*var_modified),
                                        call_ref_set);
           }
         }
       }
     }
+    if (isLineAffectsVariable(cur_line, target_var)) {
+      // non-target line modifies variable
+      return false;
+    }
   }
 
   // get neighbours
   auto neighbours = getNextLine(cur_line);
-  bool is_affected = false;
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
       is_affected =

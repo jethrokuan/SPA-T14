@@ -13,10 +13,10 @@ assign a1, a2;
 Select BOOLEAN such that Affects(1,2)
 TRUE
 5000
-4 - expects true: same assignment statement both uses and modifies the same variable ? TO BE VERIFIED
+4 - expects false
 assign a1, a2;
 Select BOOLEAN such that Affects(6,6)
-TRUE
+FALSE
 5000
 5 - invalid, second parameter is not assignment statement
 assign a1, a2;

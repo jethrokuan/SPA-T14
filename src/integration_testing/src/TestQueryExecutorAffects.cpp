@@ -71,8 +71,7 @@ TEST_CASE ("Test Query Executor on Affects queries (source 2)") {
     auto querystr =
         std::string("assign a1, a2; Select <a1, a2> such that Affects(a1, a2)");
     auto query = qe.makePqlQuery(querystr);
-    REQUIRE(qm->makeQuery(&query) ==
-            std::vector<std::string>{"2 2", "2 3", "3 2", "3 3"});
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"2 3", "3 2"});
   }
 
   SECTION ("Test Affects(a1, 3)") {

@@ -908,7 +908,8 @@ bool PKBManager::isLineAffectsLineT(const ModifyLine modify_line,
         call_ref_set = std::make_shared<
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
     call_ref_set->insert(std::pair<ModifyLine, Variable>(modify_line, (*var)));
-    return isLineAffectsLineTH(modify_line, uses_line, (*var), call_ref_set);
+    return isLineAffectsLineTH(modify_line, uses_line, (*var), modify_line,
+                               call_ref_set);
   } else {
     // only modify_line is definitely an assignment statement at this point
     // should definitely modify a variable
@@ -920,6 +921,7 @@ bool PKBManager::isLineAffectsLineT(const ModifyLine modify_line,
 // helper class for isLineAffectsLine DFS
 bool PKBManager::isLineAffectsLineTH(
     const Line cur_line, const UsesLine target_line, const Variable target_var,
+    const ModifyLine source_line,
     std::shared_ptr<
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
         call_ref_set) {
@@ -928,15 +930,15 @@ bool PKBManager::isLineAffectsLineTH(
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
 
-  return isLineAffectsLineTH(cur_line, target_line, target_var, true, visited,
-                             call_ref_set);
+  return isLineAffectsLineTH(cur_line, target_line, target_var, true, source_line,
+                             visited, call_ref_set);
 }
 
 // TODO break if modified by non assignment statement
 // helper class for isLineAffectsLine DFS
 bool PKBManager::isLineAffectsLineTH(
     const Line cur_line, const UsesLine target_line, const Variable target_var,
-    const bool first_iteration,
+    const bool first_iteration, const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
@@ -960,6 +962,8 @@ bool PKBManager::isLineAffectsLineTH(
     if (var_used) {
       // at the target line
       if ((*var_used).find(target_var) != (*var_used).end()) {
+        pkb_storage->addToSetMap(modify_uses_affects_t_cache, source_line,
+                                 cur_line);
         // std::cout << "uses target variable " + target_var << std::endl;
         // if target variable is used
         if (cur_line == target_line) {
@@ -982,8 +986,8 @@ bool PKBManager::isLineAffectsLineTH(
             // std::cout << "making call to " + cur_line + " " + (*var_modified)
             // << std::endl;
             call_ref_set->insert(call_line_var);
-            is_affected = isLineAffectsLineTH(cur_line, target_line,
-                                              (*var_modified), call_ref_set);
+            is_affected = isLineAffectsLineTH(
+                cur_line, target_line, (*var_modified), cur_line, call_ref_set);
           }
         }
       }
@@ -999,8 +1003,9 @@ bool PKBManager::isLineAffectsLineTH(
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
       is_affected =
-          is_affected || isLineAffectsLineTH(neighbour, target_line, target_var,
-                                             false, visited, call_ref_set);
+          is_affected ||
+          isLineAffectsLineTH(neighbour, target_line, target_var, false,
+                              source_line, visited, call_ref_set);
     }
     return is_affected;
   } else {
@@ -1099,7 +1104,8 @@ PKBManager::getAffectModifiesLineT(const UsesLine uses_line) {
       // do dfs starting from line
       call_ref_set->insert(std::pair<ModifyLine, Variable>(uses_line, var));
       // std::cout << "doing traversal for " + var << std::endl;
-      getAffectModifiesLineTH(uses_line, var, modifies_set, call_ref_set);
+      getAffectModifiesLineTH(uses_line, var, uses_line, modifies_set,
+                              call_ref_set);
     }
 
     if (modifies_set->empty()) {
@@ -1115,18 +1121,20 @@ PKBManager::getAffectModifiesLineT(const UsesLine uses_line) {
 
 void PKBManager::getAffectModifiesLineTH(
     const Line cur_line, const Variable target_var,
+    const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> modifies_set,
     std::shared_ptr<
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
         call_ref_set) {
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
-  getAffectModifiesLineTH(cur_line, target_var, true, visited, modifies_set,
-                          call_ref_set);
+  getAffectModifiesLineTH(cur_line, target_var, true, source_line, visited,
+                          modifies_set, call_ref_set);
 }
 
 void PKBManager::getAffectModifiesLineTH(
     const Line cur_line, const Variable target_var, const bool first_iteration,
+    const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<std::unordered_set<Line>> modifies_set,
     std::shared_ptr<
@@ -1151,6 +1159,8 @@ void PKBManager::getAffectModifiesLineTH(
       // std::cout << "line " + cur_line + " modifies " + target_var <<
       // std::endl; if line is an assignment statement
       if (isAssignExists(cur_line)) {
+        pkb_storage->addToSetMap(uses_modify_affects_t_cache, source_line,
+                                 cur_line);
         modifies_set->insert(cur_line);
         auto var_used = getUsesVariableFromAssignLine(cur_line);
         if (var_used) {
@@ -1164,7 +1174,7 @@ void PKBManager::getAffectModifiesLineTH(
               return;
             } else {
               call_ref_set->insert(call_line_var);
-              getAffectModifiesLineTH(cur_line, var, modifies_set,
+              getAffectModifiesLineTH(cur_line, var, cur_line, modifies_set,
                                       call_ref_set);
             }
           }
@@ -1179,8 +1189,8 @@ void PKBManager::getAffectModifiesLineTH(
   auto neighbours = getPreviousLine(cur_line);
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
-      getAffectModifiesLineTH(neighbour, target_var, false, visited,
-                              modifies_set, call_ref_set);
+      getAffectModifiesLineTH(neighbour, target_var, false, source_line,
+                              visited, modifies_set, call_ref_set);
     }
   }
 }
@@ -1274,7 +1284,8 @@ std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineT(
         call_ref_set = std::make_shared<
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
     call_ref_set->insert(std::pair<ModifyLine, Variable>(modify_line, (*var)));
-    getAffectUsesLineTH(modify_line, (*var), uses_set, call_ref_set);
+    getAffectUsesLineTH(modify_line, (*var), modify_line, uses_set,
+                        call_ref_set);
     if (uses_set->empty()) {
       return std::nullopt;
     } else {
@@ -1287,6 +1298,7 @@ std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineT(
 
 void PKBManager::getAffectUsesLineTH(
     const Line cur_line, const Variable target_var,
+    const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> uses_set,
     std::shared_ptr<
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
@@ -1294,12 +1306,13 @@ void PKBManager::getAffectUsesLineTH(
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
   // std::cout << "making call for " + cur_line + " " + target_var << std::endl;
-  getAffectUsesLineTH(cur_line, target_var, true, visited, uses_set,
-                      call_ref_set);
+  getAffectUsesLineTH(cur_line, target_var, true, source_line, visited,
+                      uses_set, call_ref_set);
 }
 
 void PKBManager::getAffectUsesLineTH(
     const Line cur_line, const Variable target_var, const bool first_iteration,
+    const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<std::unordered_set<Line>> uses_set,
     std::shared_ptr<
@@ -1324,6 +1337,8 @@ void PKBManager::getAffectUsesLineTH(
       if ((*var_used).find(target_var) != (*var_used).end()) {
         // std::cout << "uses target variable " + target_var << std::endl;
         // uses target variable
+        pkb_storage->addToSetMap(modify_uses_affects_t_cache, source_line,
+                                 cur_line);
         uses_set->insert(cur_line);
 
         auto var_modified = getModifyVariableFromAssignLine(cur_line);
@@ -1335,7 +1350,7 @@ void PKBManager::getAffectUsesLineTH(
           // check if call has already been made before
           if (call_ref_set->find(call_line_var) == call_ref_set->end()) {
             call_ref_set->insert(call_line_var);
-            getAffectUsesLineTH(cur_line, (*var_modified), uses_set,
+            getAffectUsesLineTH(cur_line, (*var_modified), cur_line, uses_set,
                                 call_ref_set);
           }
         } else {
@@ -1359,8 +1374,8 @@ void PKBManager::getAffectUsesLineTH(
   auto neighbours = getNextLine(cur_line);
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
-      getAffectUsesLineTH(neighbour, target_var, false, visited, uses_set,
-                          call_ref_set);
+      getAffectUsesLineTH(neighbour, target_var, false, source_line, visited,
+                          uses_set, call_ref_set);
     }
   }
 }

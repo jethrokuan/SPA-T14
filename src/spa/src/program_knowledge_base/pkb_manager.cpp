@@ -901,7 +901,7 @@ bool PKBManager::isLineAffectsLineT(const ModifyLine modify_line,
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
         call_ref_set = std::make_shared<
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
-        call_ref_set->insert(std::pair<ModifyLine, Variable>(modify_line, (*var)))
+        call_ref_set->insert(std::pair<ModifyLine, Variable>(modify_line, (*var)));
     return isLineAffectsLineTH(modify_line, uses_line, (*var), call_ref_set);
   } else {
     // only modify_line is definitely an assignment statement at this point
@@ -1084,7 +1084,7 @@ PKBManager::getAffectModifiesLineT(const UsesLine uses_line) {
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
     for (const auto &var : *var_set) {
       // do dfs starting from line
-      call_ref_set->insert(std::pair<ModifyLine, Variable>(uses_line, var))
+      call_ref_set->insert(std::pair<ModifyLine, Variable>(uses_line, var));
       // std::cout << "doing traversal for " + var << std::endl;
       getAffectModifiesLineTH(uses_line, var, modifies_set, call_ref_set);
     }

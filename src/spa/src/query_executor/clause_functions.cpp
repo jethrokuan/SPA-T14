@@ -47,22 +47,21 @@ void addWeightToClausesConditionally(WeightedGroupedClause& wgclause,
                                      PatternCondMatcher& pattern_matcher,
                                      WithCondMatcher& withcond_matcher) {
   auto& clause = wgclause.clause;
-  std::visit(
-      overload{
-          [&](RelCond* r) {
-            if (relcond_matcher(r))
-              wgclause.weight += relcond_weight_delta.weight;
-          },
-          [&](PatternCond* p) {
-            if (pattern_matcher(p))
-              wgclause.weight += pattern_weight_delta.weight;
-          },
-          [&](WithCond* w) {
-            if (withcond_matcher(w))
-              wgclause.weight += withcond_weight_delta.weight;
-          },
-      },
-      clause);
+  std::visit(overload{
+                 [&](RelCond* r) {
+                   if (relcond_matcher(r))
+                     wgclause.weight += relcond_weight_delta.weight;
+                 },
+                 [&](PatternCond* p) {
+                   if (pattern_matcher(p))
+                     wgclause.weight += pattern_weight_delta.weight;
+                 },
+                 [&](WithCond* w) {
+                   if (withcond_matcher(w))
+                     wgclause.weight += withcond_weight_delta.weight;
+                 },
+             },
+             clause);
 }
 
 // Default matchers that just don't match on each of the types of clause

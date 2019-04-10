@@ -893,8 +893,6 @@ bool PKBManager::isLineAffectsLineT(const ModifyLine modify_line,
   // check what variable the modify_line modifies
   auto var = getModifyVariableFromAssignLine(modify_line);
   if (var) {
-    std::shared_ptr<std::unordered_set<Line>> visited =
-        std::make_shared<std::unordered_set<Line>>();
     // do dfs starting from line
     // std::cout << "checking for " << std::endl;
     // std::cout << "from " + modify_line + " to " + uses_line + " for " +
@@ -903,6 +901,7 @@ bool PKBManager::isLineAffectsLineT(const ModifyLine modify_line,
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
         call_ref_set = std::make_shared<
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
+        call_ref_set->insert(std::pair<ModifyLine, Variable>(modify_line, (*var)))
     return isLineAffectsLineTH(modify_line, uses_line, (*var), call_ref_set);
   } else {
     // only modify_line is definitely an assignment statement at this point
@@ -1085,6 +1084,7 @@ PKBManager::getAffectModifiesLineT(const UsesLine uses_line) {
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
     for (const auto &var : *var_set) {
       // do dfs starting from line
+      call_ref_set->insert(std::pair<ModifyLine, Variable>(uses_line, var))
       // std::cout << "doing traversal for " + var << std::endl;
       getAffectModifiesLineTH(uses_line, var, modifies_set, call_ref_set);
     }
@@ -1252,10 +1252,7 @@ std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineT(
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
         call_ref_set = std::make_shared<
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
-    // TODO
-    // add that thing you're about to call before calling it
     call_ref_set->insert(std::pair<ModifyLine, Variable>(modify_line, (*var)));
-
     getAffectUsesLineTH(modify_line, (*var), uses_set, call_ref_set);
     if (uses_set->empty()) {
       return std::nullopt;
@@ -1330,7 +1327,6 @@ void PKBManager::getAffectUsesLineTH(
 
     // check if line modifies the variable
     // assignment statements are already accounted for at this point
-    // TODO check this shit out
     if (isLineAffectsVariable(cur_line, target_var)) {
       // stop traversing down this path
       // std::cout << "line affects " + target_var + " so return" << std::endl;

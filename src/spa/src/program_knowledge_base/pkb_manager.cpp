@@ -958,6 +958,7 @@ bool PKBManager::isLineAffectsLineTH(
         // std::cout << "uses target variable " + target_var << std::endl;
         // if target variable is used
         if (cur_line == target_line) {
+          // std::cout << "cur_line == target_line" << std::endl;
           return true;
         }
 
@@ -984,7 +985,7 @@ bool PKBManager::isLineAffectsLineTH(
     }
     if (isLineAffectsVariable(cur_line, target_var)) {
       // non-target line modifies variable
-      return false;
+      return is_affected;
     }
   }
 
@@ -1134,8 +1135,8 @@ void PKBManager::getAffectModifiesLineTH(
   if (!first_iteration) {
     // check if line modifies the variable
     if (isLineAffectsVariable(cur_line, target_var)) {
-      // std::cout << "line " + cur_line + " modifies " + target_var << std::endl;
-      // if line is an assignment statement
+      // std::cout << "line " + cur_line + " modifies " + target_var <<
+      // std::endl; if line is an assignment statement
       if (isAssignExists(cur_line)) {
         modifies_set->insert(cur_line);
         auto var_used = getUsesVariableFromAssignLine(cur_line);

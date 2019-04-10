@@ -10,6 +10,7 @@
 #include "query_executor/pattern/IfPatternEvaluator.h"
 #include "query_executor/pattern/WhilePatternEvaluator.h"
 #include "query_executor/suchthat/AffectsEvaluator.h"
+#include "query_executor/suchthat/AffectsTEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
 #include "query_executor/suchthat/CallsTEvaluator.h"
 #include "query_executor/suchthat/FollowsEvaluator.h"
@@ -89,7 +90,7 @@ bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
     case Relation::Affects:
       return AffectsEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::AffectsT:
-      return false;  // TODO: Implement
+      return AffectsTEvaluator(decls, relCond, pkb, db).evaluate();
     default:
       assert(false);
   }

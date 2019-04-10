@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <optional>
 #include <string>
 #include <unordered_set>
@@ -30,9 +31,20 @@ class PKBManager {
   void getPreviousLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
 
   // helper for affects
-  bool isLineAffectsLineH(const Line, const UsesLine,
-                          const Variable, const bool,
+  bool isLineAffectsLineH(const Line, const UsesLine, const Variable,
+                          const bool,
                           std::shared_ptr<std::unordered_set<Line>>);
+  bool isLineAffectsLineTH(
+      const Line, const UsesLine, const Variable,
+      std::shared_ptr<
+          std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
+          call_ref_set);
+  bool isLineAffectsLineTH(
+      const Line, const UsesLine, const Variable, const bool,
+      std::shared_ptr<std::unordered_set<Line>>,
+      std::shared_ptr<
+          std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
+          call_ref_set);
   void getAffectModifiesLineH(
       const Line cur_line, const Variable target_var,
       std::shared_ptr<std::unordered_set<Line>> modifies_set);
@@ -41,12 +53,42 @@ class PKBManager {
       const bool first_iteration,
       std::shared_ptr<std::unordered_set<Line>> visited,
       std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectModifiesLineTH(
+      const Line cur_line, const Variable target_var,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set,
+      std::shared_ptr<
+          std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
+          call_ref_set);
+  void getAffectModifiesLineTH(
+      const Line cur_line, const Variable target_var,
+      const bool first_iteration,
+      std::shared_ptr<std::unordered_set<Line>> visited,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set,
+      std::shared_ptr<
+          std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
+          call_ref_set);
   void getAffectUsesLineH(const Line cur_line, const Variable target_var,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
   void getAffectUsesLineH(const Line cur_line, const Variable target_var,
                           const bool first_iteration,
                           std::shared_ptr<std::unordered_set<Line>> visited,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
+  void getAffectUsesLineTH(
+      const Line cur_line, const Variable target_var,
+      std::shared_ptr<std::unordered_set<Line>> uses_set,
+      std::shared_ptr<
+          std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
+          call_ref_set);
+  void getAffectUsesLineTH(
+      const Line cur_line, const Variable target_var,
+      const bool first_iteration,
+      std::shared_ptr<std::unordered_set<Line>> visited,
+      std::shared_ptr<std::unordered_set<Line>> uses_set,
+      std::shared_ptr<
+          std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
+          call_ref_set);
+  std::shared_ptr<std::unordered_map<ModifyLine, UsesLine>> affects_cache =
+      std::make_shared<std::unordered_map<ModifyLine, UsesLine>>();
 
  public:
   PKBManager(const AST ast);
@@ -197,7 +239,7 @@ class PKBManager {
       const UsesLine);
   std::optional<std::unordered_set<UsesLine>> getAffectUsesLine(
       const ModifyLine);
-  std::optional<std::unordered_set<ModifyLine>> getAffectModiesLineT(
+  std::optional<std::unordered_set<ModifyLine>> getAffectModifiesLineT(
       const UsesLine);
   std::optional<std::unordered_set<UsesLine>> getAffectUsesLineT(
       const ModifyLine);
@@ -216,6 +258,8 @@ class PKBManager {
       const UsesLine);
   bool isFromSameProcedure(const Line, const Line);
   bool isLineAffectsVariable(const Line, const Variable);
+  // cache to be cleared after every query line
+  void clearCache();
 };
 
 }  // namespace PKB

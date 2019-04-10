@@ -1,0 +1,14 @@
+procedure main {
+	a = 1;
+	b = a + 1;
+	call alt;
+	b = a + 2;
+}
+
+procedure sub {
+	b = a + 1;
+}
+
+procedure alt {
+	a = a + 2;
+}

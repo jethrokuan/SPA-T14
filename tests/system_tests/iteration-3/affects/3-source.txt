@@ -1,0 +1,11 @@
+procedure main {
+	a = 1;
+	a = a + 1;
+	b = a + 1;
+	b = b + 1;
+	c = a + b + 1;
+	c = c + 1;
+	d = a + b + c + 1;
+	d = d + 1;
+	e = a + b + c + d;
+}

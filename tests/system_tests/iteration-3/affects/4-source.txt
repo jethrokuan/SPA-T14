@@ -1,0 +1,32 @@
+procedure main {
+	a = 1 + 2;
+	b = a + 1;
+
+	while( a > 0) {
+		b = b + b;
+		c = c + c;
+		d = d + d;
+		call sub;
+	}
+}
+
+procedure sub {
+	d = 1;
+	d = d + d;
+	read b;
+	print c;
+}
+
+procedure alt {
+	a = 10;
+	if(a > 0) then {
+		while (a > 10) {
+			x = 1;
+			x = x + 1;
+			y = y + x;
+		}
+	} else {
+		a = a + 2; 
+		a = a + 1;
+	}
+}

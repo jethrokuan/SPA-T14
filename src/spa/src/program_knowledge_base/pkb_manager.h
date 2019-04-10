@@ -32,7 +32,7 @@ class PKBManager {
 
   // helper for affects
   bool isLineAffectsLineH(const Line, const UsesLine, const Variable,
-                          const bool,
+                          const bool, const ModifyLine,
                           std::shared_ptr<std::unordered_set<Line>>);
   bool isLineAffectsLineTH(
       const Line, const UsesLine, const Variable,
@@ -47,10 +47,11 @@ class PKBManager {
           call_ref_set);
   void getAffectModifiesLineH(
       const Line cur_line, const Variable target_var,
+      const ModifyLine source_line,
       std::shared_ptr<std::unordered_set<Line>> modifies_set);
   void getAffectModifiesLineH(
       const Line cur_line, const Variable target_var,
-      const bool first_iteration,
+      const bool first_iteration, const ModifyLine source_line,
       std::shared_ptr<std::unordered_set<Line>> visited,
       std::shared_ptr<std::unordered_set<Line>> modifies_set);
   void getAffectModifiesLineTH(
@@ -68,9 +69,11 @@ class PKBManager {
           std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
           call_ref_set);
   void getAffectUsesLineH(const Line cur_line, const Variable target_var,
+                          const ModifyLine source_line,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
   void getAffectUsesLineH(const Line cur_line, const Variable target_var,
                           const bool first_iteration,
+                          const ModifyLine source_line,
                           std::shared_ptr<std::unordered_set<Line>> visited,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
   void getAffectUsesLineTH(
@@ -87,8 +90,18 @@ class PKBManager {
       std::shared_ptr<
           std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
           call_ref_set);
-  std::shared_ptr<std::unordered_map<ModifyLine, UsesLine>> affects_cache =
-      std::make_shared<std::unordered_map<ModifyLine, UsesLine>>();
+  std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>
+      modify_uses_affects_cache =
+          std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>();
+  std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>
+      modify_uses_affects_t_cache =
+          std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>();
+  std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>
+      uses_modify_affects_cache =
+          std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>();
+  std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>
+      uses_modify_affects_t_cache =
+          std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>();
 
  public:
   PKBManager(const AST ast);

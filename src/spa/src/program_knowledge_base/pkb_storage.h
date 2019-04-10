@@ -23,14 +23,6 @@ class PKBStorage {
   // helper
   Line getCurLineNumber();
   void incrementCurLineNumber();
-  void addToSetMap(
-      std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
-      const std::string index, std::string data);
-  void addToSetMap(
-      std::unordered_map<Variable,
-                         std::unordered_set<std::pair<std::string, std::string>,
-                                            pair_hash>> &umap,
-      const std::string index, std::pair<std::string, std::string> data);
 
  public:
   PKBStorage();
@@ -201,6 +193,14 @@ class PKBStorage {
 
   // helper
   void storeLineProcedureRelation(const Line, const Procedure);
+  void addToSetMap(
+      std::unordered_map<std::string, std::unordered_set<std::string>> &umap,
+      const std::string index, std::string data);
+  void addToSetMap(
+      std::unordered_map<Variable,
+                         std::unordered_set<std::pair<std::string, std::string>,
+                                            pair_hash>> &umap,
+      const std::string index, std::pair<std::string, std::string> data);
 
   // getters
   Procedure getProcedureFromLine(const Line);

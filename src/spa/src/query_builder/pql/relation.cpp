@@ -14,6 +14,8 @@ namespace QE {
 std::unordered_map<Relation, std::string> relationToStringMap(
     {{Relation::Affects, "Affects"},
      {Relation::AffectsT, "Affects*"},
+     {Relation::AffectsP, "AffectsP"},
+     {Relation::AffectsPT, "AffectsP*"},
      {Relation::ModifiesS, "Modifies(S)"},
      {Relation::UsesS, "Uses(S)"},
      {Relation::ModifiesP, "Modifies(P)"},
@@ -27,7 +29,9 @@ std::unordered_map<Relation, std::string> relationToStringMap(
      {Relation::Calls, "Calls"},
      {Relation::CallsT, "Calls*"},
      {Relation::Next, "Next"},
-     {Relation::NextT, "Next*"}});
+     {Relation::NextT, "Next*"},
+     {Relation::NextP, "NextP"},
+     {Relation::NextPT, "NextP*"}});
 
 //! Maps each relation to design entities for each of its allowed arguments if
 //! they are synonyms
@@ -64,6 +68,14 @@ std::unordered_map<
          {Relation::Affects,
           std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)},
          {Relation::AffectsT,
+          std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)},
+         {Relation::NextP,
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+         {Relation::NextPT,
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
+         {Relation::AffectsP,
+          std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)},
+         {Relation::AffectsPT,
           std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)}});
 
 std::unordered_map<Relation, std::pair<RefTypeIndexSet, RefTypeIndexSet>>
@@ -84,7 +96,12 @@ std::unordered_map<Relation, std::pair<RefTypeIndexSet, RefTypeIndexSet>>
          {Relation::Next, std::make_pair(lineRefIndices, lineRefIndices)},
          {Relation::NextT, std::make_pair(lineRefIndices, lineRefIndices)},
          {Relation::Affects, std::make_pair(stmtRefIndices, stmtRefIndices)},
-         {Relation::AffectsT, std::make_pair(stmtRefIndices, stmtRefIndices)}});
+         {Relation::AffectsT, std::make_pair(stmtRefIndices, stmtRefIndices)},
+         {Relation::NextP, std::make_pair(lineRefIndices, lineRefIndices)},
+         {Relation::NextPT, std::make_pair(lineRefIndices, lineRefIndices)},
+         {Relation::AffectsP, std::make_pair(stmtRefIndices, stmtRefIndices)},
+         {Relation::AffectsPT,
+          std::make_pair(stmtRefIndices, stmtRefIndices)}});
 
 auto stringToRelationMap =
     swapPairs<Relation, std::string>(relationToStringMap);

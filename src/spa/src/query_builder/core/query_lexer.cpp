@@ -1,8 +1,8 @@
-#include "query_builder/core/query_lexer.h"
 #include <cctype>
 #include <iostream>
 #include <unordered_set>
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_lexer.h"
 
 using QE::QueryLexer;
 
@@ -10,7 +10,8 @@ namespace QE {
 std::unordered_set<std::string> single_token_puncts({"(", ")", ",", "_", "<",
                                                      "*", ">", ";", "=", "."});
 std::unordered_set<std::string> ops_with_t({"Follows", "Parent", "Calls",
-                                            "Next", "Affects"});
+                                            "Next", "Affects", "NextP",
+                                            "AffectsP"});
 }  // namespace QE
 
 QueryLexer::QueryLexer(std::string query) : Curr(0), Query(query){};

@@ -1,5 +1,5 @@
-#include "query_builder/core/query_parser.h"
 #include "query_builder/core/exceptions.h"
+#include "query_builder/core/query_parser.h"
 #include "query_builder/pql/attrref.h"
 #include "query_builder/pql/design_entity.h"
 #include "query_builder/pql/query.h"
@@ -19,7 +19,9 @@ std::unordered_map<std::string, Relation> str_to_relation_map = {
     {"Parent", Relation::Parent},     {"Parent*", Relation::ParentT},
     {"Follows", Relation::Follows},   {"Follows*", Relation::FollowsT},
     {"Next", Relation::Next},         {"Next*", Relation::NextT},
-    {"Affects", Relation::Affects},   {"Affects*", Relation::AffectsT}};
+    {"Affects", Relation::Affects},   {"Affects*", Relation::AffectsT},
+    {"NextP", Relation::NextP},       {"NextP*", Relation::NextPT},
+    {"AffectsP", Relation::AffectsP}, {"AffectsP*", Relation::AffectsPT}};
 }
 
 QueryParser::QueryParser(std::vector<std::string> tokens)

@@ -136,6 +136,22 @@ TEST_CASE (
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"14"});
   }
 
+  SECTION ("Select s such that Next* (s, s) and Affects* (s, s)") {
+    querystr +=
+        std::string("Select s such that Next* (s, s) and Affects* (s, s)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"14", "17", "18"});
+  }
+
+  SECTION ("Select a such that Affects (a, a1) and Affects* (a1, 20)") {
+    querystr +=
+        std::string("Select a such that Affects (a, a1) and Affects* (a1, 20)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) ==
+            std::vector<std::string>{"15", "17", "18"});
+  }
+
   delete pkb;
   delete qm;
 }

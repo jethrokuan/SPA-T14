@@ -1084,6 +1084,7 @@ PKBManager::getAffectModifiesLineT(const UsesLine uses_line) {
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
     for (const auto &var : *var_set) {
       // do dfs starting from line
+      // std::cout << "doing traversal for " + var << std::endl;
       getAffectModifiesLineTH(uses_line, var, modifies_set, call_ref_set);
     }
 
@@ -1118,6 +1119,7 @@ void PKBManager::getAffectModifiesLineTH(
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
         call_ref_set) {
   // std::cout << "visiting " + cur_line << std::endl;
+  // std::cout << "targeting " + target_var << std::endl;
   if (visited->find(cur_line) != visited->end()) {
     // node has ben visited before
     // stop traversing down this path
@@ -1132,6 +1134,7 @@ void PKBManager::getAffectModifiesLineTH(
   if (!first_iteration) {
     // check if line modifies the variable
     if (isLineAffectsVariable(cur_line, target_var)) {
+      // std::cout << "line " + cur_line + " modifies " + target_var << std::endl;
       // if line is an assignment statement
       if (isAssignExists(cur_line)) {
         modifies_set->insert(cur_line);

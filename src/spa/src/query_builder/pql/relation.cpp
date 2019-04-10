@@ -62,9 +62,9 @@ std::unordered_map<
          {Relation::NextT,
           std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
          {Relation::Affects,
-          std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)},
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)},
          {Relation::AffectsT,
-          std::make_pair(ASSIGN_DESIGN_ENTITY, ASSIGN_DESIGN_ENTITY)}});
+          std::make_pair(ALL_STMT_DESIGN_ENTITIES, ALL_STMT_DESIGN_ENTITIES)}});
 
 std::unordered_map<Relation, std::pair<RefTypeIndexSet, RefTypeIndexSet>>
     relationToArgTypesMap(

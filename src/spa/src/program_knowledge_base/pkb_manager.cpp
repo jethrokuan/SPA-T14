@@ -955,7 +955,7 @@ bool PKBManager::isLineAffectsLineTH(
   if (!first_iteration) {
     auto var_used = getUsesVariableFromAssignLine(cur_line);
     if (var_used) {
-      // at the target line
+      // check if it uses target variable
       if ((*var_used).find(target_var) != (*var_used).end()) {
         // std::cout << "uses target variable " + target_var << std::endl;
         // if target variable is used
@@ -968,20 +968,51 @@ bool PKBManager::isLineAffectsLineTH(
         auto var_modified = getModifyVariableFromAssignLine(cur_line);
         if (var_modified) {
           // std::cout << "modifies variable " + (*var_modified) << std::endl;
-          std::pair<ModifyLine, Variable> call_line_var =
-              std::pair<ModifyLine, Variable>(cur_line, (*var_modified));
-
-          // check if call has already been made before
-          if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
-            // std::cout << "call has already been made" << std::endl;
-            return false;
+          // if result is in cache
+          if (modify_uses_affects_cache.find(cur_line) !=
+              modify_uses_affects_cache.end()) {
+            // use results in cache
+            // std::cout << "found " + cur_line + " in cache" << std::endl;
+            auto uses_cache = modify_uses_affects_cache.at(cur_line);
+            for (const auto &elem : uses_cache) {
+              auto var = getModifyVariableFromAssignLine(elem);
+              if (var) {
+                const std::pair<ModifyLine, Variable> call_line_var =
+                    std::pair<ModifyLine, Variable>(elem, (*var));
+                if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
+                  return false;
+                } else {
+                  call_ref_set->insert(call_line_var);
+                  is_affected =
+                      is_affected ||
+                      isLineAffectsLineTH(
+                  elem, target_line, (*var), elem, call_ref_set);
+                  if (is_affected) {
+                    return true;
+                  }
+                }
+              } else {
+                // only assignment statements should be in the cache
+                assert(false);
+              }
+            }
+            return is_affected;
           } else {
-            // std::cout << "making call to " + cur_line + " " + (*var_modified)
-            // << std::endl;
-            call_ref_set->insert(call_line_var);
-            is_affected = isLineAffectsLineTH(
-                cur_line, target_line, (*var_modified), cur_line, call_ref_set);
+            // check if call has already been made before
+            const std::pair<ModifyLine, Variable> call_line_var =
+                std::pair<ModifyLine, Variable>(cur_line, (*var_modified));
+            if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
+              // std::cout << "call has already been made" << std::endl;
+              return false;
+            } else {
+                call_ref_set->insert(call_line_var);
+                is_affected = isLineAffectsLineTH(
+                    cur_line, target_line, (*var_modified), cur_line, call_ref_set);
+            }
           }
+        } else {
+          // assignment statement should also be modifying a variable
+          assert(false);
         }
       }
     }

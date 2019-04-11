@@ -31,9 +31,6 @@ class PKBManager {
   void getPreviousLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
 
   // helper for affects
-  bool isLineAffectsLineH(const Line, const UsesLine, const Variable,
-                          const bool, const ModifyLine,
-                          std::shared_ptr<std::unordered_set<Line>>);
   bool isLineAffectsLineTH(
     const ModifyLine modify_line, const UsesLine target_line,
     std::shared_ptr<std::unordered_set<Line>> visited);

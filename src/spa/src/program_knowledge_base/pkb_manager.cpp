@@ -802,85 +802,31 @@ void PKBManager::getNextLineTH(
   }
 }
 
-// TODO
-// optimisations
-bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
-                                   const UsesLine uses_line) {
-  // check that a1 a2 belong to the same procedure
-  if (!isFromSameProcedure(modify_line, uses_line)) {
-    return false;
-  }
-  // check that a1 a2 are both assignment statements
-  if (!isAssignExists(modify_line) || !isAssignExists(modify_line)) {
-    return false;
-  }
-  // check what variable the modify_line modifies
-  auto var = getModifyVariableFromAssignLine(modify_line);
-  if (var) {
-    std::shared_ptr<std::unordered_set<Line>> visited =
-        std::make_shared<std::unordered_set<Line>>();
-    // do dfs starting from line
-    return isLineAffectsLineH(modify_line, uses_line, (*var), true, modify_line,
-                              visited);
-  } else {
-    return false;
-  }
-}
-
 // helper class for isLineAffectsLine DFS
-bool PKBManager::isLineAffectsLineH(
-    const Line cur_line, const UsesLine target_line, const Variable target_var,
-    const bool first_iteration, const ModifyLine source_line,
-    std::shared_ptr<std::unordered_set<Line>> visited) {
-  // check if line has been visited before
-  if (visited->find(cur_line) != visited->end()) {
-    // don't need to traverse further
-    return false;
-  } else if (!first_iteration) {
-    visited->insert(cur_line);
-  }
-  // still have to continue DFS even if var is not used on line
-  // since it is possible there is a different path where the line can be
-  // reached without being modified along the way
+bool PKBManager::isLineAffectsLine(
+    const ModifyLine modify_line, const UsesLine target_line) {
 
-  // check if modified
-  // ignore on first iteration since line can possibly be like
-  // x = x + 1
-  if (!first_iteration) {
-    auto var_used = getUsesVariableFromAssignLine(cur_line);
-    if (var_used) {
-      // at the target line
-      if ((*var_used).find(target_var) != (*var_used).end()) {
-        // if target variable is used
-        if (cur_line == target_line) {
-          return true;
-        }
-      }
+  // check if cache can be utilised
+  if (modify_uses_affects_cache.find(modify_line) != modify_uses_affects_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_cache.at(modify_line);
+    // check if target has been reached
+    if (uses_lines.find(target_line) != uses_lines.end()) {
+      return true;
     }
-
-    if (isLineAffectsVariable(cur_line, target_var)) {
-      // non-target line modifies variable
-      return false;
-    }
-  }
-
-  // get neighbours
-  auto neighbours = getNextLine(cur_line);
-  if (neighbours) {
-    for (const auto &neighbour : *neighbours) {
-      const bool is_affected = isLineAffectsLineH(neighbour, target_line, target_var,
-                                            false, source_line, visited);
-      if (is_affected) {
+  } else {
+    auto uses_lines = getAffectUsesLine(modify_line);
+    if (uses_lines) {
+      // check if target has been reached
+      if ((*uses_lines).find(target_line) != (*uses_lines).end()) {
         return true;
       }
     }
   }
-  // reached the end of DFS without encountering node that uses var
+  // end DFS without finding
   return false;
 }
 
-// TODO
-// optimisations
 bool PKBManager::isLineAffectsLineT(const ModifyLine modify_line,
                                     const UsesLine uses_line) {
   // check that a1 a2 belong to the same procedure

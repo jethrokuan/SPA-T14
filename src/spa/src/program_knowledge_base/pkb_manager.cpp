@@ -974,19 +974,17 @@ bool PKBManager::isLineAffectsLineTH(
             // use results in cache
             // std::cout << "found " + cur_line + " in cache" << std::endl;
             auto uses_cache = modify_uses_affects_cache.at(cur_line);
-            for (const auto &elem : uses_cache) {
-              auto var = getModifyVariableFromAssignLine(elem);
+            for (const auto &line : uses_cache) {
+              auto var = getModifyVariableFromAssignLine(line);
               if (var) {
                 const std::pair<ModifyLine, Variable> call_line_var =
-                    std::pair<ModifyLine, Variable>(elem, (*var));
+                    std::pair<ModifyLine, Variable>(line, (*var));
                 if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
                   return false;
                 } else {
                   call_ref_set->insert(call_line_var);
-                  is_affected =
-                      is_affected ||
-                      isLineAffectsLineTH(
-                  elem, target_line, (*var), elem, call_ref_set);
+                  is_affected = isLineAffectsLineTH(
+                  line, target_line, (*var), line, call_ref_set);
                   if (is_affected) {
                     return true;
                   }
@@ -1306,7 +1304,6 @@ std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineT(
         std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
         call_ref_set = std::make_shared<
             std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
-    call_ref_set->insert(std::pair<ModifyLine, Variable>(modify_line, (*var)));
     getAffectUsesLineTH(modify_line, (*var), modify_line, uses_set,
                         call_ref_set);
     if (uses_set->empty()) {
@@ -1343,11 +1340,13 @@ void PKBManager::getAffectUsesLineTH(
         call_ref_set) {
   // std::cout << "visiting " + cur_line << std::endl;
   if (visited->find(cur_line) != visited->end()) {
+    // std::cout << cur_line + " has already been seen before" << std::endl;
     // node has ben visited before
     // stop traversing down this path
     return;
   } else if (!first_iteration) {
     // add node to visited
+    // std::cout << "adding " + cur_line + " to visited list" << std::endl;
     visited->insert(cur_line);
   }
 
@@ -1358,7 +1357,7 @@ void PKBManager::getAffectUsesLineTH(
     auto var_used = getUsesVariableFromAssignLine(cur_line);
     if (var_used) {
       if ((*var_used).find(target_var) != (*var_used).end()) {
-        // std::cout << "uses target variable " + target_var << std::endl;
+        // std::cout << cur_line + " uses target variable " + target_var << std::endl;
         // uses target variable
         pkb_storage->addToSetMap(modify_uses_affects_cache, source_line,
                                  cur_line);
@@ -1366,15 +1365,46 @@ void PKBManager::getAffectUsesLineTH(
 
         auto var_modified = getModifyVariableFromAssignLine(cur_line);
         if (var_modified) {
-          // std::cout << "modifies variable " + (*var_modified) << std::endl;
-          std::pair<ModifyLine, Variable> call_line_var =
-              std::pair<ModifyLine, Variable>(cur_line, (*var_modified));
-
-          // check if call has already been made before
-          if (call_ref_set->find(call_line_var) == call_ref_set->end()) {
-            call_ref_set->insert(call_line_var);
-            getAffectUsesLineTH(cur_line, (*var_modified), cur_line, uses_set,
-                                call_ref_set);
+          if (modify_uses_affects_cache.find(cur_line) !=
+              modify_uses_affects_cache.end()) {
+            // use results in cache
+            // std::cout << "found " + cur_line + " in cache" << std::endl;
+            // std::cout << "CHECKING CACHE" << std::endl;
+            // printModifyUsesCache();
+            // std::cout << "END CHECKING CACHE" << std::endl;
+            auto uses_cache = modify_uses_affects_cache.at(cur_line);
+            for (const auto &line : uses_cache) {
+              // std::cout << "using " + line + " in cache" << std::endl;
+              auto var = getModifyVariableFromAssignLine(line);
+              if (var) {
+                // std::cout << line + " modifies " + (*var) << std::endl;
+                const std::pair<ModifyLine, Variable> call_line_var =
+                    std::pair<ModifyLine, Variable>(line, (*var_modified));
+                if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
+                  // return; // TODO check if this is necessary
+                } else {
+                  call_ref_set->insert(call_line_var);
+                  getAffectUsesLineTH(line, (*var_modified), false, line, visited, uses_set, call_ref_set);
+                }
+                // return; // TODO check if this is necessary
+              } else {
+                // only assignment statements should be in the cache
+                assert(false);
+              }
+            }
+            // return;
+          } else {
+            // check if call has already been made before
+            const std::pair<ModifyLine, Variable> call_line_var =
+                std::pair<ModifyLine, Variable>(cur_line, (*var_modified));
+            if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
+              // std::cout << "call has already been made" << std::endl;
+              // return; // TODO check if this is necessary
+            } else {
+              call_ref_set->insert(call_line_var);
+              getAffectUsesLineTH(
+                  cur_line, (*var_modified), cur_line, uses_set, call_ref_set);
+            }
           }
         } else {
           // only assignment statements can use a variable
@@ -1400,6 +1430,11 @@ void PKBManager::getAffectUsesLineTH(
       getAffectUsesLineTH(neighbour, target_var, false, source_line, visited,
                           uses_set, call_ref_set);
     }
+    // modify_cache_check.insert(cur_line);
+    // std::cout << "finished caching " + cur_line << std::endl;
+    // std::cout << "START" << std::endl;
+    // printModifyUsesCache();
+    // std::cout << "END" << std::endl;
   }
 }
 

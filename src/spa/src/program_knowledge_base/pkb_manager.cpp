@@ -891,151 +891,55 @@ bool PKBManager::isLineAffectsLineT(const ModifyLine modify_line,
   if (!isAssignExists(modify_line) || !isAssignExists(modify_line)) {
     return false;
   }
-  // check what variable the modify_line modifies
-  auto var = getModifyVariableFromAssignLine(modify_line);
-  if (var) {
-    // do dfs starting from line
-    // std::cout << "checking for " << std::endl;
-    // std::cout << "from " + modify_line + " to " + uses_line + " for " +
-    // (*var) << std::endl;
-    std::shared_ptr<
-        std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
-        call_ref_set = std::make_shared<
-            std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>();
-    return isLineAffectsLineTH(modify_line, uses_line, (*var), modify_line,
-                               call_ref_set);
-  } else {
-    // only modify_line is definitely an assignment statement at this point
-    // should definitely modify a variable
-    assert(false);
-    return false;
-  }
-}
-
-// helper class for isLineAffectsLine DFS
-bool PKBManager::isLineAffectsLineTH(
-    const Line cur_line, const UsesLine target_line, const Variable target_var,
-    const ModifyLine source_line,
-    std::shared_ptr<
-        std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
-        call_ref_set) {
-  // std::cout << "making new call" << std::endl;
-
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
-
-  return isLineAffectsLineTH(cur_line, target_line, target_var, true, source_line,
-                             visited, call_ref_set);
+  return isLineAffectsLineTH(modify_line, uses_line, visited);
 }
 
-// TODO break if modified by non assignment statement
 // helper class for isLineAffectsLine DFS
 bool PKBManager::isLineAffectsLineTH(
-    const Line cur_line, const UsesLine target_line, const Variable target_var,
-    const bool first_iteration, const ModifyLine source_line,
-    std::shared_ptr<std::unordered_set<Line>> visited,
-    std::shared_ptr<
-        std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
-        call_ref_set) {
-  // std::cout << "visiting " + cur_line << std::endl;
-  // check if line has been visited before
-  if (visited->find(cur_line) != visited->end()) {
-    // don't need to traverse further
+    const ModifyLine modify_line, const UsesLine target_line,
+    std::shared_ptr<std::unordered_set<Line>> visited) {
+  // check if visited
+  if (visited->find(modify_line) != visited->end()) {
     return false;
-  } else if (!first_iteration) {
-    // std::cout << "adding " + cur_line + " to visited list" << std::endl;
-    visited->insert(cur_line);
-  }
-  bool is_affected = false;
-
-  // check if modified
-  // ignore on first iteration since line can possibly be like
-  // x = x + 1
-  if (!first_iteration) {
-    auto var_used = getUsesVariableFromAssignLine(cur_line);
-    if (var_used) {
-      // check if it uses target variable
-      if ((*var_used).find(target_var) != (*var_used).end()) {
-        // std::cout << "uses target variable " + target_var << std::endl;
-        // if target variable is used
-        if (cur_line == target_line) {
-          // std::cout << "cur_line == target_line" << std::endl;
-          return true;
-        }
-
-        // check if it modifies any variables
-        auto var_modified = getModifyVariableFromAssignLine(cur_line);
-        if (var_modified) {
-          // std::cout << "modifies variable " + (*var_modified) << std::endl;
-          // if result is in cache
-          if (modify_uses_affects_cache.find(cur_line) !=
-              modify_uses_affects_cache.end()) {
-            // use results in cache
-            // std::cout << "found " + cur_line + " in cache" << std::endl;
-            auto uses_cache = modify_uses_affects_cache.at(cur_line);
-            for (const auto &line : uses_cache) {
-              auto var = getModifyVariableFromAssignLine(line);
-              if (var) {
-                const std::pair<ModifyLine, Variable> call_line_var =
-                    std::pair<ModifyLine, Variable>(line, (*var));
-                if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
-                  return false;
-                } else {
-                  call_ref_set->insert(call_line_var);
-                  is_affected = isLineAffectsLineTH(
-                  line, target_line, (*var), line, call_ref_set);
-                  if (is_affected) {
-                    return true;
-                  }
-                }
-              } else {
-                // only assignment statements should be in the cache
-                assert(false);
-              }
-            }
-            return is_affected;
-          } else {
-            // check if call has already been made before
-            const std::pair<ModifyLine, Variable> call_line_var =
-                std::pair<ModifyLine, Variable>(cur_line, (*var_modified));
-            if (call_ref_set->find(call_line_var) != call_ref_set->end()) {
-              // std::cout << "call has already been made" << std::endl;
-              return false;
-            } else {
-                call_ref_set->insert(call_line_var);
-                is_affected = isLineAffectsLineTH(
-                    cur_line, target_line, (*var_modified), cur_line, call_ref_set);
-            }
-          }
-        } else {
-          // assignment statement should also be modifying a variable
-          assert(false);
-        }
-      }
-    }
-    if (isLineAffectsVariable(cur_line, target_var)) {
-      // non-target line modifies variable
-      return is_affected;
-    }
+  } else {
+    visited->insert(modify_line);
   }
 
-  // get neighbours
-  auto neighbours = getNextLine(cur_line);
-  if (neighbours) {
-    for (const auto &neighbour : *neighbours) {
-      is_affected =
-          is_affected ||
-          isLineAffectsLineTH(neighbour, target_line, target_var, false,
-                              source_line, visited, call_ref_set);
-      if (is_affected) {
+  // check if cache can be utilised
+  if (modify_uses_affects_cache.find(modify_line) != modify_uses_affects_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_cache.at(modify_line);
+    // check if target has been reached
+    if (uses_lines.find(target_line) != uses_lines.end()) {
+      return true;
+    }
+    // check what each of those lines are modified by
+    for (const auto &line : uses_lines) {
+      const bool res = isLineAffectsLineTH(line, target_line, visited);
+      if (res) {
         return true;
       }
     }
-    return is_affected;
   } else {
-    // reached the end of DFS without encountering node that uses var
-    return false;
+    auto uses_lines = getAffectUsesLine(modify_line);
+    if (uses_lines) {
+      // check if target has been reached
+      if ((*uses_lines).find(target_line) != (*uses_lines).end()) {
+        return true;
+      }
+      // check what each of those lines are modified by
+      for (const auto &line : *uses_lines) {
+        const bool res = isLineAffectsLineTH(line, target_line, visited);
+        if (res) {
+          return true;
+        }
+      }
+    }
   }
+  // end DFS without finding
+  return false;
 }
 
 std::optional<std::unordered_set<ModifyLine>> PKBManager::getAffectModifiesLine(

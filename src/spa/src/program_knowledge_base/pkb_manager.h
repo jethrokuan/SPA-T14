@@ -35,16 +35,8 @@ class PKBManager {
                           const bool, const ModifyLine,
                           std::shared_ptr<std::unordered_set<Line>>);
   bool isLineAffectsLineTH(
-      const Line, const UsesLine, const Variable, const ModifyLine,
-      std::shared_ptr<
-          std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
-          call_ref_set);
-  bool isLineAffectsLineTH(
-      const Line, const UsesLine, const Variable, const bool, const ModifyLine,
-      std::shared_ptr<std::unordered_set<Line>>,
-      std::shared_ptr<
-          std::unordered_set<std::pair<ModifyLine, Variable>, pair_hash>>
-          call_ref_set);
+    const ModifyLine modify_line, const UsesLine target_line,
+    std::shared_ptr<std::unordered_set<Line>> visited);
   void getAffectModifiesLineH(
       const Line cur_line, const Variable target_var,
       const ModifyLine source_line,

@@ -95,14 +95,8 @@ class PKBManager {
   std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>
       modify_uses_affects_cache =
           std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>();
-  std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>
-      modify_uses_affects_t_cache =
-          std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>();
   std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>
       uses_modify_affects_cache =
-          std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>();
-  std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>
-      uses_modify_affects_t_cache =
           std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>();
 
  public:
@@ -275,6 +269,8 @@ class PKBManager {
   bool isLineAffectsVariable(const Line, const Variable);
   // cache to be cleared after every query line
   void clearCache();
+  void printModifyUsesCache();
+  void printUsesModifyCache();
 };
 
 }  // namespace PKB

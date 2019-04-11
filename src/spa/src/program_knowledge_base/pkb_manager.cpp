@@ -852,10 +852,6 @@ bool PKBManager::isLineAffectsLineH(
       // at the target line
       if ((*var_used).find(target_var) != (*var_used).end()) {
         // if target variable is used
-        pkb_storage->addToSetMap(modify_uses_affects_cache, source_line,
-                                 cur_line);
-        pkb_storage->addToSetMap(modify_uses_affects_t_cache, source_line,
-                                 cur_line);
         if (cur_line == target_line) {
           return true;
         }
@@ -870,18 +866,17 @@ bool PKBManager::isLineAffectsLineH(
 
   // get neighbours
   auto neighbours = getNextLine(cur_line);
-  bool is_affected = false;
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
-      is_affected =
-          is_affected || isLineAffectsLineH(neighbour, target_line, target_var,
+      const bool is_affected = isLineAffectsLineH(neighbour, target_line, target_var,
                                             false, source_line, visited);
+      if (is_affected) {
+        return true;
+      }
     }
-    return is_affected;
-  } else {
-    // reached the end of DFS without encountering node that uses var
-    return false;
   }
+  // reached the end of DFS without encountering node that uses var
+  return false;
 }
 
 // TODO
@@ -962,8 +957,6 @@ bool PKBManager::isLineAffectsLineTH(
     if (var_used) {
       // at the target line
       if ((*var_used).find(target_var) != (*var_used).end()) {
-        pkb_storage->addToSetMap(modify_uses_affects_t_cache, source_line,
-                                 cur_line);
         // std::cout << "uses target variable " + target_var << std::endl;
         // if target variable is used
         if (cur_line == target_line) {
@@ -1006,6 +999,9 @@ bool PKBManager::isLineAffectsLineTH(
           is_affected ||
           isLineAffectsLineTH(neighbour, target_line, target_var, false,
                               source_line, visited, call_ref_set);
+      if (is_affected) {
+        return true;
+      }
     }
     return is_affected;
   } else {
@@ -1069,8 +1065,6 @@ void PKBManager::getAffectModifiesLineH(
     if (isLineAffectsVariable(cur_line, target_var)) {
       if (isAssignExists(cur_line)) {
         pkb_storage->addToSetMap(uses_modify_affects_cache, source_line,
-                                 cur_line);
-        pkb_storage->addToSetMap(uses_modify_affects_t_cache, source_line,
                                  cur_line);
         modifies_set->insert(cur_line);
       }
@@ -1159,7 +1153,7 @@ void PKBManager::getAffectModifiesLineTH(
       // std::cout << "line " + cur_line + " modifies " + target_var <<
       // std::endl; if line is an assignment statement
       if (isAssignExists(cur_line)) {
-        pkb_storage->addToSetMap(uses_modify_affects_t_cache, source_line,
+        pkb_storage->addToSetMap(uses_modify_affects_cache, source_line,
                                  cur_line);
         modifies_set->insert(cur_line);
         auto var_used = getUsesVariableFromAssignLine(cur_line);
@@ -1248,8 +1242,6 @@ void PKBManager::getAffectUsesLineH(
       if ((*var_used).find(target_var) != (*var_used).end()) {
         pkb_storage->addToSetMap(modify_uses_affects_cache, source_line,
                                  cur_line);
-        pkb_storage->addToSetMap(modify_uses_affects_t_cache, source_line,
-                                 cur_line);
         uses_set->insert(cur_line);
       }
     }
@@ -1337,7 +1329,7 @@ void PKBManager::getAffectUsesLineTH(
       if ((*var_used).find(target_var) != (*var_used).end()) {
         // std::cout << "uses target variable " + target_var << std::endl;
         // uses target variable
-        pkb_storage->addToSetMap(modify_uses_affects_t_cache, source_line,
+        pkb_storage->addToSetMap(modify_uses_affects_cache, source_line,
                                  cur_line);
         uses_set->insert(cur_line);
 
@@ -1387,7 +1379,44 @@ PKBManager::getCFG() {
 
 void PKBManager::clearCache() {
   modify_uses_affects_cache.clear();
-  modify_uses_affects_t_cache.clear();
+  uses_modify_affects_cache.clear();
+}
+
+// TODO REMOVE THIS SHIT
+void PKBManager::printModifyUsesCache() {
+  bool x = true;
+  for (const auto k : pkb_storage->assign_set) {
+    if (modify_uses_affects_cache.find(k) != modify_uses_affects_cache.end()) {
+      std::cout << "=" + k + "=" << std::endl;
+      x = false;
+      auto s = modify_uses_affects_cache.at(k);
+      for (const auto e : s) {
+        std::cout << e + " ";
+      }
+      std::cout << "\n";
+    }
+  }
+  if (x) {
+    std::cout << "cache is empty" << std::endl;
+  }
+}
+
+void PKBManager::printUsesModifyCache() {
+  bool x = true;
+  for (const auto k : pkb_storage->assign_set) {
+    if (uses_modify_affects_cache.find(k) != uses_modify_affects_cache.end()) {
+      std::cout << "=" + k + "=" << std::endl;
+      x = false;
+      auto s = uses_modify_affects_cache.at(k);
+      for (const auto e : s) {
+        std::cout << e + " ";
+      }
+      std::cout << "\n";
+    }
+  }
+  if (x) {
+    std::cout << "cache is empty" << std::endl;
+  }
 }
 
 }  // namespace PKB

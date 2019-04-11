@@ -248,8 +248,6 @@ class PKBManager {
   bool isLineAffectsVariable(const Line, const Variable);
   // cache to be cleared after every query line
   void clearCache();
-  void printModifyUsesCache();
-  void printUsesModifyCache();
 };
 
 }  // namespace PKB

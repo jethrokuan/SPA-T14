@@ -1133,15 +1133,28 @@ void PKBManager::getAffectModifiesLineTH(const UsesLine uses_line,
   } else {
     visited->insert(uses_line);
   }
-  auto modify_lines = getAffectModifiesLine(uses_line);
-  if (modify_lines) {
+  if (uses_modify_affects_cache.find(uses_line) != uses_modify_affects_cache.end()) {
+    // take from cache
+    auto modify_lines = uses_modify_affects_cache.at(uses_line);
     // push each modify line onto the set
-    for (const auto &line : *modify_lines) {
+    for (const auto &line : modify_lines) {
       modifies_set->insert(line);
     }
     // check what each of those lines are modified by
-    for (const auto &line : *modify_lines) {
+    for (const auto &line : modify_lines) {
       getAffectModifiesLineTH(line, modifies_set, visited);
+    }
+  } else {
+    auto modify_lines = getAffectModifiesLine(uses_line);
+    if (modify_lines) {
+      // push each modify line onto the set
+      for (const auto &line : *modify_lines) {
+        modifies_set->insert(line);
+      }
+      // check what each of those lines are modified by
+      for (const auto &line : *modify_lines) {
+        getAffectModifiesLineTH(line, modifies_set, visited);
+      }
     }
   }
 }
@@ -1242,15 +1255,28 @@ void PKBManager::getAffectUsesLineTH(const ModifyLine modify_line,
   } else {
     visited->insert(modify_line);
   }
-  auto uses_lines = getAffectUsesLine(modify_line);
-  if (uses_lines) {
+  if (modify_uses_affects_cache.find(modify_line) != modify_uses_affects_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_cache.at(modify_line);
     // push each modify line onto the set
-    for (const auto &line : *uses_lines) {
+    for (const auto &line : uses_lines) {
       uses_set->insert(line);
     }
     // check what each of those lines are modified by
-    for (const auto &line : *uses_lines) {
+    for (const auto &line : uses_lines) {
       getAffectUsesLineTH(line, uses_set, visited);
+    }
+  } else {
+    auto uses_lines = getAffectUsesLine(modify_line);
+    if (uses_lines) {
+      // push each modify line onto the set
+      for (const auto &line : *uses_lines) {
+        uses_set->insert(line);
+      }
+      // check what each of those lines are modified by
+      for (const auto &line : *uses_lines) {
+        getAffectUsesLineTH(line, uses_set, visited);
+      }
     }
   }
 }
@@ -1263,43 +1289,6 @@ PKBManager::getCFG() {
 void PKBManager::clearCache() {
   modify_uses_affects_cache.clear();
   uses_modify_affects_cache.clear();
-}
-
-// TODO REMOVE THIS SHIT
-void PKBManager::printModifyUsesCache() {
-  bool x = true;
-  for (const auto k : pkb_storage->assign_set) {
-    if (modify_uses_affects_cache.find(k) != modify_uses_affects_cache.end()) {
-      std::cout << "=" + k + "=" << std::endl;
-      x = false;
-      auto s = modify_uses_affects_cache.at(k);
-      for (const auto e : s) {
-        std::cout << e + " ";
-      }
-      std::cout << "\n";
-    }
-  }
-  if (x) {
-    std::cout << "cache is empty" << std::endl;
-  }
-}
-
-void PKBManager::printUsesModifyCache() {
-  bool x = true;
-  for (const auto k : pkb_storage->assign_set) {
-    if (uses_modify_affects_cache.find(k) != uses_modify_affects_cache.end()) {
-      std::cout << "=" + k + "=" << std::endl;
-      x = false;
-      auto s = uses_modify_affects_cache.at(k);
-      for (const auto e : s) {
-        std::cout << e + " ";
-      }
-      std::cout << "\n";
-    }
-  }
-  if (x) {
-    std::cout << "cache is empty" << std::endl;
-  }
 }
 
 }  // namespace PKB

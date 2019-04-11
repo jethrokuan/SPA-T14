@@ -281,6 +281,24 @@ TEST_CASE ("Test RelCond clause") {
                                                  Synonym("p"), Synonym("p1"),
                                                  query.declarations));
     }
+
+    SECTION ("SUCCESS: AffectsP*") {
+      std::string input = "assign a, a1; Select a such that AffectsP*(a, a1)";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.rel_conds->size() == 1);
+      REQUIRE(*query.rel_conds->at(0) == RelCond(Relation::AffectsPT,
+                                                 Synonym("a"), Synonym("a1"),
+                                                 query.declarations));
+    }
+
+    SECTION ("SUCCESS: AffectsP") {
+      std::string input = "assign a, a1; Select a such that AffectsP(a, a1)";
+      auto query = qe.makePqlQuery(input);
+      REQUIRE(query.rel_conds->size() == 1);
+      REQUIRE(*query.rel_conds->at(0) == RelCond(Relation::AffectsP,
+                                                 Synonym("a"), Synonym("a1"),
+                                                 query.declarations));
+    }
   }
 
   SECTION ("Multiple Relconds") {

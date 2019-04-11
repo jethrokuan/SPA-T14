@@ -27,6 +27,10 @@ enum class Relation {
   NextT,
   Affects,
   AffectsT,
+  NextP,
+  NextPT,
+  AffectsP,
+  AffectsPT
 };
 Relation getRelation(std::string&);
 std::string getStringFromRelation(Relation);

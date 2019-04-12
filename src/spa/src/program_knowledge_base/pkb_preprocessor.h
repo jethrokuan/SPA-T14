@@ -8,6 +8,8 @@ namespace PKB {
 class PKBPreprocessor {
  private:
   std::shared_ptr<PKBStorage> storage;
+  std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache =
+      std::make_shared<std::unordered_map<Line, std::unordered_set<Line>>>();
 
   void setLineNumbers(const std::shared_ptr<RootNode> node);
   void setLineNumbers(const std::shared_ptr<ProcedureNode> node);
@@ -17,20 +19,56 @@ class PKBPreprocessor {
 
   void setCFG(const std::shared_ptr<RootNode> node);
   void setCFG(const std::shared_ptr<ProcedureNode> node);
-  void setCFG(const std::shared_ptr<IfNode> node,
-              std::shared_ptr<std::vector<Line>> terminating_lines);
-  void setCFG(const std::shared_ptr<WhileNode> node,
-              std::shared_ptr<std::vector<Line>> terminating_lines);
-  void setCFG(const std::shared_ptr<ReadNode>,
-              std::shared_ptr<std::vector<Line>> terminating_lines);
-  void setCFG(const std::shared_ptr<PrintNode>,
-              std::shared_ptr<std::vector<Line>> terminating_lines);
-  void setCFG(const std::shared_ptr<AssignNode>,
-              std::shared_ptr<std::vector<Line>> terminating_lines);
-  void setCFG(const std::shared_ptr<CallNode>,
-              std::shared_ptr<std::vector<Line>> terminating_lines);
-  void setCFGIterator(const std::vector<StmtNode> stmt_lst,
-                      std::shared_ptr<std::vector<Line>> terminating_lines);
+  void setCFG(
+      const std::shared_ptr<IfNode> node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>
+          cache);
+  void setCFG(
+      const std::shared_ptr<WhileNode> node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>
+          cache);
+  void setCFG(
+      const std::shared_ptr<ReadNode>,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>
+          cache);
+  void setCFG(
+      const std::shared_ptr<PrintNode>,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>
+          cache);
+  void setCFG(
+      const std::shared_ptr<AssignNode>,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>
+          cache);
+  void setCFG(
+      const std::shared_ptr<CallNode>,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>
+          cache);
+  void setCFGIterator(
+      const std::vector<StmtNode> stmt_lst,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>
+          cache);
+
+  std::unordered_set<Line> getTerminatingLines(
+      const StmtNode node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>);
+  std::unordered_set<Line> getTerminatingLines(
+      const std::shared_ptr<IfNode> node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>);
+  std::unordered_set<Line> getTerminatingLines(
+      const std::shared_ptr<WhileNode> node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>);
+  std::unordered_set<Line> getTerminatingLines(
+      const std::shared_ptr<ReadNode> node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>);
+  std::unordered_set<Line> getTerminatingLines(
+      const std::shared_ptr<PrintNode> node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>);
+  std::unordered_set<Line> getTerminatingLines(
+      const std::shared_ptr<AssignNode> node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>);
+  std::unordered_set<Line> getTerminatingLines(
+      const std::shared_ptr<CallNode> node,
+      std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>);
 
   void setDesignEntities(const std::shared_ptr<RootNode> node);
   void setDesignEntitiesProcListIterator(

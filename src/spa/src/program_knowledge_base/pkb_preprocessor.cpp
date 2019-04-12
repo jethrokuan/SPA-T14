@@ -88,6 +88,10 @@ void PKBPreprocessor::setCFG(
   std::cout << "setCFG WhileNode" << std::endl;
   const ParentLine parent_line = storage->getLineFromNode(node);
   const ChildLine child_line = storage->getLineFromNode(node->StmtList.front());
+  auto terminating = getTerminatingLines(node->StmtList.back(), cache);
+  for (const auto &line : terminating) {
+    storage->storeCFGEdge(line, parent_line);
+  }
   storage->storeCFGEdge(parent_line, child_line);
   setCFGIterator(node->StmtList, cache);
 }
@@ -113,12 +117,14 @@ void PKBPreprocessor::setCFGIterator(
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
   std::cout << "Iterator" << std::endl;
 
+  for (const auto &stmt : stmt_lst) {
+    std::visit([this, cache](const auto &s) { setCFG(s, cache); }, stmt);
+  }
+
   // iterate through statement nodes
-  for (std::size_t i = 0; i < stmt_lst.size() - 2; i++) {
+  for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
     // compare 2 nodes at once i and i + 1
-    auto terminating = std::visit(
-        [this, cache](const auto &n) { return getTerminatingLines(n, cache); },
-        stmt_lst[i]);
+    auto terminating = getTerminatingLines(stmt_lst[i], cache);
     const Line cur_line = storage->getLineFromNode(stmt_lst[i + 1]);
 
     for (const auto &line : terminating) {
@@ -163,13 +169,12 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
     // cache hit
     return cache->at(cur_line);
   }
-  // get the last node in its statement list
-  auto last_item = node->StmtList.back();
-  auto terminating = getTerminatingLines(last_item, cache);
-  // store in cache
-  cache->emplace(cur_line, terminating);
 
-  return terminating;
+  std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
+  cache->emplace(cur_line, terminating_lines);
+
+  return terminating_lines;
 }
 
 std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
@@ -183,6 +188,7 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
   }
   // store in cache
   std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
   cache->emplace(cur_line, terminating_lines);
   return terminating_lines;
 }
@@ -198,6 +204,7 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
   }
   // store in cache
   std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
   cache->emplace(cur_line, terminating_lines);
   return terminating_lines;
 }
@@ -213,6 +220,7 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
   }
   // store in cache
   std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
   cache->emplace(cur_line, terminating_lines);
   return terminating_lines;
 }
@@ -228,6 +236,7 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
   }
   // store in cache
   std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
   cache->emplace(cur_line, terminating_lines);
   return terminating_lines;
 }

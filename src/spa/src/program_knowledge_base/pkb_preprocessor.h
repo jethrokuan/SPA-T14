@@ -8,8 +8,6 @@ namespace PKB {
 class PKBPreprocessor {
  private:
   std::shared_ptr<PKBStorage> storage;
-  std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache =
-      std::make_shared<std::unordered_map<Line, std::unordered_set<Line>>>();
 
   void setLineNumbers(const std::shared_ptr<RootNode> node);
   void setLineNumbers(const std::shared_ptr<ProcedureNode> node);

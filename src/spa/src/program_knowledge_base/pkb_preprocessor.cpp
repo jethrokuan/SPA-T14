@@ -63,6 +63,8 @@ void PKBPreprocessor::setCFG(const std::shared_ptr<RootNode> node) {
 }
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<ProcedureNode> node) {
+  std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache =
+      std::make_shared<std::unordered_map<Line, std::unordered_set<Line>>>();
   setCFGIterator(node->StmtList, cache);
 }
 
@@ -113,7 +115,6 @@ void PKBPreprocessor::setCFG(
 void PKBPreprocessor::setCFGIterator(
     const std::vector<StmtNode> stmt_lst,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-
   for (const auto &stmt : stmt_lst) {
     std::visit([this, cache](const auto &s) { setCFG(s, cache); }, stmt);
   }

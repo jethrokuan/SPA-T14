@@ -1,0 +1,46 @@
+procedure main {
+	read x;
+	read y;
+	read z;
+
+	call loops;
+}
+
+procedure loops {
+	if(x < 100) then {
+		y = y + 1;
+		x = x + 1;
+	} else {
+		while (x > 100) {
+			z = z + 1;
+			call addABC;
+			x = x - 1;
+		}
+	}
+
+	call handlePrint;
+}
+
+procedure addABC {
+	a = a + 1;
+	b = a + b;
+	c = a + b + c;
+
+	if((a>1) && (a<20)) then {
+		b = a + 10;
+		c = a + 20;
+	} else {
+		b = a + 5;
+		c = b + 5;
+	}
+}
+
+procedure handlePrint {
+	print x;
+	print y;
+	print z;
+
+	print a;
+	print b;
+	print c;
+}

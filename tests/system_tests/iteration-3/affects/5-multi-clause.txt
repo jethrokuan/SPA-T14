@@ -10,8 +10,8 @@ Select <a1,a2> such that Affects(a1,a2)
 5000
 3 - 3 clauses, common synonym a, return TUPLE
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;
-Select <a, v> such that Affects(a1, a) and Affects(a, a2)
-10 c, 10 d, 10 e, 10 f, 10 g
+Select <a, v> such that Affects(a1, a) and Affects(a, a2) and Uses(a, v)
+10 c, 10 d, 10 e, 10 f, 10 g, 11 h
 5000
 4 - 6 clauses, common synonym a, return TUPLE
 assign a, a1, a2; constant c, c1, c2; prog_line n, n1, n2; procedure p, p1, p2; stmt s, s1, s2; read r, r1,r2; print pn, pn1,pn2; variable v,v1,v2; while w,w1,w2; if i,i1,i2; call cl, cl1,cl2;

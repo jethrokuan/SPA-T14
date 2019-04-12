@@ -169,10 +169,13 @@ bool ConstraintTable::joinWithTableBy(const string& var_to_join,
 
   // ** Important -> table is REPLACED with the one with just constructed
   table = out_table;
-
+  size_t base_t2_column_idx = next_column_idx;
   // Update column names from joined table
   for (auto [name, idx] : other_table.name_column_map) {
-    if (name != var_to_join) addNewColumnName(name);
+    if (name != var_to_join) {
+      name_column_map[name] = idx + base_t2_column_idx;
+      next_column_idx++;  // to be consistent with its purpose
+    }
   }
 
   // If size is 0 - no results

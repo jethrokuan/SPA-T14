@@ -204,6 +204,12 @@ class PKBStorage {
   Procedure getProcedureFromLine(const Line);
   Line getLineFromNode(const StmtNode node);
   std::optional<std::shared_ptr<Node>> getNodeFromLine(const Line line);
+
+  // extension
+  // next over procedures
+  void storeProcFirstLine(const Procedure, const Line);
+  Line getProcFirstLine(const Procedure);
+  std::unordered_map<Procedure, Line> proc_first_line_map;
 };
 
 }  // namespace PKB

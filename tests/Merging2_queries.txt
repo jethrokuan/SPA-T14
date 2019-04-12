@@ -1,0 +1,100 @@
+1 - Find statements with the same value as a constant and are not the last statement in a loop or procedure
+stmt s,s1; constant c;
+Select s such that Next*(s,s1) and Next(s,s1) and Follows(s,s1) and Follows*(s,s1) with s.stmt# = c.value
+1,2,3,50
+5000
+2 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs; variable v; procedure p,p1; call c; print pn, pn1; read r,r1;
+Select <s,pn> such that Next*(a, s) pattern a(_,_"b        *c"_) such that Next*(s,s) and Parent*(s1,r) with r.varName = p.procName such that Follows*(s,r)
+52 30,52 39,52 61,52 77,52 84
+5000
+3 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs; variable v; procedure p,p1; call c; print pn, pn1; read r,r1;
+Select <s,pn> such that Next*(a, s) pattern a(_,_"b        *c"_) such that Next*(s,s) and Parent*(s1,r) with r.varName = p.procName such that Follows*(s,r) with pn.varName = r.varName
+52 39,52 61,52 77,52 84
+5000
+4 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs; variable v; procedure p,p1; call c; print pn, pn1; read r,r1;
+Select s such that Parent(ifs,c) and Parent(ifs,s) and Uses(p,v )    with  c.procName = p.procName and p.procName = v.varName
+18,19,36,37,38,43,44,59,60,61
+5000
+5 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs; variable v; procedure p,p1; call c; print pn, pn1; read r,r1;
+Select <s,a> such that Affects(s,a) and Affects(a,s) and Parent(s1,s) and Parent(s1,a)
+26 26,73 74,74 73,8 8
+5000
+6 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1;
+Select <s,a> such that Affects(s,a) and Parent(ifs, s) and Parent(ifs1,a)
+13 16,14 16,5 9,8 5,8 8,88 86,88 87,9 5,9 8
+5000
+7 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1;
+Select <s, p> such that Next*(s, a) with a.stmt# = const.value pattern a(v,_) with v.varName = p.procName
+1 a,1 b,1 c,10 a,10 b,10 c,12 b,2 a,2 b,2 c,3 a,3 b,3 c,4 a,4 b,4 c,45 b,46 b,47 b,48 b,49 b,5 a,5 b,5 c,50 b,51 b,52 b,53 b,54 b,6 a,6 b,6 c,7 a,7 b,7 c,8 a,8 b,8 c,9 a,9 b,9 c
+5000
+8 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1; prog_line n;
+Select <n, c.procName, v> such that Affects*     (_,n) and Next*(n,_) and Follows*(a,c) with n = a.stmt# and v.varName = p.procName pattern a    (v,_) 
+23 test a,24 test b,25 test c,55 c c
+5000
+9 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1; prog_line n;
+Select<s       ,  pn.varName> such that Parent*(s, pn) and Next*(pn,a1) and Next*(a,pn) and Affects(a,a1) with s.stmt# = w.stmt# pattern w(_,_)
+80 a,81 a,82 a,83 a
+5000
+10 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1; prog_line n;
+Select<ifs, n> such that Parent*(s, ifs) pattern ifs("b",_,_) with "b" = "b" such that Affects*(n,n) and Uses(n,v) and Modifies(n,v)
+17 26,17 3,17 73,17 74,17 8,7 26,7 3,7 73,7 74,7 8,85 26,85 3,85 73,85 74,85 8
+5000
+11 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1; prog_line n;
+Select<a> such that Affects*(a,5) and Affects*(a1,a2) and Uses(a1, v) and Modifies(a,v) with a.stmt# = a1.stmt#
+1,3,8
+5000
+12 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1; prog_line n;
+Select <const, c.procName> such that Next*(c,_) and Affects*(a,a1) and Affects(a1, a2) and Next*(a2, c) pattern ifs(v,_,_) and w(v,_) with ifs.stmt# = const.value
+12 test
+5000
+13 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1; prog_line n;
+Select s such that Uses(s,v) pattern w(v,_) and ifs(v,_,_) such that Affects(a,s) with v.varName = c.procName
+10,11,16,23,24,26,3,40,41,48,50,54,55,63,65,67,69,71,73,86,87,9
+5000
+14 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1; call c; print pn, pn1; read r,r1; prog_line n;
+Select <p,p1> such that Calls(p,p1) and Uses(p,v) and Modifies(p,v) pattern ifs(v,_,_) with p.procName = v.varName
+b test,c a,c test
+5000
+15 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1,p2; call c; print pn, pn1; read r,r1; prog_line n;
+Select <p,p1,pn> such that Calls*(p,p1) and Calls(p1,p2) and Uses(p,v) and Modifies(p2,v) with p.procName = v.varName and p2.procName = c.procName and p.procName = pn.varName
+c test 30
+5000
+16 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1,p2; call c; print pn, pn1; read r,r1; prog_line n;
+Select <const, p, a, v> such that Modifies(a,v) pattern a(_,_"b * c"_) with c.stmt# = const.value and p1.procName = c.procName such that Calls*(p,p1)
+100 i 11 a,100 i 45 e,100 j 11 a,100 j 45 e
+5000
+17 - 
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1,p2; call c; print pn, pn1; read r,r1; prog_line n;
+Select <s,s1> such that Affects*(s,s1) and Next(w,s) and Next*(s,r) and Parent*(w,s) with s1.stmt# = a.stmt# and r.varName = p.procName
+23 25,23 26,50 48,50 54,50 55,52 48,52 50,52 54,52 55
+5000
+18 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1,p2; call c; print pn, pn1; read r,r1; prog_line n;
+Select <a,n> such that Next*(n,a) and Affects(a,a1) and Affects(a1,n) pattern a(v,_"b"_) and ifs(v,_,_) and w(v,_)
+23 25,23 26,3 10,3 3,3 9,5 3,5 5,5 8,73 73,74 74
+5000
+19 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1,p2; call c; print pn, pn1; read r,r1; prog_line n;
+Select c such that Next*(a,c) and Modifies(a,v) pattern w(v,_) with c.procName = v.varName such that Parent*(s,c) and Parent(s,a1) pattern a1(_,_)
+38
+5000
+20 -
+stmt s,s1; constant const; assign a,a1,a2; while w; if ifs, ifs1; variable v; procedure p,p1,p2; call c; print pn, pn1; read r,r1; prog_line n;
+Select <a,v> such that Modifies(s,v) and Next(a,s) pattern w(v,_) and ifs(v,_,_) such that Parent(s,_) and Affects(a,_)
+1 b,1 c,10 b,10 c,13 a,13 b,13 c,14 a,14 b,14 c,3 b,3 c,32 a,32 b,32 c,34 a,45 a,45 b,45 c,48 a,48 b,48 c,50 a,50 c,54 a,54 b,54 c,71 b,74 b
+5000

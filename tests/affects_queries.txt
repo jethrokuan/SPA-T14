@@ -1,0 +1,160 @@
+1 - affects stmt stmt
+constant c;
+Select c.value such that Affects(1,2)
+none
+5000
+2 - affects stmt stmt
+constant c;
+Select c.value such that Affects(5,10)
+1,3,5
+5000
+3 - affects stmt _
+
+Select BOOLEAN such that Affects(8,_)
+TRUE
+5000
+4 - affects _ stmt
+call c;
+Select <c, c.procName, c.stmt#> such that Affects(_,8)
+15 a 15, 20 test 20
+5000
+5 - affects _ _
+procedure p; constant c;
+Select <p, c> such that Affects(_,_)
+a 1, a 3, a 5, test 1, test 3, test 5, b 1, b 3, b 5
+5000
+6 - affects syn _
+stmt s;
+Select s such that Affects(s,_)
+1,3,5,8,9,10,19
+5000
+7 - affects syn stmt
+assign a;
+Select BOOLEAN such that Affects(a,7)
+FALSE
+5000
+8 - affects syn stmt
+prog_line n;
+Select n such that Affects(n,10)
+5
+5000
+9 - affects _ syn
+prog_line n;
+Select n such that Affects(_,n)
+3,5,8,9,10,11,24
+5000
+10 - affects stmt syn
+assign a;
+Select <a,a,a.stmt#> such that Affects(1,a)
+3 3 3, 11 11 11
+5000
+11 - affects syn syn
+stmt s; assign a;
+Select <a,s> such that Affects(a,s)
+1 3, 1 11, 3 5, 5 3, 5 9, 5 10, 5 11, 8 3, 8 5, 8 8, 8 11, 9 3, 9 5, 9 8, 9 11, 10 3, 10 11, 19 24
+5000
+12 - affects wrong syn
+read r; assign a;
+Select BOOLEAN such that Affects(r,a)
+FALSE
+5000
+13 - affects same syn
+stmt s;
+Select <s,s,s> such that Affects(s,s)
+8 8 8
+5000
+14 - affects* stmt stmt
+constant c;
+Select c.value such that Affects*(16,21)
+none
+5000
+15 - affects* stmt stmt
+constant c;
+Select c.value such that Affects*(9,9)
+1,3,5
+5000
+16 - affects* stmt _
+
+Select BOOLEAN such that Affects*(1,_)
+TRUE
+5000
+17 - affects* _ stmt
+procedure p;
+Select <p.procName> such that Affects*(_,10)
+a, test, b
+5000
+18 - affects* _ _
+variable v;
+Select <v.varName> such that Affects*(_,_)
+a, b, c, d, e
+5000
+19 - affects* syn _
+assign a;
+Select a such that Affects*(a,_)
+1,3,5,8,9,10,19
+5000
+20 - affects* syn stmt
+assign a;
+Select BOOLEAN such that Affects*(a,7)
+FALSE
+5000
+21 - affects* syn stmt
+assign a;
+Select a such that Affects*(a,11)
+1,3,5,8,9,10
+5000
+22 - affects* _ syn
+assign a; procedure p;
+Select a such that Affects*(_,a)
+3,5,8,9,10,11,24
+5000
+23 - affects* stmt syn
+stmt s;
+Select s.stmt# such that Affects*(9,s)
+3,5,8,9,10,11
+5000
+24 - affects* syn syn
+stmt s; assign a;
+Select <a, s> such that Affects*(a,s)
+1 3, 1 5, 1 8, 1 9, 1 10, 1 11, 3 3, 3 5, 3 8, 3 9, 3 10, 3 11, 5 3, 5 5, 5 8, 5 9, 5 10, 5 11, 8 3, 8 5, 8 8, 8 9, 8 10, 8 11, 9 3, 9 5, 9 8, 9 9, 9 10, 9 11, 10 3, 10 5, 10 8, 10 9, 10 10, 10 11, 19 24
+5000
+25 - affects* same syn
+stmt s; assign a;
+Select <a,a,a.stmt#> such that Affects*(a,a)
+3 3 3, 5 5 5, 8 8 8, 9 9 9, 10 10 10
+5000
+26 - assign partial wrong subtree
+assign a;
+Select a pattern a(_, _"      a +      b"_)
+1, 3
+5000
+27 - next* same syn
+if ifs;
+Select ifs such that Next*(ifs, ifs)
+4,7
+5000
+28 - next* same syn
+while w;
+Select w such that Next*(w, w)
+2
+5000
+29 - next* same syn
+stmt s;
+Select s such that Next*(s, s)
+2,3,4,5,6,7,8,9,10
+5000
+30 - affects* multiple
+stmt s; assign a;
+Select s such that Affects*(s, a) and Affects(a,s)
+3,5,8,9,10
+5000
+31 - mix
+stmt s; assign a;
+Select s such that Affects*(s, a) with a.stmt# = a.stmt# and a.stmt# = 3
+1,3,5,8,9,10
+5000
+32 - mix
+stmt s; assign a; print p;
+Select s such that Affects*(s, a) with p.stmt# = p.stmt# and a.stmt# = 3
+none
+5000

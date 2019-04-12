@@ -1,0 +1,60 @@
+procedure a {
+	call b;
+}
+
+procedure b {
+	if (1 == 5) then {
+		call d;
+	} else {
+		call e;
+	}
+	call c;
+}
+
+procedure c {
+	if ((!(((d <= e) || (10 % b3nd == 20 / 10)) && (a != d))) || (3 >= 5)) then {
+		a = 5;
+	} else {
+		read b;
+	}
+	call d;
+	call f;
+	c = (a * b / 15) % 18;
+}
+
+procedure d {
+  while (d == e) {
+		call f;
+		x = 20;
+		call e;
+	}
+	a = 6 * d;
+	e = 13;
+}
+
+procedure e {
+	call f;
+	print e;
+	call g;
+	read x;
+	call f;
+}
+
+procedure f {
+	d = c + b;
+	c = x % a / d; 
+	e = 2;
+	g = 26 / e;
+	h = c + d;
+	while (a != 0) {
+		c = c + 1;
+		a = b + d + g + a;
+		d = c + e;
+		c = d;
+	}
+}
+
+procedure g {
+	print x;
+	c = 45;
+}

@@ -1,0 +1,41 @@
+procedure a {
+	a = a + b;
+	while (a < b) {
+		b = a + b + c * d;
+		if (3 == 3) then {
+			c = b + d;
+		} else {
+			b = 1;
+		}
+		if (a > b) then {
+			d = d + 5;
+		} else {
+			d = c;
+		}
+		b = c;
+	}
+	a = a + b * c + d
+}
+
+procedure test {
+	if (b < 1) then {
+		b = b;
+	} else {
+		b = 1;
+	}
+	call a;
+}
+
+procedure b {
+	a = 1;
+	b = 1;
+	c = 1;
+	e = 1;
+	call test;
+	a = a;
+	b = b;
+	c = c;
+	e = e;
+	read e;
+	e = e;
+}

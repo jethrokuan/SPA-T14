@@ -1,0 +1,147 @@
+procedure a {
+	a = a + b;
+	while (a < b) {
+		b = a + b + c * d;
+		if (3 == 3) then {
+			c = b + d;
+		} else {
+			b = 1;
+		}
+		if (a > b) then {
+			d = d + 5;
+		} else {
+			d = c;
+		}
+		b = c;
+	}
+	a = a + b * c + d;
+}
+
+procedure test {
+	if (b < 1) then {
+		b = b;
+	} else {
+		b = 1;
+	}
+	if (b < 1) then {
+		d = 1 + c + 2 * b * c;
+		if (b < 1) then {
+			call a;
+		} else {
+			b = a;
+		}
+	} else {
+		while (a > 1) {
+			b = d;
+		}
+	}
+}
+
+procedure b {
+	while (1 == 1) {
+		a = b + c;
+		b = c + d;
+		c = d + e;
+		e = e + a;
+		call test;
+		a = a;
+		c = c;
+		print c;
+		read c;
+		c = c;
+	}
+}
+
+procedure c {
+	while (a == 13) {
+		a = (b - c) / 2 + d;
+	}
+	if (c >= 9) then {
+		b = c;
+	} else {
+		c = b;
+		call a;
+	}
+	print a;
+	d = a + c;
+	a = b - c / 2 + b;
+	if ((a == 11) && (b > 12)) then {
+		call test;
+	} else {
+		call a;
+	}
+}
+
+procedure f {
+	e = 1 + d + b * c;
+	while (p < c) {
+		read e;
+		a = b + c;
+		while (c < 1) {
+			b = c;
+			while (d < 1) {
+				c = d;
+				read a;
+			}
+		}
+		a = a + 1;
+	}
+	c = a + b + c + d + e;
+	call c;
+}
+
+procedure g          {
+	a = ab * c;
+	if (b == 1) then {
+		read a;
+	} else {
+		call a;
+		print a;
+	}
+	a = b;
+	b = a;
+	a = b;
+	b = a;
+	a = b;
+	b = a;
+	a = b;
+	b = a;
+	a = b;
+	b = a;
+	while (a > 0) {
+		b = b * (c - 1);
+		b = b - 1;
+	}
+}
+
+procedure  	     h {
+	while (x > 1) {
+		if (!(a < 1)) then {
+			print a; } else {
+			while (b1 == 2) {
+				a = (b + b) * b;} } }
+	while (c != d) {
+		while (d == 1) {
+			while (a == 1) {
+				while (b == 1) {
+					print a; }
+				if (a == b) then {
+					a = c;} else {
+					b = c;
+					c = d;
+					a = d;}}}}}
+
+procedure                       i                    {
+	while (100 == 2) {
+		if (1 == 50) then {
+			call j;	} else {
+			call h;} } }
+
+procedure j {
+	if (b == b) then {
+		read a;
+		call h; } else {
+		read b;
+		if (c == c) then {
+			read a; } else {
+			call h;}}}

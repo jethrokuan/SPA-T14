@@ -1,0 +1,27 @@
+procedure a {
+	while (x > 1) {
+		if (!(a < 1)) then {
+			print a; } else {
+			while (b1 == 2) {
+				a = (b + b) * b;} } }
+	while (c != d) {
+		while (d == 1) {
+			while (a == 1) {
+				while (b == 1) {
+					print a; }
+				if (a == b) then {
+					a = c;} else {
+					a = d;}}}}}
+procedure b {
+	while (100 == 2) {
+		if (1 == 50) then {
+			call c;	} else {
+			call a;} } }
+procedure c {
+	if (b == b) then {
+		read a;
+		call a; } else {
+		read b;
+		if (c == c) then {
+			read a; } else {
+			call a;}}}

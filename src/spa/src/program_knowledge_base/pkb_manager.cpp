@@ -832,7 +832,7 @@ bool PKBManager::isLineAffectsLineT(const ModifyLine modify_line,
     return false;
   }
   // check that a1 a2 are both assignment statements
-  if (!isAssignExists(modify_line) || !isAssignExists(modify_line)) {
+  if (!isAssignExists(modify_line) || !isAssignExists(uses_line)) {
     return false;
   }
   std::shared_ptr<std::unordered_set<Line>> visited =

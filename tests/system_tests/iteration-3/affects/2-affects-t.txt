@@ -36,12 +36,12 @@ TRUE
 8 - Invalid: 2nd parameter is READ stmt 
 assign a1, a2;
 Select BOOLEAN such that Affects*(7,8)
-none
+FALSE
 5000
 9 - Invalid: 1st parameter is READ stmt
 assign a1, a2;
 Select BOOLEAN such that Affects*(8,9)
-none
+FALSE
 5000
 10 - False: b is modified by read stmt# 8
 assign a1, a2;
@@ -66,12 +66,12 @@ FALSE
 14 - INVALID: 2nd parameter is IF stmt 
 assign a1, a2;
 Select BOOLEAN such that Affects*(12,13)
-none
+FALSE
 5000
 15 - INVALID: 2nd parameter is WHILE stmt 
 assign a1, a2;
 Select BOOLEAN such that Affects*(9,10)
-none
+FALSE
 5000
 16 - TRUE: test if then branch
 assign a1, a2;
@@ -106,7 +106,7 @@ FALSE
 22 - invalid: 1st parameter is WHILE stmt
 assign a1, a2;
 Select BOOLEAN such that Affects*(20,21)
-none
+FALSE
 5000
 23 - true: basic case
 assign a1, a2;
@@ -121,7 +121,7 @@ TRUE
 25 - true: WHILE LOOP (param 1 is a stmt# that occurs after param2)
 assign a1, a2;
 Select BOOLEAN such that Affects*(25,22)
-TRUE
+FALSE
 5000
 26 - false: variable modified by read in CFG 
 assign a1, a2;

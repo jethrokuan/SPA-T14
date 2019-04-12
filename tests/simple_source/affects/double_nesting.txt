@@ -1,0 +1,21 @@
+procedure main {
+	if(line1 > 1) then {
+		while (line2 > 10){
+			line3 = 1;
+		} 
+		if(line4 > 10) then {
+			TESTED = 10;
+		} else {
+			line6 = 10;
+		}
+	} else {
+		if(line7 > 10) then {
+			line8 = 10;
+		} else {
+			line9 = 10;
+		}
+		while(line10 < 10){
+			line11 = TESTED - 1;
+		}
+	}
+}

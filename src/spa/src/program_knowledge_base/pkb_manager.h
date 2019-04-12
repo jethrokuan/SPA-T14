@@ -31,9 +31,9 @@ class PKBManager {
   void getPreviousLineTH(const Line, std::shared_ptr<std::unordered_set<Line>>);
 
   // helper for affects
-  bool isLineAffectsLineTH(
-    const ModifyLine modify_line, const UsesLine target_line,
-    std::shared_ptr<std::unordered_set<Line>> visited);
+  bool isLineAffectsLineTH(const ModifyLine modify_line,
+                           const UsesLine target_line,
+                           std::shared_ptr<std::unordered_set<Line>> visited);
   void getAffectModifiesLineH(
       const Line cur_line, const Variable target_var,
       const ModifyLine source_line,
@@ -55,10 +55,9 @@ class PKBManager {
                           const ModifyLine source_line,
                           std::shared_ptr<std::unordered_set<Line>> visited,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
-  void getAffectUsesLineTH(
-      const ModifyLine modify_line,
-      std::shared_ptr<std::unordered_set<Line>> uses_set,
-      std::shared_ptr<std::unordered_set<Line>> visited);
+  void getAffectUsesLineTH(const ModifyLine modify_line,
+                           std::shared_ptr<std::unordered_set<Line>> uses_set,
+                           std::shared_ptr<std::unordered_set<Line>> visited);
   // cache
   std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>
       modify_uses_affects_cache =

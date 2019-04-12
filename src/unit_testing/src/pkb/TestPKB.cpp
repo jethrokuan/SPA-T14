@@ -3521,3 +3521,22 @@ TEST_CASE ("Test detection of semantic errors in AST") {
                         "Found multiple procedures with the same name: 'A'.");
   }
 }
+
+TEST_CASE ("Test PKB for double_nesting.txt") {
+  auto ast = SimpleInterface::getAstFromFile(
+      "tests/simple_source/affects/double_nesting.txt");
+  PKB::PKBManager pkb = PKB::PKBManager(ast);
+
+  SECTION ("affects relations") {
+    auto affects_test_1 = pkb.isLineAffectsLine("5", "11");
+    REQUIRE(affects_test_1 == false);
+    auto affects_test_2 = pkb.isLineAffectsLineT("5", "11");
+    REQUIRE(affects_test_2 == false);
+
+    auto affects_test_3 = pkb.getAffectUsesLine("5");
+    REQUIRE(affects_test_3 == std::nullopt);
+
+    auto affects_test_4 = pkb.getAffectUsesLineT("5");
+    REQUIRE(affects_test_4 == std::nullopt);
+  }
+}

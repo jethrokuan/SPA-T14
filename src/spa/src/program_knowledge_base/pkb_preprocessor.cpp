@@ -1,5 +1,4 @@
 #include "program_knowledge_base/pkb_preprocessor.h"
-#include <iostream>
 #include "structs/node.h"
 
 namespace PKB {
@@ -58,23 +57,20 @@ void PKBPreprocessor::setLineNumbersIterator(
 }
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<RootNode> node) {
-  // std::cout << "RootNode" << std::endl;
   for (const auto &proc : node->ProcList) {
     setCFG(proc);
   }
 }
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<ProcedureNode> node) {
-  // std::cout << "ProcedureNode" << std::endl;
-  std::shared_ptr<std::vector<Line>> terminating_lines =
-      std::make_shared<std::vector<Line>>();
-  setCFGIterator(node->StmtList, terminating_lines);
+  std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache =
+      std::make_shared<std::unordered_map<Line, std::unordered_set<Line>>>();
+  setCFGIterator(node->StmtList, cache);
 }
 
 void PKBPreprocessor::setCFG(
     const std::shared_ptr<IfNode> node,
-    std::shared_ptr<std::vector<Line>> terminating_lines) {
-  // std::cout << "IfNode" << std::endl;
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
   const ParentLine parent_line = storage->getLineFromNode(node);
   const ChildLine then_child_line =
       storage->getLineFromNode(node->StmtListThen.front());
@@ -83,91 +79,166 @@ void PKBPreprocessor::setCFG(
   storage->storeCFGEdge(parent_line, then_child_line);
   storage->storeCFGEdge(parent_line, else_child_line);
 
-  setCFGIterator(node->StmtListThen, terminating_lines);
-  setCFGIterator(node->StmtListElse, terminating_lines);
+  setCFGIterator(node->StmtListThen, cache);
+  setCFGIterator(node->StmtListElse, cache);
 }
 
 void PKBPreprocessor::setCFG(
     const std::shared_ptr<WhileNode> node,
-    std::shared_ptr<std::vector<Line>> terminating_lines) {
-  // std::cout << "WhileNode" << std::endl;
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
   const ParentLine parent_line = storage->getLineFromNode(node);
   const ChildLine child_line = storage->getLineFromNode(node->StmtList.front());
+  auto terminating = getTerminatingLines(node->StmtList.back(), cache);
+  for (const auto &line : terminating) {
+    storage->storeCFGEdge(line, parent_line);
+  }
   storage->storeCFGEdge(parent_line, child_line);
-  setCFGIterator(node->StmtList, terminating_lines);
+  setCFGIterator(node->StmtList, cache);
 }
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<ReadNode>,
-                             std::shared_ptr<std::vector<Line>>) {
-  // std::cout << "ReadNode" << std::endl;
-}
+void PKBPreprocessor::setCFG(
+    const std::shared_ptr<ReadNode>,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>) {}
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<PrintNode>,
-                             std::shared_ptr<std::vector<Line>>) {
-  // std::cout << "PrintNode" << std::endl;
-}
+void PKBPreprocessor::setCFG(
+    const std::shared_ptr<PrintNode>,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>) {}
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<AssignNode>,
-                             std::shared_ptr<std::vector<Line>>) {
-  // std::cout << "AssignNode" << std::endl;
-}
+void PKBPreprocessor::setCFG(
+    const std::shared_ptr<AssignNode>,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>) {}
 
-void PKBPreprocessor::setCFG(const std::shared_ptr<CallNode>,
-                             std::shared_ptr<std::vector<Line>>) {
-  // std::cout << "CallNode" << std::endl;
-}
+void PKBPreprocessor::setCFG(
+    const std::shared_ptr<CallNode>,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>>) {}
 
 void PKBPreprocessor::setCFGIterator(
     const std::vector<StmtNode> stmt_lst,
-    std::shared_ptr<std::vector<Line>> terminating_lines) {
-  // std::cout << "iterator" << std::endl;
-  // add edge for consecutive lines
-  Line previous_line = INVALID_LINE_NUMBER;  // used to keep reference
-  bool previous_node_is_if_node = false;
-  for (std::size_t i = 0; i < stmt_lst.size(); i++) {
-    const bool is_last_node = (i == (stmt_lst.size() - 1));
-    std::visit(
-        [this, &previous_line, &previous_node_is_if_node, &terminating_lines,
-         is_last_node](const auto &s) mutable {
-          const Line cur_line = storage->getLineFromNode(s);
-          if (previous_node_is_if_node) {
-            // set next relations for everything in the list
-            for (const auto &line : *terminating_lines.get()) {
-              storage->storeCFGEdge(line, cur_line);
-            }
-            // delete terminating nodes from the list
-            terminating_lines->clear();
-            previous_node_is_if_node = false;  // reset flag
-          } else if (previous_line != INVALID_LINE_NUMBER) {
-            storage->storeCFGEdge(previous_line, cur_line);
-          }
-          using T = std::decay_t<decltype(s)>;
-          if constexpr (std::is_same_v<T, std::shared_ptr<IfNode>>) {
-            previous_node_is_if_node = true;  // set flag
-            setCFG(s, terminating_lines);
-          } else if constexpr (std::is_same_v<T, std::shared_ptr<WhileNode>>) {
-            std::shared_ptr<std::vector<Line>> temp_list =
-                std::make_shared<std::vector<Line>>();
-            setCFG(s, temp_list);
-            // set edges in temp_list
-            for (const auto &line : *temp_list.get()) {
-              storage->storeCFGEdge(line, cur_line);
-            }
-          } else {
-            setCFG(s, terminating_lines);
-          }
-          // if the last node is not an if node
-          if constexpr (std::is_same_v<T, std::shared_ptr<IfNode>>) {
-            // ignore if node
-          } else if (is_last_node) {
-            // std::cout << "storing " + cur_line + " as last node" <<
-            // std::endl;
-            terminating_lines->push_back(cur_line);
-          }
-          previous_line = cur_line;
-        },
-        stmt_lst[i]);
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
+  for (const auto &stmt : stmt_lst) {
+    std::visit([this, cache](const auto &s) { setCFG(s, cache); }, stmt);
   }
+
+  // iterate through statement nodes
+  for (std::size_t i = 0; i < stmt_lst.size() - 1; i++) {
+    // compare 2 nodes at once i and i + 1
+    auto terminating = getTerminatingLines(stmt_lst[i], cache);
+    const Line cur_line = storage->getLineFromNode(stmt_lst[i + 1]);
+
+    for (const auto &line : terminating) {
+      storage->storeCFGEdge(line, cur_line);
+    }
+  }
+}
+
+std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
+    const std::shared_ptr<IfNode> node,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
+  const Line cur_line = storage->getLineFromNode(node);
+  if (cache->find(cur_line) != cache->end()) {
+    // cache hit
+    return cache->at(cur_line);
+  }
+  // get the last node in its statement list
+  auto last_item_then = node->StmtListThen.back();
+  auto last_item_else = node->StmtListElse.back();
+  auto terminating_then = getTerminatingLines(last_item_then, cache);
+  auto terminating_else = getTerminatingLines(last_item_else, cache);
+  std::unordered_set<Line> terminating;
+  for (const auto &line : terminating_then) {
+    terminating.insert(line);
+  }
+  for (const auto &line : terminating_else) {
+    terminating.insert(line);
+  }
+  // store in cache
+  cache->emplace(cur_line, terminating);
+
+  return terminating;
+}
+
+std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
+    const std::shared_ptr<WhileNode> node,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
+  const Line cur_line = storage->getLineFromNode(node);
+  if (cache->find(cur_line) != cache->end()) {
+    // cache hit
+    return cache->at(cur_line);
+  }
+
+  std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
+  cache->emplace(cur_line, terminating_lines);
+
+  return terminating_lines;
+}
+
+std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
+    const std::shared_ptr<ReadNode> node,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
+  const Line cur_line = storage->getLineFromNode(node);
+  if (cache->find(cur_line) != cache->end()) {
+    // cache hit
+    return cache->at(cur_line);
+  }
+  // store in cache
+  std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
+  cache->emplace(cur_line, terminating_lines);
+  return terminating_lines;
+}
+
+std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
+    const std::shared_ptr<PrintNode> node,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
+  const Line cur_line = storage->getLineFromNode(node);
+  if (cache->find(cur_line) != cache->end()) {
+    // cache hit
+    return cache->at(cur_line);
+  }
+  // store in cache
+  std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
+  cache->emplace(cur_line, terminating_lines);
+  return terminating_lines;
+}
+
+std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
+    const std::shared_ptr<AssignNode> node,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
+  const Line cur_line = storage->getLineFromNode(node);
+  if (cache->find(cur_line) != cache->end()) {
+    // cache hit
+    return cache->at(cur_line);
+  }
+  // store in cache
+  std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
+  cache->emplace(cur_line, terminating_lines);
+  return terminating_lines;
+}
+
+std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
+    const std::shared_ptr<CallNode> node,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
+  const Line cur_line = storage->getLineFromNode(node);
+  if (cache->find(cur_line) != cache->end()) {
+    // cache hit
+    return cache->at(cur_line);
+  }
+  // store in cache
+  std::unordered_set<Line> terminating_lines;
+  terminating_lines.emplace(cur_line);
+  cache->emplace(cur_line, terminating_lines);
+  return terminating_lines;
+}
+
+std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
+    const StmtNode node,
+    std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
+  return std::visit(
+      [this, cache](const auto &n) { return getTerminatingLines(n, cache); },
+      node);
 }
 
 void PKBPreprocessor::setDesignEntities(const std::shared_ptr<RootNode> node) {
@@ -282,13 +353,11 @@ void PKBPreprocessor::setDesignEntitiesIterator(
 }
 
 void PKBPreprocessor::setCallsRelations(const std::shared_ptr<RootNode> node) {
-  // std::cout << "RootNode" << std::endl;
   // set direct relations
   for (const auto &proc : node->ProcList) {
     setCallsRelations(proc);
   }
   // set indirect relations after direct relations have been set
-  // std::cout << "SETTING INDIRECT RELATIONS" << std::endl;
   setCallsIndirectRelations();
 }
 
@@ -309,7 +378,6 @@ void PKBPreprocessor::setCallsIndirectRelations() {
 
 void PKBPreprocessor::setCallsIndirectRelationsH(
     const ProcedureCaller proc_caller, const ProcedureCallee proc_callee) {
-  // std::cout << "setCallsIndirectRelationsH" << std::endl;
   bool has_indirect =
       storage->procedure_caller_procedure_callee_map.find(proc_callee) !=
       storage->procedure_caller_procedure_callee_map.end();
@@ -325,34 +393,24 @@ void PKBPreprocessor::setCallsIndirectRelationsH(
 
 void PKBPreprocessor::setCallsRelations(
     const std::shared_ptr<ProcedureNode> node) {
-  // std::cout << "ProcedureNode" << std::endl;
   setCallsRelationsIterator(node->StmtList);
 }
 void PKBPreprocessor::setCallsRelations(const std::shared_ptr<IfNode> node) {
-  // std::cout << "IfNode" << std::endl;
   setCallsRelationsIterator(node->StmtListThen);
   setCallsRelationsIterator(node->StmtListElse);
 }
 
 void PKBPreprocessor::setCallsRelations(const std::shared_ptr<WhileNode> node) {
-  // std::cout << "WhileNode" << std::endl;
   setCallsRelationsIterator(node->StmtList);
 }
 
-void PKBPreprocessor::setCallsRelations(const std::shared_ptr<ReadNode>) {
-  // std::cout << "ReadNode" << std::endl;
-}
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<ReadNode>) {}
 
-void PKBPreprocessor::setCallsRelations(const std::shared_ptr<PrintNode>) {
-  // std::cout << "PrintNode" << std::endl;
-}
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<PrintNode>) {}
 
-void PKBPreprocessor::setCallsRelations(const std::shared_ptr<AssignNode>) {
-  // std::cout << "AssignNode" << std::endl;
-}
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<AssignNode>) {}
 
 void PKBPreprocessor::setCallsRelations(const std::shared_ptr<CallNode> node) {
-  // std::cout << "CallNode" << std::endl;
   const Line line_number = storage->getLineFromNode(node);
   const Procedure proc_caller = storage->getProcedureFromLine(line_number);
   storage->storeCallsRelation(proc_caller, node->ProcName);
@@ -361,7 +419,6 @@ void PKBPreprocessor::setCallsRelations(const std::shared_ptr<CallNode> node) {
 
 void PKBPreprocessor::setCallsRelationsIterator(
     const std::vector<StmtNode> stmt_lst) {
-  // std::cout << "Iterator" << std::endl;
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setCallsRelations(s); }, stmt);
   }

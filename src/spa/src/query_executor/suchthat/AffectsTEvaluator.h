@@ -16,7 +16,7 @@ using namespace QE;
 class AffectsTEvaluator : public SuchThatEvaluator {
  public:
   AffectsTEvaluator(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
-                   PKBManager* pkb, ConstraintDatabase& db)
+                    PKBManager* pkb, ConstraintDatabase& db)
       : SuchThatEvaluator(decls, relCond, pkb, db){};
 
   std::unordered_set<std::string> handleLeftSynonymRightBasic(

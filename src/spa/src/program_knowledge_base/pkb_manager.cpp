@@ -762,7 +762,6 @@ void PKBManager::getPreviousLineTH(
     return;
   }
   visited->insert(cur_line);
-  // std::cout << "visited " + cur_line << std::endl;
   auto to_visit = getPreviousLine(cur_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
@@ -793,7 +792,6 @@ void PKBManager::getNextLineTH(
     return;
   }
   visited->insert(cur_line);
-  // std::cout << "visited " + cur_line << std::endl;
   auto to_visit = getNextLine(cur_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
@@ -803,11 +801,11 @@ void PKBManager::getNextLineTH(
 }
 
 // helper class for isLineAffectsLine DFS
-bool PKBManager::isLineAffectsLine(
-    const ModifyLine modify_line, const UsesLine target_line) {
-
+bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
+                                   const UsesLine target_line) {
   // check if cache can be utilised
-  if (modify_uses_affects_cache.find(modify_line) != modify_uses_affects_cache.end()) {
+  if (modify_uses_affects_cache.find(modify_line) !=
+      modify_uses_affects_cache.end()) {
     // retrieve from cache
     auto uses_lines = modify_uses_affects_cache.at(modify_line);
     // check if target has been reached
@@ -854,7 +852,8 @@ bool PKBManager::isLineAffectsLineTH(
   }
 
   // check if cache can be utilised
-  if (modify_uses_affects_cache.find(modify_line) != modify_uses_affects_cache.end()) {
+  if (modify_uses_affects_cache.find(modify_line) !=
+      modify_uses_affects_cache.end()) {
     // retrieve from cache
     auto uses_lines = modify_uses_affects_cache.at(modify_line);
     // check if target has been reached
@@ -926,7 +925,6 @@ void PKBManager::getAffectModifiesLineH(
     const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<std::unordered_set<Line>> modifies_set) {
-  // std::cout << "visiting " + cur_line << std::endl;
   if (visited->find(cur_line) != visited->end()) {
     // node has ben visited before
     // stop traversing down this path
@@ -971,11 +969,13 @@ PKBManager::getAffectModifiesLineT(const UsesLine uses_line) {
   if (modifies_set->empty()) {
     return std::nullopt;
   } else {
-    return std::make_optional<std::unordered_set<ModifyLine>>(*modifies_set.get());
+    return std::make_optional<std::unordered_set<ModifyLine>>(
+        *modifies_set.get());
   }
 }
 
-void PKBManager::getAffectModifiesLineTH(const UsesLine uses_line,
+void PKBManager::getAffectModifiesLineTH(
+    const UsesLine uses_line,
     std::shared_ptr<std::unordered_set<ModifyLine>> modifies_set,
     std::shared_ptr<std::unordered_set<Line>> visited) {
   if (visited->find(uses_line) != visited->end()) {
@@ -983,7 +983,8 @@ void PKBManager::getAffectModifiesLineTH(const UsesLine uses_line,
   } else {
     visited->insert(uses_line);
   }
-  if (uses_modify_affects_cache.find(uses_line) != uses_modify_affects_cache.end()) {
+  if (uses_modify_affects_cache.find(uses_line) !=
+      uses_modify_affects_cache.end()) {
     // take from cache
     auto modify_lines = uses_modify_affects_cache.at(uses_line);
     // push each modify line onto the set
@@ -1043,7 +1044,6 @@ void PKBManager::getAffectUsesLineH(
     const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<std::unordered_set<Line>> uses_set) {
-  // std::cout << "visiting " + cur_line << std::endl;
   if (visited->find(cur_line) != visited->end()) {
     // node has ben visited before
     // stop traversing down this path
@@ -1097,7 +1097,8 @@ std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineT(
   }
 }
 
-void PKBManager::getAffectUsesLineTH(const ModifyLine modify_line,
+void PKBManager::getAffectUsesLineTH(
+    const ModifyLine modify_line,
     std::shared_ptr<std::unordered_set<UsesLine>> uses_set,
     std::shared_ptr<std::unordered_set<Line>> visited) {
   if (visited->find(modify_line) != visited->end()) {
@@ -1105,7 +1106,8 @@ void PKBManager::getAffectUsesLineTH(const ModifyLine modify_line,
   } else {
     visited->insert(modify_line);
   }
-  if (modify_uses_affects_cache.find(modify_line) != modify_uses_affects_cache.end()) {
+  if (modify_uses_affects_cache.find(modify_line) !=
+      modify_uses_affects_cache.end()) {
     // retrieve from cache
     auto uses_lines = modify_uses_affects_cache.at(modify_line);
     // push each modify line onto the set
@@ -1131,7 +1133,7 @@ void PKBManager::getAffectUsesLineTH(const ModifyLine modify_line,
   }
 }
 
-std::unordered_map<std::string, std::unordered_set<std::string>>
+std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
 PKBManager::getCFG() {
   return pkb_storage->line_previous_line_next_map;
 };

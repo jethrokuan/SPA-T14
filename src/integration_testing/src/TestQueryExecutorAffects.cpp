@@ -88,3 +88,23 @@ TEST_CASE ("Test Query Executor on Affects queries (source 2)") {
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"2"});
   }
 }
+
+TEST_CASE ("Test Query Executor for Optimizer (source 5-source iter3)") {
+  auto ast = Simple::SimpleInterface::getAstFromFile(
+      "tests/system_tests/iteration-3/affects/5-source.txt");
+
+  // Store PKB variable in class for querying later
+  auto pkb = new PKBManager(ast);
+  auto qm = new QueryExecutor(pkb);
+  auto qe = QueryBuilder();
+
+  SECTION ("Test multi-clause affects and uses") {
+    auto querystr = std::string(
+        "assign a, a1, a2; variable v; Select <a, v> such that Affects(a1, a) "
+        "and Affects(a, a2) and Uses(a, v)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"10 c", "10 d",
+                                                              "10 e", "10 f",
+                                                              "10 g", "11 h"});
+  }
+}

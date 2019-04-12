@@ -1,5 +1,4 @@
 #include "program_knowledge_base/pkb_preprocessor.h"
-#include <iostream>
 #include "structs/node.h"
 
 namespace PKB {
@@ -58,14 +57,12 @@ void PKBPreprocessor::setLineNumbersIterator(
 }
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<RootNode> node) {
-  // std::cout << "RootNode" << std::endl;
   for (const auto &proc : node->ProcList) {
     setCFG(proc);
   }
 }
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<ProcedureNode> node) {
-  // std::cout << "ProcedureNode" << std::endl;
   std::shared_ptr<std::vector<Line>> terminating_lines =
       std::make_shared<std::vector<Line>>();
   setCFGIterator(node->StmtList, terminating_lines);
@@ -74,7 +71,6 @@ void PKBPreprocessor::setCFG(const std::shared_ptr<ProcedureNode> node) {
 void PKBPreprocessor::setCFG(
     const std::shared_ptr<IfNode> node,
     std::shared_ptr<std::vector<Line>> terminating_lines) {
-  // std::cout << "IfNode" << std::endl;
   const ParentLine parent_line = storage->getLineFromNode(node);
   const ChildLine then_child_line =
       storage->getLineFromNode(node->StmtListThen.front());
@@ -90,7 +86,6 @@ void PKBPreprocessor::setCFG(
 void PKBPreprocessor::setCFG(
     const std::shared_ptr<WhileNode> node,
     std::shared_ptr<std::vector<Line>> terminating_lines) {
-  // std::cout << "WhileNode" << std::endl;
   const ParentLine parent_line = storage->getLineFromNode(node);
   const ChildLine child_line = storage->getLineFromNode(node->StmtList.front());
   storage->storeCFGEdge(parent_line, child_line);
@@ -98,29 +93,20 @@ void PKBPreprocessor::setCFG(
 }
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<ReadNode>,
-                             std::shared_ptr<std::vector<Line>>) {
-  // std::cout << "ReadNode" << std::endl;
-}
+                             std::shared_ptr<std::vector<Line>>) {}
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<PrintNode>,
-                             std::shared_ptr<std::vector<Line>>) {
-  // std::cout << "PrintNode" << std::endl;
-}
+                             std::shared_ptr<std::vector<Line>>) {}
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<AssignNode>,
-                             std::shared_ptr<std::vector<Line>>) {
-  // std::cout << "AssignNode" << std::endl;
-}
+                             std::shared_ptr<std::vector<Line>>) {}
 
 void PKBPreprocessor::setCFG(const std::shared_ptr<CallNode>,
-                             std::shared_ptr<std::vector<Line>>) {
-  // std::cout << "CallNode" << std::endl;
-}
+                             std::shared_ptr<std::vector<Line>>) {}
 
 void PKBPreprocessor::setCFGIterator(
     const std::vector<StmtNode> stmt_lst,
     std::shared_ptr<std::vector<Line>> terminating_lines) {
-  // std::cout << "iterator" << std::endl;
   // add edge for consecutive lines
   Line previous_line = INVALID_LINE_NUMBER;  // used to keep reference
   bool previous_node_is_if_node = false;
@@ -160,8 +146,6 @@ void PKBPreprocessor::setCFGIterator(
           if constexpr (std::is_same_v<T, std::shared_ptr<IfNode>>) {
             // ignore if node
           } else if (is_last_node) {
-            // std::cout << "storing " + cur_line + " as last node" <<
-            // std::endl;
             terminating_lines->push_back(cur_line);
           }
           previous_line = cur_line;
@@ -282,13 +266,11 @@ void PKBPreprocessor::setDesignEntitiesIterator(
 }
 
 void PKBPreprocessor::setCallsRelations(const std::shared_ptr<RootNode> node) {
-  // std::cout << "RootNode" << std::endl;
   // set direct relations
   for (const auto &proc : node->ProcList) {
     setCallsRelations(proc);
   }
   // set indirect relations after direct relations have been set
-  // std::cout << "SETTING INDIRECT RELATIONS" << std::endl;
   setCallsIndirectRelations();
 }
 
@@ -309,7 +291,6 @@ void PKBPreprocessor::setCallsIndirectRelations() {
 
 void PKBPreprocessor::setCallsIndirectRelationsH(
     const ProcedureCaller proc_caller, const ProcedureCallee proc_callee) {
-  // std::cout << "setCallsIndirectRelationsH" << std::endl;
   bool has_indirect =
       storage->procedure_caller_procedure_callee_map.find(proc_callee) !=
       storage->procedure_caller_procedure_callee_map.end();
@@ -325,34 +306,24 @@ void PKBPreprocessor::setCallsIndirectRelationsH(
 
 void PKBPreprocessor::setCallsRelations(
     const std::shared_ptr<ProcedureNode> node) {
-  // std::cout << "ProcedureNode" << std::endl;
   setCallsRelationsIterator(node->StmtList);
 }
 void PKBPreprocessor::setCallsRelations(const std::shared_ptr<IfNode> node) {
-  // std::cout << "IfNode" << std::endl;
   setCallsRelationsIterator(node->StmtListThen);
   setCallsRelationsIterator(node->StmtListElse);
 }
 
 void PKBPreprocessor::setCallsRelations(const std::shared_ptr<WhileNode> node) {
-  // std::cout << "WhileNode" << std::endl;
   setCallsRelationsIterator(node->StmtList);
 }
 
-void PKBPreprocessor::setCallsRelations(const std::shared_ptr<ReadNode>) {
-  // std::cout << "ReadNode" << std::endl;
-}
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<ReadNode>) {}
 
-void PKBPreprocessor::setCallsRelations(const std::shared_ptr<PrintNode>) {
-  // std::cout << "PrintNode" << std::endl;
-}
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<PrintNode>) {}
 
-void PKBPreprocessor::setCallsRelations(const std::shared_ptr<AssignNode>) {
-  // std::cout << "AssignNode" << std::endl;
-}
+void PKBPreprocessor::setCallsRelations(const std::shared_ptr<AssignNode>) {}
 
 void PKBPreprocessor::setCallsRelations(const std::shared_ptr<CallNode> node) {
-  // std::cout << "CallNode" << std::endl;
   const Line line_number = storage->getLineFromNode(node);
   const Procedure proc_caller = storage->getProcedureFromLine(line_number);
   storage->storeCallsRelation(proc_caller, node->ProcName);
@@ -361,7 +332,6 @@ void PKBPreprocessor::setCallsRelations(const std::shared_ptr<CallNode> node) {
 
 void PKBPreprocessor::setCallsRelationsIterator(
     const std::vector<StmtNode> stmt_lst) {
-  // std::cout << "Iterator" << std::endl;
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setCallsRelations(s); }, stmt);
   }

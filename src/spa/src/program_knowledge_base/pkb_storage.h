@@ -5,7 +5,6 @@
 #include <optional>
 #include <string>
 #include <unordered_set>
-#include <vector>
 #include "program_knowledge_base/pkb_definitions.h"
 #include "structs/node.h"
 #include "utils/utils.h"
@@ -31,9 +30,9 @@ class PKBStorage {
   AST ast;
   std::unordered_map<Line, Procedure> line_procedure_map;
   // CFG
-  std::unordered_map<std::string, std::unordered_set<std::string>>
+  std::unordered_map<PreviousLine, std::unordered_set<NextLine>>
       line_previous_line_next_map;  // adjacency list
-  std::unordered_map<std::string, std::unordered_set<std::string>>
+  std::unordered_map<NextLine, std::unordered_set<PreviousLine>>
       line_next_line_previous_map;  // reversed adjacaency list
 
   // calls
@@ -149,7 +148,6 @@ class PKBStorage {
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
       while_pattern_line_var_set;
 
-  // misc
   // for affects relations
   // modifies and uses only applies for assignment statements
   std::unordered_map<ModifyLine, Variable> assign_line_modifies_variable_map;
@@ -159,7 +157,7 @@ class PKBStorage {
   // setters
   void storeAST(const AST);
   Line storeLine(const StmtNode node);
-  void storeCFGEdge(const Line, const Line);
+  void storeCFGEdge(const LineBefore, const LineAfter);
 
   void storeCallsRelation(const ProcedureCaller, const ProcedureCallee);
   void storeCallsRelationS(const ProcedureCaller, const ProcedureCallee);

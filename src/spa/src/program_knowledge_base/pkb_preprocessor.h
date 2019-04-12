@@ -1,6 +1,5 @@
 #pragma once
 #include "program_knowledge_base/pkb_storage.h"
-#include "queue"
 #include "structs/node.h"
 #include "utils/utils.h"
 

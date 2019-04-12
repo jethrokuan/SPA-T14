@@ -69,7 +69,6 @@ void PKBPreprocessor::setCFG(const std::shared_ptr<ProcedureNode> node) {
 void PKBPreprocessor::setCFG(
     const std::shared_ptr<IfNode> node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "setCFG IfNode" << std::endl;
   const ParentLine parent_line = storage->getLineFromNode(node);
   const ChildLine then_child_line =
       storage->getLineFromNode(node->StmtListThen.front());
@@ -85,7 +84,6 @@ void PKBPreprocessor::setCFG(
 void PKBPreprocessor::setCFG(
     const std::shared_ptr<WhileNode> node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "setCFG WhileNode" << std::endl;
   const ParentLine parent_line = storage->getLineFromNode(node);
   const ChildLine child_line = storage->getLineFromNode(node->StmtList.front());
   auto terminating = getTerminatingLines(node->StmtList.back(), cache);
@@ -115,7 +113,6 @@ void PKBPreprocessor::setCFG(
 void PKBPreprocessor::setCFGIterator(
     const std::vector<StmtNode> stmt_lst,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "Iterator" << std::endl;
 
   for (const auto &stmt : stmt_lst) {
     std::visit([this, cache](const auto &s) { setCFG(s, cache); }, stmt);
@@ -136,7 +133,6 @@ void PKBPreprocessor::setCFGIterator(
 std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
     const std::shared_ptr<IfNode> node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "IfNode" << std::endl;
   const Line cur_line = storage->getLineFromNode(node);
   if (cache->find(cur_line) != cache->end()) {
     // cache hit
@@ -163,7 +159,6 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
 std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
     const std::shared_ptr<WhileNode> node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "WhileNode" << std::endl;
   const Line cur_line = storage->getLineFromNode(node);
   if (cache->find(cur_line) != cache->end()) {
     // cache hit
@@ -180,7 +175,6 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
 std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
     const std::shared_ptr<ReadNode> node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "ReadNode" << std::endl;
   const Line cur_line = storage->getLineFromNode(node);
   if (cache->find(cur_line) != cache->end()) {
     // cache hit
@@ -196,7 +190,6 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
 std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
     const std::shared_ptr<PrintNode> node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "PrintNode" << std::endl;
   const Line cur_line = storage->getLineFromNode(node);
   if (cache->find(cur_line) != cache->end()) {
     // cache hit
@@ -212,7 +205,6 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
 std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
     const std::shared_ptr<AssignNode> node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "AssignNode" << std::endl;
   const Line cur_line = storage->getLineFromNode(node);
   if (cache->find(cur_line) != cache->end()) {
     // cache hit
@@ -228,7 +220,6 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
 std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
     const std::shared_ptr<CallNode> node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "CallNode" << std::endl;
   const Line cur_line = storage->getLineFromNode(node);
   if (cache->find(cur_line) != cache->end()) {
     // cache hit
@@ -244,7 +235,6 @@ std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
 std::unordered_set<Line> PKBPreprocessor::getTerminatingLines(
     const StmtNode node,
     std::shared_ptr<std::unordered_map<Line, std::unordered_set<Line>>> cache) {
-  std::cout << "StmtNode" << std::endl;
   return std::visit(
       [this, cache](const auto &n) { return getTerminatingLines(n, cache); },
       node);

@@ -762,7 +762,6 @@ void PKBManager::getPreviousLineTH(
     return;
   }
   visited->insert(cur_line);
-  // std::cout << "visited " + cur_line << std::endl;
   auto to_visit = getPreviousLine(cur_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
@@ -793,7 +792,6 @@ void PKBManager::getNextLineTH(
     return;
   }
   visited->insert(cur_line);
-  // std::cout << "visited " + cur_line << std::endl;
   auto to_visit = getNextLine(cur_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
@@ -927,7 +925,6 @@ void PKBManager::getAffectModifiesLineH(
     const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<std::unordered_set<Line>> modifies_set) {
-  // std::cout << "visiting " + cur_line << std::endl;
   if (visited->find(cur_line) != visited->end()) {
     // node has ben visited before
     // stop traversing down this path
@@ -1047,7 +1044,6 @@ void PKBManager::getAffectUsesLineH(
     const ModifyLine source_line,
     std::shared_ptr<std::unordered_set<Line>> visited,
     std::shared_ptr<std::unordered_set<Line>> uses_set) {
-  std::cout << "visiting " + cur_line << std::endl;
   if (visited->find(cur_line) != visited->end()) {
     // node has ben visited before
     // stop traversing down this path
@@ -1064,17 +1060,14 @@ void PKBManager::getAffectUsesLineH(
     auto var_used = getUsesVariableFromAssignLine(cur_line);
     if (var_used) {
       if ((*var_used).find(target_var) != (*var_used).end()) {
-        std::cout << cur_line + " uses var " + target_var << std::endl;
-        // pkb_storage->addToSetMap(modify_uses_affects_cache, source_line,
-        //                          cur_line);
+        pkb_storage->addToSetMap(modify_uses_affects_cache, source_line,
+                                 cur_line);
         uses_set->insert(cur_line);
       }
     }
 
     // check if line modifies the variable
     if (isLineAffectsVariable(cur_line, target_var)) {
-      std::cout << "line affected by variable (stop traversing down path)"
-                << std::endl;
       // stop traversing down this path
       return;
     }

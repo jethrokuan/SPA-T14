@@ -105,6 +105,6 @@ TRUE
 5000
 22 - multiple clauses, no common synonym, all valid queries, expect TRUE
 assign a, a1, a2, a3, a4,a5,a6; constant c, c1, c2, c3, c4; prog_line n, n1, n2, n3, n4; procedure p, p1, p2, p3, p4; stmt s, s1, s2, s3, s4, s5, s6, s7, s8; read r, r1,r2,r3,r4; print pn, pn1,pn2,pn3,pn4; variable v,v1,v2,v3,v4, v5; while w,w1,w2,w3,w4; if i,i1,i2,i3,i4; call cl, cl1,cl2,cl3,cl4; 
-Select BOOLEAN such that Affects(a1,a2) and Affects*(a3,a4) pattern a(v,_) and w(v1,_) and i(v2,_) with a = a
+Select BOOLEAN such that Affects(a1,a2) and Affects*(a3,a4) pattern a(v,_) and w(v1,_) and i(v2,_, _) with n = n
 TRUE
 5000

@@ -8,8 +8,7 @@
 using Simple::SimpleInterface;
 
 TEST_CASE ("Test PKB for assign.txt") {
-  auto ast =
-  SimpleInterface::getAstFromFile("tests/simple_source/assign.txt");
+  auto ast = SimpleInterface::getAstFromFile("tests/simple_source/assign.txt");
 
   PKB::PKBManager pkb = PKB::PKBManager(ast);
 
@@ -49,16 +48,16 @@ TEST_CASE ("Test PKB for assign.txt") {
 
   std::unordered_set<std::string> pattern_test_2_check;
   pattern_test_2_check.insert("1");
-  auto pattern_test_2 = pkb.getAssignPatternPartialMatchLinesWithVar("i",
-  "2"); REQUIRE(*pattern_test_2 == pattern_test_2_check);
+  auto pattern_test_2 = pkb.getAssignPatternPartialMatchLinesWithVar("i", "2");
+  REQUIRE(*pattern_test_2 == pattern_test_2_check);
 
   std::unordered_set<std::string> pattern_test_3_check;
   pattern_test_3_check.insert("1");
-  auto pattern_test_3 = pkb.getAssignPatternPartialMatchLinesWithVar("i",
-  "5"); REQUIRE(*pattern_test_3 == pattern_test_3_check);
+  auto pattern_test_3 = pkb.getAssignPatternPartialMatchLinesWithVar("i", "5");
+  REQUIRE(*pattern_test_3 == pattern_test_3_check);
 
-  auto pattern_test_4 = pkb.getAssignPatternPartialMatchLinesWithVar("x",
-  "x"); REQUIRE(pattern_test_4 == std::nullopt);
+  auto pattern_test_4 = pkb.getAssignPatternPartialMatchLinesWithVar("x", "x");
+  REQUIRE(pattern_test_4 == std::nullopt);
 
   auto pattern_test_5 = pkb.getAssignPatternPartialMatchLines("x");
   REQUIRE(pattern_test_5 == std::nullopt);
@@ -280,8 +279,8 @@ TEST_CASE ("Test PKB for simple_1.txt") {
   // test pattern
   std::unordered_set<PKB::Line> pattern_test_1_check;
   pattern_test_1_check.insert("1");
-  auto pattern_test_1 = pkb.getAssignPatternCompleteMatchLinesWithVar("i",
-  "5"); REQUIRE(*pattern_test_1 == pattern_test_1_check);
+  auto pattern_test_1 = pkb.getAssignPatternCompleteMatchLinesWithVar("i", "5");
+  REQUIRE(*pattern_test_1 == pattern_test_1_check);
 
   // CFG
   auto cfg_test_1 = pkb.isLineNextLine("1", "2");
@@ -836,8 +835,8 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_4_check.insert("19");
   pattern_test_4_check.insert("20");
   pattern_test_4_check.insert("21");
-  auto pattern_test_4 = pkb.getAssignPatternPartialMatchLinesWithVar("z",
-  "z"); REQUIRE(*pattern_test_4 == pattern_test_4_check);
+  auto pattern_test_4 = pkb.getAssignPatternPartialMatchLinesWithVar("z", "z");
+  REQUIRE(*pattern_test_4 == pattern_test_4_check);
 
   std::unordered_set<std::string> pattern_test_5_check;
   pattern_test_5_check.insert("21");
@@ -862,30 +861,25 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
       pattern_test_7_check;
   pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("6", "z"));
   pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("9", "z"));
-  pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("13",
-  "z")); pattern_test_7_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("18", "z")); auto pattern_test_7 =
-  pkb.getAssignPatternCompleteMatchLinesAndVars("z + 1");
+  pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("13", "z"));
+  pattern_test_7_check.insert(std::pair<PKB::Line, PKB::Variable>("18", "z"));
+  auto pattern_test_7 = pkb.getAssignPatternCompleteMatchLinesAndVars("z + 1");
   REQUIRE(*pattern_test_7 == pattern_test_7_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
       pattern_test_8_check;
   pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("6", "z"));
   pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("9", "z"));
-  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("10",
-  "z")); pattern_test_8_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("13", "z"));
-  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("14",
-  "z")); pattern_test_8_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("15", "z"));
-  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("18",
-  "z")); pattern_test_8_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("19", "z"));
-  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("20",
-  "z")); pattern_test_8_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("21", "z")); auto pattern_test_8 =
-  pkb.getAssignPatternPartialMatchLinesAndVars("z"); REQUIRE(*pattern_test_8
-  == pattern_test_8_check);
+  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("10", "z"));
+  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("13", "z"));
+  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("14", "z"));
+  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("15", "z"));
+  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("18", "z"));
+  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("19", "z"));
+  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("20", "z"));
+  pattern_test_8_check.insert(std::pair<PKB::Line, PKB::Variable>("21", "z"));
+  auto pattern_test_8 = pkb.getAssignPatternPartialMatchLinesAndVars("z");
+  REQUIRE(*pattern_test_8 == pattern_test_8_check);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
       pattern_test_9_check;
@@ -896,23 +890,18 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("6", "z"));
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("8", "y"));
   pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("9", "z"));
-  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("10",
-  "z")); pattern_test_9_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("12", "y"));
-  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("13",
-  "z")); pattern_test_9_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("14", "z"));
-  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("15",
-  "z")); pattern_test_9_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("17", "y"));
-  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("18",
-  "z")); pattern_test_9_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("19", "z"));
-  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("20",
-  "z")); pattern_test_9_check.insert(std::pair<PKB::Line,
-  PKB::Variable>("21", "z"));
-  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("22",
-  "x")); auto pattern_test_9 = pkb.getAllAssignPatternLinesAndVars();
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("10", "z"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("12", "y"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("13", "z"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("14", "z"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("15", "z"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("17", "y"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("18", "z"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("19", "z"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("20", "z"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("21", "z"));
+  pattern_test_9_check.insert(std::pair<PKB::Line, PKB::Variable>("22", "x"));
+  auto pattern_test_9 = pkb.getAllAssignPatternLinesAndVars();
   REQUIRE(pattern_test_9 == pattern_test_9_check);
 
   std::unordered_set<std::string> pattern_test_10_check;
@@ -942,8 +931,7 @@ TEST_CASE ("Test PKB for 10_simple_source_deep_nesting.txt") {
   REQUIRE(pattern_test_15 == false);
 
   SECTION ("while pattern") {
-    std::unordered_set<PKB::Line> while_pattern_test_1_check = {"4", "7",
-    "11",
+    std::unordered_set<PKB::Line> while_pattern_test_1_check = {"4", "7", "11",
                                                                 "16"};
     auto while_pattern_test_1 = pkb.getWhilePatternLine("x");
     REQUIRE(*while_pattern_test_1 == while_pattern_test_1_check);
@@ -3502,27 +3490,35 @@ TEST_CASE ("Test PKB for Affects-Source3.txt") {
 
 TEST_CASE ("Test detection of semantic errors in AST") {
   SECTION ("recursive procedure call") {
-    auto ast =SimpleInterface::getAstFromFile("tests/semantic_errors/recursive.txt");
+    auto ast =
+        SimpleInterface::getAstFromFile("tests/semantic_errors/recursive.txt");
 
-    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),"Found recursive call to procedure: 'A'.");
+    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
+                        "Found recursive call to procedure: 'A'.");
   }
 
   SECTION ("recursive procedure call") {
-    auto ast = SimpleInterface::getAstFromFile("tests/semantic_errors/cyclic_calls.txt");
+    auto ast = SimpleInterface::getAstFromFile(
+        "tests/semantic_errors/cyclic_calls.txt");
 
-    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),"Found cyclic call between procedures.");
+    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
+                        "Found cyclic call between procedures.");
   }
 
   SECTION ("non-existent procedure call") {
-    auto ast = SimpleInterface::getAstFromFile("tests/semantic_errors/non_existent_procedure.txt");
+    auto ast = SimpleInterface::getAstFromFile(
+        "tests/semantic_errors/non_existent_procedure.txt");
 
-    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),"Found call statement to non-existing procedure: 'B'.");
+    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
+                        "Found call statement to non-existing procedure: 'B'.");
   }
 
   SECTION ("procedures with same name") {
-    auto ast = SimpleInterface::getAstFromFile("tests/semantic_errors/procedures_same_name.txt");
+    auto ast = SimpleInterface::getAstFromFile(
+        "tests/semantic_errors/procedures_same_name.txt");
 
-    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),"Found multiple procedures with the same name: 'A'.");
+    REQUIRE_THROWS_WITH(PKB::PKBManager(ast),
+                        "Found multiple procedures with the same name: 'A'.");
   }
 }
 

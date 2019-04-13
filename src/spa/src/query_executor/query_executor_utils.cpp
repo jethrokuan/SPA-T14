@@ -191,7 +191,7 @@ std::string QueryExecutor::applyAttrToDesignEntityValue(
 
   switch (de_type) {
     case DesignEntity::CALL:
-      return pkb->getCallProcedureFromLine(de).value();
+      return pkb->getProcedureCalleeFromLine(de).value();
     case DesignEntity::READ:
       return pkb->getReadVariableFromLine(de).value();
     case DesignEntity::PRINT:

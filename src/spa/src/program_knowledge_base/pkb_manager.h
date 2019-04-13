@@ -10,6 +10,7 @@
 #include "simple_parser/interface.h"
 #include "structs/node.h"
 #include "utils/utils.h"
+#include <stack>
 
 using namespace Utils;
 using namespace Simple;
@@ -64,6 +65,44 @@ class PKBManager {
           std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>();
   std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>
       uses_modify_affects_cache =
+          std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>();
+
+  // extension
+  void getNextLineTBipH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+  void getPreviousLineTBipH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+  void getAffectModifiesLineBipH(
+      const Line cur_line, const Variable target_var,
+      const ModifyLine source_line,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectModifiesLineBipH(
+      const Line cur_line, const Variable target_var,
+      const bool first_iteration, const ModifyLine source_line,
+      std::shared_ptr<std::unordered_set<Line>> visited,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectModifiesLineTBipH(
+      const UsesLine uses_line,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set,
+      std::shared_ptr<std::unordered_set<Line>> visited);
+  void getAffectUsesLineBipH(const Line cur_line, const Variable target_var,
+                          const ModifyLine source_line,
+                          std::shared_ptr<std::unordered_set<Line>> uses_set);
+  void getAffectUsesLineBipH(const Line cur_line, const Variable target_var,
+                          const bool first_iteration,
+                          const ModifyLine source_line,
+                          std::shared_ptr<std::unordered_set<Line>> visited,
+                          std::shared_ptr<std::unordered_set<Line>> uses_set);
+  void getAffectUsesLineTBipH(const ModifyLine modify_line,
+                           std::shared_ptr<std::unordered_set<Line>> uses_set,
+                           std::shared_ptr<std::unordered_set<Line>> visited);
+  bool isLineAffectsLineTBipH(const ModifyLine modify_line,
+                           const UsesLine target_line,
+                           std::shared_ptr<std::unordered_set<Line>> visited);
+  // extension cache
+  std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>
+      modify_uses_affects_bip_cache =
+          std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>();
+  std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>
+      uses_modify_affects_bip_cache =
           std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>();
 
  public:
@@ -226,7 +265,7 @@ class PKBManager {
   // misc helpers
   std::optional<std::unordered_set<Line>> getLineForAssignVar(const Variable);
   std::optional<Procedure> getProcedureFromLine(const Line);
-  std::optional<Procedure> getCallProcedureFromLine(const Line);
+  std::optional<Procedure> getProcedureCalleeFromLine(const Line);
   std::optional<Variable> getReadVariableFromLine(const Line);
   std::optional<Variable> getPrintVariableFromLine(const Line);
   std::optional<Variable> getModifyVariableFromAssignLine(const ModifyLine);
@@ -236,6 +275,25 @@ class PKBManager {
   bool isLineAffectsVariable(const Line, const Variable);
   // cache to be cleared after every query line
   void clearCache();
+
+  // extension
+  // next line across procedures
+  std::optional<std::unordered_set<NextLine>> getNextLineBip(const PreviousLine);
+  std::optional<std::unordered_set<NextLine>> getNextLineTBip(const PreviousLine);
+  std::optional<std::unordered_set<PreviousLine>> getPreviousLineBip(const PreviousLine);
+  std::optional<std::unordered_set<PreviousLine>> getPreviousLineTBip(const PreviousLine);
+  // affects across procedures
+  bool isLineAffectsVariableBip(const Line, const Variable);
+  bool isLineAffectsLineBip(const ModifyLine, const UsesLine);
+  bool isLineAffectsLineTBip(const ModifyLine, const UsesLine);
+  std::optional<std::unordered_set<ModifyLine>> getAffectModifiesLineBip(
+      const UsesLine);
+  std::optional<std::unordered_set<UsesLine>> getAffectUsesLineBip(
+      const ModifyLine);
+  std::optional<std::unordered_set<ModifyLine>> getAffectModifiesLineTBip(
+      const UsesLine);
+  std::optional<std::unordered_set<UsesLine>> getAffectUsesLineTBip(
+      const ModifyLine);
 };
 
 }  // namespace PKB

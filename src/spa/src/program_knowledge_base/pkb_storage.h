@@ -38,7 +38,8 @@ class PKBStorage {
   // calls
   std::unordered_set<std::pair<Line, Procedure>, pair_hash>
       line_calls_procedure_set;
-  std::unordered_map<Line, Procedure> line_calls_procedure_map;
+  std::unordered_map<Line, ProcedureCallee> line_calls_procedure_map;
+  std::unordered_map<ProcedureCallee, std::unordered_set<Line>> procedure_line_calls_map;
   std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
       procedure_calls_procedure_set;
   std::unordered_set<std::pair<ProcedureCaller, ProcedureCallee>, pair_hash>
@@ -204,6 +205,13 @@ class PKBStorage {
   Procedure getProcedureFromLine(const Line);
   Line getLineFromNode(const StmtNode node);
   std::optional<std::shared_ptr<Node>> getNodeFromLine(const Line line);
+
+  // extension
+  // next over procedures
+  void storeProcFirstLine(const Procedure, const Line);
+  std::unordered_map<Procedure, Line> proc_first_line_map;
+  void storeProcLastLine(const Procedure, const Line);
+  std::unordered_map<Procedure, std::unordered_set<Line>> proc_last_line_map;
 };
 
 }  // namespace PKB

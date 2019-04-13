@@ -34,6 +34,7 @@ set(srcs ${srcs}
 # PKB
 set(srcs ${srcs}
   src/pkb/TestPKB.cpp
+  src/pkb/TestPKBExtension.cpp
   )
 
 set(srcs ${srcs}

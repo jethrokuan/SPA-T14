@@ -190,6 +190,10 @@ class PKBPreprocessor {
                  const Line line_number);
   void setAssignIterator(const std::vector<StmtNode> stmt_lst);
 
+  void setProcedureStartAndEnd(const std::shared_ptr<RootNode> node);
+  void setProcedureEnd(const Line cur_line,
+      std::shared_ptr<std::unordered_set<Line>> visited);
+
  public:
   PKBPreprocessor(const AST ast, std::shared_ptr<PKBStorage> pkb_storage);
   ~PKBPreprocessor();

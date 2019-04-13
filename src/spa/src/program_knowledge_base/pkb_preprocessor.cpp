@@ -16,6 +16,7 @@ PKBPreprocessor::PKBPreprocessor(const AST ast,
   setModifiesRelations(ast);
   setPattern(ast);
   setAssign(ast);
+  setProcedureStartAndEnd(ast);
 }
 
 PKBPreprocessor::~PKBPreprocessor() {}
@@ -951,6 +952,41 @@ void PKBPreprocessor::setAssignIterator(const std::vector<StmtNode> stmt_lst) {
   // iterate through AST via DFS
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setAssign(s); }, stmt);
+  }
+}
+
+void PKBPreprocessor::setProcedureStartAndEnd(
+    const std::shared_ptr<RootNode> node) {
+  for (const auto &proc : node->ProcList) {
+    // set procedure start
+    const Procedure proc_name = proc->Name;
+    const Line first_proc_line = storage->getLineFromNode(proc->StmtList[0]);
+    storage->storeProcFirstLine(proc_name, first_proc_line);
+
+    // set procedure end
+    std::shared_ptr<std::unordered_set<Line>> visited =
+        std::make_shared<std::unordered_set<Line>>();
+    setProcedureEnd(first_proc_line, visited);
+  }
+}
+
+void PKBPreprocessor::setProcedureEnd(
+    const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(cur_line) != visited->end()) {
+    return;
+  }
+  visited->insert(cur_line);
+  if (storage->line_previous_line_next_map.find(cur_line) !=
+      storage->line_previous_line_next_map.end()) {
+    std::unordered_set<NextLine> next_lines = 
+        storage->line_previous_line_next_map.at(cur_line);
+    for (const auto &line : next_lines) {
+      setProcedureEnd(line, visited);
+    }
+  } else {
+    // reached the end
+    const Procedure proc = storage->getProcedureFromLine(cur_line);
+    storage->storeProcLastLine(proc, cur_line);
   }
 }
 

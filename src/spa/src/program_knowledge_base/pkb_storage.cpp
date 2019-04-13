@@ -178,6 +178,7 @@ void PKBStorage::storeCall(const Line line, const Procedure proc) {
     call_set.insert(line);
     line_calls_procedure_set.insert(std::pair<Line, Procedure>(line, proc));
     line_calls_procedure_map[line] = proc;
+    addToSetMap(procedure_line_calls_map, proc, line);
   }
 }
 
@@ -269,6 +270,14 @@ void PKBStorage::addToSetMap(
     // retrieve vector and add element
     umap.at(index).insert(data);
   }
+}
+
+void PKBStorage::storeProcFirstLine(const Procedure proc, const Line line) {
+  proc_first_line_map[proc] = line;
+}
+
+void PKBStorage::storeProcLastLine(const Procedure proc, const Line line) {
+  addToSetMap(proc_last_line_map, proc, line);
 }
 
 }  // namespace PKB

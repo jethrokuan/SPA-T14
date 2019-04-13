@@ -610,7 +610,7 @@ std::optional<Procedure> PKBManager::getProcedureFromLine(const Line line) {
   }
 }
 
-std::optional<Procedure> PKBManager::getCallProcedureFromLine(const Line line) {
+std::optional<Procedure> PKBManager::getProcedureCalleeFromLine(const Line line) {
   if (isCallExists(line)) {
     return getElemFromMap(pkb_storage->line_calls_procedure_map, line);
   } else {
@@ -741,10 +741,10 @@ std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLine(
 }
 
 std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineT(
-    const PreviousLine previous_line) {
+    const NextLine next_line) {
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
-  auto to_visit = getPreviousLine(previous_line);
+  auto to_visit = getPreviousLine(next_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
       getPreviousLineTH(neighbour, visited);
@@ -800,7 +800,6 @@ void PKBManager::getNextLineTH(
   }
 }
 
-// helper class for isLineAffectsLine DFS
 bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
                                    const UsesLine target_line) {
   // check if cache can be utilised
@@ -1141,6 +1140,504 @@ PKBManager::getCFG() {
 void PKBManager::clearCache() {
   modify_uses_affects_cache.clear();
   uses_modify_affects_cache.clear();
+}
+
+std::optional<std::unordered_set<NextLine>> PKBManager::getNextLineBip(
+    const PreviousLine previous_line) {
+  std::unordered_set<NextLine> next_line;
+  // if current line is a call statement
+  if (isCallExists(previous_line)) {
+    // get the procedure that is being called
+    auto proc = getProcedureCalleeFromLine(previous_line);
+    if (proc) {
+      // get first line to that procedure
+      const Line first_line = pkb_storage->proc_first_line_map.at(*proc);
+      next_line.insert(first_line);
+    } else {
+      // call statement has to call a procedure
+      assert(false);
+    }
+  } else {
+    // non call line
+    // get next line as per normal
+    auto next_line_normal = getNextLine(previous_line);
+    if (next_line_normal) {
+      next_line = *next_line_normal;
+    } else {
+      // reached the end of procedure
+      // find out which procedure this line belongs to
+      const Procedure proc = pkb_storage->getProcedureFromLine(previous_line);
+      // check what procedure's lines were calling it
+      if (pkb_storage->procedure_line_calls_map.find(proc) !=
+          pkb_storage->procedure_line_calls_map.end()) {
+        std::unordered_set<Line> call_lines = 
+            pkb_storage->procedure_line_calls_map.at(proc);
+        for (const auto &line : call_lines) {
+          // for each line that was calling it
+          // get their next line as per normal
+          auto next_line_after_calls = getNextLine(line);
+          if (next_line_after_calls) {
+            for (const auto &line2 : *next_line_after_calls) {
+              next_line.insert(line2);
+            }
+          }
+        }
+      }
+      // else no procedures were calling it
+    }
+  }
+
+  if (next_line.empty()) {
+    return std::nullopt;
+  } else {
+    return std::make_optional<std::unordered_set<NextLine>>(next_line);
+  }
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineBip(
+    const NextLine next_line) {
+  std::unordered_set<PreviousLine> previous_line;
+  // get previous line as per normal
+  auto previous_lines = getPreviousLine(next_line);
+  if (previous_lines) {
+    // non starting line
+    // check if the previous line is a call
+    for (const auto &previous : *previous_lines) {
+      if (isCallExists(previous)) {
+        // check what procedure it calls to
+        auto proc = getProcedureCalleeFromLine(previous);
+        if (proc) {
+          // previous lines will be the last lines of that procedure
+          std::unordered_set<PreviousLine> lines = 
+              pkb_storage->proc_last_line_map.at(*proc);
+          for (const auto &line : lines) {
+            previous_line.insert(line);
+          }
+        } else {
+          // call line must call a procedure
+          assert(false);
+        }
+      } else {
+        previous_line.insert(previous);
+      }
+    }
+  } else {
+    // current line is starting line of a procedure
+    // check what lines were calling it
+    const Procedure proc = pkb_storage->getProcedureFromLine(next_line);
+    if (pkb_storage->procedure_line_calls_map.find(proc) != 
+        pkb_storage->procedure_line_calls_map.end()) {
+      // if it was being called
+      previous_line = pkb_storage->procedure_line_calls_map.at(proc);
+    }
+  }
+
+  if (previous_line.empty()) {
+    return std::nullopt;
+  } else {
+    return std::make_optional<std::unordered_set<PreviousLine>>(previous_line);
+  }
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineTBip(
+    const NextLine next_line) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  auto to_visit = getPreviousLineBip(next_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getPreviousLineTBipH(neighbour, visited);
+    }
+    if (visited->size() > 0) {
+      return std::make_optional<std::unordered_set<Line>>(*visited.get());
+    }
+  }
+  return std::nullopt;
+}
+
+void PKBManager::getPreviousLineTBipH(
+    const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(cur_line) != visited->end()) {
+    return;
+  }
+  visited->insert(cur_line);
+  auto to_visit = getPreviousLineBip(cur_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getPreviousLineTBipH(neighbour, visited);
+    }
+  }
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLineTBip(
+    const PreviousLine previous_line) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  auto to_visit = getNextLineBip(previous_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getNextLineTBipH(neighbour, visited);
+    }
+    if (visited->size() > 0) {
+      return std::make_optional<std::unordered_set<Line>>(*visited.get());
+    }
+  }
+  return std::nullopt;
+}
+
+void PKBManager::getNextLineTBipH(
+    const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(cur_line) != visited->end()) {
+    return;
+  }
+  visited->insert(cur_line);
+  auto to_visit = getNextLineBip(cur_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getNextLineTBipH(neighbour, visited);
+    }
+  }
+}
+
+bool PKBManager::isLineAffectsVariableBip(const Line line, const Variable var) {
+  // modify in affects can only occur for
+  // assign, read and call
+  if (isAssignExists(line) || isReadExists(line)) {
+    auto var_modified = getVarModifiedByLine(line);
+    if (var_modified) {
+      return (*var_modified).find(var) != (*var_modified).end();
+    }
+  }
+
+  return false;
+}
+
+std::optional<std::unordered_set<ModifyLine>> PKBManager::getAffectModifiesLineBip(
+    const UsesLine uses_line) {
+  // check what variables the uses_line uses
+  auto var_set = getUsesVariableFromAssignLine(uses_line);
+  if (var_set) {
+    std::shared_ptr<std::unordered_set<Line>> modifies_set =
+        std::make_shared<std::unordered_set<Line>>();
+    for (const auto &var : *var_set) {
+      // do dfs starting from line
+      getAffectModifiesLineBipH(uses_line, var, uses_line, modifies_set);
+    }
+
+    if (modifies_set->empty()) {
+      return std::nullopt;
+    } else {
+      return std::make_optional<std::unordered_set<UsesLine>>(
+          *modifies_set.get());
+    }
+  } else {
+    return std::nullopt;
+  }
+}
+
+void PKBManager::getAffectModifiesLineBipH(
+    const Line cur_line, const Variable target_var,
+    const ModifyLine source_line,
+    std::shared_ptr<std::unordered_set<Line>> modifies_set) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  getAffectModifiesLineBipH(cur_line, target_var, true, source_line, visited,
+                         modifies_set);
+}
+
+void PKBManager::getAffectModifiesLineBipH(
+    const Line cur_line, const Variable target_var, const bool first_iteration,
+    const ModifyLine source_line,
+    std::shared_ptr<std::unordered_set<Line>> visited,
+    std::shared_ptr<std::unordered_set<Line>> modifies_set) {
+  if (visited->find(cur_line) != visited->end()) {
+    // node has ben visited before
+    // stop traversing down this path
+    return;
+  } else if (!first_iteration) {
+    // add node to visited
+    visited->insert(cur_line);
+  }
+
+  // ignore on first iteration since line can possibly be like
+  // x = x + 1
+  if (!first_iteration) {
+    // check if line modifies the variable
+    if (isLineAffectsVariableBip(cur_line, target_var)) {
+      if (isAssignExists(cur_line)) {
+        pkb_storage->addToSetMap(uses_modify_affects_bip_cache, source_line,
+                                 cur_line);
+        modifies_set->insert(cur_line);
+      }
+      // stop traversing down this path
+      return;
+    }
+  }
+
+  // traverse down neighbours
+  auto neighbours = getPreviousLineBip(cur_line);
+  if (neighbours) {
+    for (const auto &neighbour : *neighbours) {
+      getAffectModifiesLineBipH(neighbour, target_var, false, source_line, visited,
+                             modifies_set);
+    }
+  }
+}
+
+std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineBip(
+    const ModifyLine modify_line) {
+  // check what variable the modify_line modifies
+  auto var = getModifyVariableFromAssignLine(modify_line);
+  if (var) {
+    std::shared_ptr<std::unordered_set<Line>> uses_set =
+        std::make_shared<std::unordered_set<Line>>();
+    // do dfs starting from line
+    getAffectUsesLineBipH(modify_line, (*var), modify_line, uses_set);
+    if (uses_set->empty()) {
+      return std::nullopt;
+    } else {
+      return std::make_optional<std::unordered_set<UsesLine>>(*uses_set.get());
+    }
+  } else {
+    return std::nullopt;
+  }
+}
+
+void PKBManager::getAffectUsesLineBipH(
+    const Line cur_line, const Variable target_var,
+    const ModifyLine source_line,
+    std::shared_ptr<std::unordered_set<Line>> uses_set) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  getAffectUsesLineBipH(cur_line, target_var, true, source_line, visited,
+                     uses_set);
+}
+
+void PKBManager::getAffectUsesLineBipH(
+    const Line cur_line, const Variable target_var, const bool first_iteration,
+    const ModifyLine source_line,
+    std::shared_ptr<std::unordered_set<Line>> visited,
+    std::shared_ptr<std::unordered_set<Line>> uses_set) {
+  if (visited->find(cur_line) != visited->end()) {
+    // node has ben visited before
+    // stop traversing down this path
+    return;
+  } else if (!first_iteration) {
+    // add node to visited
+    visited->insert(cur_line);
+  }
+
+  // ignore on first iteration since line can possibly be like
+  // x = x + 1
+  if (!first_iteration) {
+    // check if line uses the variable
+    auto var_used = getUsesVariableFromAssignLine(cur_line);
+    if (var_used) {
+      if ((*var_used).find(target_var) != (*var_used).end()) {
+        pkb_storage->addToSetMap(modify_uses_affects_bip_cache, source_line,
+                                 cur_line);
+        uses_set->insert(cur_line);
+      }
+    }
+
+    // check if line modifies the variable
+    if (isLineAffectsVariableBip(cur_line, target_var)) {
+      // stop traversing down this path
+      return;
+    }
+  }
+
+  // traverse down neighbours
+  auto neighbours = getNextLineBip(cur_line);
+  if (neighbours) {
+    for (const auto &neighbour : *neighbours) {
+      getAffectUsesLineBipH(neighbour, target_var, false, source_line, visited,
+                         uses_set);
+    }
+  }
+}
+
+std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineTBip(
+    const ModifyLine modify_line) {
+  std::shared_ptr<std::unordered_set<Line>> uses_set =
+      std::make_shared<std::unordered_set<Line>>();
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  getAffectUsesLineTBipH(modify_line, uses_set, visited);
+  if (uses_set->empty()) {
+    return std::nullopt;
+  } else {
+    return std::make_optional<std::unordered_set<UsesLine>>(*uses_set.get());
+  }
+}
+
+void PKBManager::getAffectUsesLineTBipH(
+    const ModifyLine modify_line,
+    std::shared_ptr<std::unordered_set<UsesLine>> uses_set,
+    std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(modify_line) != visited->end()) {
+    return;
+  } else {
+    visited->insert(modify_line);
+  }
+  if (modify_uses_affects_bip_cache.find(modify_line) !=
+      modify_uses_affects_bip_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_bip_cache.at(modify_line);
+    // push each modify line onto the set
+    for (const auto &line : uses_lines) {
+      uses_set->insert(line);
+    }
+    // check what each of those lines are modified by
+    for (const auto &line : uses_lines) {
+      getAffectUsesLineTBipH(line, uses_set, visited);
+    }
+  } else {
+    auto uses_lines = getAffectUsesLineBip(modify_line);
+    if (uses_lines) {
+      // push each modify line onto the set
+      for (const auto &line : *uses_lines) {
+        uses_set->insert(line);
+      }
+      // check what each of those lines are modified by
+      for (const auto &line : *uses_lines) {
+        getAffectUsesLineTBipH(line, uses_set, visited);
+      }
+    }
+  }
+}
+
+std::optional<std::unordered_set<ModifyLine>>
+PKBManager::getAffectModifiesLineTBip(const UsesLine uses_line) {
+  std::shared_ptr<std::unordered_set<Line>> modifies_set =
+      std::make_shared<std::unordered_set<Line>>();
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  getAffectModifiesLineTBipH(uses_line, modifies_set, visited);
+  if (modifies_set->empty()) {
+    return std::nullopt;
+  } else {
+    return std::make_optional<std::unordered_set<ModifyLine>>(
+        *modifies_set.get());
+  }
+}
+
+void PKBManager::getAffectModifiesLineTBipH(
+    const UsesLine uses_line,
+    std::shared_ptr<std::unordered_set<ModifyLine>> modifies_set,
+    std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(uses_line) != visited->end()) {
+    return;
+  } else {
+    visited->insert(uses_line);
+  }
+  if (uses_modify_affects_bip_cache.find(uses_line) !=
+      uses_modify_affects_bip_cache.end()) {
+    // take from cache
+    auto modify_lines = uses_modify_affects_bip_cache.at(uses_line);
+    // push each modify line onto the set
+    for (const auto &line : modify_lines) {
+      modifies_set->insert(line);
+    }
+    // check what each of those lines are modified by
+    for (const auto &line : modify_lines) {
+      getAffectModifiesLineTBipH(line, modifies_set, visited);
+    }
+  } else {
+    auto modify_lines = getAffectModifiesLineBip(uses_line);
+    if (modify_lines) {
+      // push each modify line onto the set
+      for (const auto &line : *modify_lines) {
+        modifies_set->insert(line);
+      }
+      // check what each of those lines are modified by
+      for (const auto &line : *modify_lines) {
+        getAffectModifiesLineTBipH(line, modifies_set, visited);
+      }
+    }
+  }
+}
+
+bool PKBManager::isLineAffectsLineBip(const ModifyLine modify_line,
+                                   const UsesLine target_line) {
+  // check if cache can be utilised
+  if (modify_uses_affects_cache.find(modify_line) !=
+      modify_uses_affects_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_cache.at(modify_line);
+    // check if target has been reached
+    if (uses_lines.find(target_line) != uses_lines.end()) {
+      return true;
+    }
+  } else {
+    auto uses_lines = getAffectUsesLineBip(modify_line);
+    if (uses_lines) {
+      // check if target has been reached
+      if ((*uses_lines).find(target_line) != (*uses_lines).end()) {
+        return true;
+      }
+    }
+  }
+  // end DFS without finding
+  return false;
+}
+
+bool PKBManager::isLineAffectsLineTBip(const ModifyLine modify_line,
+                                    const UsesLine uses_line) {
+  // check that a1 a2 are both assignment statements
+  if (!isAssignExists(modify_line) || !isAssignExists(modify_line)) {
+    return false;
+  }
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  return isLineAffectsLineTBipH(modify_line, uses_line, visited);
+}
+
+// helper class for isLineAffectsLine DFS
+bool PKBManager::isLineAffectsLineTBipH(
+    const ModifyLine modify_line, const UsesLine target_line,
+    std::shared_ptr<std::unordered_set<Line>> visited) {
+  // check if visited
+  if (visited->find(modify_line) != visited->end()) {
+    return false;
+  } else {
+    visited->insert(modify_line);
+  }
+
+  // check if cache can be utilised
+  if (modify_uses_affects_bip_cache.find(modify_line) !=
+      modify_uses_affects_bip_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_bip_cache.at(modify_line);
+    // check if target has been reached
+    if (uses_lines.find(target_line) != uses_lines.end()) {
+      return true;
+    }
+    // check what each of those lines are modified by
+    for (const auto &line : uses_lines) {
+      const bool res = isLineAffectsLineTBipH(line, target_line, visited);
+      if (res) {
+        return true;
+      }
+    }
+  } else {
+    auto uses_lines = getAffectUsesLineBip(modify_line);
+    if (uses_lines) {
+      // check if target has been reached
+      if ((*uses_lines).find(target_line) != (*uses_lines).end()) {
+        return true;
+      }
+      // check what each of those lines are modified by
+      for (const auto &line : *uses_lines) {
+        const bool res = isLineAffectsLineTBipH(line, target_line, visited);
+        if (res) {
+          return true;
+        }
+      }
+    }
+  }
+  // end DFS without finding
+  return false;
 }
 
 }  // namespace PKB

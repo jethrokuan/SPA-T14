@@ -54,7 +54,14 @@ class WhilePatternEvaluator : public PatternEvaluator {
   std::optional<SingleConstraintSet> handlePatternLHSUnderscoreRHSNull()
       override {
     // pattern w (_, _, _)
-    return QueryExecutor::getSelect(pkb, DesignEntity::WHILE);
+    // Get only the lines from the lines & vars
+    // There can be while statements without a control variable
+    PairedConstraintSet allLinesVars = pkb->getAllWhilePatternLinesAndVars();
+    SingleConstraintSet lines;
+    for (const auto& [line, var] : allLinesVars) {
+      lines.insert(line);
+    }
+    return lines;
   }
   std::optional<SingleConstraintSet> handlePatternLHSQuoteIdentRHSNull()
       override {

@@ -1,0 +1,21 @@
+procedure a {
+	while (1 < 2) {
+		x = 5;
+	}
+
+	while (x < 2) {
+		x = 5;
+	}
+
+	if (y > 3) then {
+		y = 6;
+	} else {
+		y = 7;
+	}
+
+	if (1 < 2) then {
+		y = 8;
+	} else {
+		y = 9;
+	}
+}

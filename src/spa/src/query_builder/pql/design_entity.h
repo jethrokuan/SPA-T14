@@ -26,11 +26,13 @@ const auto ALL_STMT_DESIGN_ENTITIES = std::vector<DesignEntity>{
     DesignEntity::IF,     DesignEntity::WHILE,    DesignEntity::PRINT,
     DesignEntity::CALL,   DesignEntity::PROG_LINE};
 const auto ALL_STMT_DESIGN_ENTITIES_NO_PRINT = std::vector<DesignEntity>{
-    DesignEntity::ASSIGN, DesignEntity::READ,  DesignEntity::STMT,
-    DesignEntity::IF,     DesignEntity::WHILE, DesignEntity::CALL};
+    DesignEntity::ASSIGN,   DesignEntity::READ,  DesignEntity::STMT,
+    DesignEntity::IF,       DesignEntity::WHILE, DesignEntity::CALL,
+    DesignEntity::PROG_LINE};
 const auto ALL_STMT_DESIGN_ENTITIES_NO_READ = std::vector<DesignEntity>{
-    DesignEntity::ASSIGN, DesignEntity::STMT,  DesignEntity::IF,
-    DesignEntity::WHILE,  DesignEntity::PRINT, DesignEntity::CALL};
+    DesignEntity::ASSIGN,   DesignEntity::STMT,  DesignEntity::IF,
+    DesignEntity::WHILE,    DesignEntity::PRINT, DesignEntity::CALL,
+    DesignEntity::PROG_LINE};
 const auto PROCEDURE_DESIGN_ENTITY =
     std::vector<DesignEntity>{DesignEntity::PROCEDURE};
 const auto VARIABLE_DESIGN_ENTITY =

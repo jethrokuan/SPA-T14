@@ -1196,4 +1196,34 @@ std::optional<std::unordered_set<NextLine>> PKBManager::getNextLineBip(
   }
 }
 
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLineTBip(
+    const PreviousLine previous_line) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  auto to_visit = getNextLineBip(previous_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getNextLineTBipH(neighbour, visited);
+    }
+    if (visited->size() > 0) {
+      return std::make_optional<std::unordered_set<Line>>(*visited.get());
+    }
+  }
+  return std::nullopt;
+}
+
+void PKBManager::getNextLineTBipH(
+    const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(cur_line) != visited->end()) {
+    return;
+  }
+  visited->insert(cur_line);
+  auto to_visit = getNextLineBip(cur_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getNextLineTBipH(neighbour, visited);
+    }
+  }
+}
+
 }  // namespace PKB

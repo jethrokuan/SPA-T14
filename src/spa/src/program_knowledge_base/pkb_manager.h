@@ -67,6 +67,9 @@ class PKBManager {
       uses_modify_affects_cache =
           std::unordered_map<UsesLine, std::unordered_set<ModifyLine>>();
 
+  // extension
+  void getNextLineTBipH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+
  public:
   PKBManager(const AST ast);
   ~PKBManager();
@@ -241,6 +244,7 @@ class PKBManager {
   // extension
   // next line across procedures
   std::optional<std::unordered_set<NextLine>> getNextLineBip(const PreviousLine);
+  std::optional<std::unordered_set<NextLine>> getNextLineTBip(const PreviousLine);
 };
 
 }  // namespace PKB

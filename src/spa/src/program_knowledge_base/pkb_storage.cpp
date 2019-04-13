@@ -276,4 +276,8 @@ void PKBStorage::storeProcFirstLine(const Procedure proc, const Line line) {
   proc_first_line_map[proc] = line;
 }
 
+void PKBStorage::storeProcLastLine(const Procedure proc, const Line line) {
+  addToSetMap(proc_last_line_map, proc, line);
+}
+
 }  // namespace PKB

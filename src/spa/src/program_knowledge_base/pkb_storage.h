@@ -210,6 +210,8 @@ class PKBStorage {
   // next over procedures
   void storeProcFirstLine(const Procedure, const Line);
   std::unordered_map<Procedure, Line> proc_first_line_map;
+  void storeProcLastLine(const Procedure, const Line);
+  std::unordered_map<Procedure, std::unordered_set<Line>> proc_last_line_map;
 };
 
 }  // namespace PKB

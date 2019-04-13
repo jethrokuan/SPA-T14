@@ -1313,6 +1313,78 @@ bool PKBManager::isLineAffectsVariableBip(const Line line, const Variable var) {
   return false;
 }
 
+std::optional<std::unordered_set<ModifyLine>> PKBManager::getAffectModifiesLineBip(
+    const UsesLine uses_line) {
+  // check what variables the uses_line uses
+  auto var_set = getUsesVariableFromAssignLine(uses_line);
+  if (var_set) {
+    std::shared_ptr<std::unordered_set<Line>> modifies_set =
+        std::make_shared<std::unordered_set<Line>>();
+    for (const auto &var : *var_set) {
+      // do dfs starting from line
+      getAffectModifiesLineBipH(uses_line, var, uses_line, modifies_set);
+    }
+
+    if (modifies_set->empty()) {
+      return std::nullopt;
+    } else {
+      return std::make_optional<std::unordered_set<UsesLine>>(
+          *modifies_set.get());
+    }
+  } else {
+    return std::nullopt;
+  }
+}
+
+void PKBManager::getAffectModifiesLineBipH(
+    const Line cur_line, const Variable target_var,
+    const ModifyLine source_line,
+    std::shared_ptr<std::unordered_set<Line>> modifies_set) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  getAffectModifiesLineBipH(cur_line, target_var, true, source_line, visited,
+                         modifies_set);
+}
+
+void PKBManager::getAffectModifiesLineBipH(
+    const Line cur_line, const Variable target_var, const bool first_iteration,
+    const ModifyLine source_line,
+    std::shared_ptr<std::unordered_set<Line>> visited,
+    std::shared_ptr<std::unordered_set<Line>> modifies_set) {
+  if (visited->find(cur_line) != visited->end()) {
+    // node has ben visited before
+    // stop traversing down this path
+    return;
+  } else if (!first_iteration) {
+    // add node to visited
+    visited->insert(cur_line);
+  }
+
+  // ignore on first iteration since line can possibly be like
+  // x = x + 1
+  if (!first_iteration) {
+    // check if line modifies the variable
+    if (isLineAffectsVariableBip(cur_line, target_var)) {
+      if (isAssignExists(cur_line)) {
+        pkb_storage->addToSetMap(uses_modify_affects_bip_cache, source_line,
+                                 cur_line);
+        modifies_set->insert(cur_line);
+      }
+      // stop traversing down this path
+      return;
+    }
+  }
+
+  // traverse down neighbours
+  auto neighbours = getPreviousLineBip(cur_line);
+  if (neighbours) {
+    for (const auto &neighbour : *neighbours) {
+      getAffectModifiesLineBipH(neighbour, target_var, false, source_line, visited,
+                             modifies_set);
+    }
+  }
+}
+
 std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineBip(
     const ModifyLine modify_line) {
   // check what variable the modify_line modifies

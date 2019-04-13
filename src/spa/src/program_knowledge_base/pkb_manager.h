@@ -70,6 +70,15 @@ class PKBManager {
   // extension
   void getNextLineTBipH(const Line, std::shared_ptr<std::unordered_set<Line>>);
   void getPreviousLineTBipH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+  void getAffectModifiesLineBipH(
+      const Line cur_line, const Variable target_var,
+      const ModifyLine source_line,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectModifiesLineBipH(
+      const Line cur_line, const Variable target_var,
+      const bool first_iteration, const ModifyLine source_line,
+      std::shared_ptr<std::unordered_set<Line>> visited,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set);
   void getAffectUsesLineBipH(const Line cur_line, const Variable target_var,
                           const ModifyLine source_line,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);

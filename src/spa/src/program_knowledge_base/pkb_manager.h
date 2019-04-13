@@ -10,7 +10,6 @@
 #include "simple_parser/interface.h"
 #include "structs/node.h"
 #include "utils/utils.h"
-#include <stack>
 
 using namespace Utils;
 using namespace Simple;
@@ -260,7 +259,7 @@ class PKBManager {
       const ModifyLine);
 
   // CFG
-  std::unordered_map<std::string, std::unordered_set<std::string>> getCFG();
+  std::unordered_map<PreviousLine, std::unordered_set<NextLine>> getCFG();
 
   // misc helpers
   std::optional<std::unordered_set<Line>> getLineForAssignVar(const Variable);

@@ -1,11 +1,10 @@
 #pragma once
-#include <iostream>
-
 #include <cassert>
 #include <optional>
 #include <string>
 #include <unordered_set>
 #include "program_knowledge_base/pkb_definitions.h"
+#include "program_knowledge_base/pkb_exceptions.h"
 #include "structs/node.h"
 #include "utils/utils.h"
 
@@ -18,7 +17,6 @@ class PKBStorage {
   int num_lines = 1;
   std::unordered_map<Line, std::shared_ptr<Node>> line_node_map;
   std::unordered_map<std::shared_ptr<Node>, Line> node_line_map;
-  std::unordered_map<std::shared_ptr<std::string>, std::string> test;
   // helper
   Line getCurLineNumber();
   void incrementCurLineNumber();

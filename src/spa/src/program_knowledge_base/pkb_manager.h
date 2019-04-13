@@ -87,6 +87,9 @@ class PKBManager {
                           const ModifyLine source_line,
                           std::shared_ptr<std::unordered_set<Line>> visited,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
+  void getAffectUsesLineTBipH(const ModifyLine modify_line,
+                           std::shared_ptr<std::unordered_set<Line>> uses_set,
+                           std::shared_ptr<std::unordered_set<Line>> visited);
   // extension cache
   std::unordered_map<ModifyLine, std::unordered_set<UsesLine>>
       modify_uses_affects_bip_cache =

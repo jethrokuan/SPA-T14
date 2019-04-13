@@ -1458,4 +1458,54 @@ void PKBManager::getAffectUsesLineBipH(
   }
 }
 
+std::optional<std::unordered_set<UsesLine>> PKBManager::getAffectUsesLineTBip(
+    const ModifyLine modify_line) {
+  std::shared_ptr<std::unordered_set<Line>> uses_set =
+      std::make_shared<std::unordered_set<Line>>();
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  getAffectUsesLineTBipH(modify_line, uses_set, visited);
+  if (uses_set->empty()) {
+    return std::nullopt;
+  } else {
+    return std::make_optional<std::unordered_set<UsesLine>>(*uses_set.get());
+  }
+}
+
+void PKBManager::getAffectUsesLineTBipH(
+    const ModifyLine modify_line,
+    std::shared_ptr<std::unordered_set<UsesLine>> uses_set,
+    std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(modify_line) != visited->end()) {
+    return;
+  } else {
+    visited->insert(modify_line);
+  }
+  if (modify_uses_affects_bip_cache.find(modify_line) !=
+      modify_uses_affects_bip_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_bip_cache.at(modify_line);
+    // push each modify line onto the set
+    for (const auto &line : uses_lines) {
+      uses_set->insert(line);
+    }
+    // check what each of those lines are modified by
+    for (const auto &line : uses_lines) {
+      getAffectUsesLineTBipH(line, uses_set, visited);
+    }
+  } else {
+    auto uses_lines = getAffectUsesLineBip(modify_line);
+    if (uses_lines) {
+      // push each modify line onto the set
+      for (const auto &line : *uses_lines) {
+        uses_set->insert(line);
+      }
+      // check what each of those lines are modified by
+      for (const auto &line : *uses_lines) {
+        getAffectUsesLineTBipH(line, uses_set, visited);
+      }
+    }
+  }
+}
+
 }  // namespace PKB

@@ -16,8 +16,7 @@ PKBPreprocessor::PKBPreprocessor(const AST ast,
   setModifiesRelations(ast);
   setPattern(ast);
   setAssign(ast);
-  setProcedureStart(ast);
-  setProcedureEnd(ast);
+  setProcedureStartAndEnd(ast);
 }
 
 PKBPreprocessor::~PKBPreprocessor() {}
@@ -953,14 +952,6 @@ void PKBPreprocessor::setAssignIterator(const std::vector<StmtNode> stmt_lst) {
   // iterate through AST via DFS
   for (const auto &stmt : stmt_lst) {
     std::visit([this](const auto &s) { setAssign(s); }, stmt);
-  }
-}
-
-void PKBPreprocessor::setProcedureStart(const std::shared_ptr<RootNode> node) {
-  for (const auto &proc : node->ProcList) {
-    const Procedure proc_name = proc->Name;
-    const Line first_proc_line = storage->getLineFromNode(proc->StmtList[0]);
-    storage->storeProcFirstLine(proc_name, first_proc_line);
   }
 }
 

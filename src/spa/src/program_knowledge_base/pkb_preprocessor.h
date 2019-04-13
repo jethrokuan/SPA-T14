@@ -191,6 +191,8 @@ class PKBPreprocessor {
   void setAssignIterator(const std::vector<StmtNode> stmt_lst);
 
   void setProcedureStart(const std::shared_ptr<RootNode> node);
+  void setProcedureEnd();
+  void setProcedureEnd(const Line);
 
  public:
   PKBPreprocessor(const AST ast, std::shared_ptr<PKBStorage> pkb_storage);

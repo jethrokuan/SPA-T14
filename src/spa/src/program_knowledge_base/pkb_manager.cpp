@@ -800,7 +800,6 @@ void PKBManager::getNextLineTH(
   }
 }
 
-// helper class for isLineAffectsLine DFS
 bool PKBManager::isLineAffectsLine(const ModifyLine modify_line,
                                    const UsesLine target_line) {
   // check if cache can be utilised
@@ -1557,6 +1556,88 @@ void PKBManager::getAffectModifiesLineTBipH(
       }
     }
   }
+}
+
+bool PKBManager::isLineAffectsLineBip(const ModifyLine modify_line,
+                                   const UsesLine target_line) {
+  // check if cache can be utilised
+  if (modify_uses_affects_cache.find(modify_line) !=
+      modify_uses_affects_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_cache.at(modify_line);
+    // check if target has been reached
+    if (uses_lines.find(target_line) != uses_lines.end()) {
+      return true;
+    }
+  } else {
+    auto uses_lines = getAffectUsesLineBip(modify_line);
+    if (uses_lines) {
+      // check if target has been reached
+      if ((*uses_lines).find(target_line) != (*uses_lines).end()) {
+        return true;
+      }
+    }
+  }
+  // end DFS without finding
+  return false;
+}
+
+bool PKBManager::isLineAffectsLineTBip(const ModifyLine modify_line,
+                                    const UsesLine uses_line) {
+  // check that a1 a2 are both assignment statements
+  if (!isAssignExists(modify_line) || !isAssignExists(modify_line)) {
+    return false;
+  }
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  return isLineAffectsLineTBipH(modify_line, uses_line, visited);
+}
+
+// helper class for isLineAffectsLine DFS
+bool PKBManager::isLineAffectsLineTBipH(
+    const ModifyLine modify_line, const UsesLine target_line,
+    std::shared_ptr<std::unordered_set<Line>> visited) {
+  // check if visited
+  if (visited->find(modify_line) != visited->end()) {
+    return false;
+  } else {
+    visited->insert(modify_line);
+  }
+
+  // check if cache can be utilised
+  if (modify_uses_affects_bip_cache.find(modify_line) !=
+      modify_uses_affects_bip_cache.end()) {
+    // retrieve from cache
+    auto uses_lines = modify_uses_affects_bip_cache.at(modify_line);
+    // check if target has been reached
+    if (uses_lines.find(target_line) != uses_lines.end()) {
+      return true;
+    }
+    // check what each of those lines are modified by
+    for (const auto &line : uses_lines) {
+      const bool res = isLineAffectsLineTBipH(line, target_line, visited);
+      if (res) {
+        return true;
+      }
+    }
+  } else {
+    auto uses_lines = getAffectUsesLineBip(modify_line);
+    if (uses_lines) {
+      // check if target has been reached
+      if ((*uses_lines).find(target_line) != (*uses_lines).end()) {
+        return true;
+      }
+      // check what each of those lines are modified by
+      for (const auto &line : *uses_lines) {
+        const bool res = isLineAffectsLineTBipH(line, target_line, visited);
+        if (res) {
+          return true;
+        }
+      }
+    }
+  }
+  // end DFS without finding
+  return false;
 }
 
 }  // namespace PKB

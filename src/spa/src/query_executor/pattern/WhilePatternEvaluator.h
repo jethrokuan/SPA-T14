@@ -53,7 +53,7 @@ class WhilePatternEvaluator : public PatternEvaluator {
   }
   std::optional<SingleConstraintSet> handlePatternLHSUnderscoreRHSNull()
       override {
-    // pattern w (_, _, _)
+    // pattern w (_, _)
     // Get only the lines from the lines & vars
     // There can be while statements without a control variable
     PairedConstraintSet allLinesVars = pkb->getAllWhilePatternLinesAndVars();
@@ -65,7 +65,7 @@ class WhilePatternEvaluator : public PatternEvaluator {
   }
   std::optional<SingleConstraintSet> handlePatternLHSQuoteIdentRHSNull()
       override {
-    // pattern w ("x", _, _)
+    // pattern w ("x", _)
     return pkb->getWhilePatternLine(*argLeftAsBasic);
   }
   std::optional<PairedConstraintSet> handlePatternLHSSynonymRHSNull() override {

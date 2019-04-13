@@ -79,6 +79,10 @@ class PKBManager {
       const bool first_iteration, const ModifyLine source_line,
       std::shared_ptr<std::unordered_set<Line>> visited,
       std::shared_ptr<std::unordered_set<Line>> modifies_set);
+  void getAffectModifiesLineTBipH(
+      const UsesLine uses_line,
+      std::shared_ptr<std::unordered_set<Line>> modifies_set,
+      std::shared_ptr<std::unordered_set<Line>> visited);
   void getAffectUsesLineBipH(const Line cur_line, const Variable target_var,
                           const ModifyLine source_line,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);

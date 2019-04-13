@@ -260,6 +260,7 @@ class PKBManager {
   // next line across procedures
   std::optional<std::unordered_set<NextLine>> getNextLineBip(const PreviousLine);
   std::optional<std::unordered_set<NextLine>> getNextLineTBip(const PreviousLine);
+  std::optional<std::unordered_set<NextLine>> getPreviousLineBip(const PreviousLine);
   // affects across procedures
   bool isLineAffectsVariableBip(const Line, const Variable);
   bool isLineAffectsLineBip(const ModifyLine, const UsesLine);

@@ -1168,7 +1168,7 @@ std::optional<std::unordered_set<NextLine>> PKBManager::getNextLineBip(
       // reached the end of procedure
       // find out which procedure this line belongs to
       const Procedure proc = pkb_storage->getProcedureFromLine(previous_line);
-      // check what procedures were calling it
+      // check what procedure's lines were calling it
       if (pkb_storage->procedure_line_calls_map.find(proc) !=
           pkb_storage->procedure_line_calls_map.end()) {
         std::unordered_set<Line> call_lines = 
@@ -1188,11 +1188,55 @@ std::optional<std::unordered_set<NextLine>> PKBManager::getNextLineBip(
     }
   }
 
-  // if next lines is empty return nullopt that thingy
-  if (next_line.size() == 0) {
+  if (next_line.empty()) {
     return std::nullopt;
   } else {
     return std::make_optional<std::unordered_set<NextLine>>(next_line);
+  }
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineBip(
+    const NextLine next_line) {
+  std::unordered_set<PreviousLine> previous_line;
+  // get previous line as per normal
+  auto previous_lines = getPreviousLine(next_line);
+  if (previous_lines) {
+    // non starting line
+    // check if the previous line is a call
+    for (const auto &previous : *previous_lines) {
+      if (isCallExists(previous)) {
+        // check what procedure it calls to
+        auto proc = getProcedureCalleeFromLine(previous);
+        if (proc) {
+          // previous lines will be the last lines of that procedure
+          std::unordered_set<PreviousLine> lines = 
+              pkb_storage->proc_last_line_map.at(*proc);
+          for (const auto &line : lines) {
+            previous_line.insert(line);
+          }
+        } else {
+          // call line must call a procedure
+          assert(false);
+        }
+      } else {
+        previous_line.insert(previous);
+      }
+    }
+  } else {
+    // current line is starting line of a procedure
+    // check what lines were calling it
+    const Procedure proc = pkb_storage->getProcedureFromLine(next_line);
+    if (pkb_storage->procedure_line_calls_map.find(proc) != 
+        pkb_storage->procedure_line_calls_map.end()) {
+      // if it was being called
+      previous_line = pkb_storage->procedure_line_calls_map.at(proc);
+    }
+  }
+
+  if (previous_line.empty()) {
+    return std::nullopt;
+  } else {
+    return std::make_optional<std::unordered_set<PreviousLine>>(previous_line);
   }
 }
 

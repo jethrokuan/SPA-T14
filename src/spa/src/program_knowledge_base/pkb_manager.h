@@ -10,6 +10,7 @@
 #include "simple_parser/interface.h"
 #include "structs/node.h"
 #include "utils/utils.h"
+#include <stack>
 
 using namespace Utils;
 using namespace Simple;
@@ -226,7 +227,7 @@ class PKBManager {
   // misc helpers
   std::optional<std::unordered_set<Line>> getLineForAssignVar(const Variable);
   std::optional<Procedure> getProcedureFromLine(const Line);
-  std::optional<Procedure> getCallProcedureFromLine(const Line);
+  std::optional<Procedure> getProcedureCalleeFromLine(const Line);
   std::optional<Variable> getReadVariableFromLine(const Line);
   std::optional<Variable> getPrintVariableFromLine(const Line);
   std::optional<Variable> getModifyVariableFromAssignLine(const ModifyLine);
@@ -236,6 +237,10 @@ class PKBManager {
   bool isLineAffectsVariable(const Line, const Variable);
   // cache to be cleared after every query line
   void clearCache();
+
+  // extension
+  // next line across procedures
+  std::optional<std::unordered_set<NextLine>> getNextLineBip(const PreviousLine);
 };
 
 }  // namespace PKB

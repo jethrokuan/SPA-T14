@@ -178,6 +178,7 @@ void PKBStorage::storeCall(const Line line, const Procedure proc) {
     call_set.insert(line);
     line_calls_procedure_set.insert(std::pair<Line, Procedure>(line, proc));
     line_calls_procedure_map[line] = proc;
+    addToSetMap(procedure_line_calls_map, proc, line);
   }
 }
 
@@ -277,6 +278,14 @@ void PKBStorage::storeProcFirstLine(const Procedure proc, const Line line) {
 
 Line PKBStorage::getProcFirstLine(const Procedure proc) {
   return proc_first_line_map.at(proc);
+}
+
+ProcedureCallee PKBStorage::getProcedureCalleeFromLine(const Line line) {
+  return line_calls_procedure_map[line];
+}
+
+std::unordered_set<Line> PKBStorage::getLineFromProcedureCallee(const ProcedureCallee) {
+  ;
 }
 
 }  // namespace PKB

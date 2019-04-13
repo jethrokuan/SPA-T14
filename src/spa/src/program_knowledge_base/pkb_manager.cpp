@@ -610,7 +610,7 @@ std::optional<Procedure> PKBManager::getProcedureFromLine(const Line line) {
   }
 }
 
-std::optional<Procedure> PKBManager::getCallProcedureFromLine(const Line line) {
+std::optional<Procedure> PKBManager::getProcedureCalleeFromLine(const Line line) {
   if (isCallExists(line)) {
     return getElemFromMap(pkb_storage->line_calls_procedure_map, line);
   } else {
@@ -1141,6 +1141,32 @@ PKBManager::getCFG() {
 void PKBManager::clearCache() {
   modify_uses_affects_cache.clear();
   uses_modify_affects_cache.clear();
+}
+
+std::optional<std::unordered_set<Line>> PKBManager::getNextLineBip(
+    const PreviousLine previous_line) {
+  // if current line is a call statement
+  if (isCallExists(previous_line)) {
+    // make a call to the next procedure
+    const Procedure proc = pkb_storage->getProcedureCalleeFromLine(previous_line);
+    // get first line to that procedure
+    const Line first_line = pkb_storage->getProcFirstLine(proc);
+    std::unordered_set<Line> next_lines;
+    next_lines.insert(first_line);
+  }
+
+  // non call line
+  // get next line as per normal
+  auto next_line = getNextLine(previous_line);
+  if (next_line) {
+    ;
+  } else {
+    // reached the end of procedure
+    // should check if need to return to other procedures
+    // find out which procedure this line belongs to
+    const Procedure proc = pkb_storage->getProcedureFromLine(previous_line);
+    // check what procedures were calling it
+  }
 }
 
 }  // namespace PKB

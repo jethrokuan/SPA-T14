@@ -69,7 +69,7 @@ class WhilePatternEvaluator : public PatternEvaluator {
     return pkb->getWhilePatternLine(*argLeftAsBasic);
   }
   std::optional<PairedConstraintSet> handlePatternLHSSynonymRHSNull() override {
-    // pattern w (v, _, _)
+    // pattern w (v, _)
     return pkb->getAllWhilePatternLinesAndVars();
   }
 

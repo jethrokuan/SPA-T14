@@ -588,6 +588,16 @@ void PKBPreprocessor::setUsesIndirectRelations() {
       for (const auto &var : vars_used) {
         storage->storeLineUsesVarRelation(line, var);
       }
+
+      if (storage->child_line_parent_line_map.find(line) !=
+          storage->child_line_parent_line_map.end()) {
+        auto parents = storage->child_line_parent_line_map_t.at(line);
+        for (const auto &parent : parents) {
+          for ( auto &var : vars_used) {
+            storage->storeLineUsesVarRelation(parent, var);
+          }
+        }
+      }
     }
   }
 }
@@ -722,8 +732,19 @@ void PKBPreprocessor::setModifiesIndirectRelations() {
         storage->var_modified_by_procedure_map.end()) {
       auto vars_modified =
           storage->var_modified_by_procedure_map.at(proc_called);
+
       for (const auto &var : vars_modified) {
         storage->storeLineModifiesVarRelation(line, var);
+      }
+
+      if (storage->child_line_parent_line_map.find(line) !=
+          storage->child_line_parent_line_map.end()) {
+        auto parents = storage->child_line_parent_line_map_t.at(line);
+        for (const auto &parent : parents) {
+          for (const auto &var : vars_modified) {
+            storage->storeLineModifiesVarRelation(parent, var);
+          }
+        }
       }
     }
   }

@@ -276,16 +276,4 @@ void PKBStorage::storeProcFirstLine(const Procedure proc, const Line line) {
   proc_first_line_map[proc] = line;
 }
 
-Line PKBStorage::getProcFirstLine(const Procedure proc) {
-  return proc_first_line_map.at(proc);
-}
-
-ProcedureCallee PKBStorage::getProcedureCalleeFromLine(const Line line) {
-  return line_calls_procedure_map[line];
-}
-
-std::unordered_set<Line> PKBStorage::getLineFromProcedureCallee(const ProcedureCallee) {
-  ;
-}
-
 }  // namespace PKB

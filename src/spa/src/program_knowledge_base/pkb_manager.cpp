@@ -610,7 +610,8 @@ std::optional<Procedure> PKBManager::getProcedureFromLine(const Line line) {
   }
 }
 
-std::optional<Procedure> PKBManager::getProcedureCalleeFromLine(const Line line) {
+std::optional<Procedure> PKBManager::getProcedureCalleeFromLine(
+    const Line line) {
   if (isCallExists(line)) {
     return getElemFromMap(pkb_storage->line_calls_procedure_map, line);
   } else {
@@ -1170,7 +1171,7 @@ std::optional<std::unordered_set<NextLine>> PKBManager::getNextLineBip(
       // check what procedure's lines were calling it
       if (pkb_storage->procedure_line_calls_map.find(proc) !=
           pkb_storage->procedure_line_calls_map.end()) {
-        std::unordered_set<Line> call_lines = 
+        std::unordered_set<Line> call_lines =
             pkb_storage->procedure_line_calls_map.at(proc);
         for (const auto &line : call_lines) {
           // for each line that was calling it
@@ -1208,7 +1209,7 @@ std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineBip(
         auto proc = getProcedureCalleeFromLine(previous);
         if (proc) {
           // previous lines will be the last lines of that procedure
-          std::unordered_set<PreviousLine> lines = 
+          std::unordered_set<PreviousLine> lines =
               pkb_storage->proc_last_line_map.at(*proc);
           for (const auto &line : lines) {
             previous_line.insert(line);
@@ -1225,7 +1226,7 @@ std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineBip(
     // current line is starting line of a procedure
     // check what lines were calling it
     const Procedure proc = pkb_storage->getProcedureFromLine(next_line);
-    if (pkb_storage->procedure_line_calls_map.find(proc) != 
+    if (pkb_storage->procedure_line_calls_map.find(proc) !=
         pkb_storage->procedure_line_calls_map.end()) {
       // if it was being called
       previous_line = pkb_storage->procedure_line_calls_map.at(proc);
@@ -1312,8 +1313,8 @@ bool PKBManager::isLineAffectsVariableBip(const Line line, const Variable var) {
   return false;
 }
 
-std::optional<std::unordered_set<ModifyLine>> PKBManager::getAffectModifiesLineBip(
-    const UsesLine uses_line) {
+std::optional<std::unordered_set<ModifyLine>>
+PKBManager::getAffectModifiesLineBip(const UsesLine uses_line) {
   // check what variables the uses_line uses
   auto var_set = getUsesVariableFromAssignLine(uses_line);
   if (var_set) {
@@ -1342,7 +1343,7 @@ void PKBManager::getAffectModifiesLineBipH(
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
   getAffectModifiesLineBipH(cur_line, target_var, true, source_line, visited,
-                         modifies_set);
+                            modifies_set);
 }
 
 void PKBManager::getAffectModifiesLineBipH(
@@ -1378,8 +1379,8 @@ void PKBManager::getAffectModifiesLineBipH(
   auto neighbours = getPreviousLineBip(cur_line);
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
-      getAffectModifiesLineBipH(neighbour, target_var, false, source_line, visited,
-                             modifies_set);
+      getAffectModifiesLineBipH(neighbour, target_var, false, source_line,
+                                visited, modifies_set);
     }
   }
 }
@@ -1410,7 +1411,7 @@ void PKBManager::getAffectUsesLineBipH(
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
   getAffectUsesLineBipH(cur_line, target_var, true, source_line, visited,
-                     uses_set);
+                        uses_set);
 }
 
 void PKBManager::getAffectUsesLineBipH(
@@ -1452,7 +1453,7 @@ void PKBManager::getAffectUsesLineBipH(
   if (neighbours) {
     for (const auto &neighbour : *neighbours) {
       getAffectUsesLineBipH(neighbour, target_var, false, source_line, visited,
-                         uses_set);
+                            uses_set);
     }
   }
 }
@@ -1559,7 +1560,7 @@ void PKBManager::getAffectModifiesLineTBipH(
 }
 
 bool PKBManager::isLineAffectsLineBip(const ModifyLine modify_line,
-                                   const UsesLine target_line) {
+                                      const UsesLine target_line) {
   // check if cache can be utilised
   if (modify_uses_affects_cache.find(modify_line) !=
       modify_uses_affects_cache.end()) {
@@ -1583,7 +1584,7 @@ bool PKBManager::isLineAffectsLineBip(const ModifyLine modify_line,
 }
 
 bool PKBManager::isLineAffectsLineTBip(const ModifyLine modify_line,
-                                    const UsesLine uses_line) {
+                                       const UsesLine uses_line) {
   // check that a1 a2 are both assignment statements
   if (!isAssignExists(modify_line) || !isAssignExists(modify_line)) {
     return false;

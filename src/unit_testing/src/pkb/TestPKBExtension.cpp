@@ -12,7 +12,7 @@ TEST_CASE ("Test PKB for next bip extension") {
       "tests/simple_source/call/complex_call_structure.txt");
   PKB::PKBManager pkb = PKB::PKBManager(ast);
 
-  SECTION("Next Bip") {
+  SECTION ("Next Bip") {
     std::unordered_set<std::string> next_bip_test_1_check;
     next_bip_test_1_check.insert("3");
     auto next_bip_test_1 = pkb.getNextLineBip("1");
@@ -90,7 +90,7 @@ TEST_CASE ("Test PKB for next bip extension") {
     REQUIRE(*next_bip_test_16 == next_bip_test_16_check);
   }
 
-  SECTION("NextT Bip") {
+  SECTION ("NextT Bip") {
     std::unordered_set<std::string> next_bip_test_1_check;
     next_bip_test_1_check.insert("3");
     next_bip_test_1_check.insert("6");
@@ -226,7 +226,7 @@ TEST_CASE ("Test PKB for next bip extension") {
     REQUIRE(*next_bip_test_16 == next_bip_test_16_check);
   }
 
-  SECTION("Previous Bip") {
+  SECTION ("Previous Bip") {
     auto previous_bip_test_1 = pkb.getPreviousLineBip("1");
     REQUIRE(previous_bip_test_1 == std::nullopt);
 
@@ -304,7 +304,7 @@ TEST_CASE ("Test PKB for next bip extension") {
     REQUIRE(*previous_bip_test_16 == previous_bip_test_16_check);
   }
 
-  SECTION("PreviousT Bip") {
+  SECTION ("PreviousT Bip") {
     auto previous_bip_test_1 = pkb.getPreviousLineTBip("1");
     REQUIRE(previous_bip_test_1 == std::nullopt);
 

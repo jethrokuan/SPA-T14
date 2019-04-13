@@ -192,7 +192,7 @@ class PKBPreprocessor {
 
   void setProcedureStartAndEnd(const std::shared_ptr<RootNode> node);
   void setProcedureEnd(const Line cur_line,
-      std::shared_ptr<std::unordered_set<Line>> visited);
+                       std::shared_ptr<std::unordered_set<Line>> visited);
 
  public:
   PKBPreprocessor(const AST ast, std::shared_ptr<PKBStorage> pkb_storage);

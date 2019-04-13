@@ -40,8 +40,8 @@ Select a pattern a(v,"a+b")
 5000
 9 - Pattern, assign
 assign a; variable v;
-Select <a,v> pattern a(_,_)
-6 y, 7 x, 9 z, 11 x, 13 a, 14 a, 14 b, 15 a, 15 b, 15 c, 17 a, 17 b, 18 a, 18 c, 19 a, 19 b, 20 c, 20 b
+Select <a,v> pattern a(v,_)
+6 y, 7 x, 9 z, 11 x, 13 a, 14 b, 15 c, 17 b, 18 c, 19 b, 20 c
 5000
 10 - Pattern, assign
 assign a; variable v;

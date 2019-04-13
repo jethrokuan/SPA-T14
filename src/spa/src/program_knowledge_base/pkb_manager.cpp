@@ -741,10 +741,10 @@ std::optional<std::unordered_set<PreviousLine>> PKBManager::getNextLine(
 }
 
 std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineT(
-    const PreviousLine previous_line) {
+    const NextLine next_line) {
   std::shared_ptr<std::unordered_set<Line>> visited =
       std::make_shared<std::unordered_set<Line>>();
-  auto to_visit = getPreviousLine(previous_line);
+  auto to_visit = getPreviousLine(next_line);
   if (to_visit) {
     for (const auto &neighbour : *to_visit) {
       getPreviousLineTH(neighbour, visited);
@@ -1237,6 +1237,36 @@ std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineBip(
     return std::nullopt;
   } else {
     return std::make_optional<std::unordered_set<PreviousLine>>(previous_line);
+  }
+}
+
+std::optional<std::unordered_set<PreviousLine>> PKBManager::getPreviousLineTBip(
+    const NextLine next_line) {
+  std::shared_ptr<std::unordered_set<Line>> visited =
+      std::make_shared<std::unordered_set<Line>>();
+  auto to_visit = getPreviousLineBip(next_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getPreviousLineTBipH(neighbour, visited);
+    }
+    if (visited->size() > 0) {
+      return std::make_optional<std::unordered_set<Line>>(*visited.get());
+    }
+  }
+  return std::nullopt;
+}
+
+void PKBManager::getPreviousLineTBipH(
+    const Line cur_line, std::shared_ptr<std::unordered_set<Line>> visited) {
+  if (visited->find(cur_line) != visited->end()) {
+    return;
+  }
+  visited->insert(cur_line);
+  auto to_visit = getPreviousLineBip(cur_line);
+  if (to_visit) {
+    for (const auto &neighbour : *to_visit) {
+      getPreviousLineTBipH(neighbour, visited);
+    }
   }
 }
 

@@ -69,6 +69,7 @@ class PKBManager {
 
   // extension
   void getNextLineTBipH(const Line, std::shared_ptr<std::unordered_set<Line>>);
+  void getPreviousLineTBipH(const Line, std::shared_ptr<std::unordered_set<Line>>);
   void getAffectUsesLineBipH(const Line cur_line, const Variable target_var,
                           const ModifyLine source_line,
                           std::shared_ptr<std::unordered_set<Line>> uses_set);
@@ -260,7 +261,8 @@ class PKBManager {
   // next line across procedures
   std::optional<std::unordered_set<NextLine>> getNextLineBip(const PreviousLine);
   std::optional<std::unordered_set<NextLine>> getNextLineTBip(const PreviousLine);
-  std::optional<std::unordered_set<NextLine>> getPreviousLineBip(const PreviousLine);
+  std::optional<std::unordered_set<PreviousLine>> getPreviousLineBip(const PreviousLine);
+  std::optional<std::unordered_set<PreviousLine>> getPreviousLineTBip(const PreviousLine);
   // affects across procedures
   bool isLineAffectsVariableBip(const Line, const Variable);
   bool isLineAffectsLineBip(const ModifyLine, const UsesLine);

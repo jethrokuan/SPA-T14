@@ -89,4 +89,140 @@ TEST_CASE ("Test PKB for extension") {
     auto next_bip_test_16 = pkb.getNextLineBip("16");
     REQUIRE(*next_bip_test_16 == next_bip_test_16_check);
   }
+
+  SECTION("Next BipT") {
+    std::unordered_set<std::string> next_bip_test_1_check;
+    next_bip_test_1_check.insert("3");
+    next_bip_test_1_check.insert("6");
+    next_bip_test_1_check.insert("9");
+    next_bip_test_1_check.insert("10");
+    next_bip_test_1_check.insert("7");
+    next_bip_test_1_check.insert("11");
+    next_bip_test_1_check.insert("12");
+    next_bip_test_1_check.insert("8");
+    next_bip_test_1_check.insert("4");
+    next_bip_test_1_check.insert("5");
+    next_bip_test_1_check.insert("2");
+    auto next_bip_test_1 = pkb.getNextLineTBip("1");
+    REQUIRE(*next_bip_test_1 == next_bip_test_1_check);
+
+    auto next_bip_test_2 = pkb.getNextLineTBip("2");
+    REQUIRE(next_bip_test_2 == std::nullopt);
+
+    std::unordered_set<std::string> next_bip_test_3_check;
+    next_bip_test_3_check.insert("6");
+    next_bip_test_3_check.insert("9");
+    next_bip_test_3_check.insert("10");
+    next_bip_test_3_check.insert("7");
+    next_bip_test_3_check.insert("11");
+    next_bip_test_3_check.insert("12");
+    next_bip_test_3_check.insert("8");
+    next_bip_test_3_check.insert("4");
+    next_bip_test_3_check.insert("5");
+    next_bip_test_3_check.insert("2");
+    auto next_bip_test_3 = pkb.getNextLineTBip("3");
+    REQUIRE(*next_bip_test_3 == next_bip_test_3_check);
+
+    std::unordered_set<std::string> next_bip_test_4_check;
+    next_bip_test_4_check.insert("5");
+    next_bip_test_4_check.insert("2");
+    auto next_bip_test_4 = pkb.getNextLineTBip("4");
+    REQUIRE(*next_bip_test_4 == next_bip_test_4_check);
+
+    std::unordered_set<std::string> next_bip_test_5_check;
+    next_bip_test_5_check.insert("2");
+    auto next_bip_test_5 = pkb.getNextLineTBip("5");
+    REQUIRE(*next_bip_test_5 == next_bip_test_5_check);
+
+    std::unordered_set<std::string> next_bip_test_6_check;
+    next_bip_test_6_check.insert("9");
+    next_bip_test_6_check.insert("10");
+    next_bip_test_6_check.insert("7");
+    next_bip_test_6_check.insert("11");
+    next_bip_test_6_check.insert("12");
+    next_bip_test_6_check.insert("8");
+    next_bip_test_6_check.insert("4");
+    next_bip_test_6_check.insert("5");
+    next_bip_test_6_check.insert("2");
+    auto next_bip_test_6 = pkb.getNextLineTBip("6");
+    REQUIRE(*next_bip_test_6 == next_bip_test_6_check);
+
+    std::unordered_set<std::string> next_bip_test_7_check;
+    next_bip_test_7_check.insert("11");
+    next_bip_test_7_check.insert("12");
+    next_bip_test_7_check.insert("8");
+    next_bip_test_7_check.insert("4");
+    next_bip_test_7_check.insert("5");
+    next_bip_test_7_check.insert("2");
+    auto next_bip_test_7 = pkb.getNextLineTBip("7");
+    REQUIRE(*next_bip_test_7 == next_bip_test_7_check);
+
+    std::unordered_set<std::string> next_bip_test_8_check;
+    next_bip_test_8_check.insert("4");
+    next_bip_test_8_check.insert("5");
+    next_bip_test_8_check.insert("2");
+    auto next_bip_test_8 = pkb.getNextLineTBip("8");
+    REQUIRE(*next_bip_test_8 == next_bip_test_8_check);
+
+    std::unordered_set<std::string> next_bip_test_9_check;
+    next_bip_test_9_check.insert("10");
+    next_bip_test_9_check.insert("7");
+    next_bip_test_9_check.insert("11");
+    next_bip_test_9_check.insert("12");
+    next_bip_test_9_check.insert("8");
+    next_bip_test_9_check.insert("4");
+    next_bip_test_9_check.insert("5");
+    next_bip_test_9_check.insert("2");
+    auto next_bip_test_9 = pkb.getNextLineTBip("9");
+    REQUIRE(*next_bip_test_9 == next_bip_test_9_check);
+
+    std::unordered_set<std::string> next_bip_test_10_check;
+    next_bip_test_10_check.insert("7");
+    next_bip_test_10_check.insert("11");
+    next_bip_test_10_check.insert("12");
+    next_bip_test_10_check.insert("8");
+    next_bip_test_10_check.insert("4");
+    next_bip_test_10_check.insert("5");
+    next_bip_test_10_check.insert("2");
+    auto next_bip_test_10 = pkb.getNextLineTBip("10");
+    REQUIRE(*next_bip_test_10 == next_bip_test_10_check);
+
+    std::unordered_set<std::string> next_bip_test_11_check;
+    next_bip_test_11_check.insert("12");
+    next_bip_test_11_check.insert("8");
+    next_bip_test_11_check.insert("4");
+    next_bip_test_11_check.insert("5");
+    next_bip_test_11_check.insert("2");
+    auto next_bip_test_11 = pkb.getNextLineTBip("11");
+    REQUIRE(*next_bip_test_11 == next_bip_test_11_check);
+
+    std::unordered_set<std::string> next_bip_test_12_check;
+    next_bip_test_12_check.insert("8");
+    next_bip_test_12_check.insert("4");
+    next_bip_test_12_check.insert("5");
+    next_bip_test_12_check.insert("2");
+    auto next_bip_test_12 = pkb.getNextLineTBip("12");
+    REQUIRE(*next_bip_test_12 == next_bip_test_12_check);
+
+    std::unordered_set<std::string> next_bip_test_13_check;
+    next_bip_test_13_check.insert("15");
+    next_bip_test_13_check.insert("16");
+    next_bip_test_13_check.insert("14");
+    auto next_bip_test_13 = pkb.getNextLineTBip("13");
+    REQUIRE(*next_bip_test_13 == next_bip_test_13_check);
+
+    auto next_bip_test_14 = pkb.getNextLineTBip("14");
+    REQUIRE(next_bip_test_14 == std::nullopt);
+
+    std::unordered_set<std::string> next_bip_test_15_check;
+    next_bip_test_15_check.insert("16");
+    next_bip_test_15_check.insert("14");
+    auto next_bip_test_15 = pkb.getNextLineTBip("15");
+    REQUIRE(*next_bip_test_15 == next_bip_test_15_check);
+
+    std::unordered_set<std::string> next_bip_test_16_check;
+    next_bip_test_16_check.insert("14");
+    auto next_bip_test_16 = pkb.getNextLineTBip("16");
+    REQUIRE(*next_bip_test_16 == next_bip_test_16_check);
+  }
 }

@@ -151,7 +151,7 @@ Select c1 such that Uses(c1,v1)
 31 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;
 Select v1 such that Uses(1,v1)
-x
+none
 5000
 32 - Uses
 assign a1,a2; print pn1,pn2; procedure p1,p2; call c1,c2; while w1,w2; if i1, i2; variable v1, v2;

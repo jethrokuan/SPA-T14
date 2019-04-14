@@ -214,20 +214,20 @@ ConstraintTable ConstraintTable::cartesianProduct(ConstraintTable& t1,
   if (t2.size() == 0) return t1;
   ConstraintTable out_table;
   // Construct new column headers
-  for (auto& [name, col_idx] : t1.name_column_map) {
+  for (const auto& [name, col_idx] : t1.name_column_map) {
     // can't addNewColumnName, idx wrong
     out_table.name_column_map[name] = col_idx;
     out_table.next_column_idx++;  // to be consistent with its purpose
   }
   // Add this to all col numbers for t2 as we merge
   size_t base_t2_column_idx = out_table.next_column_idx;
-  for (auto& [name, col_idx] : t2.name_column_map) {
+  for (const auto& [name, col_idx] : t2.name_column_map) {
     out_table.name_column_map[name] = col_idx + base_t2_column_idx;
     out_table.next_column_idx++;  // to be consistent with its purpose
   }
   // Cartesian product of rows in both tables
-  for (auto row1 : t1.table) {
-    for (auto row2 : t2.table) {
+  for (const auto& row1 : t1.table) {
+    for (const auto& row2 : t2.table) {
       vector<string> new_row;
       new_row.insert(new_row.end(), row1.begin(), row1.end());
       new_row.insert(new_row.end(), row2.begin(), row2.end());
@@ -248,7 +248,7 @@ vector<string> ConstraintTable::getColumnByName(const string& name) {
 }
 
 ConstraintTable ConstraintTable::getSubTable(
-    const vector<string>& vars_to_select) {
+    const vector<string>& vars_to_select) const {
   vector<string> vars_to_select_in_table;
   ConstraintTable out_table;
   for (const auto& var_to_select : vars_to_select) {
@@ -259,10 +259,10 @@ ConstraintTable ConstraintTable::getSubTable(
     }
   }
   if (vars_to_select.empty()) return out_table;  // no vars to select
-  for (auto& row : table) {
+  for (const auto& row : table) {
     vector<string> out_row;
     for (const auto& var_to_select : vars_to_select_in_table) {
-      size_t to_select_idx = name_column_map[var_to_select];
+      size_t to_select_idx = name_column_map.at(var_to_select);
       out_row.push_back(row[to_select_idx]);
     }
     out_table.table.push_back(out_row);

@@ -231,23 +231,30 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
   std::cerr << "Cart end, final construction start\n";
 
   // Get only the variables we want (in order) from final table
-  vector<vector<string>> out_values;
-  out_values.reserve(existing_table.table.size());
-  for (const auto& row : existing_table.table) {
-    vector<string> out_row;
-    for (const auto& var : vars_to_select) {
-      size_t var_idx = existing_table.name_column_map[var];
-      out_row.push_back(row[var_idx]);
+  // vector<vector<string>> out_values;
+  // out_values.reserve(existing_table.table.size());
+  map<string, size_t> vars_to_select_idx_map;
+  for (const auto var_name : vars_to_select) {
+    vars_to_select_idx_map.insert(
+        {var_name, existing_table.name_column_map[var_name]});
+  }
+  vector<vector<string>> rows;
+  rows.reserve(existing_table.size());
+  for (int i = existing_table.size() - 1; i >= 0; i--) {
+    vector<string> new_row;
+    const auto& row = existing_table.table[i];
+    new_row.reserve(vars_to_select.size());
+    for (const auto& var_to_select : vars_to_select) {
+      new_row.push_back(row[vars_to_select_idx_map[var_to_select]]);
     }
-    out_values.push_back(out_row);
+    rows.push_back(new_row);
   }
 
   std::cerr << "Start unique removal\n";
 
-  std::sort(out_values.begin(), out_values.end());
-  out_values.erase(std::unique(out_values.begin(), out_values.end()),
-                   out_values.end());
+  std::sort(rows.begin(), rows.end());
+  rows.erase(std::unique(rows.begin(), rows.end()), rows.end());
 
   std::cerr << "Final return  vector\n";
-  return out_values;
+  return rows;
 }

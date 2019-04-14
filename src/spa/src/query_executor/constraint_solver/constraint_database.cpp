@@ -236,14 +236,9 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
       size_t var_idx = existing_table.name_column_map[var];
       out_row.push_back(row[var_idx]);
     }
-    // Remove trailing space
     out_values.push_back(out_row);
   }
 
-  // Force uniqueness on results
   set<vector<string>> unique_values(out_values.begin(), out_values.end());
-  auto unique_vec =
-      vector<vector<string>>(unique_values.begin(), unique_values.end());
-  std::sort(unique_vec.begin(), unique_vec.end());
-  return unique_vec;
+  return vector<vector<string>>(unique_values.begin(), unique_values.end());
 }

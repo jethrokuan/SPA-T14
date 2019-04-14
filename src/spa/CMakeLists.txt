@@ -69,7 +69,9 @@ set(headers ${headers}
   src/query_executor/suchthat/ModifiesPEvaluator.h
   src/query_executor/suchthat/UsesPEvaluator.h
   src/query_executor/suchthat/AffectsEvaluator.h
+  src/query_executor/suchthat/AffectsPEvaluator.h
   src/query_executor/suchthat/AffectsTEvaluator.h
+  src/query_executor/suchthat/AffectsPTEvaluator.h
   src/query_executor/with/WithEvaluator.h
   )
 

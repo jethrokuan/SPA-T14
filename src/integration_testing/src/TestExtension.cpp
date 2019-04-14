@@ -13,8 +13,7 @@
 
 using namespace QE;
 
-TEST_CASE (
-    "Test Extension: NextP/NextPT/AffectsP/AffectsPT - test bip source") {
+TEST_CASE ("Test Extension: NextP/NextPT- test bip source") {
   auto ast = Simple::SimpleInterface::getAstFromFile("tests/BipTest.txt");
 
   // Store PKB variable in class for querying later
@@ -133,6 +132,24 @@ TEST_CASE (
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) ==
             std::vector<std::string>{"10", "11", "3", "4", "5", "8", "9"});
+  }
+
+  delete pkb;
+  delete qm;
+}
+
+TEST_CASE ("Test Extension: AffectsP/AffectsPT- test bip source") {
+  auto ast = Simple::SimpleInterface::getAstFromFile("tests/BipTest.txt");
+
+  // Store PKB variable in class for querying later
+  auto pkb = new PKBManager(ast);
+  auto qm = new QueryExecutor(pkb);
+  auto qe = QueryBuilder();
+
+  SECTION ("Test basic AffectsP 1->3") {
+    auto querystr = std::string("Select BOOLEAN such that AffectsP(1, 6)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"TRUE"});
   }
 
   delete pkb;

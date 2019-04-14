@@ -10,6 +10,8 @@
 #include "query_executor/pattern/IfPatternEvaluator.h"
 #include "query_executor/pattern/WhilePatternEvaluator.h"
 #include "query_executor/suchthat/AffectsEvaluator.h"
+#include "query_executor/suchthat/AffectsPEvaluator.h"
+#include "query_executor/suchthat/AffectsPTEvaluator.h"
 #include "query_executor/suchthat/AffectsTEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
 #include "query_executor/suchthat/CallsTEvaluator.h"
@@ -98,9 +100,9 @@ bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
     case Relation::NextPT:
       return NextPTEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::AffectsP:
-      // return AffectsEvaluator(decls, relCond, pkb, db).evaluate();
+      return AffectsPEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::AffectsPT:
-      // return AffectsTEvaluator(decls, relCond, pkb, db).evaluate();
+      return AffectsPTEvaluator(decls, relCond, pkb, db).evaluate();
     default:
       return false;
       // assert(false);

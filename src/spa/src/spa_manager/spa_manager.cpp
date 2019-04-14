@@ -26,6 +26,9 @@ std::vector<std::string> SPAManager::query(std::string& pql_query) {
   auto qe = QueryBuilder();
   auto query = qe.makePqlQuery(pql_query);
   auto query_results = qm->makeQuery(&query);
+  // Can't reuse cache across queries
+  pkb->clearCache();
+  pkb->clearBipCache();
   return query_results;
 }
 

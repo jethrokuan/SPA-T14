@@ -231,6 +231,7 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
 
   // Get only the variables we want (in order) from final table
   vector<vector<string>> out_values;
+  out_values.reserve(existing_table.table.size());
   for (const auto& row : existing_table.table) {
     vector<string> out_row;
     for (const auto& var : vars_to_select) {
@@ -239,6 +240,8 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
     }
     out_values.push_back(out_row);
   }
+
+  std::cerr << "Start unique removal\n";
   out_values.erase(std::unique(out_values.begin(), out_values.end()),
                    out_values.end());
 

@@ -229,6 +229,7 @@ ConstraintTable ConstraintTable::cartesianProduct(ConstraintTable& t1,
   for (const auto& row1 : t1.table) {
     for (const auto& row2 : t2.table) {
       vector<string> new_row;
+      new_row.reserve(row1.size() + row2.size());
       new_row.insert(new_row.end(), row1.begin(), row1.end());
       new_row.insert(new_row.end(), row2.begin(), row2.end());
       out_table.table.push_back(new_row);
@@ -241,6 +242,7 @@ ConstraintTable ConstraintTable::cartesianProduct(ConstraintTable& t1,
 vector<string> ConstraintTable::getColumnByName(const string& name) {
   size_t col_idx = name_column_map[name];
   vector<string> out_column;
+  out_column.reserve(table.size());
   for (auto& row : table) {
     out_column.push_back(row[col_idx]);
   }
@@ -259,6 +261,7 @@ ConstraintTable ConstraintTable::getSubTable(
     }
   }
   if (vars_to_select.empty()) return out_table;  // no vars to select
+  out_table.table.reserve(table.size());
   for (const auto& row : table) {
     vector<string> out_row;
     for (const auto& var_to_select : vars_to_select_in_table) {

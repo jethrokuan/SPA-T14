@@ -140,14 +140,18 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   // Either get all possible DEs, or look up existing set of DEs in DB
   SingleConstraintSet lhs_designentities;
   if (db.hasVariable(argLeftAsSynonym->synonym)) {
-    lhs_designentities = db.selectOneAsSet(argLeftAsSynonym->synonym);
+    // lhs_designentities = db.selectOneAsSet(argLeftAsSynonym->synonym);
+    lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+        declarations, pkb, argLeftAsSynonym->synonym);
   } else {
     lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
         declarations, pkb, argLeftAsSynonym->synonym);
   }
   SingleConstraintSet rhs_designentities;
   if (db.hasVariable(argRightAsSynonym->synonym)) {
-    rhs_designentities = db.selectOneAsSet(argRightAsSynonym->synonym);
+    // rhs_designentities = db.selectOneAsSet(argRightAsSynonym->synonym);
+    rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+        declarations, pkb, argRightAsSynonym->synonym);
   } else {
     rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
         declarations, pkb, argRightAsSynonym->synonym);

@@ -27,6 +27,7 @@ bool ConstraintDatabase::addToPairedVariableConstraints(
   // If no table, create one (disjoint, so needs new table)
   if (!matching_table_iterators) {
     createNewTable(var1_name, var2_name, constraint_values);
+
     return true;
   } else if ((matching_table_iterators->first != name_table_map.end()) &&
              (matching_table_iterators->second != name_table_map.end()) &&
@@ -34,6 +35,7 @@ bool ConstraintDatabase::addToPairedVariableConstraints(
                  matching_table_iterators->second->second) {
     // Exact match to same table, filter only
     size_t table_idx = matching_table_iterators->first->second;
+
     return tables[table_idx].filterBy(var1_name, var2_name, constraint_values);
   } else {
     // 2 possibilities
@@ -54,6 +56,7 @@ bool ConstraintDatabase::addToPairedVariableConstraints(
       // Join required on var2_name
       if (!have_done_table_set_join) {
         size_t table_idx = matching_table_iterators->second->second;
+
         return doTableSetJoin(table_idx, var1_name, var2_name,
                               constraint_values, false);
       } else {
@@ -62,6 +65,7 @@ bool ConstraintDatabase::addToPairedVariableConstraints(
         // second variable
         size_t table1_idx = matching_table_iterators->first->second;
         size_t table2_idx = matching_table_iterators->second->second;
+
         return doTableTableJoin(table1_idx, table2_idx, var2_name);
       }
     }

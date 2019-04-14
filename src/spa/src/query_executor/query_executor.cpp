@@ -10,6 +10,8 @@
 #include "query_executor/pattern/IfPatternEvaluator.h"
 #include "query_executor/pattern/WhilePatternEvaluator.h"
 #include "query_executor/suchthat/AffectsEvaluator.h"
+#include "query_executor/suchthat/AffectsPEvaluator.h"
+#include "query_executor/suchthat/AffectsPTEvaluator.h"
 #include "query_executor/suchthat/AffectsTEvaluator.h"
 #include "query_executor/suchthat/CallsEvaluator.h"
 #include "query_executor/suchthat/CallsTEvaluator.h"
@@ -18,6 +20,8 @@
 #include "query_executor/suchthat/ModifiesPEvaluator.h"
 #include "query_executor/suchthat/ModifiesSEvaluator.h"
 #include "query_executor/suchthat/NextEvaluator.h"
+#include "query_executor/suchthat/NextPEvaluator.h"
+#include "query_executor/suchthat/NextPTEvaluator.h"
 #include "query_executor/suchthat/NextTEvaluator.h"
 #include "query_executor/suchthat/ParentEvaluator.h"
 #include "query_executor/suchthat/ParentTEvaluator.h"
@@ -91,8 +95,17 @@ bool QueryExecutor::executeClause(std::vector<QE::Declaration>* decls,
       return AffectsEvaluator(decls, relCond, pkb, db).evaluate();
     case Relation::AffectsT:
       return AffectsTEvaluator(decls, relCond, pkb, db).evaluate();
+    case Relation::NextP:
+      return NextPEvaluator(decls, relCond, pkb, db).evaluate();
+    case Relation::NextPT:
+      return NextPTEvaluator(decls, relCond, pkb, db).evaluate();
+    case Relation::AffectsP:
+      return AffectsPEvaluator(decls, relCond, pkb, db).evaluate();
+    case Relation::AffectsPT:
+      return AffectsPTEvaluator(decls, relCond, pkb, db).evaluate();
     default:
-      assert(false);
+      return false;
+      // assert(false);
   }
 }
 

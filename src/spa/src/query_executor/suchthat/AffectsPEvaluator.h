@@ -13,40 +13,41 @@
 using namespace PKB;
 using namespace QE;
 
-class AffectsTEvaluator : public SuchThatEvaluator {
+class AffectsPEvaluator : public SuchThatEvaluator {
  public:
-  AffectsTEvaluator(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
+  AffectsPEvaluator(std::vector<QE::Declaration>* decls, QE::RelCond* relCond,
                     PKBManager* pkb, ConstraintDatabase& db)
       : SuchThatEvaluator(decls, relCond, pkb, db){};
 
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
-    // Affects*(a, 1)
-    return pkb->getAffectModifiesLineT(basic_value)
+    // AffectsP(a, 1)
+    return pkb->getAffectModifiesLineBip(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
-    // Affects*(1, a)
-    return pkb->getAffectUsesLineT(basic_value)
+    // AffectsP(1, a)
+    return pkb->getAffectUsesLineBip(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
-    // Affects*(a, _)  (for each a)
-    return pkb->getAffectUsesLineT(arg_value).has_value();
+    // AffectsP(a, _)  (for each a)
+    return pkb->getAffectUsesLineBip(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
-    // Affects*(_, a) (for each a)
-    return pkb->getAffectModifiesLineT(arg_value).has_value();
+    // AffectsP(_, a) (for each a)
+    return pkb->getAffectModifiesLineBip(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_left,
                               std::string& arg_right) override {
-    // Affects*(a1, 2) (for each a1, a2)
-    return pkb->isLineAffectsLineT(arg_left, arg_right);
+    // AffectsP(a1, 2) (for each a1, a2)
+    return pkb->isLineAffectsLineBip(arg_left, arg_right);
   }
   bool handleDoubleUnderscore() override {
-    // Affects*(_, _)
+    // AffectsP(_, _)
     // Must check all possible combinations to see if one is true
+
     SingleConstraintSet lhs_designentities =
         QueryExecutor::getSelect(pkb, DesignEntity::ASSIGN);
     SingleConstraintSet rhs_designentities =
@@ -55,7 +56,7 @@ class AffectsTEvaluator : public SuchThatEvaluator {
     PairedConstraintSet results;
     for (auto lhs_de : lhs_designentities) {
       for (auto rhs_de : rhs_designentities) {
-        if (pkb->isLineAffectsLineT(lhs_de, rhs_de)) {
+        if (pkb->isLineAffectsLineBip(lhs_de, rhs_de)) {
           return true;
         }
       }
@@ -63,16 +64,16 @@ class AffectsTEvaluator : public SuchThatEvaluator {
     return false;
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
-    // Affects*(1, _)
-    return pkb->getAffectUsesLineT(arg).has_value();
+    // AffectsP(1, _)
+    return pkb->getAffectUsesLineBip(arg).has_value();
   }
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
-    // Affects*(_, 1)
-    return pkb->getAffectModifiesLineT(arg).has_value();
+    // AffectsP(_, 1)
+    return pkb->getAffectModifiesLineBip(arg).has_value();
   }
   bool handleBothArgsBasic(std::string& arg_left,
                            std::string& arg_right) override {
-    // Affects*(1, 2)
-    return pkb->isLineAffectsLineT(arg_left, arg_right);
+    // AffectsP(1, 2)
+    return pkb->isLineAffectsLineBip(arg_left, arg_right);
   }
 };

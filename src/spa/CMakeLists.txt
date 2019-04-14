@@ -62,12 +62,16 @@ set(headers ${headers}
   src/query_executor/pattern/AssignPatternEvaluator.h
   src/query_executor/suchthat/NextEvaluator.h
   src/query_executor/suchthat/NextTEvaluator.h
+  src/query_executor/suchthat/NextPEvaluator.h
+  src/query_executor/suchthat/NextPTEvaluator.h
   src/query_executor/suchthat/CallsEvaluator.h
   src/query_executor/suchthat/CallsTEvaluator.h
   src/query_executor/suchthat/ModifiesPEvaluator.h
   src/query_executor/suchthat/UsesPEvaluator.h
   src/query_executor/suchthat/AffectsEvaluator.h
+  src/query_executor/suchthat/AffectsPEvaluator.h
   src/query_executor/suchthat/AffectsTEvaluator.h
+  src/query_executor/suchthat/AffectsPTEvaluator.h
   src/query_executor/with/WithEvaluator.h
   )
 

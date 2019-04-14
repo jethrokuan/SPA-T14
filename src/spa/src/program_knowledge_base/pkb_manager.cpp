@@ -34,29 +34,9 @@ std::optional<std::string> PKBManager::getElemFromMap(
 }
 
 // is design entity set empty
-bool PKBManager::isVariableSetEmpty() { return pkb_storage->var_set.empty(); }
-
-bool PKBManager::isAssignSetEmpty() { return pkb_storage->assign_set.empty(); }
-
-bool PKBManager::isPrintSetEmpty() { return pkb_storage->print_set.empty(); }
-
-bool PKBManager::isReadSetEmpty() { return pkb_storage->read_set.empty(); }
-
-bool PKBManager::isWhileSetEmpty() { return pkb_storage->while_set.empty(); }
-
-bool PKBManager::isIfSetEmpty() { return pkb_storage->if_set.empty(); }
-
-bool PKBManager::isConstantSetEmpty() {
-  return pkb_storage->constant_set.empty();
-}
-
 bool PKBManager::isCallSetEmpty() { return pkb_storage->call_set.empty(); }
 
 // is design entity exists
-bool PKBManager::isVariableExists(const Variable var) {
-  return pkb_storage->var_set.find(var) != pkb_storage->var_set.end();
-}
-
 bool PKBManager::isAssignExists(const Line line) {
   return pkb_storage->assign_set.find(line) != pkb_storage->assign_set.end();
 }
@@ -72,23 +52,6 @@ bool PKBManager::isPrintExists(const Line line) {
 
 bool PKBManager::isReadExists(const Line line) {
   return pkb_storage->read_set.find(line) != pkb_storage->assign_set.end();
-}
-
-bool PKBManager::isWhileExists(const Line line) {
-  return pkb_storage->while_set.find(line) != pkb_storage->while_set.end();
-}
-
-bool PKBManager::isIfExists(const Line line) {
-  return pkb_storage->if_set.find(line) != pkb_storage->if_set.end();
-}
-
-bool PKBManager::isConstantExists(const Constant c) {
-  return pkb_storage->constant_set.find(c) != pkb_storage->constant_set.end();
-}
-
-bool PKBManager::isProcedureExists(const Procedure proc) {
-  return pkb_storage->procedure_set.find(proc) !=
-         pkb_storage->procedure_set.end();
 }
 
 bool PKBManager::isCallExists(const Line line) {
@@ -542,35 +505,14 @@ PKBManager::getAllAssignPatternLinesAndVars() {
   return pkb_storage->assign_pattern_line_var_set;
 }
 
-// TODO use this in the other pattern methods
-bool PKBManager::isAssignPatternExists(Pattern pattern) {
-  Expr expr = SimpleInterface::parseExpression(pattern);
-  ExprStr pattern_expr =
-      std::visit([](const auto &s) { return s->to_str(); }, expr);
-  return pkb_storage->assign_pattern_expr_str_set.find(pattern_expr) !=
-         pkb_storage->assign_pattern_expr_str_set.end();
-}
-
 std::optional<std::unordered_set<Line>> PKBManager::getIfPatternLine(
     const Variable var) {
   return getSetFromMap(pkb_storage->if_pattern_control_variable_line_map, var);
 }
 
-std::optional<std::unordered_set<Variable>> PKBManager::getIfPatternVariable(
-    const Line line) {
-  return getSetFromMap(pkb_storage->if_pattern_line_control_variable_map, line);
-}
-
 std::unordered_set<std::pair<Line, Variable>, pair_hash>
 PKBManager::getAllIfPatternLinesAndVars() {
   return pkb_storage->if_pattern_line_var_set;
-}
-
-bool PKBManager::isIfPatternExists(const Line line, const Variable var) {
-  const std::pair<Line, Variable> pattern =
-      std::pair<Line, Variable>(line, var);
-  return pkb_storage->if_pattern_line_var_set.find(pattern) !=
-         pkb_storage->if_pattern_line_var_set.end();
 }
 
 std::optional<std::unordered_set<Line>> PKBManager::getWhilePatternLine(
@@ -579,22 +521,9 @@ std::optional<std::unordered_set<Line>> PKBManager::getWhilePatternLine(
                        var);
 }
 
-std::optional<std::unordered_set<Variable>> PKBManager::getWhilePatternVariable(
-    const Line line) {
-  return getSetFromMap(pkb_storage->while_pattern_line_control_variable_map,
-                       line);
-}
-
 std::unordered_set<std::pair<Line, Variable>, pair_hash>
 PKBManager::getAllWhilePatternLinesAndVars() {
   return pkb_storage->while_pattern_line_var_set;
-}
-
-bool PKBManager::isWhilePatternExists(const Line line, const Variable var) {
-  const std::pair<Line, Variable> pattern =
-      std::pair<Line, Variable>(line, var);
-  return pkb_storage->while_pattern_line_var_set.find(pattern) !=
-         pkb_storage->while_pattern_line_var_set.end();
 }
 
 std::optional<std::unordered_set<Line>> PKBManager::getLineForAssignVar(
@@ -1582,11 +1511,6 @@ bool PKBManager::isLineNextLineTBip(const PreviousLine previous_line,
   }
 
   return false;
-}
-
-std::unordered_map<PreviousLine, std::unordered_set<NextLine>>
-PKBManager::getCFGBip() {
-  return pkb_storage->line_previous_line_next_bip_map;
 }
 
 }  // namespace PKB

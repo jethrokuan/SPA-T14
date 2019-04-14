@@ -114,25 +114,13 @@ class PKBManager {
   // API exposed to Query Executor
 
   // is design entity set empty
-  bool isVariableSetEmpty();
-  bool isAssignSetEmpty();
-  bool isPrintSetEmpty();
-  bool isReadSetEmpty();
-  bool isWhileSetEmpty();
-  bool isIfSetEmpty();
-  bool isConstantSetEmpty();
   bool isCallSetEmpty();
 
   // is design entity exists
-  bool isVariableExists(const Variable);
   bool isAssignExists(const Line);
   bool isStatementExists(const Line);
   bool isPrintExists(const Line);
   bool isReadExists(const Line);
-  bool isWhileExists(const Line);
-  bool isIfExists(const Line);
-  bool isConstantExists(const Constant);
-  bool isProcedureExists(const Procedure);
   bool isCallExists(const Line);
 
   // get design entities
@@ -222,22 +210,16 @@ class PKBManager {
   getAssignPatternPartialMatchLinesAndVars(const Pattern);
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
   getAllAssignPatternLinesAndVars();
-  bool isAssignPatternExists(const Pattern);
 
   // if pattern
   std::optional<std::unordered_set<Line>> getIfPatternLine(const Variable);
-  std::optional<std::unordered_set<Variable>> getIfPatternVariable(const Line);
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
   getAllIfPatternLinesAndVars();
-  bool isIfPatternExists(const Line, const Variable);
 
   // while pattern
   std::optional<std::unordered_set<Line>> getWhilePatternLine(const Variable);
-  std::optional<std::unordered_set<Variable>> getWhilePatternVariable(
-      const Line);
   std::unordered_set<std::pair<Line, Variable>, pair_hash>
   getAllWhilePatternLinesAndVars();
-  bool isWhilePatternExists(const Line, const Variable);
 
   // next
   bool isLineNextLine(const PreviousLine, const NextLine);
@@ -303,7 +285,6 @@ class PKBManager {
   std::optional<std::unordered_set<UsesLine>> getAffectUsesLineTBip(
       const ModifyLine);
   void clearBipCache();
-  std::unordered_map<PreviousLine, std::unordered_set<NextLine>> getCFGBip();
 };
 
 }  // namespace PKB

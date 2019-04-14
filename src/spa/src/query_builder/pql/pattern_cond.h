@@ -41,6 +41,12 @@ class PatternCond {
     return synonym == pat.synonym && firstArg == pat.firstArg &&
            secondArg == pat.secondArg;
   }
+  friend std::ostream& operator<<(std::ostream& os,
+                                  PatternCond const& patcond) {
+    os << "pattern " << patcond.synonym.synonym << "(..)";
+    // os << relcond.arg1 << "," << relcond.arg2 << ")";
+    return os;
+  }
 };
 
 }  // namespace QE

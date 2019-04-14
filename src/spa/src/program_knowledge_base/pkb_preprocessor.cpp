@@ -16,6 +16,7 @@ PKBPreprocessor::PKBPreprocessor(const AST ast,
   setPattern(ast);
   setAssign(ast);
   setProcedureStartAndEnd(ast);
+  setCFGBip();
 }
 
 PKBPreprocessor::~PKBPreprocessor() {}
@@ -593,7 +594,7 @@ void PKBPreprocessor::setUsesIndirectRelations() {
           storage->child_line_parent_line_map.end()) {
         auto parents = storage->child_line_parent_line_map_t.at(line);
         for (const auto &parent : parents) {
-          for ( auto &var : vars_used) {
+          for (auto &var : vars_used) {
             storage->storeLineUsesVarRelation(parent, var);
           }
         }
@@ -987,6 +988,7 @@ void PKBPreprocessor::setProcedureStartAndEnd(
     std::shared_ptr<std::unordered_set<Line>> visited =
         std::make_shared<std::unordered_set<Line>>();
     setProcedureEnd(first_proc_line, visited);
+    setProcedureEndHIterator(proc->StmtList);
   }
 }
 
@@ -1007,6 +1009,86 @@ void PKBPreprocessor::setProcedureEnd(
     // reached the end
     const Procedure proc = storage->getProcedureFromLine(cur_line);
     storage->storeProcLastLine(proc, cur_line);
+  }
+}
+
+// to catch edge case where program ends with while
+void PKBPreprocessor::setProcedureEndHIterator(
+    const std::vector<StmtNode> stmt_lst) {
+  std::visit([this](const auto &s) { setProcedureEndH(s); }, stmt_lst.back());
+}
+
+void PKBPreprocessor::setProcedureEndH(const std::shared_ptr<IfNode> node) {
+  setProcedureEndHIterator(node->StmtListThen);
+  setProcedureEndHIterator(node->StmtListElse);
+}
+
+void PKBPreprocessor::setProcedureEndH(const std::shared_ptr<WhileNode> node) {
+  const Line line = storage->getLineFromNode(node);
+  const Procedure proc = storage->getProcedureFromLine(line);
+  storage->storeProcLastLine(proc, line);
+}
+
+void PKBPreprocessor::setProcedureEndH(const std::shared_ptr<ReadNode>) {}
+
+void PKBPreprocessor::setProcedureEndH(const std::shared_ptr<PrintNode>) {}
+
+void PKBPreprocessor::setProcedureEndH(const std::shared_ptr<AssignNode>) {}
+
+void PKBPreprocessor::setProcedureEndH(const std::shared_ptr<CallNode>) {}
+
+void PKBPreprocessor::setProcedureEndH(const StmtNode node) {
+  std::visit([this](const auto &n) { setProcedureEndH(n); }, node);
+}
+
+void PKBPreprocessor::setCFGBip() {
+  // loop through all the statement lines
+  for (const auto &line : storage->statement_set) {
+    setCFGBipH(line);
+  }
+}
+
+void PKBPreprocessor::setCFGBipH(const PreviousLine previous_line) {
+  // if current line is a call statement
+  if (storage->call_set.find(previous_line) != storage->call_set.end()) {
+    // get the procedure that is being called
+    const ProcedureCallee procedure_callee =
+        storage->line_calls_procedure_map.at(previous_line);
+    // get first line to that procedure
+    const Line first_line = storage->proc_first_line_map.at(procedure_callee);
+    storage->storeCFGBipEdge(previous_line, first_line);
+  } else {
+    const Procedure cur_proc = storage->getProcedureFromLine(previous_line);
+    if (storage->proc_last_line_map.at(cur_proc).find(previous_line) !=
+        storage->proc_last_line_map.at(cur_proc).end()) {
+      // reached the end of procedure
+      // check what procedure's lines were calling it
+      if (storage->procedure_line_calls_map.find(cur_proc) !=
+          storage->procedure_line_calls_map.end()) {
+        std::unordered_set<Line> call_lines =
+            storage->procedure_line_calls_map.at(cur_proc);
+        for (const auto &line : call_lines) {
+          // for each line that was calling it
+          // get their next line as per normal
+          if (storage->line_previous_line_next_map.find(line) !=
+              storage->line_previous_line_next_map.end()) {
+            std::unordered_set<Line> next_lines =
+                storage->line_previous_line_next_map.at(line);
+            for (const auto &next_line : next_lines) {
+              storage->storeCFGBipEdge(previous_line, next_line);
+            }
+          }
+        }
+      }
+      // else no procedures were calling it
+    } else {
+      // get next line as per normal
+      std::unordered_set<Line> next_lines =
+          storage->line_previous_line_next_map.at(previous_line);
+      for (const auto &next_line : next_lines) {
+        storage->storeCFGBipEdge(previous_line, next_line);
+      }
+    }
   }
 }
 

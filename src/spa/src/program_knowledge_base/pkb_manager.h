@@ -303,6 +303,7 @@ class PKBManager {
   std::optional<std::unordered_set<UsesLine>> getAffectUsesLineTBip(
       const ModifyLine);
   void clearBipCache();
+  std::unordered_map<PreviousLine, std::unordered_set<NextLine>> getCFGBip();
 };
 
 }  // namespace PKB

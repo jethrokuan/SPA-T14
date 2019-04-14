@@ -47,20 +47,11 @@ class AffectsPEvaluator : public SuchThatEvaluator {
   bool handleDoubleUnderscore() override {
     // AffectsP(_, _)
     // Must check all possible combinations to see if one is true
-    SingleConstraintSet lhs_designentities;
-    if (db.hasVariable(argLeftAsSynonym->synonym)) {
-      lhs_designentities = db.selectOneAsSet(argLeftAsSynonym->synonym);
-    } else {
-      lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-          declarations, pkb, argLeftAsSynonym->synonym);
-    }
-    SingleConstraintSet rhs_designentities;
-    if (db.hasVariable(argRightAsSynonym->synonym)) {
-      rhs_designentities = db.selectOneAsSet(argRightAsSynonym->synonym);
-    } else {
-      rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
-          declarations, pkb, argRightAsSynonym->synonym);
-    }
+
+    SingleConstraintSet lhs_designentities =
+        QueryExecutor::getSelect(pkb, DesignEntity::ASSIGN);
+    SingleConstraintSet rhs_designentities =
+        QueryExecutor::getSelect(pkb, DesignEntity::ASSIGN);
 
     PairedConstraintSet results;
     for (auto lhs_de : lhs_designentities) {

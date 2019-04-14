@@ -1143,6 +1143,11 @@ void PKBManager::clearCache() {
   uses_modify_affects_cache.clear();
 }
 
+void PKBManager::clearBipCache() {
+  modify_uses_affects_bip_cache.clear();
+  uses_modify_affects_bip_cache.clear();
+}
+
 std::optional<std::unordered_set<NextLine>> PKBManager::getNextLineBip(
     const PreviousLine previous_line) {
   std::unordered_set<NextLine> next_line;

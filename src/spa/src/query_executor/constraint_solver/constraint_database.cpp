@@ -193,6 +193,7 @@ bool ConstraintDatabase::selectBoolean() {
 vector<string> ConstraintDatabase::selectOne(const std::string var_to_select) {
   // Unique-ify the column and return only unique results
   auto one_column = selectOneColumn(var_to_select);
+  std::sort(one_column.begin(), one_column.end());
   one_column.erase(std::unique(one_column.begin(), one_column.end()),
                    one_column.end());
   return one_column;
@@ -242,6 +243,8 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
   }
 
   std::cerr << "Start unique removal\n";
+
+  std::sort(out_values.begin(), out_values.end());
   out_values.erase(std::unique(out_values.begin(), out_values.end()),
                    out_values.end());
 

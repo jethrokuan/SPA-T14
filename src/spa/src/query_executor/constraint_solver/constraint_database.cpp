@@ -218,7 +218,7 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
     const vector<string> vars_to_select) {
   // Go through each table and get a filtered version of each depending on the
   // columns selected inside - try to select all variables
-  std::cerr << "Cart start\n";
+  // std::cerr << "Cart start\n";
   ConstraintTable existing_table;
   for (const auto& table : tables) {
     ConstraintTable new_table = table.getSubTable(vars_to_select);
@@ -228,7 +228,7 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
     existing_table =
         ConstraintTable::cartesianProduct(existing_table, new_table);
   }
-  std::cerr << "Cart end, final construction start\n";
+  // std::cerr << "Cart end, final construction start\n";
 
   // Get only the variables we want (in order) from final table
   // vector<vector<string>> out_values;
@@ -239,7 +239,6 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
         {var_name, existing_table.name_column_map[var_name]});
   }
   vector<vector<string>> rows;
-  rows.reserve(existing_table.size());
   for (int i = existing_table.size() - 1; i >= 0; i--) {
     vector<string> new_row;
     const auto& row = existing_table.table[i];
@@ -250,11 +249,11 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
     rows.push_back(new_row);
   }
 
-  std::cerr << "Start unique removal\n";
+  // std::cerr << "Start unique removal\n";
 
   std::sort(rows.begin(), rows.end());
   rows.erase(std::unique(rows.begin(), rows.end()), rows.end());
 
-  std::cerr << "Final return  vector\n";
+  // std::cerr << "Final return  vector\n";
   return rows;
 }

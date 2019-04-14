@@ -39,10 +39,15 @@ std::vector<std::string> QueryExecutor::makeQuery(Query* query) {
 
   // Execute each clause on the PKB
   for (auto clause : clauses) {
+    std::cerr << "Executing clause:";
+    printClause(clause);
+    std::cerr << "\n";
     if (!executeClause(query->declarations, clause, db)) {
       return getNegativeResult(query->result->T);
     }
   }
+
+  std::cerr << "Done executing clauses\n\n";
 
   // All clauses returned true and potentially added constraints
   // Have to evaluate constraints now

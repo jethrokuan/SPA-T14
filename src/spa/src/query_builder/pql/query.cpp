@@ -12,3 +12,9 @@ Query::~Query() {
   delete declarations;
   delete result;
 }
+
+namespace QE {
+void printClause(Clause clause) {
+  std::visit(overload{[&](auto r) { std::cout << *r; }}, clause);
+}
+}  // namespace QE

@@ -8,7 +8,7 @@ class WithCond {
   WithCond(AttrRef ref1_, AttrRef ref2_);
 
   bool operator==(const WithCond& other) const;
-  friend std::ostream& operator<<(std::ostream& os, WithCond const& withcond) {
+  friend std::ostream& operator<<(std::ostream& os, WithCond const&) {
     os << "with ... = ...";
     // os << relcond.arg1 << "," << relcond.arg2 << ")";
     return os;

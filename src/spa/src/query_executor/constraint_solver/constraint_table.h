@@ -69,7 +69,7 @@ class ConstraintTable {
   void addNewColumnName(const string& column_name);
 
   //! Each vector is one row from this table that has been selected
-  ConstraintTable getSubTable(const vector<string>& vars_to_select);
+  ConstraintTable getSubTable(const vector<string>& vars_to_select) const;
 
   //! Cartesian product of two tables: t1.size() x t2.size() rows as output
   static ConstraintTable cartesianProduct(ConstraintTable& t1,

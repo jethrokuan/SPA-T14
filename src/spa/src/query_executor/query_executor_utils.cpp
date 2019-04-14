@@ -246,6 +246,7 @@ void QueryExecutor::applyAttributesToResults(
 std::vector<std::string> QueryExecutor::joinResults(
     const std::vector<std::vector<std::string>>& results) {
   std::vector<std::string> out_result;
+  out_result.reserve(results.size());
   // Join all vectors by comma
   for (const auto& row : results) {
     out_result.push_back(Utils::join(row.begin(), row.end()));

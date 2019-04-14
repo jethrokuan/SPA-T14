@@ -193,10 +193,10 @@ bool ConstraintDatabase::selectBoolean() {
 vector<string> ConstraintDatabase::selectOne(const std::string var_to_select) {
   // Unique-ify the column and return only unique results
   auto one_column = selectOneColumn(var_to_select);
-  unordered_set<string> unique_values(one_column.begin(), one_column.end());
-  auto unique_vec = vector<string>(unique_values.begin(), unique_values.end());
-  std::sort(unique_vec.begin(), unique_vec.end());
-  return unique_vec;
+  std::sort(one_column.begin(), one_column.end());
+  one_column.erase(std::unique(one_column.begin(), one_column.end()),
+                   one_column.end());
+  return one_column;
 }
 
 SingleConstraintSet ConstraintDatabase::selectOneAsSet(
@@ -218,8 +218,9 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
     const vector<string> vars_to_select) {
   // Go through each table and get a filtered version of each depending on the
   // columns selected inside - try to select all variables
+  // std::cerr << "Cart start\n";
   ConstraintTable existing_table;
-  for (auto& table : tables) {
+  for (const auto& table : tables) {
     ConstraintTable new_table = table.getSubTable(vars_to_select);
     if (new_table.size() == 0) continue;
 
@@ -227,23 +228,32 @@ vector<vector<string>> ConstraintDatabase::selectMultiple(
     existing_table =
         ConstraintTable::cartesianProduct(existing_table, new_table);
   }
+  // std::cerr << "Cart end, final construction start\n";
 
   // Get only the variables we want (in order) from final table
-  vector<vector<string>> out_values;
-  for (auto& row : existing_table.table) {
-    vector<string> out_row;
-    for (auto& var : vars_to_select) {
-      size_t var_idx = existing_table.name_column_map[var];
-      out_row.push_back(row[var_idx]);
+  // vector<vector<string>> out_values;
+  // out_values.reserve(existing_table.table.size());
+  map<string, size_t> vars_to_select_idx_map;
+  for (const auto var_name : vars_to_select) {
+    vars_to_select_idx_map.insert(
+        {var_name, existing_table.name_column_map[var_name]});
+  }
+  vector<vector<string>> rows;
+  for (int i = existing_table.size() - 1; i >= 0; i--) {
+    vector<string> new_row;
+    const auto& row = existing_table.table[i];
+    new_row.reserve(vars_to_select.size());
+    for (const auto& var_to_select : vars_to_select) {
+      new_row.push_back(row[vars_to_select_idx_map[var_to_select]]);
     }
-    // Remove trailing space
-    out_values.push_back(out_row);
+    rows.push_back(new_row);
   }
 
-  // Force uniqueness on results
-  set<vector<string>> unique_values(out_values.begin(), out_values.end());
-  auto unique_vec =
-      vector<vector<string>>(unique_values.begin(), unique_values.end());
-  std::sort(unique_vec.begin(), unique_vec.end());
-  return unique_vec;
+  // std::cerr << "Start unique removal\n";
+
+  std::sort(rows.begin(), rows.end());
+  rows.erase(std::unique(rows.begin(), rows.end()), rows.end());
+
+  // std::cerr << "Final return  vector\n";
+  return rows;
 }

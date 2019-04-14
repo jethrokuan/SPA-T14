@@ -21,31 +21,31 @@ class AffectsPTEvaluator : public SuchThatEvaluator {
 
   std::unordered_set<std::string> handleLeftSynonymRightBasic(
       std::string& basic_value) override {
-    // Affects*(a, 1)
+    // AffectsP*(a, 1)
     return pkb->getAffectModifiesLineTBip(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   std::unordered_set<std::string> handleRightSynonymLeftBasic(
       std::string& basic_value) override {
-    // Affects*(1, a)
+    // AffectsP*(1, a)
     return pkb->getAffectUsesLineTBip(basic_value)
         .value_or(std::unordered_set<std::string>());
   }
   bool handleLeftSynonymRightUnderscore(std::string& arg_value) override {
-    // Affects*(a, _)  (for each a)
+    // AffectsP*(a, _)  (for each a)
     return pkb->getAffectUsesLineTBip(arg_value).has_value();
   }
   bool handleRightSynonymLeftUnderscore(std::string& arg_value) override {
-    // Affects*(_, a) (for each a)
+    // AffectsP*(_, a) (for each a)
     return pkb->getAffectModifiesLineTBip(arg_value).has_value();
   }
   bool handleBothArgsSynonyms(std::string& arg_left,
                               std::string& arg_right) override {
-    // Affects*(a1, 2) (for each a1, a2)
+    // AffectsP*(a1, 2) (for each a1, a2)
     return pkb->isLineAffectsLineTBip(arg_left, arg_right);
   }
   bool handleDoubleUnderscore() override {
-    // Affects*(_, _)
+    // AffectsP*(_, _)
     // Must check all possible combinations to see if one is true
     SingleConstraintSet lhs_designentities;
     if (db.hasVariable(argLeftAsSynonym->synonym)) {
@@ -73,16 +73,16 @@ class AffectsPTEvaluator : public SuchThatEvaluator {
     return false;
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
-    // Affects*(1, _)
+    // AffectsP*(1, _)
     return pkb->getAffectUsesLineTBip(arg).has_value();
   }
   bool handleRightBasicLeftUnderscore(std::string& arg) override {
-    // Affects*(_, 1)
+    // AffectsP*(_, 1)
     return pkb->getAffectModifiesLineTBip(arg).has_value();
   }
   bool handleBothArgsBasic(std::string& arg_left,
                            std::string& arg_right) override {
-    // Affects*(1, 2)
+    // AffectsP*(1, 2)
     return pkb->isLineAffectsLineTBip(arg_left, arg_right);
   }
 };

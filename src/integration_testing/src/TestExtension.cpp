@@ -146,8 +146,38 @@ TEST_CASE ("Test Extension: AffectsP/AffectsPT- test bip source") {
   auto qm = new QueryExecutor(pkb);
   auto qe = QueryBuilder();
 
-  SECTION ("Test basic AffectsP 1->3") {
+  SECTION ("Test AffectsP 1->3") {
     auto querystr = std::string("Select BOOLEAN such that AffectsP(1, 6)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"TRUE"});
+  }
+
+  SECTION ("Test AffectsP 1->10") {
+    auto querystr = std::string("Select BOOLEAN such that AffectsP(1, 10)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"TRUE"});
+  }
+
+  SECTION ("Test AffectsP 1->11") {
+    auto querystr = std::string("Select BOOLEAN such that AffectsP(1, 11)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"FALSE"});
+  }
+
+  SECTION ("Test AffectsP 6->8") {
+    auto querystr = std::string("Select BOOLEAN such that AffectsP(6, 8)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"TRUE"});
+  }
+
+  SECTION ("Test AffectsP* 1->8") {
+    auto querystr = std::string("Select BOOLEAN such that AffectsP*(1, 8)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"TRUE"});
+  }
+
+  SECTION ("Test AffectsP* 1->5") {
+    auto querystr = std::string("Select BOOLEAN such that AffectsP*(1, 5)");
     auto query = qe.makePqlQuery(querystr);
     REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"TRUE"});
   }

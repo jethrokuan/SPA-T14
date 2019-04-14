@@ -15,4 +15,4 @@ procedure John {
 	if (i > 0) then {
 		x = x + z; } 
 	else {
-		x = 2; }}
+		y = 2; }}

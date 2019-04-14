@@ -1646,4 +1646,28 @@ bool PKBManager::isLineAffectsLineTBipH(
   return false;
 }
 
+bool PKBManager::isLineNextLineBip(const PreviousLine previous_line,
+    const NextLine next_line) {
+  auto next_lines = getNextLineBip(previous_line);
+  if (next_lines) {
+    if ((*next_lines).find(next_line) != (*next_lines).end()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool PKBManager::isLineNextLineTBip(const PreviousLine previous_line,
+    const NextLine next_line) {
+  auto next_lines_t = getNextLineTBip(previous_line);
+  if (next_lines_t) {
+    if ((*next_lines_t).find(next_line) != (*next_lines_t).end()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 }  // namespace PKB

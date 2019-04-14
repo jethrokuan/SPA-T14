@@ -193,10 +193,8 @@ bool ConstraintDatabase::selectBoolean() {
 vector<string> ConstraintDatabase::selectOne(const std::string var_to_select) {
   // Unique-ify the column and return only unique results
   auto one_column = selectOneColumn(var_to_select);
-  unordered_set<string> unique_values(one_column.begin(), one_column.end());
-  auto unique_vec = vector<string>(unique_values.begin(), unique_values.end());
-  std::sort(unique_vec.begin(), unique_vec.end());
-  return unique_vec;
+  set<string> unique_values(one_column.begin(), one_column.end());
+  return vector<string>(unique_values.begin(), unique_values.end());
 }
 
 SingleConstraintSet ConstraintDatabase::selectOneAsSet(

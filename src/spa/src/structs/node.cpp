@@ -1,4 +1,6 @@
 #include "structs/node.h"
+#include "simple_parser/exceptions.h"
+#include "utils/utils.h"
 
 #include <iostream>
 
@@ -20,12 +22,16 @@ std::string RootNode::to_str() {
   return acc;
 }
 
-NumberNode::NumberNode(const std::string val) : Val(val){};
+NumberNode::NumberNode(const std::string val) : Val(val){
+  if (!Utils::has_only_digits(val)) {
+      throw Simple::SimpleParseException("Unable to construct number: " + val);
+    }
+};
 bool NumberNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const NumberNode*>(&other);
-  return casted_other != 0 && this->Val.compare(casted_other->Val) == 0;
+  return casted_other != 0 && std::stoi(this->Val) == std::stoi(casted_other->Val);
 };
-std::string NumberNode::to_str() { return "(NumberNode " + this->Val + ")"; }
+std::string NumberNode::to_str() { return "(NumberNode " + std::to_string(std::stoi(this->Val)) + ")"; }
 
 VariableNode::VariableNode(const std::string name) : Name(name){};
 bool VariableNode::operator==(const Node& other) const {

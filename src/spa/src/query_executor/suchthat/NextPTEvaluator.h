@@ -46,12 +46,7 @@ class NextPTEvaluator : public SuchThatEvaluator {
   // Handle cases with no variables selected
   bool handleDoubleUnderscore() override {
     // NextP*(_, _)
-    // This is not using a potential isLineNextLineTSetEmpty
-    // Cannot compute beforehand, and the info is same for both sets
-    // Next(1,2) ==> NextP*(1,2)
-    // NextP*(1,2) ==> some combination of Next
-    // Either both are empty or neither
-    return !pkb->isLineNextLineMapEmpty();
+    return !(pkb->isLineNextLineMapEmpty() && pkb->isCallSetEmpty());
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // NextP*(3, _)

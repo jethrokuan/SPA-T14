@@ -51,7 +51,7 @@ class NextPEvaluator : public SuchThatEvaluator {
   }
   bool handleDoubleUnderscore() override {
     // NextP(_, _)
-    return !pkb->isLineNextLineMapEmpty();
+    return !(pkb->isLineNextLineMapEmpty() && pkb->isCallSetEmpty());
   }
   bool handleLeftBasicRightUnderscore(std::string& arg) override {
     // NextP(3, _)

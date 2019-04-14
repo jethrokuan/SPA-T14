@@ -1133,10 +1133,10 @@ void PKBManager::getAffectUsesLineTH(
   }
 }
 
-std::unordered_map<ProcedureCaller, std::unordered_set<ProcedureCallee>>
+std::unordered_map<PreviousLine, std::unordered_set<NextLine>>
 PKBManager::getCFG() {
   return pkb_storage->line_previous_line_next_map;
-};
+}
 
 void PKBManager::clearCache() {
   modify_uses_affects_cache.clear();
@@ -1582,6 +1582,11 @@ bool PKBManager::isLineNextLineTBip(const PreviousLine previous_line,
   }
 
   return false;
+}
+
+std::unordered_map<PreviousLine, std::unordered_set<NextLine>>
+PKBManager::getCFGBip() {
+  return pkb_storage->line_previous_line_next_bip_map;
 }
 
 }  // namespace PKB

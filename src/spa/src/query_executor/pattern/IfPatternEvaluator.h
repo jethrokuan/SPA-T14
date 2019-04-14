@@ -54,7 +54,14 @@ class IfPatternEvaluator : public PatternEvaluator {
   std::optional<SingleConstraintSet> handlePatternLHSUnderscoreRHSNull()
       override {
     // pattern ifs (_, _, _)
-    return QueryExecutor::getSelect(pkb, DesignEntity::IF);
+    // Get only the lines from the lines & vars
+    // There can be if statements without a control variable
+    PairedConstraintSet allLinesVars = pkb->getAllIfPatternLinesAndVars();
+    SingleConstraintSet lines;
+    for (const auto& [line, var] : allLinesVars) {
+      lines.insert(line);
+    }
+    return lines;
   }
   std::optional<SingleConstraintSet> handlePatternLHSQuoteIdentRHSNull()
       override {

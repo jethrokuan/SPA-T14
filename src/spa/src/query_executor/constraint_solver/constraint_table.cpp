@@ -173,7 +173,13 @@ bool ConstraintTable::joinWithTableBy(const string& var_to_join,
   // Update column names from joined table
   for (auto [name, idx] : other_table.name_column_map) {
     if (name != var_to_join) {
-      name_column_map[name] = idx + base_t2_column_idx;
+      size_t new_col_idx = idx + base_t2_column_idx;
+      if (other_table.name_column_map.at(name) > other_table_join_var_idx) {
+        // If the column being merged is AFTER the join column, subtract one
+        // from col idx when merging.
+        new_col_idx--;
+      }
+      name_column_map[name] = new_col_idx;
       next_column_idx++;  // to be consistent with its purpose
     }
   }

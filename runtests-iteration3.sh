@@ -20,3 +20,13 @@ build/src/autotester/autotester tests/system_tests/iteration-3/affects/5-source.
 
 #  STRESS TEST
 build/src/autotester/autotester tests/system_tests/iteration-3/stress-test/1-source-read-assign.txt tests/system_tests/iteration-3/stress-test/1-query.txt tests/system_tests/output/iter3-stress-test-01.xml
+
+build/src/autotester/autotester tests/system_tests/iteration-3/stress-test/2-source.txt tests/system_tests/iteration-3/stress-test/2-boolean-clause-queries.txt tests/system_tests/output/iter3-stress-test-02.xml
+
+build/src/autotester/autotester tests/system_tests/iteration-3/stress-test/2-source.txt tests/system_tests/iteration-3/stress-test/2-multiple-clauses-queries.txt tests/system_tests/output/iter3-stress-test-03.xml
+
+build/src/autotester/autotester tests/system_tests/iteration-3/stress-test/2-source.txt tests/system_tests/iteration-3/stress-test/2-varying-order-of-num-clauses-queries.txt tests/system_tests/output/iter3-stress-test-04.xml
+
+build/src/autotester/autotester tests/system_tests/iteration-3/stress-test/2-source.txt tests/system_tests/iteration-3/stress-test/timeout/2-affects-queries.txt tests/system_tests/output/iter3-stress-test-05.xml
+
+build/src/autotester/autotester tests/system_tests/iteration-3/stress-test/2-source.txt tests/system_tests/iteration-3/stress-test/timeout/2-multiple-clauses-queries.txt tests/system_tests/output/iter3-stress-test-06.xml

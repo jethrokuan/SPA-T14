@@ -131,3 +131,32 @@ TEST_CASE (
   delete pkb;
   delete qm;
 }
+
+TEST_CASE (
+    "Test Query Executor Pattern functionality on all underscore patterns - "
+    "no-control-var-loops.txt") {
+  auto ast =
+      Simple::SimpleInterface::getAstFromFile("tests/no-control-var-loops.txt");
+
+  // Store PKB variable in class for querying later
+  auto pkb = new PKBManager(ast);
+  auto qm = new QueryExecutor(pkb);
+  auto qe = QueryBuilder();
+
+  SECTION ("Test pattern match - select all while stmt with control vars") {
+    auto querystr =
+        std::string("while w; variable v1; Select w pattern w (_, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"3"});
+  }
+
+  SECTION ("Test pattern match - select all if stmt with control vars") {
+    auto querystr =
+        std::string("if ifs; variable v1; Select ifs pattern ifs (_, _, _)");
+    auto query = qe.makePqlQuery(querystr);
+    REQUIRE(qm->makeQuery(&query) == std::vector<std::string>{"5"});
+  }
+
+  delete pkb;
+  delete qm;
+}

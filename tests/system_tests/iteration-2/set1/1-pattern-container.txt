@@ -26,12 +26,12 @@ x
 6 - Pattern, while
 while w; variable v;
 Select v pattern w(_,_)
-none
+a,b,c,x,y,z
 5000
 7 - Pattern, while
 while w; variable v;
 Select v pattern w("x",_)
-none
+a,b,c,x,y,z
 5000
 8 - Pattern, while variable not in any while control var
 while w; variable v;
@@ -81,12 +81,12 @@ x,a
 17 - Pattern, if
 if i; variable v;
 Select v pattern i(_,_,_)
-x,a
+a,b,c,x,y,z
 5000
 18 - Pattern, if
 if i; variable v;
 Select v pattern i("x",_,_)
-x
+a,b,c,x,y,z
 5000
 19 - Pattern, if
 if i; variable v;

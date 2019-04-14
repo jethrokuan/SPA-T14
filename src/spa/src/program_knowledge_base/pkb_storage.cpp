@@ -1,6 +1,4 @@
 #include "program_knowledge_base/pkb_storage.h"
-#include <iostream>
-#include "program_knowledge_base/pkb_exceptions.h"
 
 namespace PKB {
 
@@ -48,7 +46,6 @@ std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(
 }
 
 void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
-  // std::cout << source + " " + dest << std::endl;
   // add to adjacency list
   addToSetMap(line_previous_line_next_map, source, dest);
   addToSetMap(line_next_line_previous_map, dest, source);
@@ -198,8 +195,6 @@ void PKBStorage::storeAssignPattern(const Variable var, const ExprStr expr_str,
               std::pair<Line, ExprStr>(line, expr_str));
   addToSetMap(assign_pattern_expr_str_line_var_map, expr_str,
               std::pair<Line, Variable>(line, var));
-  // std::cout << var + " at line " + line + " maps to " + expr_str <<
-  // std::endl;
   assign_pattern_var_expr_str_set.insert(
       std::pair<Variable, ExprStr>(var, expr_str));
   assign_pattern_line_expr_str_set.insert(
@@ -208,17 +203,13 @@ void PKBStorage::storeAssignPattern(const Variable var, const ExprStr expr_str,
 }
 
 void PKBStorage::storeIfPattern(const Variable var, const Line line) {
-  // std::cout << "if " + var + " at line " + line << std::endl;
   if_pattern_line_var_set.insert(std::pair<Line, Variable>(line, var));
-  // addToSetMap(if_pattern_var_line_map, var, line);
   addToSetMap(if_pattern_line_control_variable_map, line, var);
   addToSetMap(if_pattern_control_variable_line_map, var, line);
 }
 
 void PKBStorage::storeWhilePattern(const Variable var, const Line line) {
-  // std::cout << "while " + var + " at line " + line << std::endl;
   while_pattern_line_var_set.insert(std::pair<Line, Variable>(line, var));
-  // addToSetMap(while_pattern_var_line_map, var, line);
   addToSetMap(while_pattern_line_control_variable_map, line, var);
   addToSetMap(while_pattern_control_variable_line_map, var, line);
 }

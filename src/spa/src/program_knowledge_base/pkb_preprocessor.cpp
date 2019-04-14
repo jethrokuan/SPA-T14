@@ -1,5 +1,4 @@
 #include "program_knowledge_base/pkb_preprocessor.h"
-#include "structs/node.h"
 
 namespace PKB {
 
@@ -978,7 +977,7 @@ void PKBPreprocessor::setProcedureEnd(
   visited->insert(cur_line);
   if (storage->line_previous_line_next_map.find(cur_line) !=
       storage->line_previous_line_next_map.end()) {
-    std::unordered_set<NextLine> next_lines = 
+    std::unordered_set<NextLine> next_lines =
         storage->line_previous_line_next_map.at(cur_line);
     for (const auto &line : next_lines) {
       setProcedureEnd(line, visited);

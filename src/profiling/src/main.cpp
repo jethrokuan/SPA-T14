@@ -24,13 +24,19 @@ duration<double> run_test_iteration() {
   // Run query - get timers
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
   auto querystr = std::string(
-      "stmt s1, s2; assign a; while w; if i; procedure p; variable v; read r; "
-      "Select <s1, s2, a, w, i, p, v, r> such that Calls(p, \"animals\") and "
-      "Modifies(a, v) and Uses(w, v) and Parent(w, i) and Follows(w, s1) and "
-      "Next*(s1, s2) pattern a(\"x\", _)");
-  spa_manager->query(querystr);
+      "if ifs; variable v1; assign a1, a2, a3, a4, a5; Select BOOLEAN such "
+      "that Affects*(a1, a2) and Next*(a2, a3) and Affects*(a3, a4) and "
+      "Next*(a4, a5) and Next*(a5, a2) and Affects*(a2, a4) and Affects*(a1, "
+      "a5) with v1.varName = \"procedure\" pattern ifs(\"procedure\", _, _) "
+      "with 10 = 11 and \"procedure\" = \"procedure\" and 1 = 1");
+  auto res = spa_manager->query(querystr);
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+
+  for (const auto& r : res) {
+    std::cout << r << ",";
+  }
+  std::cout << "\n";
 
   delete spa_manager;
 
@@ -38,7 +44,7 @@ duration<double> run_test_iteration() {
 }
 
 int main(void) {
-  const int NUM_ITER = 1;
+  const int NUM_ITER = 10;
   duration<double> total_time_taken;
 
   std::cout << "\nSTARTING EXECUTION: " << NUM_ITER << " ITERATIONS.\n\n";

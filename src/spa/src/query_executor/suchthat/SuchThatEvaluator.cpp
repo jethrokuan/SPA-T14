@@ -141,6 +141,8 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   SingleConstraintSet lhs_designentities;
   if (db.hasVariable(argLeftAsSynonym->synonym)) {
     lhs_designentities = db.selectOneAsSet(argLeftAsSynonym->synonym);
+    // lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+    //    declarations, pkb, argLeftAsSynonym->synonym);
   } else {
     lhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
         declarations, pkb, argLeftAsSynonym->synonym);
@@ -148,6 +150,8 @@ bool SuchThatEvaluator::dispatchBothVarsSynonyms() {
   SingleConstraintSet rhs_designentities;
   if (db.hasVariable(argRightAsSynonym->synonym)) {
     rhs_designentities = db.selectOneAsSet(argRightAsSynonym->synonym);
+    // rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
+    //    declarations, pkb, argRightAsSynonym->synonym);
   } else {
     rhs_designentities = QueryExecutor::getAllDesignEntityValuesByVarName(
         declarations, pkb, argRightAsSynonym->synonym);

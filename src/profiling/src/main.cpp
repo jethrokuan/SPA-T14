@@ -23,11 +23,12 @@ duration<double> run_test_iteration() {
 
   // Run query - get timers
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
-  auto querystr = std::string(
-      "stmt s1, s2, s3, s4, s5, s6; Select <s1, s2> such that Parent*(s3, s4)");
+  auto querystr = std::string("stmt s1, s2, s3, s4, s5, s6; Select <s1, s2> such that Parent*(s3, s4)");
   spa_manager->query(querystr);
+
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+
 
   delete spa_manager;
 

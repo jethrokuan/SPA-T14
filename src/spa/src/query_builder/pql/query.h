@@ -44,4 +44,6 @@ class Query {
     return os;
   }
 };
+
+void printClause(Clause clause);
 }  // namespace QE

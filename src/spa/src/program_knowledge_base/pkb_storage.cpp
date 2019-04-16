@@ -45,10 +45,11 @@ std::optional<std::shared_ptr<Node>> PKBStorage::getNodeFromLine(
   }
 }
 
-void PKBStorage::storeCFGEdge(const Line source, const Line dest) {
+void PKBStorage::storeCFGEdge(const PreviousLine previous_line,
+                              const NextLine next_line) {
   // add to adjacency list
-  addToSetMap(line_previous_line_next_map, source, dest);
-  addToSetMap(line_next_line_previous_map, dest, source);
+  addToSetMap(line_previous_line_next_map, previous_line, next_line);
+  addToSetMap(line_next_line_previous_map, next_line, previous_line);
 }
 
 void PKBStorage::storeCallsRelation(const ProcedureCaller procedure_caller,
@@ -269,6 +270,13 @@ void PKBStorage::storeProcFirstLine(const Procedure proc, const Line line) {
 
 void PKBStorage::storeProcLastLine(const Procedure proc, const Line line) {
   addToSetMap(proc_last_line_map, proc, line);
+}
+
+void PKBStorage::storeCFGBipEdge(const PreviousLine previous_line,
+                                 const NextLine next_line) {
+  // add to adjacency list
+  addToSetMap(line_previous_line_next_bip_map, previous_line, next_line);
+  addToSetMap(line_next_line_previous_bip_map, next_line, previous_line);
 }
 
 }  // namespace PKB

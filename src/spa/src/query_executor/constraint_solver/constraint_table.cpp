@@ -265,7 +265,10 @@ ConstraintTable ConstraintTable::getSubTable(
       size_t to_select_idx = name_column_map[var_to_select];
       out_row.push_back(row[to_select_idx]);
     }
-    out_table.table.push_back(out_row);
+    if (out_row.size() > 0) {
+      // Only add a row of data if that row has anything in the first place
+      out_table.table.push_back(out_row);
+    }
   }
   return out_table;
 }

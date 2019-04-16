@@ -18,11 +18,13 @@ using namespace std::chrono;
 duration<double> run_test_iteration() {
   // Initialize AST
   auto spa_manager = new SPAManager();
-  spa_manager->loadSimpleSource("tests/system_tests/src/2.txt");
+  spa_manager->loadSimpleSource(
+      "tests/system_tests/iteration-3/stress-test/2-source.txt");
 
   // Run query - get timers
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
-  auto querystr = std::string("assign a; Select a");
+  auto querystr = std::string(
+      "stmt s1, s2, s3, s4, s5, s6; Select <s1, s2> such that Parent*(s3, s4)");
   spa_manager->query(querystr);
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
